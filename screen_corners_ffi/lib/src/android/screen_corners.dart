@@ -31,7 +31,7 @@ class _ScreenCornersDataPartial {
     bottomRight: object.getBottomRight()?.doubleValue(releaseOriginal: true),
   );
 
-  factory _ScreenCornersDataPartial._fromActivity(jb.Activity activity) {
+  factory _ScreenCornersDataPartial._fromActivity(JObject activity) {
     final object = jb.ScreenCorners.fromActivity(activity);
     final result = _ScreenCornersDataPartial._fromNative(object);
     object.release();
@@ -92,12 +92,12 @@ class _ScreenCornersDataPartial {
   int get hashCode =>
       Object.hash(runtimeType, topLeft, topRight, bottomLeft, bottomRight);
 
-  static jb.Activity? _getActivity() {
+  static JObject? _getActivity() {
     if (!Platform.isAndroid) return null;
     final platformDispatcher = WidgetsBinding.instance.platformDispatcher;
     final engineId = platformDispatcher.engineId;
     assert(engineId != null);
-    return Jni.androidActivity(engineId!)?.as(jb.Activity.type);
+    return Jni.androidActivity(engineId!);
   }
 }
 

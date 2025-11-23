@@ -6,10 +6,9 @@ source_path:
   - android/src/main/kotlin
 
 classes:
-  - android.app.Activity
   - dev.deminearchiver.screen_corners_ffi.ScreenCorners
 
 output:
   dart:
-    path: lib/src/jni_bindings.dart
+    path: lib/src/android/jni_bindings.dart
     structure: single_file
