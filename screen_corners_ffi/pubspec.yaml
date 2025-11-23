@@ -14,7 +14,6 @@ dependencies:
     sdk: flutter
   jni: ^0.15.2
   meta: ^1.17.0
-  plugin_platform_interface: ^2.0.2
 
 dev_dependencies:
   flutter_test:
