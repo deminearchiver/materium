@@ -1,0 +1,15 @@
+android_sdk_config:
+  add_gradle_deps: true
+  android_example: example/
+
+source_path:
+  - android/src/main/kotlin
+
+classes:
+  - android.app.Activity
+  - dev.deminearchiver.screen_corners_ffi.ScreenCorners
+
+output:
+  dart:
+    path: lib/src/jni_bindings.dart
+    structure: single_file

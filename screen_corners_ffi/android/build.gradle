@@ -1,0 +1,59 @@
+group = "com.example.screen_corners_ffi"
+version = "1.0"
+
+buildscript {
+  repositories {
+    google()
+    mavenCentral()
+  }
+
+  dependencies {
+    // The Android Gradle Plugin knows how to build native code with the NDK.
+    classpath("com.android.tools.build:gradle:8.11.1")
+  }
+}
+
+rootProject.allprojects {
+  repositories {
+    google()
+    mavenCentral()
+  }
+}
+
+apply plugin: "com.android.library"
+apply plugin: "kotlin-android"
+
+android {
+  defaultConfig {
+    consumerProguardFiles("consumer-proguard-rules.pro")
+  }
+
+  namespace = "com.example.screen_corners_ffi"
+
+  // Bumping the plugin compileSdk version requires all clients of this plugin
+  // to bump the version in their app.
+  compileSdk = 36
+
+  // Use the NDK version
+  // declared in /android/app/build.gradle file of the Flutter project.
+  // Replace it with a version number if this plugin requires a specific NDK version.
+  // (e.g. ndkVersion "23.1.7779620")
+  ndkVersion = android.ndkVersion
+
+  sourceSets {
+    main.java.srcDirs += "src/main/kotlin"
+  }
+
+  kotlinOptions {
+    jvmTarget = JavaVersion.VERSION_17.toString()
+  }
+
+  compileOptions {
+    sourceCompatibility = JavaVersion.VERSION_17
+    targetCompatibility = JavaVersion.VERSION_17
+  }
+
+  defaultConfig {
+    minSdk = 24
+  }
+}

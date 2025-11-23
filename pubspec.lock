@@ -918,6 +918,22 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.7.0"
+  jni:
+    dependency: transitive
+    description:
+      name: jni
+      sha256: "8706a77e94c76fe9ec9315e18949cc9479cc03af97085ca9c1077b61323ea12d"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.15.2"
+  jnigen:
+    dependency: transitive
+    description:
+      name: jnigen
+      sha256: dcb5927c2b15ddd3bfcd1b13a13c063828ac4e495f9f87dd11e7968f68114ac7
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.15.0"
   js:
     dependency: transitive
     description:
