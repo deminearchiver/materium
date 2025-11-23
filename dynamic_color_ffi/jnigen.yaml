@@ -6,11 +6,11 @@ source_path:
   - android/src/main/kotlin
 
 classes:
-  - android.app.Activity
-  - android.content.Context
-  - dev.deminearchiver.dynamic_color_ffi.DynamicColor
+  - dev.deminearchiver.dynamic_color_ffi.DynamicColorPlugin
+  - dev.deminearchiver.dynamic_color_ffi.DynamicColorScheme
+  - dev.deminearchiver.dynamic_color_ffi.DynamicTonalPalette
 
 output:
   dart:
-    path: lib/src/jni_bindings.dart
+    path: lib/src/android/jni_bindings.dart
     structure: single_file
