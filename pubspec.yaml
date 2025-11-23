@@ -7,6 +7,8 @@ publish_to: none
 workspace:
   - dynamic_color
   - dynamic_color/example
+  - dynamic_color_ffi
+  - dynamic_color_ffi/example
   - layout
   - material
   - materium_fonts
