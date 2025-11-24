@@ -27,6 +27,34 @@ abstract class ScreenCornersDataPartial with Diagnosticable {
   double? get bottomLeft;
   double? get bottomRight;
 
+  ScreenCornersDataPartial copyWith({
+    double? topLeft,
+    double? topRight,
+    double? bottomLeft,
+    double? bottomRight,
+  }) =>
+      topLeft != null ||
+          topRight != null ||
+          bottomLeft != null ||
+          bottomRight != null
+      ? ScreenCornersDataPartial.from(
+          topLeft: topLeft ?? this.topLeft,
+          topRight: topRight ?? this.topRight,
+          bottomLeft: bottomLeft ?? this.bottomLeft,
+          bottomRight: bottomRight ?? this.bottomRight,
+        )
+      : this;
+
+  ScreenCornersDataPartial merge(ScreenCornersDataPartial? other) =>
+      other != null
+      ? copyWith(
+          topLeft: other.topLeft,
+          topRight: other.topRight,
+          bottomLeft: other.bottomLeft,
+          bottomRight: other.bottomRight,
+        )
+      : this;
+
   ScreenCornersData? _resolve({double devicePixelRatio = 1.0}) =>
       switch (this) {
         ScreenCornersDataPartial(
@@ -112,6 +140,35 @@ abstract class ScreenCornersData extends ScreenCornersDataPartial {
 
   @override
   double get bottomRight;
+
+  @override
+  ScreenCornersData copyWith({
+    double? topLeft,
+    double? topRight,
+    double? bottomLeft,
+    double? bottomRight,
+  }) =>
+      topLeft != null ||
+          topRight != null ||
+          bottomLeft != null ||
+          bottomRight != null
+      ? ScreenCornersData.from(
+          topLeft: topLeft ?? this.topLeft,
+          topRight: topRight ?? this.topRight,
+          bottomLeft: bottomLeft ?? this.bottomLeft,
+          bottomRight: bottomRight ?? this.bottomRight,
+        )
+      : this;
+
+  @override
+  ScreenCornersData merge(ScreenCornersDataPartial? other) => other != null
+      ? copyWith(
+          topLeft: other.topLeft,
+          topRight: other.topRight,
+          bottomLeft: other.bottomLeft,
+          bottomRight: other.bottomRight,
+        )
+      : this;
 
   BorderRadius toBorderRadius() => BorderRadius.only(
     topLeft: Radius.circular(topLeft),
