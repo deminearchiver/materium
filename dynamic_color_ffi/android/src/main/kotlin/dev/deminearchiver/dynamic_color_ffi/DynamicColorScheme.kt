@@ -4,7 +4,7 @@ import android.content.Context
 import androidx.annotation.Keep
 
 @Keep
-data class DynamicColorScheme(
+class DynamicColorScheme(
   val primaryPaletteKeyColor: Int? = null,
   val secondaryPaletteKeyColor: Int? = null,
   val tertiaryPaletteKeyColor: Int? = null,
@@ -64,12 +64,4 @@ data class DynamicColorScheme(
   val onError: Int? = null,
   val errorContainer: Int? = null,
   val onErrorContainer: Int? = null,
-  val controlActivated: Int? = null,
-  val controlNormal: Int? = null,
-  val controlHighlight: Int? = null,
-  val textPrimaryInverse: Int? = null,
-  val textSecondaryAndTertiaryInverse: Int? = null,
-  val textPrimaryInverseDisableOnly: Int? = null,
-  val textSecondaryAndTertiaryInverseDisabled: Int? = null,
-  val textHintInverse: Int? = null,
 )

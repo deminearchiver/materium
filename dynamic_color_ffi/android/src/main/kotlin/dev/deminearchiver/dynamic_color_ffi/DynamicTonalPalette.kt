@@ -3,7 +3,7 @@ package dev.deminearchiver.dynamic_color_ffi
 import androidx.annotation.Keep
 
 @Keep
-data class DynamicTonalPalette(
+class DynamicTonalPalette(
   val primary0: Int? = null,
   val primary10: Int? = null,
   val primary20: Int? = null,
@@ -71,16 +71,26 @@ data class DynamicTonalPalette(
   val neutral99: Int? = null,
   val neutral100: Int? = null,
   val neutralVariant0: Int? = null,
+  val neutralVariant4: Int? = null,
+  val neutralVariant6: Int? = null,
   val neutralVariant10: Int? = null,
+  val neutralVariant12: Int? = null,
+  val neutralVariant17: Int? = null,
   val neutralVariant20: Int? = null,
+  val neutralVariant22: Int? = null,
+  val neutralVariant24: Int? = null,
   val neutralVariant30: Int? = null,
   val neutralVariant40: Int? = null,
   val neutralVariant50: Int? = null,
   val neutralVariant60: Int? = null,
   val neutralVariant70: Int? = null,
   val neutralVariant80: Int? = null,
+  val neutralVariant87: Int? = null,
   val neutralVariant90: Int? = null,
+  val neutralVariant92: Int? = null,
+  val neutralVariant94: Int? = null,
   val neutralVariant95: Int? = null,
+  val neutralVariant96: Int? = null,
   val neutralVariant98: Int? = null,
   val neutralVariant99: Int? = null,
   val neutralVariant100: Int? = null,

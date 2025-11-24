@@ -130,6 +130,40 @@ class DynamicColorPlugin extends jni$_.JObject {
       _$context.pointer,
     ).object<DynamicColorScheme>(const $DynamicColorScheme$Type$());
   }
+
+  static final _id_dynamicDarkColorScheme = _class.staticMethodId(
+    r'dynamicDarkColorScheme',
+    r'(Landroid/content/Context;)Ldev/deminearchiver/dynamic_color_ffi/DynamicColorScheme;',
+  );
+
+  static final _dynamicDarkColorScheme =
+      jni$_.ProtectedJniExtensions.lookup<
+            jni$_.NativeFunction<
+              jni$_.JniResult Function(
+                jni$_.Pointer<jni$_.Void>,
+                jni$_.JMethodIDPtr,
+                jni$_.VarArgs<(jni$_.Pointer<jni$_.Void>,)>,
+              )
+            >
+          >('globalEnv_CallStaticObjectMethod')
+          .asFunction<
+            jni$_.JniResult Function(
+              jni$_.Pointer<jni$_.Void>,
+              jni$_.JMethodIDPtr,
+              jni$_.Pointer<jni$_.Void>,
+            )
+          >();
+
+  /// from: `public fun dynamicDarkColorScheme(context: android.content.Context): dev.deminearchiver.dynamic_color_ffi.DynamicColorScheme`
+  /// The returned object must be released after use, by calling the [release] method.
+  static DynamicColorScheme dynamicDarkColorScheme(jni$_.JObject context) {
+    final _$context = context.reference;
+    return _dynamicDarkColorScheme(
+      _class.reference.pointer,
+      _id_dynamicDarkColorScheme as jni$_.JMethodIDPtr,
+      _$context.pointer,
+    ).object<DynamicColorScheme>(const $DynamicColorScheme$Type$());
+  }
 }
 
 final class $DynamicColorPlugin$NullableType$
@@ -227,7 +261,7 @@ class DynamicColorScheme extends jni$_.JObject {
   static const jni$_.JType<DynamicColorScheme> type =
       $DynamicColorScheme$Type$();
   static final _id_new$ = _class.constructorId(
-    r'(Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;)V',
+    r'(Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;)V',
   );
 
   static final _new$ =
@@ -297,14 +331,6 @@ class DynamicColorScheme extends jni$_.JObject {
                     jni$_.Pointer<jni$_.Void>,
                     jni$_.Pointer<jni$_.Void>,
                     jni$_.Pointer<jni$_.Void>,
-                    jni$_.Pointer<jni$_.Void>,
-                    jni$_.Pointer<jni$_.Void>,
-                    jni$_.Pointer<jni$_.Void>,
-                    jni$_.Pointer<jni$_.Void>,
-                    jni$_.Pointer<jni$_.Void>,
-                    jni$_.Pointer<jni$_.Void>,
-                    jni$_.Pointer<jni$_.Void>,
-                    jni$_.Pointer<jni$_.Void>,
                   )
                 >,
               )
@@ -373,18 +399,10 @@ class DynamicColorScheme extends jni$_.JObject {
               jni$_.Pointer<jni$_.Void>,
               jni$_.Pointer<jni$_.Void>,
               jni$_.Pointer<jni$_.Void>,
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.Pointer<jni$_.Void>,
             )
           >();
 
-  /// from: `public void <init>(java.lang.Integer integer, java.lang.Integer integer1, java.lang.Integer integer2, java.lang.Integer integer3, java.lang.Integer integer4, java.lang.Integer integer5, java.lang.Integer integer6, java.lang.Integer integer7, java.lang.Integer integer8, java.lang.Integer integer9, java.lang.Integer integer10, java.lang.Integer integer11, java.lang.Integer integer12, java.lang.Integer integer13, java.lang.Integer integer14, java.lang.Integer integer15, java.lang.Integer integer16, java.lang.Integer integer17, java.lang.Integer integer18, java.lang.Integer integer19, java.lang.Integer integer20, java.lang.Integer integer21, java.lang.Integer integer22, java.lang.Integer integer23, java.lang.Integer integer24, java.lang.Integer integer25, java.lang.Integer integer26, java.lang.Integer integer27, java.lang.Integer integer28, java.lang.Integer integer29, java.lang.Integer integer30, java.lang.Integer integer31, java.lang.Integer integer32, java.lang.Integer integer33, java.lang.Integer integer34, java.lang.Integer integer35, java.lang.Integer integer36, java.lang.Integer integer37, java.lang.Integer integer38, java.lang.Integer integer39, java.lang.Integer integer40, java.lang.Integer integer41, java.lang.Integer integer42, java.lang.Integer integer43, java.lang.Integer integer44, java.lang.Integer integer45, java.lang.Integer integer46, java.lang.Integer integer47, java.lang.Integer integer48, java.lang.Integer integer49, java.lang.Integer integer50, java.lang.Integer integer51, java.lang.Integer integer52, java.lang.Integer integer53, java.lang.Integer integer54, java.lang.Integer integer55, java.lang.Integer integer56, java.lang.Integer integer57, java.lang.Integer integer58, java.lang.Integer integer59, java.lang.Integer integer60, java.lang.Integer integer61, java.lang.Integer integer62, java.lang.Integer integer63, java.lang.Integer integer64, java.lang.Integer integer65, java.lang.Integer integer66)`
+  /// from: `public void <init>(java.lang.Integer integer, java.lang.Integer integer1, java.lang.Integer integer2, java.lang.Integer integer3, java.lang.Integer integer4, java.lang.Integer integer5, java.lang.Integer integer6, java.lang.Integer integer7, java.lang.Integer integer8, java.lang.Integer integer9, java.lang.Integer integer10, java.lang.Integer integer11, java.lang.Integer integer12, java.lang.Integer integer13, java.lang.Integer integer14, java.lang.Integer integer15, java.lang.Integer integer16, java.lang.Integer integer17, java.lang.Integer integer18, java.lang.Integer integer19, java.lang.Integer integer20, java.lang.Integer integer21, java.lang.Integer integer22, java.lang.Integer integer23, java.lang.Integer integer24, java.lang.Integer integer25, java.lang.Integer integer26, java.lang.Integer integer27, java.lang.Integer integer28, java.lang.Integer integer29, java.lang.Integer integer30, java.lang.Integer integer31, java.lang.Integer integer32, java.lang.Integer integer33, java.lang.Integer integer34, java.lang.Integer integer35, java.lang.Integer integer36, java.lang.Integer integer37, java.lang.Integer integer38, java.lang.Integer integer39, java.lang.Integer integer40, java.lang.Integer integer41, java.lang.Integer integer42, java.lang.Integer integer43, java.lang.Integer integer44, java.lang.Integer integer45, java.lang.Integer integer46, java.lang.Integer integer47, java.lang.Integer integer48, java.lang.Integer integer49, java.lang.Integer integer50, java.lang.Integer integer51, java.lang.Integer integer52, java.lang.Integer integer53, java.lang.Integer integer54, java.lang.Integer integer55, java.lang.Integer integer56, java.lang.Integer integer57, java.lang.Integer integer58)`
   /// The returned object must be released after use, by calling the [release] method.
   factory DynamicColorScheme(
     jni$_.JInteger? integer,
@@ -446,14 +464,6 @@ class DynamicColorScheme extends jni$_.JObject {
     jni$_.JInteger? integer56,
     jni$_.JInteger? integer57,
     jni$_.JInteger? integer58,
-    jni$_.JInteger? integer59,
-    jni$_.JInteger? integer60,
-    jni$_.JInteger? integer61,
-    jni$_.JInteger? integer62,
-    jni$_.JInteger? integer63,
-    jni$_.JInteger? integer64,
-    jni$_.JInteger? integer65,
-    jni$_.JInteger? integer66,
   ) {
     final _$integer = integer?.reference ?? jni$_.jNullReference;
     final _$integer1 = integer1?.reference ?? jni$_.jNullReference;
@@ -514,14 +524,6 @@ class DynamicColorScheme extends jni$_.JObject {
     final _$integer56 = integer56?.reference ?? jni$_.jNullReference;
     final _$integer57 = integer57?.reference ?? jni$_.jNullReference;
     final _$integer58 = integer58?.reference ?? jni$_.jNullReference;
-    final _$integer59 = integer59?.reference ?? jni$_.jNullReference;
-    final _$integer60 = integer60?.reference ?? jni$_.jNullReference;
-    final _$integer61 = integer61?.reference ?? jni$_.jNullReference;
-    final _$integer62 = integer62?.reference ?? jni$_.jNullReference;
-    final _$integer63 = integer63?.reference ?? jni$_.jNullReference;
-    final _$integer64 = integer64?.reference ?? jni$_.jNullReference;
-    final _$integer65 = integer65?.reference ?? jni$_.jNullReference;
-    final _$integer66 = integer66?.reference ?? jni$_.jNullReference;
     return DynamicColorScheme.fromReference(
       _new$(
         _class.reference.pointer,
@@ -585,20 +587,12 @@ class DynamicColorScheme extends jni$_.JObject {
         _$integer56.pointer,
         _$integer57.pointer,
         _$integer58.pointer,
-        _$integer59.pointer,
-        _$integer60.pointer,
-        _$integer61.pointer,
-        _$integer62.pointer,
-        _$integer63.pointer,
-        _$integer64.pointer,
-        _$integer65.pointer,
-        _$integer66.pointer,
       ).reference,
     );
   }
 
   static final _id_new$1 = _class.constructorId(
-    r'(Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;IIILkotlin/jvm/internal/DefaultConstructorMarker;)V',
+    r'(Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;IILkotlin/jvm/internal/DefaultConstructorMarker;)V',
   );
 
   static final _new$1 =
@@ -668,15 +662,6 @@ class DynamicColorScheme extends jni$_.JObject {
                     jni$_.Pointer<jni$_.Void>,
                     jni$_.Pointer<jni$_.Void>,
                     jni$_.Pointer<jni$_.Void>,
-                    jni$_.Pointer<jni$_.Void>,
-                    jni$_.Pointer<jni$_.Void>,
-                    jni$_.Pointer<jni$_.Void>,
-                    jni$_.Pointer<jni$_.Void>,
-                    jni$_.Pointer<jni$_.Void>,
-                    jni$_.Pointer<jni$_.Void>,
-                    jni$_.Pointer<jni$_.Void>,
-                    jni$_.Pointer<jni$_.Void>,
-                    jni$_.Int32,
                     jni$_.Int32,
                     jni$_.Int32,
                     jni$_.Pointer<jni$_.Void>,
@@ -748,22 +733,13 @@ class DynamicColorScheme extends jni$_.JObject {
               jni$_.Pointer<jni$_.Void>,
               jni$_.Pointer<jni$_.Void>,
               jni$_.Pointer<jni$_.Void>,
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.Pointer<jni$_.Void>,
-              int,
               int,
               int,
               jni$_.Pointer<jni$_.Void>,
             )
           >();
 
-  /// from: `synthetic public void <init>(java.lang.Integer integer, java.lang.Integer integer1, java.lang.Integer integer2, java.lang.Integer integer3, java.lang.Integer integer4, java.lang.Integer integer5, java.lang.Integer integer6, java.lang.Integer integer7, java.lang.Integer integer8, java.lang.Integer integer9, java.lang.Integer integer10, java.lang.Integer integer11, java.lang.Integer integer12, java.lang.Integer integer13, java.lang.Integer integer14, java.lang.Integer integer15, java.lang.Integer integer16, java.lang.Integer integer17, java.lang.Integer integer18, java.lang.Integer integer19, java.lang.Integer integer20, java.lang.Integer integer21, java.lang.Integer integer22, java.lang.Integer integer23, java.lang.Integer integer24, java.lang.Integer integer25, java.lang.Integer integer26, java.lang.Integer integer27, java.lang.Integer integer28, java.lang.Integer integer29, java.lang.Integer integer30, java.lang.Integer integer31, java.lang.Integer integer32, java.lang.Integer integer33, java.lang.Integer integer34, java.lang.Integer integer35, java.lang.Integer integer36, java.lang.Integer integer37, java.lang.Integer integer38, java.lang.Integer integer39, java.lang.Integer integer40, java.lang.Integer integer41, java.lang.Integer integer42, java.lang.Integer integer43, java.lang.Integer integer44, java.lang.Integer integer45, java.lang.Integer integer46, java.lang.Integer integer47, java.lang.Integer integer48, java.lang.Integer integer49, java.lang.Integer integer50, java.lang.Integer integer51, java.lang.Integer integer52, java.lang.Integer integer53, java.lang.Integer integer54, java.lang.Integer integer55, java.lang.Integer integer56, java.lang.Integer integer57, java.lang.Integer integer58, java.lang.Integer integer59, java.lang.Integer integer60, java.lang.Integer integer61, java.lang.Integer integer62, java.lang.Integer integer63, java.lang.Integer integer64, java.lang.Integer integer65, java.lang.Integer integer66, int i, int i1, int i2, kotlin.jvm.internal.DefaultConstructorMarker defaultConstructorMarker)`
+  /// from: `synthetic public void <init>(java.lang.Integer integer, java.lang.Integer integer1, java.lang.Integer integer2, java.lang.Integer integer3, java.lang.Integer integer4, java.lang.Integer integer5, java.lang.Integer integer6, java.lang.Integer integer7, java.lang.Integer integer8, java.lang.Integer integer9, java.lang.Integer integer10, java.lang.Integer integer11, java.lang.Integer integer12, java.lang.Integer integer13, java.lang.Integer integer14, java.lang.Integer integer15, java.lang.Integer integer16, java.lang.Integer integer17, java.lang.Integer integer18, java.lang.Integer integer19, java.lang.Integer integer20, java.lang.Integer integer21, java.lang.Integer integer22, java.lang.Integer integer23, java.lang.Integer integer24, java.lang.Integer integer25, java.lang.Integer integer26, java.lang.Integer integer27, java.lang.Integer integer28, java.lang.Integer integer29, java.lang.Integer integer30, java.lang.Integer integer31, java.lang.Integer integer32, java.lang.Integer integer33, java.lang.Integer integer34, java.lang.Integer integer35, java.lang.Integer integer36, java.lang.Integer integer37, java.lang.Integer integer38, java.lang.Integer integer39, java.lang.Integer integer40, java.lang.Integer integer41, java.lang.Integer integer42, java.lang.Integer integer43, java.lang.Integer integer44, java.lang.Integer integer45, java.lang.Integer integer46, java.lang.Integer integer47, java.lang.Integer integer48, java.lang.Integer integer49, java.lang.Integer integer50, java.lang.Integer integer51, java.lang.Integer integer52, java.lang.Integer integer53, java.lang.Integer integer54, java.lang.Integer integer55, java.lang.Integer integer56, java.lang.Integer integer57, java.lang.Integer integer58, int i, int i1, kotlin.jvm.internal.DefaultConstructorMarker defaultConstructorMarker)`
   /// The returned object must be released after use, by calling the [release] method.
   factory DynamicColorScheme.new$1(
     jni$_.JInteger? integer,
@@ -825,17 +801,8 @@ class DynamicColorScheme extends jni$_.JObject {
     jni$_.JInteger? integer56,
     jni$_.JInteger? integer57,
     jni$_.JInteger? integer58,
-    jni$_.JInteger? integer59,
-    jni$_.JInteger? integer60,
-    jni$_.JInteger? integer61,
-    jni$_.JInteger? integer62,
-    jni$_.JInteger? integer63,
-    jni$_.JInteger? integer64,
-    jni$_.JInteger? integer65,
-    jni$_.JInteger? integer66,
     int i,
     int i1,
-    int i2,
     jni$_.JObject? defaultConstructorMarker,
   ) {
     final _$integer = integer?.reference ?? jni$_.jNullReference;
@@ -897,14 +864,6 @@ class DynamicColorScheme extends jni$_.JObject {
     final _$integer56 = integer56?.reference ?? jni$_.jNullReference;
     final _$integer57 = integer57?.reference ?? jni$_.jNullReference;
     final _$integer58 = integer58?.reference ?? jni$_.jNullReference;
-    final _$integer59 = integer59?.reference ?? jni$_.jNullReference;
-    final _$integer60 = integer60?.reference ?? jni$_.jNullReference;
-    final _$integer61 = integer61?.reference ?? jni$_.jNullReference;
-    final _$integer62 = integer62?.reference ?? jni$_.jNullReference;
-    final _$integer63 = integer63?.reference ?? jni$_.jNullReference;
-    final _$integer64 = integer64?.reference ?? jni$_.jNullReference;
-    final _$integer65 = integer65?.reference ?? jni$_.jNullReference;
-    final _$integer66 = integer66?.reference ?? jni$_.jNullReference;
     final _$defaultConstructorMarker =
         defaultConstructorMarker?.reference ?? jni$_.jNullReference;
     return DynamicColorScheme.fromReference(
@@ -970,17 +929,8 @@ class DynamicColorScheme extends jni$_.JObject {
         _$integer56.pointer,
         _$integer57.pointer,
         _$integer58.pointer,
-        _$integer59.pointer,
-        _$integer60.pointer,
-        _$integer61.pointer,
-        _$integer62.pointer,
-        _$integer63.pointer,
-        _$integer64.pointer,
-        _$integer65.pointer,
-        _$integer66.pointer,
         i,
         i1,
-        i2,
         _$defaultConstructorMarker.pointer,
       ).reference,
     );
@@ -2756,2716 +2706,6 @@ class DynamicColorScheme extends jni$_.JObject {
     ).object<jni$_.JInteger?>(const jni$_.$JInteger$NullableType$());
   }
 
-  static final _id_getControlActivated = _class.instanceMethodId(
-    r'getControlActivated',
-    r'()Ljava/lang/Integer;',
-  );
-
-  static final _getControlActivated =
-      jni$_.ProtectedJniExtensions.lookup<
-            jni$_.NativeFunction<
-              jni$_.JniResult Function(
-                jni$_.Pointer<jni$_.Void>,
-                jni$_.JMethodIDPtr,
-              )
-            >
-          >('globalEnv_CallObjectMethod')
-          .asFunction<
-            jni$_.JniResult Function(
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.JMethodIDPtr,
-            )
-          >();
-
-  /// from: `public final java.lang.Integer getControlActivated()`
-  /// The returned object must be released after use, by calling the [release] method.
-  jni$_.JInteger? getControlActivated() {
-    return _getControlActivated(
-      reference.pointer,
-      _id_getControlActivated as jni$_.JMethodIDPtr,
-    ).object<jni$_.JInteger?>(const jni$_.$JInteger$NullableType$());
-  }
-
-  static final _id_getControlNormal = _class.instanceMethodId(
-    r'getControlNormal',
-    r'()Ljava/lang/Integer;',
-  );
-
-  static final _getControlNormal =
-      jni$_.ProtectedJniExtensions.lookup<
-            jni$_.NativeFunction<
-              jni$_.JniResult Function(
-                jni$_.Pointer<jni$_.Void>,
-                jni$_.JMethodIDPtr,
-              )
-            >
-          >('globalEnv_CallObjectMethod')
-          .asFunction<
-            jni$_.JniResult Function(
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.JMethodIDPtr,
-            )
-          >();
-
-  /// from: `public final java.lang.Integer getControlNormal()`
-  /// The returned object must be released after use, by calling the [release] method.
-  jni$_.JInteger? getControlNormal() {
-    return _getControlNormal(
-      reference.pointer,
-      _id_getControlNormal as jni$_.JMethodIDPtr,
-    ).object<jni$_.JInteger?>(const jni$_.$JInteger$NullableType$());
-  }
-
-  static final _id_getControlHighlight = _class.instanceMethodId(
-    r'getControlHighlight',
-    r'()Ljava/lang/Integer;',
-  );
-
-  static final _getControlHighlight =
-      jni$_.ProtectedJniExtensions.lookup<
-            jni$_.NativeFunction<
-              jni$_.JniResult Function(
-                jni$_.Pointer<jni$_.Void>,
-                jni$_.JMethodIDPtr,
-              )
-            >
-          >('globalEnv_CallObjectMethod')
-          .asFunction<
-            jni$_.JniResult Function(
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.JMethodIDPtr,
-            )
-          >();
-
-  /// from: `public final java.lang.Integer getControlHighlight()`
-  /// The returned object must be released after use, by calling the [release] method.
-  jni$_.JInteger? getControlHighlight() {
-    return _getControlHighlight(
-      reference.pointer,
-      _id_getControlHighlight as jni$_.JMethodIDPtr,
-    ).object<jni$_.JInteger?>(const jni$_.$JInteger$NullableType$());
-  }
-
-  static final _id_getTextPrimaryInverse = _class.instanceMethodId(
-    r'getTextPrimaryInverse',
-    r'()Ljava/lang/Integer;',
-  );
-
-  static final _getTextPrimaryInverse =
-      jni$_.ProtectedJniExtensions.lookup<
-            jni$_.NativeFunction<
-              jni$_.JniResult Function(
-                jni$_.Pointer<jni$_.Void>,
-                jni$_.JMethodIDPtr,
-              )
-            >
-          >('globalEnv_CallObjectMethod')
-          .asFunction<
-            jni$_.JniResult Function(
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.JMethodIDPtr,
-            )
-          >();
-
-  /// from: `public final java.lang.Integer getTextPrimaryInverse()`
-  /// The returned object must be released after use, by calling the [release] method.
-  jni$_.JInteger? getTextPrimaryInverse() {
-    return _getTextPrimaryInverse(
-      reference.pointer,
-      _id_getTextPrimaryInverse as jni$_.JMethodIDPtr,
-    ).object<jni$_.JInteger?>(const jni$_.$JInteger$NullableType$());
-  }
-
-  static final _id_getTextSecondaryAndTertiaryInverse = _class.instanceMethodId(
-    r'getTextSecondaryAndTertiaryInverse',
-    r'()Ljava/lang/Integer;',
-  );
-
-  static final _getTextSecondaryAndTertiaryInverse =
-      jni$_.ProtectedJniExtensions.lookup<
-            jni$_.NativeFunction<
-              jni$_.JniResult Function(
-                jni$_.Pointer<jni$_.Void>,
-                jni$_.JMethodIDPtr,
-              )
-            >
-          >('globalEnv_CallObjectMethod')
-          .asFunction<
-            jni$_.JniResult Function(
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.JMethodIDPtr,
-            )
-          >();
-
-  /// from: `public final java.lang.Integer getTextSecondaryAndTertiaryInverse()`
-  /// The returned object must be released after use, by calling the [release] method.
-  jni$_.JInteger? getTextSecondaryAndTertiaryInverse() {
-    return _getTextSecondaryAndTertiaryInverse(
-      reference.pointer,
-      _id_getTextSecondaryAndTertiaryInverse as jni$_.JMethodIDPtr,
-    ).object<jni$_.JInteger?>(const jni$_.$JInteger$NullableType$());
-  }
-
-  static final _id_getTextPrimaryInverseDisableOnly = _class.instanceMethodId(
-    r'getTextPrimaryInverseDisableOnly',
-    r'()Ljava/lang/Integer;',
-  );
-
-  static final _getTextPrimaryInverseDisableOnly =
-      jni$_.ProtectedJniExtensions.lookup<
-            jni$_.NativeFunction<
-              jni$_.JniResult Function(
-                jni$_.Pointer<jni$_.Void>,
-                jni$_.JMethodIDPtr,
-              )
-            >
-          >('globalEnv_CallObjectMethod')
-          .asFunction<
-            jni$_.JniResult Function(
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.JMethodIDPtr,
-            )
-          >();
-
-  /// from: `public final java.lang.Integer getTextPrimaryInverseDisableOnly()`
-  /// The returned object must be released after use, by calling the [release] method.
-  jni$_.JInteger? getTextPrimaryInverseDisableOnly() {
-    return _getTextPrimaryInverseDisableOnly(
-      reference.pointer,
-      _id_getTextPrimaryInverseDisableOnly as jni$_.JMethodIDPtr,
-    ).object<jni$_.JInteger?>(const jni$_.$JInteger$NullableType$());
-  }
-
-  static final _id_getTextSecondaryAndTertiaryInverseDisabled = _class
-      .instanceMethodId(
-        r'getTextSecondaryAndTertiaryInverseDisabled',
-        r'()Ljava/lang/Integer;',
-      );
-
-  static final _getTextSecondaryAndTertiaryInverseDisabled =
-      jni$_.ProtectedJniExtensions.lookup<
-            jni$_.NativeFunction<
-              jni$_.JniResult Function(
-                jni$_.Pointer<jni$_.Void>,
-                jni$_.JMethodIDPtr,
-              )
-            >
-          >('globalEnv_CallObjectMethod')
-          .asFunction<
-            jni$_.JniResult Function(
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.JMethodIDPtr,
-            )
-          >();
-
-  /// from: `public final java.lang.Integer getTextSecondaryAndTertiaryInverseDisabled()`
-  /// The returned object must be released after use, by calling the [release] method.
-  jni$_.JInteger? getTextSecondaryAndTertiaryInverseDisabled() {
-    return _getTextSecondaryAndTertiaryInverseDisabled(
-      reference.pointer,
-      _id_getTextSecondaryAndTertiaryInverseDisabled as jni$_.JMethodIDPtr,
-    ).object<jni$_.JInteger?>(const jni$_.$JInteger$NullableType$());
-  }
-
-  static final _id_getTextHintInverse = _class.instanceMethodId(
-    r'getTextHintInverse',
-    r'()Ljava/lang/Integer;',
-  );
-
-  static final _getTextHintInverse =
-      jni$_.ProtectedJniExtensions.lookup<
-            jni$_.NativeFunction<
-              jni$_.JniResult Function(
-                jni$_.Pointer<jni$_.Void>,
-                jni$_.JMethodIDPtr,
-              )
-            >
-          >('globalEnv_CallObjectMethod')
-          .asFunction<
-            jni$_.JniResult Function(
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.JMethodIDPtr,
-            )
-          >();
-
-  /// from: `public final java.lang.Integer getTextHintInverse()`
-  /// The returned object must be released after use, by calling the [release] method.
-  jni$_.JInteger? getTextHintInverse() {
-    return _getTextHintInverse(
-      reference.pointer,
-      _id_getTextHintInverse as jni$_.JMethodIDPtr,
-    ).object<jni$_.JInteger?>(const jni$_.$JInteger$NullableType$());
-  }
-
-  static final _id_component1 = _class.instanceMethodId(
-    r'component1',
-    r'()Ljava/lang/Integer;',
-  );
-
-  static final _component1 =
-      jni$_.ProtectedJniExtensions.lookup<
-            jni$_.NativeFunction<
-              jni$_.JniResult Function(
-                jni$_.Pointer<jni$_.Void>,
-                jni$_.JMethodIDPtr,
-              )
-            >
-          >('globalEnv_CallObjectMethod')
-          .asFunction<
-            jni$_.JniResult Function(
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.JMethodIDPtr,
-            )
-          >();
-
-  /// from: `public operator fun component1(): kotlin.Int?`
-  /// The returned object must be released after use, by calling the [release] method.
-  jni$_.JInteger? component1() {
-    return _component1(
-      reference.pointer,
-      _id_component1 as jni$_.JMethodIDPtr,
-    ).object<jni$_.JInteger?>(const jni$_.$JInteger$NullableType$());
-  }
-
-  static final _id_component2 = _class.instanceMethodId(
-    r'component2',
-    r'()Ljava/lang/Integer;',
-  );
-
-  static final _component2 =
-      jni$_.ProtectedJniExtensions.lookup<
-            jni$_.NativeFunction<
-              jni$_.JniResult Function(
-                jni$_.Pointer<jni$_.Void>,
-                jni$_.JMethodIDPtr,
-              )
-            >
-          >('globalEnv_CallObjectMethod')
-          .asFunction<
-            jni$_.JniResult Function(
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.JMethodIDPtr,
-            )
-          >();
-
-  /// from: `public operator fun component2(): kotlin.Int?`
-  /// The returned object must be released after use, by calling the [release] method.
-  jni$_.JInteger? component2() {
-    return _component2(
-      reference.pointer,
-      _id_component2 as jni$_.JMethodIDPtr,
-    ).object<jni$_.JInteger?>(const jni$_.$JInteger$NullableType$());
-  }
-
-  static final _id_component3 = _class.instanceMethodId(
-    r'component3',
-    r'()Ljava/lang/Integer;',
-  );
-
-  static final _component3 =
-      jni$_.ProtectedJniExtensions.lookup<
-            jni$_.NativeFunction<
-              jni$_.JniResult Function(
-                jni$_.Pointer<jni$_.Void>,
-                jni$_.JMethodIDPtr,
-              )
-            >
-          >('globalEnv_CallObjectMethod')
-          .asFunction<
-            jni$_.JniResult Function(
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.JMethodIDPtr,
-            )
-          >();
-
-  /// from: `public operator fun component3(): kotlin.Int?`
-  /// The returned object must be released after use, by calling the [release] method.
-  jni$_.JInteger? component3() {
-    return _component3(
-      reference.pointer,
-      _id_component3 as jni$_.JMethodIDPtr,
-    ).object<jni$_.JInteger?>(const jni$_.$JInteger$NullableType$());
-  }
-
-  static final _id_component4 = _class.instanceMethodId(
-    r'component4',
-    r'()Ljava/lang/Integer;',
-  );
-
-  static final _component4 =
-      jni$_.ProtectedJniExtensions.lookup<
-            jni$_.NativeFunction<
-              jni$_.JniResult Function(
-                jni$_.Pointer<jni$_.Void>,
-                jni$_.JMethodIDPtr,
-              )
-            >
-          >('globalEnv_CallObjectMethod')
-          .asFunction<
-            jni$_.JniResult Function(
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.JMethodIDPtr,
-            )
-          >();
-
-  /// from: `public operator fun component4(): kotlin.Int?`
-  /// The returned object must be released after use, by calling the [release] method.
-  jni$_.JInteger? component4() {
-    return _component4(
-      reference.pointer,
-      _id_component4 as jni$_.JMethodIDPtr,
-    ).object<jni$_.JInteger?>(const jni$_.$JInteger$NullableType$());
-  }
-
-  static final _id_component5 = _class.instanceMethodId(
-    r'component5',
-    r'()Ljava/lang/Integer;',
-  );
-
-  static final _component5 =
-      jni$_.ProtectedJniExtensions.lookup<
-            jni$_.NativeFunction<
-              jni$_.JniResult Function(
-                jni$_.Pointer<jni$_.Void>,
-                jni$_.JMethodIDPtr,
-              )
-            >
-          >('globalEnv_CallObjectMethod')
-          .asFunction<
-            jni$_.JniResult Function(
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.JMethodIDPtr,
-            )
-          >();
-
-  /// from: `public operator fun component5(): kotlin.Int?`
-  /// The returned object must be released after use, by calling the [release] method.
-  jni$_.JInteger? component5() {
-    return _component5(
-      reference.pointer,
-      _id_component5 as jni$_.JMethodIDPtr,
-    ).object<jni$_.JInteger?>(const jni$_.$JInteger$NullableType$());
-  }
-
-  static final _id_component6 = _class.instanceMethodId(
-    r'component6',
-    r'()Ljava/lang/Integer;',
-  );
-
-  static final _component6 =
-      jni$_.ProtectedJniExtensions.lookup<
-            jni$_.NativeFunction<
-              jni$_.JniResult Function(
-                jni$_.Pointer<jni$_.Void>,
-                jni$_.JMethodIDPtr,
-              )
-            >
-          >('globalEnv_CallObjectMethod')
-          .asFunction<
-            jni$_.JniResult Function(
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.JMethodIDPtr,
-            )
-          >();
-
-  /// from: `public operator fun component6(): kotlin.Int?`
-  /// The returned object must be released after use, by calling the [release] method.
-  jni$_.JInteger? component6() {
-    return _component6(
-      reference.pointer,
-      _id_component6 as jni$_.JMethodIDPtr,
-    ).object<jni$_.JInteger?>(const jni$_.$JInteger$NullableType$());
-  }
-
-  static final _id_component7 = _class.instanceMethodId(
-    r'component7',
-    r'()Ljava/lang/Integer;',
-  );
-
-  static final _component7 =
-      jni$_.ProtectedJniExtensions.lookup<
-            jni$_.NativeFunction<
-              jni$_.JniResult Function(
-                jni$_.Pointer<jni$_.Void>,
-                jni$_.JMethodIDPtr,
-              )
-            >
-          >('globalEnv_CallObjectMethod')
-          .asFunction<
-            jni$_.JniResult Function(
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.JMethodIDPtr,
-            )
-          >();
-
-  /// from: `public operator fun component7(): kotlin.Int?`
-  /// The returned object must be released after use, by calling the [release] method.
-  jni$_.JInteger? component7() {
-    return _component7(
-      reference.pointer,
-      _id_component7 as jni$_.JMethodIDPtr,
-    ).object<jni$_.JInteger?>(const jni$_.$JInteger$NullableType$());
-  }
-
-  static final _id_component8 = _class.instanceMethodId(
-    r'component8',
-    r'()Ljava/lang/Integer;',
-  );
-
-  static final _component8 =
-      jni$_.ProtectedJniExtensions.lookup<
-            jni$_.NativeFunction<
-              jni$_.JniResult Function(
-                jni$_.Pointer<jni$_.Void>,
-                jni$_.JMethodIDPtr,
-              )
-            >
-          >('globalEnv_CallObjectMethod')
-          .asFunction<
-            jni$_.JniResult Function(
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.JMethodIDPtr,
-            )
-          >();
-
-  /// from: `public operator fun component8(): kotlin.Int?`
-  /// The returned object must be released after use, by calling the [release] method.
-  jni$_.JInteger? component8() {
-    return _component8(
-      reference.pointer,
-      _id_component8 as jni$_.JMethodIDPtr,
-    ).object<jni$_.JInteger?>(const jni$_.$JInteger$NullableType$());
-  }
-
-  static final _id_component9 = _class.instanceMethodId(
-    r'component9',
-    r'()Ljava/lang/Integer;',
-  );
-
-  static final _component9 =
-      jni$_.ProtectedJniExtensions.lookup<
-            jni$_.NativeFunction<
-              jni$_.JniResult Function(
-                jni$_.Pointer<jni$_.Void>,
-                jni$_.JMethodIDPtr,
-              )
-            >
-          >('globalEnv_CallObjectMethod')
-          .asFunction<
-            jni$_.JniResult Function(
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.JMethodIDPtr,
-            )
-          >();
-
-  /// from: `public operator fun component9(): kotlin.Int?`
-  /// The returned object must be released after use, by calling the [release] method.
-  jni$_.JInteger? component9() {
-    return _component9(
-      reference.pointer,
-      _id_component9 as jni$_.JMethodIDPtr,
-    ).object<jni$_.JInteger?>(const jni$_.$JInteger$NullableType$());
-  }
-
-  static final _id_component10 = _class.instanceMethodId(
-    r'component10',
-    r'()Ljava/lang/Integer;',
-  );
-
-  static final _component10 =
-      jni$_.ProtectedJniExtensions.lookup<
-            jni$_.NativeFunction<
-              jni$_.JniResult Function(
-                jni$_.Pointer<jni$_.Void>,
-                jni$_.JMethodIDPtr,
-              )
-            >
-          >('globalEnv_CallObjectMethod')
-          .asFunction<
-            jni$_.JniResult Function(
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.JMethodIDPtr,
-            )
-          >();
-
-  /// from: `public operator fun component10(): kotlin.Int?`
-  /// The returned object must be released after use, by calling the [release] method.
-  jni$_.JInteger? component10() {
-    return _component10(
-      reference.pointer,
-      _id_component10 as jni$_.JMethodIDPtr,
-    ).object<jni$_.JInteger?>(const jni$_.$JInteger$NullableType$());
-  }
-
-  static final _id_component11 = _class.instanceMethodId(
-    r'component11',
-    r'()Ljava/lang/Integer;',
-  );
-
-  static final _component11 =
-      jni$_.ProtectedJniExtensions.lookup<
-            jni$_.NativeFunction<
-              jni$_.JniResult Function(
-                jni$_.Pointer<jni$_.Void>,
-                jni$_.JMethodIDPtr,
-              )
-            >
-          >('globalEnv_CallObjectMethod')
-          .asFunction<
-            jni$_.JniResult Function(
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.JMethodIDPtr,
-            )
-          >();
-
-  /// from: `public operator fun component11(): kotlin.Int?`
-  /// The returned object must be released after use, by calling the [release] method.
-  jni$_.JInteger? component11() {
-    return _component11(
-      reference.pointer,
-      _id_component11 as jni$_.JMethodIDPtr,
-    ).object<jni$_.JInteger?>(const jni$_.$JInteger$NullableType$());
-  }
-
-  static final _id_component12 = _class.instanceMethodId(
-    r'component12',
-    r'()Ljava/lang/Integer;',
-  );
-
-  static final _component12 =
-      jni$_.ProtectedJniExtensions.lookup<
-            jni$_.NativeFunction<
-              jni$_.JniResult Function(
-                jni$_.Pointer<jni$_.Void>,
-                jni$_.JMethodIDPtr,
-              )
-            >
-          >('globalEnv_CallObjectMethod')
-          .asFunction<
-            jni$_.JniResult Function(
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.JMethodIDPtr,
-            )
-          >();
-
-  /// from: `public operator fun component12(): kotlin.Int?`
-  /// The returned object must be released after use, by calling the [release] method.
-  jni$_.JInteger? component12() {
-    return _component12(
-      reference.pointer,
-      _id_component12 as jni$_.JMethodIDPtr,
-    ).object<jni$_.JInteger?>(const jni$_.$JInteger$NullableType$());
-  }
-
-  static final _id_component13 = _class.instanceMethodId(
-    r'component13',
-    r'()Ljava/lang/Integer;',
-  );
-
-  static final _component13 =
-      jni$_.ProtectedJniExtensions.lookup<
-            jni$_.NativeFunction<
-              jni$_.JniResult Function(
-                jni$_.Pointer<jni$_.Void>,
-                jni$_.JMethodIDPtr,
-              )
-            >
-          >('globalEnv_CallObjectMethod')
-          .asFunction<
-            jni$_.JniResult Function(
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.JMethodIDPtr,
-            )
-          >();
-
-  /// from: `public operator fun component13(): kotlin.Int?`
-  /// The returned object must be released after use, by calling the [release] method.
-  jni$_.JInteger? component13() {
-    return _component13(
-      reference.pointer,
-      _id_component13 as jni$_.JMethodIDPtr,
-    ).object<jni$_.JInteger?>(const jni$_.$JInteger$NullableType$());
-  }
-
-  static final _id_component14 = _class.instanceMethodId(
-    r'component14',
-    r'()Ljava/lang/Integer;',
-  );
-
-  static final _component14 =
-      jni$_.ProtectedJniExtensions.lookup<
-            jni$_.NativeFunction<
-              jni$_.JniResult Function(
-                jni$_.Pointer<jni$_.Void>,
-                jni$_.JMethodIDPtr,
-              )
-            >
-          >('globalEnv_CallObjectMethod')
-          .asFunction<
-            jni$_.JniResult Function(
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.JMethodIDPtr,
-            )
-          >();
-
-  /// from: `public operator fun component14(): kotlin.Int?`
-  /// The returned object must be released after use, by calling the [release] method.
-  jni$_.JInteger? component14() {
-    return _component14(
-      reference.pointer,
-      _id_component14 as jni$_.JMethodIDPtr,
-    ).object<jni$_.JInteger?>(const jni$_.$JInteger$NullableType$());
-  }
-
-  static final _id_component15 = _class.instanceMethodId(
-    r'component15',
-    r'()Ljava/lang/Integer;',
-  );
-
-  static final _component15 =
-      jni$_.ProtectedJniExtensions.lookup<
-            jni$_.NativeFunction<
-              jni$_.JniResult Function(
-                jni$_.Pointer<jni$_.Void>,
-                jni$_.JMethodIDPtr,
-              )
-            >
-          >('globalEnv_CallObjectMethod')
-          .asFunction<
-            jni$_.JniResult Function(
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.JMethodIDPtr,
-            )
-          >();
-
-  /// from: `public operator fun component15(): kotlin.Int?`
-  /// The returned object must be released after use, by calling the [release] method.
-  jni$_.JInteger? component15() {
-    return _component15(
-      reference.pointer,
-      _id_component15 as jni$_.JMethodIDPtr,
-    ).object<jni$_.JInteger?>(const jni$_.$JInteger$NullableType$());
-  }
-
-  static final _id_component16 = _class.instanceMethodId(
-    r'component16',
-    r'()Ljava/lang/Integer;',
-  );
-
-  static final _component16 =
-      jni$_.ProtectedJniExtensions.lookup<
-            jni$_.NativeFunction<
-              jni$_.JniResult Function(
-                jni$_.Pointer<jni$_.Void>,
-                jni$_.JMethodIDPtr,
-              )
-            >
-          >('globalEnv_CallObjectMethod')
-          .asFunction<
-            jni$_.JniResult Function(
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.JMethodIDPtr,
-            )
-          >();
-
-  /// from: `public operator fun component16(): kotlin.Int?`
-  /// The returned object must be released after use, by calling the [release] method.
-  jni$_.JInteger? component16() {
-    return _component16(
-      reference.pointer,
-      _id_component16 as jni$_.JMethodIDPtr,
-    ).object<jni$_.JInteger?>(const jni$_.$JInteger$NullableType$());
-  }
-
-  static final _id_component17 = _class.instanceMethodId(
-    r'component17',
-    r'()Ljava/lang/Integer;',
-  );
-
-  static final _component17 =
-      jni$_.ProtectedJniExtensions.lookup<
-            jni$_.NativeFunction<
-              jni$_.JniResult Function(
-                jni$_.Pointer<jni$_.Void>,
-                jni$_.JMethodIDPtr,
-              )
-            >
-          >('globalEnv_CallObjectMethod')
-          .asFunction<
-            jni$_.JniResult Function(
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.JMethodIDPtr,
-            )
-          >();
-
-  /// from: `public operator fun component17(): kotlin.Int?`
-  /// The returned object must be released after use, by calling the [release] method.
-  jni$_.JInteger? component17() {
-    return _component17(
-      reference.pointer,
-      _id_component17 as jni$_.JMethodIDPtr,
-    ).object<jni$_.JInteger?>(const jni$_.$JInteger$NullableType$());
-  }
-
-  static final _id_component18 = _class.instanceMethodId(
-    r'component18',
-    r'()Ljava/lang/Integer;',
-  );
-
-  static final _component18 =
-      jni$_.ProtectedJniExtensions.lookup<
-            jni$_.NativeFunction<
-              jni$_.JniResult Function(
-                jni$_.Pointer<jni$_.Void>,
-                jni$_.JMethodIDPtr,
-              )
-            >
-          >('globalEnv_CallObjectMethod')
-          .asFunction<
-            jni$_.JniResult Function(
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.JMethodIDPtr,
-            )
-          >();
-
-  /// from: `public operator fun component18(): kotlin.Int?`
-  /// The returned object must be released after use, by calling the [release] method.
-  jni$_.JInteger? component18() {
-    return _component18(
-      reference.pointer,
-      _id_component18 as jni$_.JMethodIDPtr,
-    ).object<jni$_.JInteger?>(const jni$_.$JInteger$NullableType$());
-  }
-
-  static final _id_component19 = _class.instanceMethodId(
-    r'component19',
-    r'()Ljava/lang/Integer;',
-  );
-
-  static final _component19 =
-      jni$_.ProtectedJniExtensions.lookup<
-            jni$_.NativeFunction<
-              jni$_.JniResult Function(
-                jni$_.Pointer<jni$_.Void>,
-                jni$_.JMethodIDPtr,
-              )
-            >
-          >('globalEnv_CallObjectMethod')
-          .asFunction<
-            jni$_.JniResult Function(
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.JMethodIDPtr,
-            )
-          >();
-
-  /// from: `public operator fun component19(): kotlin.Int?`
-  /// The returned object must be released after use, by calling the [release] method.
-  jni$_.JInteger? component19() {
-    return _component19(
-      reference.pointer,
-      _id_component19 as jni$_.JMethodIDPtr,
-    ).object<jni$_.JInteger?>(const jni$_.$JInteger$NullableType$());
-  }
-
-  static final _id_component20 = _class.instanceMethodId(
-    r'component20',
-    r'()Ljava/lang/Integer;',
-  );
-
-  static final _component20 =
-      jni$_.ProtectedJniExtensions.lookup<
-            jni$_.NativeFunction<
-              jni$_.JniResult Function(
-                jni$_.Pointer<jni$_.Void>,
-                jni$_.JMethodIDPtr,
-              )
-            >
-          >('globalEnv_CallObjectMethod')
-          .asFunction<
-            jni$_.JniResult Function(
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.JMethodIDPtr,
-            )
-          >();
-
-  /// from: `public operator fun component20(): kotlin.Int?`
-  /// The returned object must be released after use, by calling the [release] method.
-  jni$_.JInteger? component20() {
-    return _component20(
-      reference.pointer,
-      _id_component20 as jni$_.JMethodIDPtr,
-    ).object<jni$_.JInteger?>(const jni$_.$JInteger$NullableType$());
-  }
-
-  static final _id_component21 = _class.instanceMethodId(
-    r'component21',
-    r'()Ljava/lang/Integer;',
-  );
-
-  static final _component21 =
-      jni$_.ProtectedJniExtensions.lookup<
-            jni$_.NativeFunction<
-              jni$_.JniResult Function(
-                jni$_.Pointer<jni$_.Void>,
-                jni$_.JMethodIDPtr,
-              )
-            >
-          >('globalEnv_CallObjectMethod')
-          .asFunction<
-            jni$_.JniResult Function(
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.JMethodIDPtr,
-            )
-          >();
-
-  /// from: `public operator fun component21(): kotlin.Int?`
-  /// The returned object must be released after use, by calling the [release] method.
-  jni$_.JInteger? component21() {
-    return _component21(
-      reference.pointer,
-      _id_component21 as jni$_.JMethodIDPtr,
-    ).object<jni$_.JInteger?>(const jni$_.$JInteger$NullableType$());
-  }
-
-  static final _id_component22 = _class.instanceMethodId(
-    r'component22',
-    r'()Ljava/lang/Integer;',
-  );
-
-  static final _component22 =
-      jni$_.ProtectedJniExtensions.lookup<
-            jni$_.NativeFunction<
-              jni$_.JniResult Function(
-                jni$_.Pointer<jni$_.Void>,
-                jni$_.JMethodIDPtr,
-              )
-            >
-          >('globalEnv_CallObjectMethod')
-          .asFunction<
-            jni$_.JniResult Function(
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.JMethodIDPtr,
-            )
-          >();
-
-  /// from: `public operator fun component22(): kotlin.Int?`
-  /// The returned object must be released after use, by calling the [release] method.
-  jni$_.JInteger? component22() {
-    return _component22(
-      reference.pointer,
-      _id_component22 as jni$_.JMethodIDPtr,
-    ).object<jni$_.JInteger?>(const jni$_.$JInteger$NullableType$());
-  }
-
-  static final _id_component23 = _class.instanceMethodId(
-    r'component23',
-    r'()Ljava/lang/Integer;',
-  );
-
-  static final _component23 =
-      jni$_.ProtectedJniExtensions.lookup<
-            jni$_.NativeFunction<
-              jni$_.JniResult Function(
-                jni$_.Pointer<jni$_.Void>,
-                jni$_.JMethodIDPtr,
-              )
-            >
-          >('globalEnv_CallObjectMethod')
-          .asFunction<
-            jni$_.JniResult Function(
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.JMethodIDPtr,
-            )
-          >();
-
-  /// from: `public operator fun component23(): kotlin.Int?`
-  /// The returned object must be released after use, by calling the [release] method.
-  jni$_.JInteger? component23() {
-    return _component23(
-      reference.pointer,
-      _id_component23 as jni$_.JMethodIDPtr,
-    ).object<jni$_.JInteger?>(const jni$_.$JInteger$NullableType$());
-  }
-
-  static final _id_component24 = _class.instanceMethodId(
-    r'component24',
-    r'()Ljava/lang/Integer;',
-  );
-
-  static final _component24 =
-      jni$_.ProtectedJniExtensions.lookup<
-            jni$_.NativeFunction<
-              jni$_.JniResult Function(
-                jni$_.Pointer<jni$_.Void>,
-                jni$_.JMethodIDPtr,
-              )
-            >
-          >('globalEnv_CallObjectMethod')
-          .asFunction<
-            jni$_.JniResult Function(
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.JMethodIDPtr,
-            )
-          >();
-
-  /// from: `public operator fun component24(): kotlin.Int?`
-  /// The returned object must be released after use, by calling the [release] method.
-  jni$_.JInteger? component24() {
-    return _component24(
-      reference.pointer,
-      _id_component24 as jni$_.JMethodIDPtr,
-    ).object<jni$_.JInteger?>(const jni$_.$JInteger$NullableType$());
-  }
-
-  static final _id_component25 = _class.instanceMethodId(
-    r'component25',
-    r'()Ljava/lang/Integer;',
-  );
-
-  static final _component25 =
-      jni$_.ProtectedJniExtensions.lookup<
-            jni$_.NativeFunction<
-              jni$_.JniResult Function(
-                jni$_.Pointer<jni$_.Void>,
-                jni$_.JMethodIDPtr,
-              )
-            >
-          >('globalEnv_CallObjectMethod')
-          .asFunction<
-            jni$_.JniResult Function(
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.JMethodIDPtr,
-            )
-          >();
-
-  /// from: `public operator fun component25(): kotlin.Int?`
-  /// The returned object must be released after use, by calling the [release] method.
-  jni$_.JInteger? component25() {
-    return _component25(
-      reference.pointer,
-      _id_component25 as jni$_.JMethodIDPtr,
-    ).object<jni$_.JInteger?>(const jni$_.$JInteger$NullableType$());
-  }
-
-  static final _id_component26 = _class.instanceMethodId(
-    r'component26',
-    r'()Ljava/lang/Integer;',
-  );
-
-  static final _component26 =
-      jni$_.ProtectedJniExtensions.lookup<
-            jni$_.NativeFunction<
-              jni$_.JniResult Function(
-                jni$_.Pointer<jni$_.Void>,
-                jni$_.JMethodIDPtr,
-              )
-            >
-          >('globalEnv_CallObjectMethod')
-          .asFunction<
-            jni$_.JniResult Function(
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.JMethodIDPtr,
-            )
-          >();
-
-  /// from: `public operator fun component26(): kotlin.Int?`
-  /// The returned object must be released after use, by calling the [release] method.
-  jni$_.JInteger? component26() {
-    return _component26(
-      reference.pointer,
-      _id_component26 as jni$_.JMethodIDPtr,
-    ).object<jni$_.JInteger?>(const jni$_.$JInteger$NullableType$());
-  }
-
-  static final _id_component27 = _class.instanceMethodId(
-    r'component27',
-    r'()Ljava/lang/Integer;',
-  );
-
-  static final _component27 =
-      jni$_.ProtectedJniExtensions.lookup<
-            jni$_.NativeFunction<
-              jni$_.JniResult Function(
-                jni$_.Pointer<jni$_.Void>,
-                jni$_.JMethodIDPtr,
-              )
-            >
-          >('globalEnv_CallObjectMethod')
-          .asFunction<
-            jni$_.JniResult Function(
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.JMethodIDPtr,
-            )
-          >();
-
-  /// from: `public operator fun component27(): kotlin.Int?`
-  /// The returned object must be released after use, by calling the [release] method.
-  jni$_.JInteger? component27() {
-    return _component27(
-      reference.pointer,
-      _id_component27 as jni$_.JMethodIDPtr,
-    ).object<jni$_.JInteger?>(const jni$_.$JInteger$NullableType$());
-  }
-
-  static final _id_component28 = _class.instanceMethodId(
-    r'component28',
-    r'()Ljava/lang/Integer;',
-  );
-
-  static final _component28 =
-      jni$_.ProtectedJniExtensions.lookup<
-            jni$_.NativeFunction<
-              jni$_.JniResult Function(
-                jni$_.Pointer<jni$_.Void>,
-                jni$_.JMethodIDPtr,
-              )
-            >
-          >('globalEnv_CallObjectMethod')
-          .asFunction<
-            jni$_.JniResult Function(
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.JMethodIDPtr,
-            )
-          >();
-
-  /// from: `public operator fun component28(): kotlin.Int?`
-  /// The returned object must be released after use, by calling the [release] method.
-  jni$_.JInteger? component28() {
-    return _component28(
-      reference.pointer,
-      _id_component28 as jni$_.JMethodIDPtr,
-    ).object<jni$_.JInteger?>(const jni$_.$JInteger$NullableType$());
-  }
-
-  static final _id_component29 = _class.instanceMethodId(
-    r'component29',
-    r'()Ljava/lang/Integer;',
-  );
-
-  static final _component29 =
-      jni$_.ProtectedJniExtensions.lookup<
-            jni$_.NativeFunction<
-              jni$_.JniResult Function(
-                jni$_.Pointer<jni$_.Void>,
-                jni$_.JMethodIDPtr,
-              )
-            >
-          >('globalEnv_CallObjectMethod')
-          .asFunction<
-            jni$_.JniResult Function(
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.JMethodIDPtr,
-            )
-          >();
-
-  /// from: `public operator fun component29(): kotlin.Int?`
-  /// The returned object must be released after use, by calling the [release] method.
-  jni$_.JInteger? component29() {
-    return _component29(
-      reference.pointer,
-      _id_component29 as jni$_.JMethodIDPtr,
-    ).object<jni$_.JInteger?>(const jni$_.$JInteger$NullableType$());
-  }
-
-  static final _id_component30 = _class.instanceMethodId(
-    r'component30',
-    r'()Ljava/lang/Integer;',
-  );
-
-  static final _component30 =
-      jni$_.ProtectedJniExtensions.lookup<
-            jni$_.NativeFunction<
-              jni$_.JniResult Function(
-                jni$_.Pointer<jni$_.Void>,
-                jni$_.JMethodIDPtr,
-              )
-            >
-          >('globalEnv_CallObjectMethod')
-          .asFunction<
-            jni$_.JniResult Function(
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.JMethodIDPtr,
-            )
-          >();
-
-  /// from: `public operator fun component30(): kotlin.Int?`
-  /// The returned object must be released after use, by calling the [release] method.
-  jni$_.JInteger? component30() {
-    return _component30(
-      reference.pointer,
-      _id_component30 as jni$_.JMethodIDPtr,
-    ).object<jni$_.JInteger?>(const jni$_.$JInteger$NullableType$());
-  }
-
-  static final _id_component31 = _class.instanceMethodId(
-    r'component31',
-    r'()Ljava/lang/Integer;',
-  );
-
-  static final _component31 =
-      jni$_.ProtectedJniExtensions.lookup<
-            jni$_.NativeFunction<
-              jni$_.JniResult Function(
-                jni$_.Pointer<jni$_.Void>,
-                jni$_.JMethodIDPtr,
-              )
-            >
-          >('globalEnv_CallObjectMethod')
-          .asFunction<
-            jni$_.JniResult Function(
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.JMethodIDPtr,
-            )
-          >();
-
-  /// from: `public operator fun component31(): kotlin.Int?`
-  /// The returned object must be released after use, by calling the [release] method.
-  jni$_.JInteger? component31() {
-    return _component31(
-      reference.pointer,
-      _id_component31 as jni$_.JMethodIDPtr,
-    ).object<jni$_.JInteger?>(const jni$_.$JInteger$NullableType$());
-  }
-
-  static final _id_component32 = _class.instanceMethodId(
-    r'component32',
-    r'()Ljava/lang/Integer;',
-  );
-
-  static final _component32 =
-      jni$_.ProtectedJniExtensions.lookup<
-            jni$_.NativeFunction<
-              jni$_.JniResult Function(
-                jni$_.Pointer<jni$_.Void>,
-                jni$_.JMethodIDPtr,
-              )
-            >
-          >('globalEnv_CallObjectMethod')
-          .asFunction<
-            jni$_.JniResult Function(
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.JMethodIDPtr,
-            )
-          >();
-
-  /// from: `public operator fun component32(): kotlin.Int?`
-  /// The returned object must be released after use, by calling the [release] method.
-  jni$_.JInteger? component32() {
-    return _component32(
-      reference.pointer,
-      _id_component32 as jni$_.JMethodIDPtr,
-    ).object<jni$_.JInteger?>(const jni$_.$JInteger$NullableType$());
-  }
-
-  static final _id_component33 = _class.instanceMethodId(
-    r'component33',
-    r'()Ljava/lang/Integer;',
-  );
-
-  static final _component33 =
-      jni$_.ProtectedJniExtensions.lookup<
-            jni$_.NativeFunction<
-              jni$_.JniResult Function(
-                jni$_.Pointer<jni$_.Void>,
-                jni$_.JMethodIDPtr,
-              )
-            >
-          >('globalEnv_CallObjectMethod')
-          .asFunction<
-            jni$_.JniResult Function(
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.JMethodIDPtr,
-            )
-          >();
-
-  /// from: `public operator fun component33(): kotlin.Int?`
-  /// The returned object must be released after use, by calling the [release] method.
-  jni$_.JInteger? component33() {
-    return _component33(
-      reference.pointer,
-      _id_component33 as jni$_.JMethodIDPtr,
-    ).object<jni$_.JInteger?>(const jni$_.$JInteger$NullableType$());
-  }
-
-  static final _id_component34 = _class.instanceMethodId(
-    r'component34',
-    r'()Ljava/lang/Integer;',
-  );
-
-  static final _component34 =
-      jni$_.ProtectedJniExtensions.lookup<
-            jni$_.NativeFunction<
-              jni$_.JniResult Function(
-                jni$_.Pointer<jni$_.Void>,
-                jni$_.JMethodIDPtr,
-              )
-            >
-          >('globalEnv_CallObjectMethod')
-          .asFunction<
-            jni$_.JniResult Function(
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.JMethodIDPtr,
-            )
-          >();
-
-  /// from: `public operator fun component34(): kotlin.Int?`
-  /// The returned object must be released after use, by calling the [release] method.
-  jni$_.JInteger? component34() {
-    return _component34(
-      reference.pointer,
-      _id_component34 as jni$_.JMethodIDPtr,
-    ).object<jni$_.JInteger?>(const jni$_.$JInteger$NullableType$());
-  }
-
-  static final _id_component35 = _class.instanceMethodId(
-    r'component35',
-    r'()Ljava/lang/Integer;',
-  );
-
-  static final _component35 =
-      jni$_.ProtectedJniExtensions.lookup<
-            jni$_.NativeFunction<
-              jni$_.JniResult Function(
-                jni$_.Pointer<jni$_.Void>,
-                jni$_.JMethodIDPtr,
-              )
-            >
-          >('globalEnv_CallObjectMethod')
-          .asFunction<
-            jni$_.JniResult Function(
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.JMethodIDPtr,
-            )
-          >();
-
-  /// from: `public operator fun component35(): kotlin.Int?`
-  /// The returned object must be released after use, by calling the [release] method.
-  jni$_.JInteger? component35() {
-    return _component35(
-      reference.pointer,
-      _id_component35 as jni$_.JMethodIDPtr,
-    ).object<jni$_.JInteger?>(const jni$_.$JInteger$NullableType$());
-  }
-
-  static final _id_component36 = _class.instanceMethodId(
-    r'component36',
-    r'()Ljava/lang/Integer;',
-  );
-
-  static final _component36 =
-      jni$_.ProtectedJniExtensions.lookup<
-            jni$_.NativeFunction<
-              jni$_.JniResult Function(
-                jni$_.Pointer<jni$_.Void>,
-                jni$_.JMethodIDPtr,
-              )
-            >
-          >('globalEnv_CallObjectMethod')
-          .asFunction<
-            jni$_.JniResult Function(
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.JMethodIDPtr,
-            )
-          >();
-
-  /// from: `public operator fun component36(): kotlin.Int?`
-  /// The returned object must be released after use, by calling the [release] method.
-  jni$_.JInteger? component36() {
-    return _component36(
-      reference.pointer,
-      _id_component36 as jni$_.JMethodIDPtr,
-    ).object<jni$_.JInteger?>(const jni$_.$JInteger$NullableType$());
-  }
-
-  static final _id_component37 = _class.instanceMethodId(
-    r'component37',
-    r'()Ljava/lang/Integer;',
-  );
-
-  static final _component37 =
-      jni$_.ProtectedJniExtensions.lookup<
-            jni$_.NativeFunction<
-              jni$_.JniResult Function(
-                jni$_.Pointer<jni$_.Void>,
-                jni$_.JMethodIDPtr,
-              )
-            >
-          >('globalEnv_CallObjectMethod')
-          .asFunction<
-            jni$_.JniResult Function(
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.JMethodIDPtr,
-            )
-          >();
-
-  /// from: `public operator fun component37(): kotlin.Int?`
-  /// The returned object must be released after use, by calling the [release] method.
-  jni$_.JInteger? component37() {
-    return _component37(
-      reference.pointer,
-      _id_component37 as jni$_.JMethodIDPtr,
-    ).object<jni$_.JInteger?>(const jni$_.$JInteger$NullableType$());
-  }
-
-  static final _id_component38 = _class.instanceMethodId(
-    r'component38',
-    r'()Ljava/lang/Integer;',
-  );
-
-  static final _component38 =
-      jni$_.ProtectedJniExtensions.lookup<
-            jni$_.NativeFunction<
-              jni$_.JniResult Function(
-                jni$_.Pointer<jni$_.Void>,
-                jni$_.JMethodIDPtr,
-              )
-            >
-          >('globalEnv_CallObjectMethod')
-          .asFunction<
-            jni$_.JniResult Function(
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.JMethodIDPtr,
-            )
-          >();
-
-  /// from: `public operator fun component38(): kotlin.Int?`
-  /// The returned object must be released after use, by calling the [release] method.
-  jni$_.JInteger? component38() {
-    return _component38(
-      reference.pointer,
-      _id_component38 as jni$_.JMethodIDPtr,
-    ).object<jni$_.JInteger?>(const jni$_.$JInteger$NullableType$());
-  }
-
-  static final _id_component39 = _class.instanceMethodId(
-    r'component39',
-    r'()Ljava/lang/Integer;',
-  );
-
-  static final _component39 =
-      jni$_.ProtectedJniExtensions.lookup<
-            jni$_.NativeFunction<
-              jni$_.JniResult Function(
-                jni$_.Pointer<jni$_.Void>,
-                jni$_.JMethodIDPtr,
-              )
-            >
-          >('globalEnv_CallObjectMethod')
-          .asFunction<
-            jni$_.JniResult Function(
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.JMethodIDPtr,
-            )
-          >();
-
-  /// from: `public operator fun component39(): kotlin.Int?`
-  /// The returned object must be released after use, by calling the [release] method.
-  jni$_.JInteger? component39() {
-    return _component39(
-      reference.pointer,
-      _id_component39 as jni$_.JMethodIDPtr,
-    ).object<jni$_.JInteger?>(const jni$_.$JInteger$NullableType$());
-  }
-
-  static final _id_component40 = _class.instanceMethodId(
-    r'component40',
-    r'()Ljava/lang/Integer;',
-  );
-
-  static final _component40 =
-      jni$_.ProtectedJniExtensions.lookup<
-            jni$_.NativeFunction<
-              jni$_.JniResult Function(
-                jni$_.Pointer<jni$_.Void>,
-                jni$_.JMethodIDPtr,
-              )
-            >
-          >('globalEnv_CallObjectMethod')
-          .asFunction<
-            jni$_.JniResult Function(
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.JMethodIDPtr,
-            )
-          >();
-
-  /// from: `public operator fun component40(): kotlin.Int?`
-  /// The returned object must be released after use, by calling the [release] method.
-  jni$_.JInteger? component40() {
-    return _component40(
-      reference.pointer,
-      _id_component40 as jni$_.JMethodIDPtr,
-    ).object<jni$_.JInteger?>(const jni$_.$JInteger$NullableType$());
-  }
-
-  static final _id_component41 = _class.instanceMethodId(
-    r'component41',
-    r'()Ljava/lang/Integer;',
-  );
-
-  static final _component41 =
-      jni$_.ProtectedJniExtensions.lookup<
-            jni$_.NativeFunction<
-              jni$_.JniResult Function(
-                jni$_.Pointer<jni$_.Void>,
-                jni$_.JMethodIDPtr,
-              )
-            >
-          >('globalEnv_CallObjectMethod')
-          .asFunction<
-            jni$_.JniResult Function(
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.JMethodIDPtr,
-            )
-          >();
-
-  /// from: `public operator fun component41(): kotlin.Int?`
-  /// The returned object must be released after use, by calling the [release] method.
-  jni$_.JInteger? component41() {
-    return _component41(
-      reference.pointer,
-      _id_component41 as jni$_.JMethodIDPtr,
-    ).object<jni$_.JInteger?>(const jni$_.$JInteger$NullableType$());
-  }
-
-  static final _id_component42 = _class.instanceMethodId(
-    r'component42',
-    r'()Ljava/lang/Integer;',
-  );
-
-  static final _component42 =
-      jni$_.ProtectedJniExtensions.lookup<
-            jni$_.NativeFunction<
-              jni$_.JniResult Function(
-                jni$_.Pointer<jni$_.Void>,
-                jni$_.JMethodIDPtr,
-              )
-            >
-          >('globalEnv_CallObjectMethod')
-          .asFunction<
-            jni$_.JniResult Function(
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.JMethodIDPtr,
-            )
-          >();
-
-  /// from: `public operator fun component42(): kotlin.Int?`
-  /// The returned object must be released after use, by calling the [release] method.
-  jni$_.JInteger? component42() {
-    return _component42(
-      reference.pointer,
-      _id_component42 as jni$_.JMethodIDPtr,
-    ).object<jni$_.JInteger?>(const jni$_.$JInteger$NullableType$());
-  }
-
-  static final _id_component43 = _class.instanceMethodId(
-    r'component43',
-    r'()Ljava/lang/Integer;',
-  );
-
-  static final _component43 =
-      jni$_.ProtectedJniExtensions.lookup<
-            jni$_.NativeFunction<
-              jni$_.JniResult Function(
-                jni$_.Pointer<jni$_.Void>,
-                jni$_.JMethodIDPtr,
-              )
-            >
-          >('globalEnv_CallObjectMethod')
-          .asFunction<
-            jni$_.JniResult Function(
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.JMethodIDPtr,
-            )
-          >();
-
-  /// from: `public operator fun component43(): kotlin.Int?`
-  /// The returned object must be released after use, by calling the [release] method.
-  jni$_.JInteger? component43() {
-    return _component43(
-      reference.pointer,
-      _id_component43 as jni$_.JMethodIDPtr,
-    ).object<jni$_.JInteger?>(const jni$_.$JInteger$NullableType$());
-  }
-
-  static final _id_component44 = _class.instanceMethodId(
-    r'component44',
-    r'()Ljava/lang/Integer;',
-  );
-
-  static final _component44 =
-      jni$_.ProtectedJniExtensions.lookup<
-            jni$_.NativeFunction<
-              jni$_.JniResult Function(
-                jni$_.Pointer<jni$_.Void>,
-                jni$_.JMethodIDPtr,
-              )
-            >
-          >('globalEnv_CallObjectMethod')
-          .asFunction<
-            jni$_.JniResult Function(
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.JMethodIDPtr,
-            )
-          >();
-
-  /// from: `public operator fun component44(): kotlin.Int?`
-  /// The returned object must be released after use, by calling the [release] method.
-  jni$_.JInteger? component44() {
-    return _component44(
-      reference.pointer,
-      _id_component44 as jni$_.JMethodIDPtr,
-    ).object<jni$_.JInteger?>(const jni$_.$JInteger$NullableType$());
-  }
-
-  static final _id_component45 = _class.instanceMethodId(
-    r'component45',
-    r'()Ljava/lang/Integer;',
-  );
-
-  static final _component45 =
-      jni$_.ProtectedJniExtensions.lookup<
-            jni$_.NativeFunction<
-              jni$_.JniResult Function(
-                jni$_.Pointer<jni$_.Void>,
-                jni$_.JMethodIDPtr,
-              )
-            >
-          >('globalEnv_CallObjectMethod')
-          .asFunction<
-            jni$_.JniResult Function(
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.JMethodIDPtr,
-            )
-          >();
-
-  /// from: `public operator fun component45(): kotlin.Int?`
-  /// The returned object must be released after use, by calling the [release] method.
-  jni$_.JInteger? component45() {
-    return _component45(
-      reference.pointer,
-      _id_component45 as jni$_.JMethodIDPtr,
-    ).object<jni$_.JInteger?>(const jni$_.$JInteger$NullableType$());
-  }
-
-  static final _id_component46 = _class.instanceMethodId(
-    r'component46',
-    r'()Ljava/lang/Integer;',
-  );
-
-  static final _component46 =
-      jni$_.ProtectedJniExtensions.lookup<
-            jni$_.NativeFunction<
-              jni$_.JniResult Function(
-                jni$_.Pointer<jni$_.Void>,
-                jni$_.JMethodIDPtr,
-              )
-            >
-          >('globalEnv_CallObjectMethod')
-          .asFunction<
-            jni$_.JniResult Function(
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.JMethodIDPtr,
-            )
-          >();
-
-  /// from: `public operator fun component46(): kotlin.Int?`
-  /// The returned object must be released after use, by calling the [release] method.
-  jni$_.JInteger? component46() {
-    return _component46(
-      reference.pointer,
-      _id_component46 as jni$_.JMethodIDPtr,
-    ).object<jni$_.JInteger?>(const jni$_.$JInteger$NullableType$());
-  }
-
-  static final _id_component47 = _class.instanceMethodId(
-    r'component47',
-    r'()Ljava/lang/Integer;',
-  );
-
-  static final _component47 =
-      jni$_.ProtectedJniExtensions.lookup<
-            jni$_.NativeFunction<
-              jni$_.JniResult Function(
-                jni$_.Pointer<jni$_.Void>,
-                jni$_.JMethodIDPtr,
-              )
-            >
-          >('globalEnv_CallObjectMethod')
-          .asFunction<
-            jni$_.JniResult Function(
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.JMethodIDPtr,
-            )
-          >();
-
-  /// from: `public operator fun component47(): kotlin.Int?`
-  /// The returned object must be released after use, by calling the [release] method.
-  jni$_.JInteger? component47() {
-    return _component47(
-      reference.pointer,
-      _id_component47 as jni$_.JMethodIDPtr,
-    ).object<jni$_.JInteger?>(const jni$_.$JInteger$NullableType$());
-  }
-
-  static final _id_component48 = _class.instanceMethodId(
-    r'component48',
-    r'()Ljava/lang/Integer;',
-  );
-
-  static final _component48 =
-      jni$_.ProtectedJniExtensions.lookup<
-            jni$_.NativeFunction<
-              jni$_.JniResult Function(
-                jni$_.Pointer<jni$_.Void>,
-                jni$_.JMethodIDPtr,
-              )
-            >
-          >('globalEnv_CallObjectMethod')
-          .asFunction<
-            jni$_.JniResult Function(
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.JMethodIDPtr,
-            )
-          >();
-
-  /// from: `public operator fun component48(): kotlin.Int?`
-  /// The returned object must be released after use, by calling the [release] method.
-  jni$_.JInteger? component48() {
-    return _component48(
-      reference.pointer,
-      _id_component48 as jni$_.JMethodIDPtr,
-    ).object<jni$_.JInteger?>(const jni$_.$JInteger$NullableType$());
-  }
-
-  static final _id_component49 = _class.instanceMethodId(
-    r'component49',
-    r'()Ljava/lang/Integer;',
-  );
-
-  static final _component49 =
-      jni$_.ProtectedJniExtensions.lookup<
-            jni$_.NativeFunction<
-              jni$_.JniResult Function(
-                jni$_.Pointer<jni$_.Void>,
-                jni$_.JMethodIDPtr,
-              )
-            >
-          >('globalEnv_CallObjectMethod')
-          .asFunction<
-            jni$_.JniResult Function(
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.JMethodIDPtr,
-            )
-          >();
-
-  /// from: `public operator fun component49(): kotlin.Int?`
-  /// The returned object must be released after use, by calling the [release] method.
-  jni$_.JInteger? component49() {
-    return _component49(
-      reference.pointer,
-      _id_component49 as jni$_.JMethodIDPtr,
-    ).object<jni$_.JInteger?>(const jni$_.$JInteger$NullableType$());
-  }
-
-  static final _id_component50 = _class.instanceMethodId(
-    r'component50',
-    r'()Ljava/lang/Integer;',
-  );
-
-  static final _component50 =
-      jni$_.ProtectedJniExtensions.lookup<
-            jni$_.NativeFunction<
-              jni$_.JniResult Function(
-                jni$_.Pointer<jni$_.Void>,
-                jni$_.JMethodIDPtr,
-              )
-            >
-          >('globalEnv_CallObjectMethod')
-          .asFunction<
-            jni$_.JniResult Function(
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.JMethodIDPtr,
-            )
-          >();
-
-  /// from: `public operator fun component50(): kotlin.Int?`
-  /// The returned object must be released after use, by calling the [release] method.
-  jni$_.JInteger? component50() {
-    return _component50(
-      reference.pointer,
-      _id_component50 as jni$_.JMethodIDPtr,
-    ).object<jni$_.JInteger?>(const jni$_.$JInteger$NullableType$());
-  }
-
-  static final _id_component51 = _class.instanceMethodId(
-    r'component51',
-    r'()Ljava/lang/Integer;',
-  );
-
-  static final _component51 =
-      jni$_.ProtectedJniExtensions.lookup<
-            jni$_.NativeFunction<
-              jni$_.JniResult Function(
-                jni$_.Pointer<jni$_.Void>,
-                jni$_.JMethodIDPtr,
-              )
-            >
-          >('globalEnv_CallObjectMethod')
-          .asFunction<
-            jni$_.JniResult Function(
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.JMethodIDPtr,
-            )
-          >();
-
-  /// from: `public operator fun component51(): kotlin.Int?`
-  /// The returned object must be released after use, by calling the [release] method.
-  jni$_.JInteger? component51() {
-    return _component51(
-      reference.pointer,
-      _id_component51 as jni$_.JMethodIDPtr,
-    ).object<jni$_.JInteger?>(const jni$_.$JInteger$NullableType$());
-  }
-
-  static final _id_component52 = _class.instanceMethodId(
-    r'component52',
-    r'()Ljava/lang/Integer;',
-  );
-
-  static final _component52 =
-      jni$_.ProtectedJniExtensions.lookup<
-            jni$_.NativeFunction<
-              jni$_.JniResult Function(
-                jni$_.Pointer<jni$_.Void>,
-                jni$_.JMethodIDPtr,
-              )
-            >
-          >('globalEnv_CallObjectMethod')
-          .asFunction<
-            jni$_.JniResult Function(
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.JMethodIDPtr,
-            )
-          >();
-
-  /// from: `public operator fun component52(): kotlin.Int?`
-  /// The returned object must be released after use, by calling the [release] method.
-  jni$_.JInteger? component52() {
-    return _component52(
-      reference.pointer,
-      _id_component52 as jni$_.JMethodIDPtr,
-    ).object<jni$_.JInteger?>(const jni$_.$JInteger$NullableType$());
-  }
-
-  static final _id_component53 = _class.instanceMethodId(
-    r'component53',
-    r'()Ljava/lang/Integer;',
-  );
-
-  static final _component53 =
-      jni$_.ProtectedJniExtensions.lookup<
-            jni$_.NativeFunction<
-              jni$_.JniResult Function(
-                jni$_.Pointer<jni$_.Void>,
-                jni$_.JMethodIDPtr,
-              )
-            >
-          >('globalEnv_CallObjectMethod')
-          .asFunction<
-            jni$_.JniResult Function(
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.JMethodIDPtr,
-            )
-          >();
-
-  /// from: `public operator fun component53(): kotlin.Int?`
-  /// The returned object must be released after use, by calling the [release] method.
-  jni$_.JInteger? component53() {
-    return _component53(
-      reference.pointer,
-      _id_component53 as jni$_.JMethodIDPtr,
-    ).object<jni$_.JInteger?>(const jni$_.$JInteger$NullableType$());
-  }
-
-  static final _id_component54 = _class.instanceMethodId(
-    r'component54',
-    r'()Ljava/lang/Integer;',
-  );
-
-  static final _component54 =
-      jni$_.ProtectedJniExtensions.lookup<
-            jni$_.NativeFunction<
-              jni$_.JniResult Function(
-                jni$_.Pointer<jni$_.Void>,
-                jni$_.JMethodIDPtr,
-              )
-            >
-          >('globalEnv_CallObjectMethod')
-          .asFunction<
-            jni$_.JniResult Function(
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.JMethodIDPtr,
-            )
-          >();
-
-  /// from: `public operator fun component54(): kotlin.Int?`
-  /// The returned object must be released after use, by calling the [release] method.
-  jni$_.JInteger? component54() {
-    return _component54(
-      reference.pointer,
-      _id_component54 as jni$_.JMethodIDPtr,
-    ).object<jni$_.JInteger?>(const jni$_.$JInteger$NullableType$());
-  }
-
-  static final _id_component55 = _class.instanceMethodId(
-    r'component55',
-    r'()Ljava/lang/Integer;',
-  );
-
-  static final _component55 =
-      jni$_.ProtectedJniExtensions.lookup<
-            jni$_.NativeFunction<
-              jni$_.JniResult Function(
-                jni$_.Pointer<jni$_.Void>,
-                jni$_.JMethodIDPtr,
-              )
-            >
-          >('globalEnv_CallObjectMethod')
-          .asFunction<
-            jni$_.JniResult Function(
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.JMethodIDPtr,
-            )
-          >();
-
-  /// from: `public operator fun component55(): kotlin.Int?`
-  /// The returned object must be released after use, by calling the [release] method.
-  jni$_.JInteger? component55() {
-    return _component55(
-      reference.pointer,
-      _id_component55 as jni$_.JMethodIDPtr,
-    ).object<jni$_.JInteger?>(const jni$_.$JInteger$NullableType$());
-  }
-
-  static final _id_component56 = _class.instanceMethodId(
-    r'component56',
-    r'()Ljava/lang/Integer;',
-  );
-
-  static final _component56 =
-      jni$_.ProtectedJniExtensions.lookup<
-            jni$_.NativeFunction<
-              jni$_.JniResult Function(
-                jni$_.Pointer<jni$_.Void>,
-                jni$_.JMethodIDPtr,
-              )
-            >
-          >('globalEnv_CallObjectMethod')
-          .asFunction<
-            jni$_.JniResult Function(
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.JMethodIDPtr,
-            )
-          >();
-
-  /// from: `public operator fun component56(): kotlin.Int?`
-  /// The returned object must be released after use, by calling the [release] method.
-  jni$_.JInteger? component56() {
-    return _component56(
-      reference.pointer,
-      _id_component56 as jni$_.JMethodIDPtr,
-    ).object<jni$_.JInteger?>(const jni$_.$JInteger$NullableType$());
-  }
-
-  static final _id_component57 = _class.instanceMethodId(
-    r'component57',
-    r'()Ljava/lang/Integer;',
-  );
-
-  static final _component57 =
-      jni$_.ProtectedJniExtensions.lookup<
-            jni$_.NativeFunction<
-              jni$_.JniResult Function(
-                jni$_.Pointer<jni$_.Void>,
-                jni$_.JMethodIDPtr,
-              )
-            >
-          >('globalEnv_CallObjectMethod')
-          .asFunction<
-            jni$_.JniResult Function(
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.JMethodIDPtr,
-            )
-          >();
-
-  /// from: `public operator fun component57(): kotlin.Int?`
-  /// The returned object must be released after use, by calling the [release] method.
-  jni$_.JInteger? component57() {
-    return _component57(
-      reference.pointer,
-      _id_component57 as jni$_.JMethodIDPtr,
-    ).object<jni$_.JInteger?>(const jni$_.$JInteger$NullableType$());
-  }
-
-  static final _id_component58 = _class.instanceMethodId(
-    r'component58',
-    r'()Ljava/lang/Integer;',
-  );
-
-  static final _component58 =
-      jni$_.ProtectedJniExtensions.lookup<
-            jni$_.NativeFunction<
-              jni$_.JniResult Function(
-                jni$_.Pointer<jni$_.Void>,
-                jni$_.JMethodIDPtr,
-              )
-            >
-          >('globalEnv_CallObjectMethod')
-          .asFunction<
-            jni$_.JniResult Function(
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.JMethodIDPtr,
-            )
-          >();
-
-  /// from: `public operator fun component58(): kotlin.Int?`
-  /// The returned object must be released after use, by calling the [release] method.
-  jni$_.JInteger? component58() {
-    return _component58(
-      reference.pointer,
-      _id_component58 as jni$_.JMethodIDPtr,
-    ).object<jni$_.JInteger?>(const jni$_.$JInteger$NullableType$());
-  }
-
-  static final _id_component59 = _class.instanceMethodId(
-    r'component59',
-    r'()Ljava/lang/Integer;',
-  );
-
-  static final _component59 =
-      jni$_.ProtectedJniExtensions.lookup<
-            jni$_.NativeFunction<
-              jni$_.JniResult Function(
-                jni$_.Pointer<jni$_.Void>,
-                jni$_.JMethodIDPtr,
-              )
-            >
-          >('globalEnv_CallObjectMethod')
-          .asFunction<
-            jni$_.JniResult Function(
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.JMethodIDPtr,
-            )
-          >();
-
-  /// from: `public operator fun component59(): kotlin.Int?`
-  /// The returned object must be released after use, by calling the [release] method.
-  jni$_.JInteger? component59() {
-    return _component59(
-      reference.pointer,
-      _id_component59 as jni$_.JMethodIDPtr,
-    ).object<jni$_.JInteger?>(const jni$_.$JInteger$NullableType$());
-  }
-
-  static final _id_component60 = _class.instanceMethodId(
-    r'component60',
-    r'()Ljava/lang/Integer;',
-  );
-
-  static final _component60 =
-      jni$_.ProtectedJniExtensions.lookup<
-            jni$_.NativeFunction<
-              jni$_.JniResult Function(
-                jni$_.Pointer<jni$_.Void>,
-                jni$_.JMethodIDPtr,
-              )
-            >
-          >('globalEnv_CallObjectMethod')
-          .asFunction<
-            jni$_.JniResult Function(
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.JMethodIDPtr,
-            )
-          >();
-
-  /// from: `public operator fun component60(): kotlin.Int?`
-  /// The returned object must be released after use, by calling the [release] method.
-  jni$_.JInteger? component60() {
-    return _component60(
-      reference.pointer,
-      _id_component60 as jni$_.JMethodIDPtr,
-    ).object<jni$_.JInteger?>(const jni$_.$JInteger$NullableType$());
-  }
-
-  static final _id_component61 = _class.instanceMethodId(
-    r'component61',
-    r'()Ljava/lang/Integer;',
-  );
-
-  static final _component61 =
-      jni$_.ProtectedJniExtensions.lookup<
-            jni$_.NativeFunction<
-              jni$_.JniResult Function(
-                jni$_.Pointer<jni$_.Void>,
-                jni$_.JMethodIDPtr,
-              )
-            >
-          >('globalEnv_CallObjectMethod')
-          .asFunction<
-            jni$_.JniResult Function(
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.JMethodIDPtr,
-            )
-          >();
-
-  /// from: `public operator fun component61(): kotlin.Int?`
-  /// The returned object must be released after use, by calling the [release] method.
-  jni$_.JInteger? component61() {
-    return _component61(
-      reference.pointer,
-      _id_component61 as jni$_.JMethodIDPtr,
-    ).object<jni$_.JInteger?>(const jni$_.$JInteger$NullableType$());
-  }
-
-  static final _id_component62 = _class.instanceMethodId(
-    r'component62',
-    r'()Ljava/lang/Integer;',
-  );
-
-  static final _component62 =
-      jni$_.ProtectedJniExtensions.lookup<
-            jni$_.NativeFunction<
-              jni$_.JniResult Function(
-                jni$_.Pointer<jni$_.Void>,
-                jni$_.JMethodIDPtr,
-              )
-            >
-          >('globalEnv_CallObjectMethod')
-          .asFunction<
-            jni$_.JniResult Function(
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.JMethodIDPtr,
-            )
-          >();
-
-  /// from: `public operator fun component62(): kotlin.Int?`
-  /// The returned object must be released after use, by calling the [release] method.
-  jni$_.JInteger? component62() {
-    return _component62(
-      reference.pointer,
-      _id_component62 as jni$_.JMethodIDPtr,
-    ).object<jni$_.JInteger?>(const jni$_.$JInteger$NullableType$());
-  }
-
-  static final _id_component63 = _class.instanceMethodId(
-    r'component63',
-    r'()Ljava/lang/Integer;',
-  );
-
-  static final _component63 =
-      jni$_.ProtectedJniExtensions.lookup<
-            jni$_.NativeFunction<
-              jni$_.JniResult Function(
-                jni$_.Pointer<jni$_.Void>,
-                jni$_.JMethodIDPtr,
-              )
-            >
-          >('globalEnv_CallObjectMethod')
-          .asFunction<
-            jni$_.JniResult Function(
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.JMethodIDPtr,
-            )
-          >();
-
-  /// from: `public operator fun component63(): kotlin.Int?`
-  /// The returned object must be released after use, by calling the [release] method.
-  jni$_.JInteger? component63() {
-    return _component63(
-      reference.pointer,
-      _id_component63 as jni$_.JMethodIDPtr,
-    ).object<jni$_.JInteger?>(const jni$_.$JInteger$NullableType$());
-  }
-
-  static final _id_component64 = _class.instanceMethodId(
-    r'component64',
-    r'()Ljava/lang/Integer;',
-  );
-
-  static final _component64 =
-      jni$_.ProtectedJniExtensions.lookup<
-            jni$_.NativeFunction<
-              jni$_.JniResult Function(
-                jni$_.Pointer<jni$_.Void>,
-                jni$_.JMethodIDPtr,
-              )
-            >
-          >('globalEnv_CallObjectMethod')
-          .asFunction<
-            jni$_.JniResult Function(
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.JMethodIDPtr,
-            )
-          >();
-
-  /// from: `public operator fun component64(): kotlin.Int?`
-  /// The returned object must be released after use, by calling the [release] method.
-  jni$_.JInteger? component64() {
-    return _component64(
-      reference.pointer,
-      _id_component64 as jni$_.JMethodIDPtr,
-    ).object<jni$_.JInteger?>(const jni$_.$JInteger$NullableType$());
-  }
-
-  static final _id_component65 = _class.instanceMethodId(
-    r'component65',
-    r'()Ljava/lang/Integer;',
-  );
-
-  static final _component65 =
-      jni$_.ProtectedJniExtensions.lookup<
-            jni$_.NativeFunction<
-              jni$_.JniResult Function(
-                jni$_.Pointer<jni$_.Void>,
-                jni$_.JMethodIDPtr,
-              )
-            >
-          >('globalEnv_CallObjectMethod')
-          .asFunction<
-            jni$_.JniResult Function(
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.JMethodIDPtr,
-            )
-          >();
-
-  /// from: `public operator fun component65(): kotlin.Int?`
-  /// The returned object must be released after use, by calling the [release] method.
-  jni$_.JInteger? component65() {
-    return _component65(
-      reference.pointer,
-      _id_component65 as jni$_.JMethodIDPtr,
-    ).object<jni$_.JInteger?>(const jni$_.$JInteger$NullableType$());
-  }
-
-  static final _id_component66 = _class.instanceMethodId(
-    r'component66',
-    r'()Ljava/lang/Integer;',
-  );
-
-  static final _component66 =
-      jni$_.ProtectedJniExtensions.lookup<
-            jni$_.NativeFunction<
-              jni$_.JniResult Function(
-                jni$_.Pointer<jni$_.Void>,
-                jni$_.JMethodIDPtr,
-              )
-            >
-          >('globalEnv_CallObjectMethod')
-          .asFunction<
-            jni$_.JniResult Function(
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.JMethodIDPtr,
-            )
-          >();
-
-  /// from: `public operator fun component66(): kotlin.Int?`
-  /// The returned object must be released after use, by calling the [release] method.
-  jni$_.JInteger? component66() {
-    return _component66(
-      reference.pointer,
-      _id_component66 as jni$_.JMethodIDPtr,
-    ).object<jni$_.JInteger?>(const jni$_.$JInteger$NullableType$());
-  }
-
-  static final _id_component67 = _class.instanceMethodId(
-    r'component67',
-    r'()Ljava/lang/Integer;',
-  );
-
-  static final _component67 =
-      jni$_.ProtectedJniExtensions.lookup<
-            jni$_.NativeFunction<
-              jni$_.JniResult Function(
-                jni$_.Pointer<jni$_.Void>,
-                jni$_.JMethodIDPtr,
-              )
-            >
-          >('globalEnv_CallObjectMethod')
-          .asFunction<
-            jni$_.JniResult Function(
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.JMethodIDPtr,
-            )
-          >();
-
-  /// from: `public operator fun component67(): kotlin.Int?`
-  /// The returned object must be released after use, by calling the [release] method.
-  jni$_.JInteger? component67() {
-    return _component67(
-      reference.pointer,
-      _id_component67 as jni$_.JMethodIDPtr,
-    ).object<jni$_.JInteger?>(const jni$_.$JInteger$NullableType$());
-  }
-
-  static final _id_copy = _class.instanceMethodId(
-    r'copy',
-    r'(Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;)Ldev/deminearchiver/dynamic_color_ffi/DynamicColorScheme;',
-  );
-
-  static final _copy =
-      jni$_.ProtectedJniExtensions.lookup<
-            jni$_.NativeFunction<
-              jni$_.JniResult Function(
-                jni$_.Pointer<jni$_.Void>,
-                jni$_.JMethodIDPtr,
-                jni$_.VarArgs<
-                  (
-                    jni$_.Pointer<jni$_.Void>,
-                    jni$_.Pointer<jni$_.Void>,
-                    jni$_.Pointer<jni$_.Void>,
-                    jni$_.Pointer<jni$_.Void>,
-                    jni$_.Pointer<jni$_.Void>,
-                    jni$_.Pointer<jni$_.Void>,
-                    jni$_.Pointer<jni$_.Void>,
-                    jni$_.Pointer<jni$_.Void>,
-                    jni$_.Pointer<jni$_.Void>,
-                    jni$_.Pointer<jni$_.Void>,
-                    jni$_.Pointer<jni$_.Void>,
-                    jni$_.Pointer<jni$_.Void>,
-                    jni$_.Pointer<jni$_.Void>,
-                    jni$_.Pointer<jni$_.Void>,
-                    jni$_.Pointer<jni$_.Void>,
-                    jni$_.Pointer<jni$_.Void>,
-                    jni$_.Pointer<jni$_.Void>,
-                    jni$_.Pointer<jni$_.Void>,
-                    jni$_.Pointer<jni$_.Void>,
-                    jni$_.Pointer<jni$_.Void>,
-                    jni$_.Pointer<jni$_.Void>,
-                    jni$_.Pointer<jni$_.Void>,
-                    jni$_.Pointer<jni$_.Void>,
-                    jni$_.Pointer<jni$_.Void>,
-                    jni$_.Pointer<jni$_.Void>,
-                    jni$_.Pointer<jni$_.Void>,
-                    jni$_.Pointer<jni$_.Void>,
-                    jni$_.Pointer<jni$_.Void>,
-                    jni$_.Pointer<jni$_.Void>,
-                    jni$_.Pointer<jni$_.Void>,
-                    jni$_.Pointer<jni$_.Void>,
-                    jni$_.Pointer<jni$_.Void>,
-                    jni$_.Pointer<jni$_.Void>,
-                    jni$_.Pointer<jni$_.Void>,
-                    jni$_.Pointer<jni$_.Void>,
-                    jni$_.Pointer<jni$_.Void>,
-                    jni$_.Pointer<jni$_.Void>,
-                    jni$_.Pointer<jni$_.Void>,
-                    jni$_.Pointer<jni$_.Void>,
-                    jni$_.Pointer<jni$_.Void>,
-                    jni$_.Pointer<jni$_.Void>,
-                    jni$_.Pointer<jni$_.Void>,
-                    jni$_.Pointer<jni$_.Void>,
-                    jni$_.Pointer<jni$_.Void>,
-                    jni$_.Pointer<jni$_.Void>,
-                    jni$_.Pointer<jni$_.Void>,
-                    jni$_.Pointer<jni$_.Void>,
-                    jni$_.Pointer<jni$_.Void>,
-                    jni$_.Pointer<jni$_.Void>,
-                    jni$_.Pointer<jni$_.Void>,
-                    jni$_.Pointer<jni$_.Void>,
-                    jni$_.Pointer<jni$_.Void>,
-                    jni$_.Pointer<jni$_.Void>,
-                    jni$_.Pointer<jni$_.Void>,
-                    jni$_.Pointer<jni$_.Void>,
-                    jni$_.Pointer<jni$_.Void>,
-                    jni$_.Pointer<jni$_.Void>,
-                    jni$_.Pointer<jni$_.Void>,
-                    jni$_.Pointer<jni$_.Void>,
-                    jni$_.Pointer<jni$_.Void>,
-                    jni$_.Pointer<jni$_.Void>,
-                    jni$_.Pointer<jni$_.Void>,
-                    jni$_.Pointer<jni$_.Void>,
-                    jni$_.Pointer<jni$_.Void>,
-                    jni$_.Pointer<jni$_.Void>,
-                    jni$_.Pointer<jni$_.Void>,
-                    jni$_.Pointer<jni$_.Void>,
-                  )
-                >,
-              )
-            >
-          >('globalEnv_CallObjectMethod')
-          .asFunction<
-            jni$_.JniResult Function(
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.JMethodIDPtr,
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.Pointer<jni$_.Void>,
-            )
-          >();
-
-  /// from: `public fun copy(primaryPaletteKeyColor: kotlin.Int?, secondaryPaletteKeyColor: kotlin.Int?, tertiaryPaletteKeyColor: kotlin.Int?, neutralPaletteKeyColor: kotlin.Int?, neutralVariantPaletteKeyColor: kotlin.Int?, errorPaletteKeyColor: kotlin.Int?, background: kotlin.Int?, onBackground: kotlin.Int?, surface: kotlin.Int?, surfaceDim: kotlin.Int?, surfaceBright: kotlin.Int?, surfaceContainerLowest: kotlin.Int?, surfaceContainerLow: kotlin.Int?, surfaceContainer: kotlin.Int?, surfaceContainerHigh: kotlin.Int?, surfaceContainerHighest: kotlin.Int?, onSurface: kotlin.Int?, surfaceVariant: kotlin.Int?, onSurfaceVariant: kotlin.Int?, outline: kotlin.Int?, outlineVariant: kotlin.Int?, inverseSurface: kotlin.Int?, inverseOnSurface: kotlin.Int?, shadow: kotlin.Int?, scrim: kotlin.Int?, surfaceTint: kotlin.Int?, primary: kotlin.Int?, primaryDim: kotlin.Int?, onPrimary: kotlin.Int?, primaryContainer: kotlin.Int?, onPrimaryContainer: kotlin.Int?, primaryFixed: kotlin.Int?, primaryFixedDim: kotlin.Int?, onPrimaryFixed: kotlin.Int?, onPrimaryFixedVariant: kotlin.Int?, inversePrimary: kotlin.Int?, secondary: kotlin.Int?, secondaryDim: kotlin.Int?, onSecondary: kotlin.Int?, secondaryContainer: kotlin.Int?, onSecondaryContainer: kotlin.Int?, secondaryFixed: kotlin.Int?, secondaryFixedDim: kotlin.Int?, onSecondaryFixed: kotlin.Int?, onSecondaryFixedVariant: kotlin.Int?, tertiary: kotlin.Int?, tertiaryDim: kotlin.Int?, onTertiary: kotlin.Int?, tertiaryContainer: kotlin.Int?, onTertiaryContainer: kotlin.Int?, tertiaryFixed: kotlin.Int?, tertiaryFixedDim: kotlin.Int?, onTertiaryFixed: kotlin.Int?, onTertiaryFixedVariant: kotlin.Int?, error: kotlin.Int?, errorDim: kotlin.Int?, onError: kotlin.Int?, errorContainer: kotlin.Int?, onErrorContainer: kotlin.Int?, controlActivated: kotlin.Int?, controlNormal: kotlin.Int?, controlHighlight: kotlin.Int?, textPrimaryInverse: kotlin.Int?, textSecondaryAndTertiaryInverse: kotlin.Int?, textPrimaryInverseDisableOnly: kotlin.Int?, textSecondaryAndTertiaryInverseDisabled: kotlin.Int?, textHintInverse: kotlin.Int?): dev.deminearchiver.dynamic_color_ffi.DynamicColorScheme`
-  /// The returned object must be released after use, by calling the [release] method.
-  DynamicColorScheme copy(
-    jni$_.JInteger? integer,
-    jni$_.JInteger? integer1,
-    jni$_.JInteger? integer2,
-    jni$_.JInteger? integer3,
-    jni$_.JInteger? integer4,
-    jni$_.JInteger? integer5,
-    jni$_.JInteger? integer6,
-    jni$_.JInteger? integer7,
-    jni$_.JInteger? integer8,
-    jni$_.JInteger? integer9,
-    jni$_.JInteger? integer10,
-    jni$_.JInteger? integer11,
-    jni$_.JInteger? integer12,
-    jni$_.JInteger? integer13,
-    jni$_.JInteger? integer14,
-    jni$_.JInteger? integer15,
-    jni$_.JInteger? integer16,
-    jni$_.JInteger? integer17,
-    jni$_.JInteger? integer18,
-    jni$_.JInteger? integer19,
-    jni$_.JInteger? integer20,
-    jni$_.JInteger? integer21,
-    jni$_.JInteger? integer22,
-    jni$_.JInteger? integer23,
-    jni$_.JInteger? integer24,
-    jni$_.JInteger? integer25,
-    jni$_.JInteger? integer26,
-    jni$_.JInteger? integer27,
-    jni$_.JInteger? integer28,
-    jni$_.JInteger? integer29,
-    jni$_.JInteger? integer30,
-    jni$_.JInteger? integer31,
-    jni$_.JInteger? integer32,
-    jni$_.JInteger? integer33,
-    jni$_.JInteger? integer34,
-    jni$_.JInteger? integer35,
-    jni$_.JInteger? integer36,
-    jni$_.JInteger? integer37,
-    jni$_.JInteger? integer38,
-    jni$_.JInteger? integer39,
-    jni$_.JInteger? integer40,
-    jni$_.JInteger? integer41,
-    jni$_.JInteger? integer42,
-    jni$_.JInteger? integer43,
-    jni$_.JInteger? integer44,
-    jni$_.JInteger? integer45,
-    jni$_.JInteger? integer46,
-    jni$_.JInteger? integer47,
-    jni$_.JInteger? integer48,
-    jni$_.JInteger? integer49,
-    jni$_.JInteger? integer50,
-    jni$_.JInteger? integer51,
-    jni$_.JInteger? integer52,
-    jni$_.JInteger? integer53,
-    jni$_.JInteger? integer54,
-    jni$_.JInteger? integer55,
-    jni$_.JInteger? integer56,
-    jni$_.JInteger? integer57,
-    jni$_.JInteger? integer58,
-    jni$_.JInteger? integer59,
-    jni$_.JInteger? integer60,
-    jni$_.JInteger? integer61,
-    jni$_.JInteger? integer62,
-    jni$_.JInteger? integer63,
-    jni$_.JInteger? integer64,
-    jni$_.JInteger? integer65,
-    jni$_.JInteger? integer66,
-  ) {
-    final _$integer = integer?.reference ?? jni$_.jNullReference;
-    final _$integer1 = integer1?.reference ?? jni$_.jNullReference;
-    final _$integer2 = integer2?.reference ?? jni$_.jNullReference;
-    final _$integer3 = integer3?.reference ?? jni$_.jNullReference;
-    final _$integer4 = integer4?.reference ?? jni$_.jNullReference;
-    final _$integer5 = integer5?.reference ?? jni$_.jNullReference;
-    final _$integer6 = integer6?.reference ?? jni$_.jNullReference;
-    final _$integer7 = integer7?.reference ?? jni$_.jNullReference;
-    final _$integer8 = integer8?.reference ?? jni$_.jNullReference;
-    final _$integer9 = integer9?.reference ?? jni$_.jNullReference;
-    final _$integer10 = integer10?.reference ?? jni$_.jNullReference;
-    final _$integer11 = integer11?.reference ?? jni$_.jNullReference;
-    final _$integer12 = integer12?.reference ?? jni$_.jNullReference;
-    final _$integer13 = integer13?.reference ?? jni$_.jNullReference;
-    final _$integer14 = integer14?.reference ?? jni$_.jNullReference;
-    final _$integer15 = integer15?.reference ?? jni$_.jNullReference;
-    final _$integer16 = integer16?.reference ?? jni$_.jNullReference;
-    final _$integer17 = integer17?.reference ?? jni$_.jNullReference;
-    final _$integer18 = integer18?.reference ?? jni$_.jNullReference;
-    final _$integer19 = integer19?.reference ?? jni$_.jNullReference;
-    final _$integer20 = integer20?.reference ?? jni$_.jNullReference;
-    final _$integer21 = integer21?.reference ?? jni$_.jNullReference;
-    final _$integer22 = integer22?.reference ?? jni$_.jNullReference;
-    final _$integer23 = integer23?.reference ?? jni$_.jNullReference;
-    final _$integer24 = integer24?.reference ?? jni$_.jNullReference;
-    final _$integer25 = integer25?.reference ?? jni$_.jNullReference;
-    final _$integer26 = integer26?.reference ?? jni$_.jNullReference;
-    final _$integer27 = integer27?.reference ?? jni$_.jNullReference;
-    final _$integer28 = integer28?.reference ?? jni$_.jNullReference;
-    final _$integer29 = integer29?.reference ?? jni$_.jNullReference;
-    final _$integer30 = integer30?.reference ?? jni$_.jNullReference;
-    final _$integer31 = integer31?.reference ?? jni$_.jNullReference;
-    final _$integer32 = integer32?.reference ?? jni$_.jNullReference;
-    final _$integer33 = integer33?.reference ?? jni$_.jNullReference;
-    final _$integer34 = integer34?.reference ?? jni$_.jNullReference;
-    final _$integer35 = integer35?.reference ?? jni$_.jNullReference;
-    final _$integer36 = integer36?.reference ?? jni$_.jNullReference;
-    final _$integer37 = integer37?.reference ?? jni$_.jNullReference;
-    final _$integer38 = integer38?.reference ?? jni$_.jNullReference;
-    final _$integer39 = integer39?.reference ?? jni$_.jNullReference;
-    final _$integer40 = integer40?.reference ?? jni$_.jNullReference;
-    final _$integer41 = integer41?.reference ?? jni$_.jNullReference;
-    final _$integer42 = integer42?.reference ?? jni$_.jNullReference;
-    final _$integer43 = integer43?.reference ?? jni$_.jNullReference;
-    final _$integer44 = integer44?.reference ?? jni$_.jNullReference;
-    final _$integer45 = integer45?.reference ?? jni$_.jNullReference;
-    final _$integer46 = integer46?.reference ?? jni$_.jNullReference;
-    final _$integer47 = integer47?.reference ?? jni$_.jNullReference;
-    final _$integer48 = integer48?.reference ?? jni$_.jNullReference;
-    final _$integer49 = integer49?.reference ?? jni$_.jNullReference;
-    final _$integer50 = integer50?.reference ?? jni$_.jNullReference;
-    final _$integer51 = integer51?.reference ?? jni$_.jNullReference;
-    final _$integer52 = integer52?.reference ?? jni$_.jNullReference;
-    final _$integer53 = integer53?.reference ?? jni$_.jNullReference;
-    final _$integer54 = integer54?.reference ?? jni$_.jNullReference;
-    final _$integer55 = integer55?.reference ?? jni$_.jNullReference;
-    final _$integer56 = integer56?.reference ?? jni$_.jNullReference;
-    final _$integer57 = integer57?.reference ?? jni$_.jNullReference;
-    final _$integer58 = integer58?.reference ?? jni$_.jNullReference;
-    final _$integer59 = integer59?.reference ?? jni$_.jNullReference;
-    final _$integer60 = integer60?.reference ?? jni$_.jNullReference;
-    final _$integer61 = integer61?.reference ?? jni$_.jNullReference;
-    final _$integer62 = integer62?.reference ?? jni$_.jNullReference;
-    final _$integer63 = integer63?.reference ?? jni$_.jNullReference;
-    final _$integer64 = integer64?.reference ?? jni$_.jNullReference;
-    final _$integer65 = integer65?.reference ?? jni$_.jNullReference;
-    final _$integer66 = integer66?.reference ?? jni$_.jNullReference;
-    return _copy(
-      reference.pointer,
-      _id_copy as jni$_.JMethodIDPtr,
-      _$integer.pointer,
-      _$integer1.pointer,
-      _$integer2.pointer,
-      _$integer3.pointer,
-      _$integer4.pointer,
-      _$integer5.pointer,
-      _$integer6.pointer,
-      _$integer7.pointer,
-      _$integer8.pointer,
-      _$integer9.pointer,
-      _$integer10.pointer,
-      _$integer11.pointer,
-      _$integer12.pointer,
-      _$integer13.pointer,
-      _$integer14.pointer,
-      _$integer15.pointer,
-      _$integer16.pointer,
-      _$integer17.pointer,
-      _$integer18.pointer,
-      _$integer19.pointer,
-      _$integer20.pointer,
-      _$integer21.pointer,
-      _$integer22.pointer,
-      _$integer23.pointer,
-      _$integer24.pointer,
-      _$integer25.pointer,
-      _$integer26.pointer,
-      _$integer27.pointer,
-      _$integer28.pointer,
-      _$integer29.pointer,
-      _$integer30.pointer,
-      _$integer31.pointer,
-      _$integer32.pointer,
-      _$integer33.pointer,
-      _$integer34.pointer,
-      _$integer35.pointer,
-      _$integer36.pointer,
-      _$integer37.pointer,
-      _$integer38.pointer,
-      _$integer39.pointer,
-      _$integer40.pointer,
-      _$integer41.pointer,
-      _$integer42.pointer,
-      _$integer43.pointer,
-      _$integer44.pointer,
-      _$integer45.pointer,
-      _$integer46.pointer,
-      _$integer47.pointer,
-      _$integer48.pointer,
-      _$integer49.pointer,
-      _$integer50.pointer,
-      _$integer51.pointer,
-      _$integer52.pointer,
-      _$integer53.pointer,
-      _$integer54.pointer,
-      _$integer55.pointer,
-      _$integer56.pointer,
-      _$integer57.pointer,
-      _$integer58.pointer,
-      _$integer59.pointer,
-      _$integer60.pointer,
-      _$integer61.pointer,
-      _$integer62.pointer,
-      _$integer63.pointer,
-      _$integer64.pointer,
-      _$integer65.pointer,
-      _$integer66.pointer,
-    ).object<DynamicColorScheme>(const $DynamicColorScheme$Type$());
-  }
-
-  static final _id_toString$1 = _class.instanceMethodId(
-    r'toString',
-    r'()Ljava/lang/String;',
-  );
-
-  static final _toString$1 =
-      jni$_.ProtectedJniExtensions.lookup<
-            jni$_.NativeFunction<
-              jni$_.JniResult Function(
-                jni$_.Pointer<jni$_.Void>,
-                jni$_.JMethodIDPtr,
-              )
-            >
-          >('globalEnv_CallObjectMethod')
-          .asFunction<
-            jni$_.JniResult Function(
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.JMethodIDPtr,
-            )
-          >();
-
-  /// from: `public fun toString(): kotlin.String`
-  /// The returned object must be released after use, by calling the [release] method.
-  jni$_.JString toString$1() {
-    return _toString$1(
-      reference.pointer,
-      _id_toString$1 as jni$_.JMethodIDPtr,
-    ).object<jni$_.JString>(const jni$_.$JString$Type$());
-  }
-
-  static final _id_hashCode$1 = _class.instanceMethodId(r'hashCode', r'()I');
-
-  static final _hashCode$1 =
-      jni$_.ProtectedJniExtensions.lookup<
-            jni$_.NativeFunction<
-              jni$_.JniResult Function(
-                jni$_.Pointer<jni$_.Void>,
-                jni$_.JMethodIDPtr,
-              )
-            >
-          >('globalEnv_CallIntMethod')
-          .asFunction<
-            jni$_.JniResult Function(
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.JMethodIDPtr,
-            )
-          >();
-
-  /// from: `public fun hashCode(): kotlin.Int`
-  int hashCode$1() {
-    return _hashCode$1(
-      reference.pointer,
-      _id_hashCode$1 as jni$_.JMethodIDPtr,
-    ).integer;
-  }
-
-  static final _id_equals = _class.instanceMethodId(
-    r'equals',
-    r'(Ljava/lang/Object;)Z',
-  );
-
-  static final _equals =
-      jni$_.ProtectedJniExtensions.lookup<
-            jni$_.NativeFunction<
-              jni$_.JniResult Function(
-                jni$_.Pointer<jni$_.Void>,
-                jni$_.JMethodIDPtr,
-                jni$_.VarArgs<(jni$_.Pointer<jni$_.Void>,)>,
-              )
-            >
-          >('globalEnv_CallBooleanMethod')
-          .asFunction<
-            jni$_.JniResult Function(
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.JMethodIDPtr,
-              jni$_.Pointer<jni$_.Void>,
-            )
-          >();
-
-  /// from: `public operator fun equals(other: kotlin.Any?): kotlin.Boolean`
-  bool equals(jni$_.JObject? object) {
-    final _$object = object?.reference ?? jni$_.jNullReference;
-    return _equals(
-      reference.pointer,
-      _id_equals as jni$_.JMethodIDPtr,
-      _$object.pointer,
-    ).boolean;
-  }
-
   static final _id_new$2 = _class.constructorId(r'()V');
 
   static final _new$2 =
@@ -5591,7 +2831,7 @@ class DynamicTonalPalette extends jni$_.JObject {
   static const jni$_.JType<DynamicTonalPalette> type =
       $DynamicTonalPalette$Type$();
   static final _id_new$ = _class.constructorId(
-    r'(Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;)V',
+    r'(Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;)V',
   );
 
   static final _new$ =
@@ -5696,6 +2936,16 @@ class DynamicTonalPalette extends jni$_.JObject {
                     jni$_.Pointer<jni$_.Void>,
                     jni$_.Pointer<jni$_.Void>,
                     jni$_.Pointer<jni$_.Void>,
+                    jni$_.Pointer<jni$_.Void>,
+                    jni$_.Pointer<jni$_.Void>,
+                    jni$_.Pointer<jni$_.Void>,
+                    jni$_.Pointer<jni$_.Void>,
+                    jni$_.Pointer<jni$_.Void>,
+                    jni$_.Pointer<jni$_.Void>,
+                    jni$_.Pointer<jni$_.Void>,
+                    jni$_.Pointer<jni$_.Void>,
+                    jni$_.Pointer<jni$_.Void>,
+                    jni$_.Pointer<jni$_.Void>,
                   )
                 >,
               )
@@ -5799,10 +3049,20 @@ class DynamicTonalPalette extends jni$_.JObject {
               jni$_.Pointer<jni$_.Void>,
               jni$_.Pointer<jni$_.Void>,
               jni$_.Pointer<jni$_.Void>,
+              jni$_.Pointer<jni$_.Void>,
+              jni$_.Pointer<jni$_.Void>,
+              jni$_.Pointer<jni$_.Void>,
+              jni$_.Pointer<jni$_.Void>,
+              jni$_.Pointer<jni$_.Void>,
+              jni$_.Pointer<jni$_.Void>,
+              jni$_.Pointer<jni$_.Void>,
+              jni$_.Pointer<jni$_.Void>,
+              jni$_.Pointer<jni$_.Void>,
+              jni$_.Pointer<jni$_.Void>,
             )
           >();
 
-  /// from: `public void <init>(java.lang.Integer integer, java.lang.Integer integer1, java.lang.Integer integer2, java.lang.Integer integer3, java.lang.Integer integer4, java.lang.Integer integer5, java.lang.Integer integer6, java.lang.Integer integer7, java.lang.Integer integer8, java.lang.Integer integer9, java.lang.Integer integer10, java.lang.Integer integer11, java.lang.Integer integer12, java.lang.Integer integer13, java.lang.Integer integer14, java.lang.Integer integer15, java.lang.Integer integer16, java.lang.Integer integer17, java.lang.Integer integer18, java.lang.Integer integer19, java.lang.Integer integer20, java.lang.Integer integer21, java.lang.Integer integer22, java.lang.Integer integer23, java.lang.Integer integer24, java.lang.Integer integer25, java.lang.Integer integer26, java.lang.Integer integer27, java.lang.Integer integer28, java.lang.Integer integer29, java.lang.Integer integer30, java.lang.Integer integer31, java.lang.Integer integer32, java.lang.Integer integer33, java.lang.Integer integer34, java.lang.Integer integer35, java.lang.Integer integer36, java.lang.Integer integer37, java.lang.Integer integer38, java.lang.Integer integer39, java.lang.Integer integer40, java.lang.Integer integer41, java.lang.Integer integer42, java.lang.Integer integer43, java.lang.Integer integer44, java.lang.Integer integer45, java.lang.Integer integer46, java.lang.Integer integer47, java.lang.Integer integer48, java.lang.Integer integer49, java.lang.Integer integer50, java.lang.Integer integer51, java.lang.Integer integer52, java.lang.Integer integer53, java.lang.Integer integer54, java.lang.Integer integer55, java.lang.Integer integer56, java.lang.Integer integer57, java.lang.Integer integer58, java.lang.Integer integer59, java.lang.Integer integer60, java.lang.Integer integer61, java.lang.Integer integer62, java.lang.Integer integer63, java.lang.Integer integer64, java.lang.Integer integer65, java.lang.Integer integer66, java.lang.Integer integer67, java.lang.Integer integer68, java.lang.Integer integer69, java.lang.Integer integer70, java.lang.Integer integer71, java.lang.Integer integer72, java.lang.Integer integer73, java.lang.Integer integer74, java.lang.Integer integer75, java.lang.Integer integer76, java.lang.Integer integer77, java.lang.Integer integer78, java.lang.Integer integer79, java.lang.Integer integer80, java.lang.Integer integer81, java.lang.Integer integer82, java.lang.Integer integer83, java.lang.Integer integer84, java.lang.Integer integer85, java.lang.Integer integer86, java.lang.Integer integer87, java.lang.Integer integer88, java.lang.Integer integer89, java.lang.Integer integer90, java.lang.Integer integer91, java.lang.Integer integer92, java.lang.Integer integer93)`
+  /// from: `public void <init>(java.lang.Integer integer, java.lang.Integer integer1, java.lang.Integer integer2, java.lang.Integer integer3, java.lang.Integer integer4, java.lang.Integer integer5, java.lang.Integer integer6, java.lang.Integer integer7, java.lang.Integer integer8, java.lang.Integer integer9, java.lang.Integer integer10, java.lang.Integer integer11, java.lang.Integer integer12, java.lang.Integer integer13, java.lang.Integer integer14, java.lang.Integer integer15, java.lang.Integer integer16, java.lang.Integer integer17, java.lang.Integer integer18, java.lang.Integer integer19, java.lang.Integer integer20, java.lang.Integer integer21, java.lang.Integer integer22, java.lang.Integer integer23, java.lang.Integer integer24, java.lang.Integer integer25, java.lang.Integer integer26, java.lang.Integer integer27, java.lang.Integer integer28, java.lang.Integer integer29, java.lang.Integer integer30, java.lang.Integer integer31, java.lang.Integer integer32, java.lang.Integer integer33, java.lang.Integer integer34, java.lang.Integer integer35, java.lang.Integer integer36, java.lang.Integer integer37, java.lang.Integer integer38, java.lang.Integer integer39, java.lang.Integer integer40, java.lang.Integer integer41, java.lang.Integer integer42, java.lang.Integer integer43, java.lang.Integer integer44, java.lang.Integer integer45, java.lang.Integer integer46, java.lang.Integer integer47, java.lang.Integer integer48, java.lang.Integer integer49, java.lang.Integer integer50, java.lang.Integer integer51, java.lang.Integer integer52, java.lang.Integer integer53, java.lang.Integer integer54, java.lang.Integer integer55, java.lang.Integer integer56, java.lang.Integer integer57, java.lang.Integer integer58, java.lang.Integer integer59, java.lang.Integer integer60, java.lang.Integer integer61, java.lang.Integer integer62, java.lang.Integer integer63, java.lang.Integer integer64, java.lang.Integer integer65, java.lang.Integer integer66, java.lang.Integer integer67, java.lang.Integer integer68, java.lang.Integer integer69, java.lang.Integer integer70, java.lang.Integer integer71, java.lang.Integer integer72, java.lang.Integer integer73, java.lang.Integer integer74, java.lang.Integer integer75, java.lang.Integer integer76, java.lang.Integer integer77, java.lang.Integer integer78, java.lang.Integer integer79, java.lang.Integer integer80, java.lang.Integer integer81, java.lang.Integer integer82, java.lang.Integer integer83, java.lang.Integer integer84, java.lang.Integer integer85, java.lang.Integer integer86, java.lang.Integer integer87, java.lang.Integer integer88, java.lang.Integer integer89, java.lang.Integer integer90, java.lang.Integer integer91, java.lang.Integer integer92, java.lang.Integer integer93, java.lang.Integer integer94, java.lang.Integer integer95, java.lang.Integer integer96, java.lang.Integer integer97, java.lang.Integer integer98, java.lang.Integer integer99, java.lang.Integer integer100, java.lang.Integer integer101, java.lang.Integer integer102, java.lang.Integer integer103)`
   /// The returned object must be released after use, by calling the [release] method.
   factory DynamicTonalPalette(
     jni$_.JInteger? integer,
@@ -5899,6 +3159,16 @@ class DynamicTonalPalette extends jni$_.JObject {
     jni$_.JInteger? integer91,
     jni$_.JInteger? integer92,
     jni$_.JInteger? integer93,
+    jni$_.JInteger? integer94,
+    jni$_.JInteger? integer95,
+    jni$_.JInteger? integer96,
+    jni$_.JInteger? integer97,
+    jni$_.JInteger? integer98,
+    jni$_.JInteger? integer99,
+    jni$_.JInteger? integer100,
+    jni$_.JInteger? integer101,
+    jni$_.JInteger? integer102,
+    jni$_.JInteger? integer103,
   ) {
     final _$integer = integer?.reference ?? jni$_.jNullReference;
     final _$integer1 = integer1?.reference ?? jni$_.jNullReference;
@@ -5994,6 +3264,16 @@ class DynamicTonalPalette extends jni$_.JObject {
     final _$integer91 = integer91?.reference ?? jni$_.jNullReference;
     final _$integer92 = integer92?.reference ?? jni$_.jNullReference;
     final _$integer93 = integer93?.reference ?? jni$_.jNullReference;
+    final _$integer94 = integer94?.reference ?? jni$_.jNullReference;
+    final _$integer95 = integer95?.reference ?? jni$_.jNullReference;
+    final _$integer96 = integer96?.reference ?? jni$_.jNullReference;
+    final _$integer97 = integer97?.reference ?? jni$_.jNullReference;
+    final _$integer98 = integer98?.reference ?? jni$_.jNullReference;
+    final _$integer99 = integer99?.reference ?? jni$_.jNullReference;
+    final _$integer100 = integer100?.reference ?? jni$_.jNullReference;
+    final _$integer101 = integer101?.reference ?? jni$_.jNullReference;
+    final _$integer102 = integer102?.reference ?? jni$_.jNullReference;
+    final _$integer103 = integer103?.reference ?? jni$_.jNullReference;
     return DynamicTonalPalette.fromReference(
       _new$(
         _class.reference.pointer,
@@ -6092,12 +3372,22 @@ class DynamicTonalPalette extends jni$_.JObject {
         _$integer91.pointer,
         _$integer92.pointer,
         _$integer93.pointer,
+        _$integer94.pointer,
+        _$integer95.pointer,
+        _$integer96.pointer,
+        _$integer97.pointer,
+        _$integer98.pointer,
+        _$integer99.pointer,
+        _$integer100.pointer,
+        _$integer101.pointer,
+        _$integer102.pointer,
+        _$integer103.pointer,
       ).reference,
     );
   }
 
   static final _id_new$1 = _class.constructorId(
-    r'(Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;IIILkotlin/jvm/internal/DefaultConstructorMarker;)V',
+    r'(Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;IIIILkotlin/jvm/internal/DefaultConstructorMarker;)V',
   );
 
   static final _new$1 =
@@ -6202,6 +3492,17 @@ class DynamicTonalPalette extends jni$_.JObject {
                     jni$_.Pointer<jni$_.Void>,
                     jni$_.Pointer<jni$_.Void>,
                     jni$_.Pointer<jni$_.Void>,
+                    jni$_.Pointer<jni$_.Void>,
+                    jni$_.Pointer<jni$_.Void>,
+                    jni$_.Pointer<jni$_.Void>,
+                    jni$_.Pointer<jni$_.Void>,
+                    jni$_.Pointer<jni$_.Void>,
+                    jni$_.Pointer<jni$_.Void>,
+                    jni$_.Pointer<jni$_.Void>,
+                    jni$_.Pointer<jni$_.Void>,
+                    jni$_.Pointer<jni$_.Void>,
+                    jni$_.Pointer<jni$_.Void>,
+                    jni$_.Int32,
                     jni$_.Int32,
                     jni$_.Int32,
                     jni$_.Int32,
@@ -6309,6 +3610,17 @@ class DynamicTonalPalette extends jni$_.JObject {
               jni$_.Pointer<jni$_.Void>,
               jni$_.Pointer<jni$_.Void>,
               jni$_.Pointer<jni$_.Void>,
+              jni$_.Pointer<jni$_.Void>,
+              jni$_.Pointer<jni$_.Void>,
+              jni$_.Pointer<jni$_.Void>,
+              jni$_.Pointer<jni$_.Void>,
+              jni$_.Pointer<jni$_.Void>,
+              jni$_.Pointer<jni$_.Void>,
+              jni$_.Pointer<jni$_.Void>,
+              jni$_.Pointer<jni$_.Void>,
+              jni$_.Pointer<jni$_.Void>,
+              jni$_.Pointer<jni$_.Void>,
+              int,
               int,
               int,
               int,
@@ -6316,7 +3628,7 @@ class DynamicTonalPalette extends jni$_.JObject {
             )
           >();
 
-  /// from: `synthetic public void <init>(java.lang.Integer integer, java.lang.Integer integer1, java.lang.Integer integer2, java.lang.Integer integer3, java.lang.Integer integer4, java.lang.Integer integer5, java.lang.Integer integer6, java.lang.Integer integer7, java.lang.Integer integer8, java.lang.Integer integer9, java.lang.Integer integer10, java.lang.Integer integer11, java.lang.Integer integer12, java.lang.Integer integer13, java.lang.Integer integer14, java.lang.Integer integer15, java.lang.Integer integer16, java.lang.Integer integer17, java.lang.Integer integer18, java.lang.Integer integer19, java.lang.Integer integer20, java.lang.Integer integer21, java.lang.Integer integer22, java.lang.Integer integer23, java.lang.Integer integer24, java.lang.Integer integer25, java.lang.Integer integer26, java.lang.Integer integer27, java.lang.Integer integer28, java.lang.Integer integer29, java.lang.Integer integer30, java.lang.Integer integer31, java.lang.Integer integer32, java.lang.Integer integer33, java.lang.Integer integer34, java.lang.Integer integer35, java.lang.Integer integer36, java.lang.Integer integer37, java.lang.Integer integer38, java.lang.Integer integer39, java.lang.Integer integer40, java.lang.Integer integer41, java.lang.Integer integer42, java.lang.Integer integer43, java.lang.Integer integer44, java.lang.Integer integer45, java.lang.Integer integer46, java.lang.Integer integer47, java.lang.Integer integer48, java.lang.Integer integer49, java.lang.Integer integer50, java.lang.Integer integer51, java.lang.Integer integer52, java.lang.Integer integer53, java.lang.Integer integer54, java.lang.Integer integer55, java.lang.Integer integer56, java.lang.Integer integer57, java.lang.Integer integer58, java.lang.Integer integer59, java.lang.Integer integer60, java.lang.Integer integer61, java.lang.Integer integer62, java.lang.Integer integer63, java.lang.Integer integer64, java.lang.Integer integer65, java.lang.Integer integer66, java.lang.Integer integer67, java.lang.Integer integer68, java.lang.Integer integer69, java.lang.Integer integer70, java.lang.Integer integer71, java.lang.Integer integer72, java.lang.Integer integer73, java.lang.Integer integer74, java.lang.Integer integer75, java.lang.Integer integer76, java.lang.Integer integer77, java.lang.Integer integer78, java.lang.Integer integer79, java.lang.Integer integer80, java.lang.Integer integer81, java.lang.Integer integer82, java.lang.Integer integer83, java.lang.Integer integer84, java.lang.Integer integer85, java.lang.Integer integer86, java.lang.Integer integer87, java.lang.Integer integer88, java.lang.Integer integer89, java.lang.Integer integer90, java.lang.Integer integer91, java.lang.Integer integer92, java.lang.Integer integer93, int i, int i1, int i2, kotlin.jvm.internal.DefaultConstructorMarker defaultConstructorMarker)`
+  /// from: `synthetic public void <init>(java.lang.Integer integer, java.lang.Integer integer1, java.lang.Integer integer2, java.lang.Integer integer3, java.lang.Integer integer4, java.lang.Integer integer5, java.lang.Integer integer6, java.lang.Integer integer7, java.lang.Integer integer8, java.lang.Integer integer9, java.lang.Integer integer10, java.lang.Integer integer11, java.lang.Integer integer12, java.lang.Integer integer13, java.lang.Integer integer14, java.lang.Integer integer15, java.lang.Integer integer16, java.lang.Integer integer17, java.lang.Integer integer18, java.lang.Integer integer19, java.lang.Integer integer20, java.lang.Integer integer21, java.lang.Integer integer22, java.lang.Integer integer23, java.lang.Integer integer24, java.lang.Integer integer25, java.lang.Integer integer26, java.lang.Integer integer27, java.lang.Integer integer28, java.lang.Integer integer29, java.lang.Integer integer30, java.lang.Integer integer31, java.lang.Integer integer32, java.lang.Integer integer33, java.lang.Integer integer34, java.lang.Integer integer35, java.lang.Integer integer36, java.lang.Integer integer37, java.lang.Integer integer38, java.lang.Integer integer39, java.lang.Integer integer40, java.lang.Integer integer41, java.lang.Integer integer42, java.lang.Integer integer43, java.lang.Integer integer44, java.lang.Integer integer45, java.lang.Integer integer46, java.lang.Integer integer47, java.lang.Integer integer48, java.lang.Integer integer49, java.lang.Integer integer50, java.lang.Integer integer51, java.lang.Integer integer52, java.lang.Integer integer53, java.lang.Integer integer54, java.lang.Integer integer55, java.lang.Integer integer56, java.lang.Integer integer57, java.lang.Integer integer58, java.lang.Integer integer59, java.lang.Integer integer60, java.lang.Integer integer61, java.lang.Integer integer62, java.lang.Integer integer63, java.lang.Integer integer64, java.lang.Integer integer65, java.lang.Integer integer66, java.lang.Integer integer67, java.lang.Integer integer68, java.lang.Integer integer69, java.lang.Integer integer70, java.lang.Integer integer71, java.lang.Integer integer72, java.lang.Integer integer73, java.lang.Integer integer74, java.lang.Integer integer75, java.lang.Integer integer76, java.lang.Integer integer77, java.lang.Integer integer78, java.lang.Integer integer79, java.lang.Integer integer80, java.lang.Integer integer81, java.lang.Integer integer82, java.lang.Integer integer83, java.lang.Integer integer84, java.lang.Integer integer85, java.lang.Integer integer86, java.lang.Integer integer87, java.lang.Integer integer88, java.lang.Integer integer89, java.lang.Integer integer90, java.lang.Integer integer91, java.lang.Integer integer92, java.lang.Integer integer93, java.lang.Integer integer94, java.lang.Integer integer95, java.lang.Integer integer96, java.lang.Integer integer97, java.lang.Integer integer98, java.lang.Integer integer99, java.lang.Integer integer100, java.lang.Integer integer101, java.lang.Integer integer102, java.lang.Integer integer103, int i, int i1, int i2, int i3, kotlin.jvm.internal.DefaultConstructorMarker defaultConstructorMarker)`
   /// The returned object must be released after use, by calling the [release] method.
   factory DynamicTonalPalette.new$1(
     jni$_.JInteger? integer,
@@ -6413,9 +3725,20 @@ class DynamicTonalPalette extends jni$_.JObject {
     jni$_.JInteger? integer91,
     jni$_.JInteger? integer92,
     jni$_.JInteger? integer93,
+    jni$_.JInteger? integer94,
+    jni$_.JInteger? integer95,
+    jni$_.JInteger? integer96,
+    jni$_.JInteger? integer97,
+    jni$_.JInteger? integer98,
+    jni$_.JInteger? integer99,
+    jni$_.JInteger? integer100,
+    jni$_.JInteger? integer101,
+    jni$_.JInteger? integer102,
+    jni$_.JInteger? integer103,
     int i,
     int i1,
     int i2,
+    int i3,
     jni$_.JObject? defaultConstructorMarker,
   ) {
     final _$integer = integer?.reference ?? jni$_.jNullReference;
@@ -6512,6 +3835,16 @@ class DynamicTonalPalette extends jni$_.JObject {
     final _$integer91 = integer91?.reference ?? jni$_.jNullReference;
     final _$integer92 = integer92?.reference ?? jni$_.jNullReference;
     final _$integer93 = integer93?.reference ?? jni$_.jNullReference;
+    final _$integer94 = integer94?.reference ?? jni$_.jNullReference;
+    final _$integer95 = integer95?.reference ?? jni$_.jNullReference;
+    final _$integer96 = integer96?.reference ?? jni$_.jNullReference;
+    final _$integer97 = integer97?.reference ?? jni$_.jNullReference;
+    final _$integer98 = integer98?.reference ?? jni$_.jNullReference;
+    final _$integer99 = integer99?.reference ?? jni$_.jNullReference;
+    final _$integer100 = integer100?.reference ?? jni$_.jNullReference;
+    final _$integer101 = integer101?.reference ?? jni$_.jNullReference;
+    final _$integer102 = integer102?.reference ?? jni$_.jNullReference;
+    final _$integer103 = integer103?.reference ?? jni$_.jNullReference;
     final _$defaultConstructorMarker =
         defaultConstructorMarker?.reference ?? jni$_.jNullReference;
     return DynamicTonalPalette.fromReference(
@@ -6612,9 +3945,20 @@ class DynamicTonalPalette extends jni$_.JObject {
         _$integer91.pointer,
         _$integer92.pointer,
         _$integer93.pointer,
+        _$integer94.pointer,
+        _$integer95.pointer,
+        _$integer96.pointer,
+        _$integer97.pointer,
+        _$integer98.pointer,
+        _$integer99.pointer,
+        _$integer100.pointer,
+        _$integer101.pointer,
+        _$integer102.pointer,
+        _$integer103.pointer,
         i,
         i1,
         i2,
+        i3,
         _$defaultConstructorMarker.pointer,
       ).reference,
     );
@@ -8630,6 +5974,66 @@ class DynamicTonalPalette extends jni$_.JObject {
     ).object<jni$_.JInteger?>(const jni$_.$JInteger$NullableType$());
   }
 
+  static final _id_getNeutralVariant4 = _class.instanceMethodId(
+    r'getNeutralVariant4',
+    r'()Ljava/lang/Integer;',
+  );
+
+  static final _getNeutralVariant4 =
+      jni$_.ProtectedJniExtensions.lookup<
+            jni$_.NativeFunction<
+              jni$_.JniResult Function(
+                jni$_.Pointer<jni$_.Void>,
+                jni$_.JMethodIDPtr,
+              )
+            >
+          >('globalEnv_CallObjectMethod')
+          .asFunction<
+            jni$_.JniResult Function(
+              jni$_.Pointer<jni$_.Void>,
+              jni$_.JMethodIDPtr,
+            )
+          >();
+
+  /// from: `public final java.lang.Integer getNeutralVariant4()`
+  /// The returned object must be released after use, by calling the [release] method.
+  jni$_.JInteger? getNeutralVariant4() {
+    return _getNeutralVariant4(
+      reference.pointer,
+      _id_getNeutralVariant4 as jni$_.JMethodIDPtr,
+    ).object<jni$_.JInteger?>(const jni$_.$JInteger$NullableType$());
+  }
+
+  static final _id_getNeutralVariant6 = _class.instanceMethodId(
+    r'getNeutralVariant6',
+    r'()Ljava/lang/Integer;',
+  );
+
+  static final _getNeutralVariant6 =
+      jni$_.ProtectedJniExtensions.lookup<
+            jni$_.NativeFunction<
+              jni$_.JniResult Function(
+                jni$_.Pointer<jni$_.Void>,
+                jni$_.JMethodIDPtr,
+              )
+            >
+          >('globalEnv_CallObjectMethod')
+          .asFunction<
+            jni$_.JniResult Function(
+              jni$_.Pointer<jni$_.Void>,
+              jni$_.JMethodIDPtr,
+            )
+          >();
+
+  /// from: `public final java.lang.Integer getNeutralVariant6()`
+  /// The returned object must be released after use, by calling the [release] method.
+  jni$_.JInteger? getNeutralVariant6() {
+    return _getNeutralVariant6(
+      reference.pointer,
+      _id_getNeutralVariant6 as jni$_.JMethodIDPtr,
+    ).object<jni$_.JInteger?>(const jni$_.$JInteger$NullableType$());
+  }
+
   static final _id_getNeutralVariant10 = _class.instanceMethodId(
     r'getNeutralVariant10',
     r'()Ljava/lang/Integer;',
@@ -8660,6 +6064,66 @@ class DynamicTonalPalette extends jni$_.JObject {
     ).object<jni$_.JInteger?>(const jni$_.$JInteger$NullableType$());
   }
 
+  static final _id_getNeutralVariant12 = _class.instanceMethodId(
+    r'getNeutralVariant12',
+    r'()Ljava/lang/Integer;',
+  );
+
+  static final _getNeutralVariant12 =
+      jni$_.ProtectedJniExtensions.lookup<
+            jni$_.NativeFunction<
+              jni$_.JniResult Function(
+                jni$_.Pointer<jni$_.Void>,
+                jni$_.JMethodIDPtr,
+              )
+            >
+          >('globalEnv_CallObjectMethod')
+          .asFunction<
+            jni$_.JniResult Function(
+              jni$_.Pointer<jni$_.Void>,
+              jni$_.JMethodIDPtr,
+            )
+          >();
+
+  /// from: `public final java.lang.Integer getNeutralVariant12()`
+  /// The returned object must be released after use, by calling the [release] method.
+  jni$_.JInteger? getNeutralVariant12() {
+    return _getNeutralVariant12(
+      reference.pointer,
+      _id_getNeutralVariant12 as jni$_.JMethodIDPtr,
+    ).object<jni$_.JInteger?>(const jni$_.$JInteger$NullableType$());
+  }
+
+  static final _id_getNeutralVariant17 = _class.instanceMethodId(
+    r'getNeutralVariant17',
+    r'()Ljava/lang/Integer;',
+  );
+
+  static final _getNeutralVariant17 =
+      jni$_.ProtectedJniExtensions.lookup<
+            jni$_.NativeFunction<
+              jni$_.JniResult Function(
+                jni$_.Pointer<jni$_.Void>,
+                jni$_.JMethodIDPtr,
+              )
+            >
+          >('globalEnv_CallObjectMethod')
+          .asFunction<
+            jni$_.JniResult Function(
+              jni$_.Pointer<jni$_.Void>,
+              jni$_.JMethodIDPtr,
+            )
+          >();
+
+  /// from: `public final java.lang.Integer getNeutralVariant17()`
+  /// The returned object must be released after use, by calling the [release] method.
+  jni$_.JInteger? getNeutralVariant17() {
+    return _getNeutralVariant17(
+      reference.pointer,
+      _id_getNeutralVariant17 as jni$_.JMethodIDPtr,
+    ).object<jni$_.JInteger?>(const jni$_.$JInteger$NullableType$());
+  }
+
   static final _id_getNeutralVariant20 = _class.instanceMethodId(
     r'getNeutralVariant20',
     r'()Ljava/lang/Integer;',
@@ -8687,6 +6151,66 @@ class DynamicTonalPalette extends jni$_.JObject {
     return _getNeutralVariant20(
       reference.pointer,
       _id_getNeutralVariant20 as jni$_.JMethodIDPtr,
+    ).object<jni$_.JInteger?>(const jni$_.$JInteger$NullableType$());
+  }
+
+  static final _id_getNeutralVariant22 = _class.instanceMethodId(
+    r'getNeutralVariant22',
+    r'()Ljava/lang/Integer;',
+  );
+
+  static final _getNeutralVariant22 =
+      jni$_.ProtectedJniExtensions.lookup<
+            jni$_.NativeFunction<
+              jni$_.JniResult Function(
+                jni$_.Pointer<jni$_.Void>,
+                jni$_.JMethodIDPtr,
+              )
+            >
+          >('globalEnv_CallObjectMethod')
+          .asFunction<
+            jni$_.JniResult Function(
+              jni$_.Pointer<jni$_.Void>,
+              jni$_.JMethodIDPtr,
+            )
+          >();
+
+  /// from: `public final java.lang.Integer getNeutralVariant22()`
+  /// The returned object must be released after use, by calling the [release] method.
+  jni$_.JInteger? getNeutralVariant22() {
+    return _getNeutralVariant22(
+      reference.pointer,
+      _id_getNeutralVariant22 as jni$_.JMethodIDPtr,
+    ).object<jni$_.JInteger?>(const jni$_.$JInteger$NullableType$());
+  }
+
+  static final _id_getNeutralVariant24 = _class.instanceMethodId(
+    r'getNeutralVariant24',
+    r'()Ljava/lang/Integer;',
+  );
+
+  static final _getNeutralVariant24 =
+      jni$_.ProtectedJniExtensions.lookup<
+            jni$_.NativeFunction<
+              jni$_.JniResult Function(
+                jni$_.Pointer<jni$_.Void>,
+                jni$_.JMethodIDPtr,
+              )
+            >
+          >('globalEnv_CallObjectMethod')
+          .asFunction<
+            jni$_.JniResult Function(
+              jni$_.Pointer<jni$_.Void>,
+              jni$_.JMethodIDPtr,
+            )
+          >();
+
+  /// from: `public final java.lang.Integer getNeutralVariant24()`
+  /// The returned object must be released after use, by calling the [release] method.
+  jni$_.JInteger? getNeutralVariant24() {
+    return _getNeutralVariant24(
+      reference.pointer,
+      _id_getNeutralVariant24 as jni$_.JMethodIDPtr,
     ).object<jni$_.JInteger?>(const jni$_.$JInteger$NullableType$());
   }
 
@@ -8870,6 +6394,36 @@ class DynamicTonalPalette extends jni$_.JObject {
     ).object<jni$_.JInteger?>(const jni$_.$JInteger$NullableType$());
   }
 
+  static final _id_getNeutralVariant87 = _class.instanceMethodId(
+    r'getNeutralVariant87',
+    r'()Ljava/lang/Integer;',
+  );
+
+  static final _getNeutralVariant87 =
+      jni$_.ProtectedJniExtensions.lookup<
+            jni$_.NativeFunction<
+              jni$_.JniResult Function(
+                jni$_.Pointer<jni$_.Void>,
+                jni$_.JMethodIDPtr,
+              )
+            >
+          >('globalEnv_CallObjectMethod')
+          .asFunction<
+            jni$_.JniResult Function(
+              jni$_.Pointer<jni$_.Void>,
+              jni$_.JMethodIDPtr,
+            )
+          >();
+
+  /// from: `public final java.lang.Integer getNeutralVariant87()`
+  /// The returned object must be released after use, by calling the [release] method.
+  jni$_.JInteger? getNeutralVariant87() {
+    return _getNeutralVariant87(
+      reference.pointer,
+      _id_getNeutralVariant87 as jni$_.JMethodIDPtr,
+    ).object<jni$_.JInteger?>(const jni$_.$JInteger$NullableType$());
+  }
+
   static final _id_getNeutralVariant90 = _class.instanceMethodId(
     r'getNeutralVariant90',
     r'()Ljava/lang/Integer;',
@@ -8900,6 +6454,66 @@ class DynamicTonalPalette extends jni$_.JObject {
     ).object<jni$_.JInteger?>(const jni$_.$JInteger$NullableType$());
   }
 
+  static final _id_getNeutralVariant92 = _class.instanceMethodId(
+    r'getNeutralVariant92',
+    r'()Ljava/lang/Integer;',
+  );
+
+  static final _getNeutralVariant92 =
+      jni$_.ProtectedJniExtensions.lookup<
+            jni$_.NativeFunction<
+              jni$_.JniResult Function(
+                jni$_.Pointer<jni$_.Void>,
+                jni$_.JMethodIDPtr,
+              )
+            >
+          >('globalEnv_CallObjectMethod')
+          .asFunction<
+            jni$_.JniResult Function(
+              jni$_.Pointer<jni$_.Void>,
+              jni$_.JMethodIDPtr,
+            )
+          >();
+
+  /// from: `public final java.lang.Integer getNeutralVariant92()`
+  /// The returned object must be released after use, by calling the [release] method.
+  jni$_.JInteger? getNeutralVariant92() {
+    return _getNeutralVariant92(
+      reference.pointer,
+      _id_getNeutralVariant92 as jni$_.JMethodIDPtr,
+    ).object<jni$_.JInteger?>(const jni$_.$JInteger$NullableType$());
+  }
+
+  static final _id_getNeutralVariant94 = _class.instanceMethodId(
+    r'getNeutralVariant94',
+    r'()Ljava/lang/Integer;',
+  );
+
+  static final _getNeutralVariant94 =
+      jni$_.ProtectedJniExtensions.lookup<
+            jni$_.NativeFunction<
+              jni$_.JniResult Function(
+                jni$_.Pointer<jni$_.Void>,
+                jni$_.JMethodIDPtr,
+              )
+            >
+          >('globalEnv_CallObjectMethod')
+          .asFunction<
+            jni$_.JniResult Function(
+              jni$_.Pointer<jni$_.Void>,
+              jni$_.JMethodIDPtr,
+            )
+          >();
+
+  /// from: `public final java.lang.Integer getNeutralVariant94()`
+  /// The returned object must be released after use, by calling the [release] method.
+  jni$_.JInteger? getNeutralVariant94() {
+    return _getNeutralVariant94(
+      reference.pointer,
+      _id_getNeutralVariant94 as jni$_.JMethodIDPtr,
+    ).object<jni$_.JInteger?>(const jni$_.$JInteger$NullableType$());
+  }
+
   static final _id_getNeutralVariant95 = _class.instanceMethodId(
     r'getNeutralVariant95',
     r'()Ljava/lang/Integer;',
@@ -8927,6 +6541,36 @@ class DynamicTonalPalette extends jni$_.JObject {
     return _getNeutralVariant95(
       reference.pointer,
       _id_getNeutralVariant95 as jni$_.JMethodIDPtr,
+    ).object<jni$_.JInteger?>(const jni$_.$JInteger$NullableType$());
+  }
+
+  static final _id_getNeutralVariant96 = _class.instanceMethodId(
+    r'getNeutralVariant96',
+    r'()Ljava/lang/Integer;',
+  );
+
+  static final _getNeutralVariant96 =
+      jni$_.ProtectedJniExtensions.lookup<
+            jni$_.NativeFunction<
+              jni$_.JniResult Function(
+                jni$_.Pointer<jni$_.Void>,
+                jni$_.JMethodIDPtr,
+              )
+            >
+          >('globalEnv_CallObjectMethod')
+          .asFunction<
+            jni$_.JniResult Function(
+              jni$_.Pointer<jni$_.Void>,
+              jni$_.JMethodIDPtr,
+            )
+          >();
+
+  /// from: `public final java.lang.Integer getNeutralVariant96()`
+  /// The returned object must be released after use, by calling the [release] method.
+  jni$_.JInteger? getNeutralVariant96() {
+    return _getNeutralVariant96(
+      reference.pointer,
+      _id_getNeutralVariant96 as jni$_.JMethodIDPtr,
     ).object<jni$_.JInteger?>(const jni$_.$JInteger$NullableType$());
   }
 
@@ -9438,3420 +7082,6 @@ class DynamicTonalPalette extends jni$_.JObject {
       reference.pointer,
       _id_getError100 as jni$_.JMethodIDPtr,
     ).object<jni$_.JInteger?>(const jni$_.$JInteger$NullableType$());
-  }
-
-  static final _id_component1 = _class.instanceMethodId(
-    r'component1',
-    r'()Ljava/lang/Integer;',
-  );
-
-  static final _component1 =
-      jni$_.ProtectedJniExtensions.lookup<
-            jni$_.NativeFunction<
-              jni$_.JniResult Function(
-                jni$_.Pointer<jni$_.Void>,
-                jni$_.JMethodIDPtr,
-              )
-            >
-          >('globalEnv_CallObjectMethod')
-          .asFunction<
-            jni$_.JniResult Function(
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.JMethodIDPtr,
-            )
-          >();
-
-  /// from: `public operator fun component1(): kotlin.Int?`
-  /// The returned object must be released after use, by calling the [release] method.
-  jni$_.JInteger? component1() {
-    return _component1(
-      reference.pointer,
-      _id_component1 as jni$_.JMethodIDPtr,
-    ).object<jni$_.JInteger?>(const jni$_.$JInteger$NullableType$());
-  }
-
-  static final _id_component2 = _class.instanceMethodId(
-    r'component2',
-    r'()Ljava/lang/Integer;',
-  );
-
-  static final _component2 =
-      jni$_.ProtectedJniExtensions.lookup<
-            jni$_.NativeFunction<
-              jni$_.JniResult Function(
-                jni$_.Pointer<jni$_.Void>,
-                jni$_.JMethodIDPtr,
-              )
-            >
-          >('globalEnv_CallObjectMethod')
-          .asFunction<
-            jni$_.JniResult Function(
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.JMethodIDPtr,
-            )
-          >();
-
-  /// from: `public operator fun component2(): kotlin.Int?`
-  /// The returned object must be released after use, by calling the [release] method.
-  jni$_.JInteger? component2() {
-    return _component2(
-      reference.pointer,
-      _id_component2 as jni$_.JMethodIDPtr,
-    ).object<jni$_.JInteger?>(const jni$_.$JInteger$NullableType$());
-  }
-
-  static final _id_component3 = _class.instanceMethodId(
-    r'component3',
-    r'()Ljava/lang/Integer;',
-  );
-
-  static final _component3 =
-      jni$_.ProtectedJniExtensions.lookup<
-            jni$_.NativeFunction<
-              jni$_.JniResult Function(
-                jni$_.Pointer<jni$_.Void>,
-                jni$_.JMethodIDPtr,
-              )
-            >
-          >('globalEnv_CallObjectMethod')
-          .asFunction<
-            jni$_.JniResult Function(
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.JMethodIDPtr,
-            )
-          >();
-
-  /// from: `public operator fun component3(): kotlin.Int?`
-  /// The returned object must be released after use, by calling the [release] method.
-  jni$_.JInteger? component3() {
-    return _component3(
-      reference.pointer,
-      _id_component3 as jni$_.JMethodIDPtr,
-    ).object<jni$_.JInteger?>(const jni$_.$JInteger$NullableType$());
-  }
-
-  static final _id_component4 = _class.instanceMethodId(
-    r'component4',
-    r'()Ljava/lang/Integer;',
-  );
-
-  static final _component4 =
-      jni$_.ProtectedJniExtensions.lookup<
-            jni$_.NativeFunction<
-              jni$_.JniResult Function(
-                jni$_.Pointer<jni$_.Void>,
-                jni$_.JMethodIDPtr,
-              )
-            >
-          >('globalEnv_CallObjectMethod')
-          .asFunction<
-            jni$_.JniResult Function(
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.JMethodIDPtr,
-            )
-          >();
-
-  /// from: `public operator fun component4(): kotlin.Int?`
-  /// The returned object must be released after use, by calling the [release] method.
-  jni$_.JInteger? component4() {
-    return _component4(
-      reference.pointer,
-      _id_component4 as jni$_.JMethodIDPtr,
-    ).object<jni$_.JInteger?>(const jni$_.$JInteger$NullableType$());
-  }
-
-  static final _id_component5 = _class.instanceMethodId(
-    r'component5',
-    r'()Ljava/lang/Integer;',
-  );
-
-  static final _component5 =
-      jni$_.ProtectedJniExtensions.lookup<
-            jni$_.NativeFunction<
-              jni$_.JniResult Function(
-                jni$_.Pointer<jni$_.Void>,
-                jni$_.JMethodIDPtr,
-              )
-            >
-          >('globalEnv_CallObjectMethod')
-          .asFunction<
-            jni$_.JniResult Function(
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.JMethodIDPtr,
-            )
-          >();
-
-  /// from: `public operator fun component5(): kotlin.Int?`
-  /// The returned object must be released after use, by calling the [release] method.
-  jni$_.JInteger? component5() {
-    return _component5(
-      reference.pointer,
-      _id_component5 as jni$_.JMethodIDPtr,
-    ).object<jni$_.JInteger?>(const jni$_.$JInteger$NullableType$());
-  }
-
-  static final _id_component6 = _class.instanceMethodId(
-    r'component6',
-    r'()Ljava/lang/Integer;',
-  );
-
-  static final _component6 =
-      jni$_.ProtectedJniExtensions.lookup<
-            jni$_.NativeFunction<
-              jni$_.JniResult Function(
-                jni$_.Pointer<jni$_.Void>,
-                jni$_.JMethodIDPtr,
-              )
-            >
-          >('globalEnv_CallObjectMethod')
-          .asFunction<
-            jni$_.JniResult Function(
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.JMethodIDPtr,
-            )
-          >();
-
-  /// from: `public operator fun component6(): kotlin.Int?`
-  /// The returned object must be released after use, by calling the [release] method.
-  jni$_.JInteger? component6() {
-    return _component6(
-      reference.pointer,
-      _id_component6 as jni$_.JMethodIDPtr,
-    ).object<jni$_.JInteger?>(const jni$_.$JInteger$NullableType$());
-  }
-
-  static final _id_component7 = _class.instanceMethodId(
-    r'component7',
-    r'()Ljava/lang/Integer;',
-  );
-
-  static final _component7 =
-      jni$_.ProtectedJniExtensions.lookup<
-            jni$_.NativeFunction<
-              jni$_.JniResult Function(
-                jni$_.Pointer<jni$_.Void>,
-                jni$_.JMethodIDPtr,
-              )
-            >
-          >('globalEnv_CallObjectMethod')
-          .asFunction<
-            jni$_.JniResult Function(
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.JMethodIDPtr,
-            )
-          >();
-
-  /// from: `public operator fun component7(): kotlin.Int?`
-  /// The returned object must be released after use, by calling the [release] method.
-  jni$_.JInteger? component7() {
-    return _component7(
-      reference.pointer,
-      _id_component7 as jni$_.JMethodIDPtr,
-    ).object<jni$_.JInteger?>(const jni$_.$JInteger$NullableType$());
-  }
-
-  static final _id_component8 = _class.instanceMethodId(
-    r'component8',
-    r'()Ljava/lang/Integer;',
-  );
-
-  static final _component8 =
-      jni$_.ProtectedJniExtensions.lookup<
-            jni$_.NativeFunction<
-              jni$_.JniResult Function(
-                jni$_.Pointer<jni$_.Void>,
-                jni$_.JMethodIDPtr,
-              )
-            >
-          >('globalEnv_CallObjectMethod')
-          .asFunction<
-            jni$_.JniResult Function(
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.JMethodIDPtr,
-            )
-          >();
-
-  /// from: `public operator fun component8(): kotlin.Int?`
-  /// The returned object must be released after use, by calling the [release] method.
-  jni$_.JInteger? component8() {
-    return _component8(
-      reference.pointer,
-      _id_component8 as jni$_.JMethodIDPtr,
-    ).object<jni$_.JInteger?>(const jni$_.$JInteger$NullableType$());
-  }
-
-  static final _id_component9 = _class.instanceMethodId(
-    r'component9',
-    r'()Ljava/lang/Integer;',
-  );
-
-  static final _component9 =
-      jni$_.ProtectedJniExtensions.lookup<
-            jni$_.NativeFunction<
-              jni$_.JniResult Function(
-                jni$_.Pointer<jni$_.Void>,
-                jni$_.JMethodIDPtr,
-              )
-            >
-          >('globalEnv_CallObjectMethod')
-          .asFunction<
-            jni$_.JniResult Function(
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.JMethodIDPtr,
-            )
-          >();
-
-  /// from: `public operator fun component9(): kotlin.Int?`
-  /// The returned object must be released after use, by calling the [release] method.
-  jni$_.JInteger? component9() {
-    return _component9(
-      reference.pointer,
-      _id_component9 as jni$_.JMethodIDPtr,
-    ).object<jni$_.JInteger?>(const jni$_.$JInteger$NullableType$());
-  }
-
-  static final _id_component10 = _class.instanceMethodId(
-    r'component10',
-    r'()Ljava/lang/Integer;',
-  );
-
-  static final _component10 =
-      jni$_.ProtectedJniExtensions.lookup<
-            jni$_.NativeFunction<
-              jni$_.JniResult Function(
-                jni$_.Pointer<jni$_.Void>,
-                jni$_.JMethodIDPtr,
-              )
-            >
-          >('globalEnv_CallObjectMethod')
-          .asFunction<
-            jni$_.JniResult Function(
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.JMethodIDPtr,
-            )
-          >();
-
-  /// from: `public operator fun component10(): kotlin.Int?`
-  /// The returned object must be released after use, by calling the [release] method.
-  jni$_.JInteger? component10() {
-    return _component10(
-      reference.pointer,
-      _id_component10 as jni$_.JMethodIDPtr,
-    ).object<jni$_.JInteger?>(const jni$_.$JInteger$NullableType$());
-  }
-
-  static final _id_component11 = _class.instanceMethodId(
-    r'component11',
-    r'()Ljava/lang/Integer;',
-  );
-
-  static final _component11 =
-      jni$_.ProtectedJniExtensions.lookup<
-            jni$_.NativeFunction<
-              jni$_.JniResult Function(
-                jni$_.Pointer<jni$_.Void>,
-                jni$_.JMethodIDPtr,
-              )
-            >
-          >('globalEnv_CallObjectMethod')
-          .asFunction<
-            jni$_.JniResult Function(
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.JMethodIDPtr,
-            )
-          >();
-
-  /// from: `public operator fun component11(): kotlin.Int?`
-  /// The returned object must be released after use, by calling the [release] method.
-  jni$_.JInteger? component11() {
-    return _component11(
-      reference.pointer,
-      _id_component11 as jni$_.JMethodIDPtr,
-    ).object<jni$_.JInteger?>(const jni$_.$JInteger$NullableType$());
-  }
-
-  static final _id_component12 = _class.instanceMethodId(
-    r'component12',
-    r'()Ljava/lang/Integer;',
-  );
-
-  static final _component12 =
-      jni$_.ProtectedJniExtensions.lookup<
-            jni$_.NativeFunction<
-              jni$_.JniResult Function(
-                jni$_.Pointer<jni$_.Void>,
-                jni$_.JMethodIDPtr,
-              )
-            >
-          >('globalEnv_CallObjectMethod')
-          .asFunction<
-            jni$_.JniResult Function(
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.JMethodIDPtr,
-            )
-          >();
-
-  /// from: `public operator fun component12(): kotlin.Int?`
-  /// The returned object must be released after use, by calling the [release] method.
-  jni$_.JInteger? component12() {
-    return _component12(
-      reference.pointer,
-      _id_component12 as jni$_.JMethodIDPtr,
-    ).object<jni$_.JInteger?>(const jni$_.$JInteger$NullableType$());
-  }
-
-  static final _id_component13 = _class.instanceMethodId(
-    r'component13',
-    r'()Ljava/lang/Integer;',
-  );
-
-  static final _component13 =
-      jni$_.ProtectedJniExtensions.lookup<
-            jni$_.NativeFunction<
-              jni$_.JniResult Function(
-                jni$_.Pointer<jni$_.Void>,
-                jni$_.JMethodIDPtr,
-              )
-            >
-          >('globalEnv_CallObjectMethod')
-          .asFunction<
-            jni$_.JniResult Function(
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.JMethodIDPtr,
-            )
-          >();
-
-  /// from: `public operator fun component13(): kotlin.Int?`
-  /// The returned object must be released after use, by calling the [release] method.
-  jni$_.JInteger? component13() {
-    return _component13(
-      reference.pointer,
-      _id_component13 as jni$_.JMethodIDPtr,
-    ).object<jni$_.JInteger?>(const jni$_.$JInteger$NullableType$());
-  }
-
-  static final _id_component14 = _class.instanceMethodId(
-    r'component14',
-    r'()Ljava/lang/Integer;',
-  );
-
-  static final _component14 =
-      jni$_.ProtectedJniExtensions.lookup<
-            jni$_.NativeFunction<
-              jni$_.JniResult Function(
-                jni$_.Pointer<jni$_.Void>,
-                jni$_.JMethodIDPtr,
-              )
-            >
-          >('globalEnv_CallObjectMethod')
-          .asFunction<
-            jni$_.JniResult Function(
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.JMethodIDPtr,
-            )
-          >();
-
-  /// from: `public operator fun component14(): kotlin.Int?`
-  /// The returned object must be released after use, by calling the [release] method.
-  jni$_.JInteger? component14() {
-    return _component14(
-      reference.pointer,
-      _id_component14 as jni$_.JMethodIDPtr,
-    ).object<jni$_.JInteger?>(const jni$_.$JInteger$NullableType$());
-  }
-
-  static final _id_component15 = _class.instanceMethodId(
-    r'component15',
-    r'()Ljava/lang/Integer;',
-  );
-
-  static final _component15 =
-      jni$_.ProtectedJniExtensions.lookup<
-            jni$_.NativeFunction<
-              jni$_.JniResult Function(
-                jni$_.Pointer<jni$_.Void>,
-                jni$_.JMethodIDPtr,
-              )
-            >
-          >('globalEnv_CallObjectMethod')
-          .asFunction<
-            jni$_.JniResult Function(
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.JMethodIDPtr,
-            )
-          >();
-
-  /// from: `public operator fun component15(): kotlin.Int?`
-  /// The returned object must be released after use, by calling the [release] method.
-  jni$_.JInteger? component15() {
-    return _component15(
-      reference.pointer,
-      _id_component15 as jni$_.JMethodIDPtr,
-    ).object<jni$_.JInteger?>(const jni$_.$JInteger$NullableType$());
-  }
-
-  static final _id_component16 = _class.instanceMethodId(
-    r'component16',
-    r'()Ljava/lang/Integer;',
-  );
-
-  static final _component16 =
-      jni$_.ProtectedJniExtensions.lookup<
-            jni$_.NativeFunction<
-              jni$_.JniResult Function(
-                jni$_.Pointer<jni$_.Void>,
-                jni$_.JMethodIDPtr,
-              )
-            >
-          >('globalEnv_CallObjectMethod')
-          .asFunction<
-            jni$_.JniResult Function(
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.JMethodIDPtr,
-            )
-          >();
-
-  /// from: `public operator fun component16(): kotlin.Int?`
-  /// The returned object must be released after use, by calling the [release] method.
-  jni$_.JInteger? component16() {
-    return _component16(
-      reference.pointer,
-      _id_component16 as jni$_.JMethodIDPtr,
-    ).object<jni$_.JInteger?>(const jni$_.$JInteger$NullableType$());
-  }
-
-  static final _id_component17 = _class.instanceMethodId(
-    r'component17',
-    r'()Ljava/lang/Integer;',
-  );
-
-  static final _component17 =
-      jni$_.ProtectedJniExtensions.lookup<
-            jni$_.NativeFunction<
-              jni$_.JniResult Function(
-                jni$_.Pointer<jni$_.Void>,
-                jni$_.JMethodIDPtr,
-              )
-            >
-          >('globalEnv_CallObjectMethod')
-          .asFunction<
-            jni$_.JniResult Function(
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.JMethodIDPtr,
-            )
-          >();
-
-  /// from: `public operator fun component17(): kotlin.Int?`
-  /// The returned object must be released after use, by calling the [release] method.
-  jni$_.JInteger? component17() {
-    return _component17(
-      reference.pointer,
-      _id_component17 as jni$_.JMethodIDPtr,
-    ).object<jni$_.JInteger?>(const jni$_.$JInteger$NullableType$());
-  }
-
-  static final _id_component18 = _class.instanceMethodId(
-    r'component18',
-    r'()Ljava/lang/Integer;',
-  );
-
-  static final _component18 =
-      jni$_.ProtectedJniExtensions.lookup<
-            jni$_.NativeFunction<
-              jni$_.JniResult Function(
-                jni$_.Pointer<jni$_.Void>,
-                jni$_.JMethodIDPtr,
-              )
-            >
-          >('globalEnv_CallObjectMethod')
-          .asFunction<
-            jni$_.JniResult Function(
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.JMethodIDPtr,
-            )
-          >();
-
-  /// from: `public operator fun component18(): kotlin.Int?`
-  /// The returned object must be released after use, by calling the [release] method.
-  jni$_.JInteger? component18() {
-    return _component18(
-      reference.pointer,
-      _id_component18 as jni$_.JMethodIDPtr,
-    ).object<jni$_.JInteger?>(const jni$_.$JInteger$NullableType$());
-  }
-
-  static final _id_component19 = _class.instanceMethodId(
-    r'component19',
-    r'()Ljava/lang/Integer;',
-  );
-
-  static final _component19 =
-      jni$_.ProtectedJniExtensions.lookup<
-            jni$_.NativeFunction<
-              jni$_.JniResult Function(
-                jni$_.Pointer<jni$_.Void>,
-                jni$_.JMethodIDPtr,
-              )
-            >
-          >('globalEnv_CallObjectMethod')
-          .asFunction<
-            jni$_.JniResult Function(
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.JMethodIDPtr,
-            )
-          >();
-
-  /// from: `public operator fun component19(): kotlin.Int?`
-  /// The returned object must be released after use, by calling the [release] method.
-  jni$_.JInteger? component19() {
-    return _component19(
-      reference.pointer,
-      _id_component19 as jni$_.JMethodIDPtr,
-    ).object<jni$_.JInteger?>(const jni$_.$JInteger$NullableType$());
-  }
-
-  static final _id_component20 = _class.instanceMethodId(
-    r'component20',
-    r'()Ljava/lang/Integer;',
-  );
-
-  static final _component20 =
-      jni$_.ProtectedJniExtensions.lookup<
-            jni$_.NativeFunction<
-              jni$_.JniResult Function(
-                jni$_.Pointer<jni$_.Void>,
-                jni$_.JMethodIDPtr,
-              )
-            >
-          >('globalEnv_CallObjectMethod')
-          .asFunction<
-            jni$_.JniResult Function(
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.JMethodIDPtr,
-            )
-          >();
-
-  /// from: `public operator fun component20(): kotlin.Int?`
-  /// The returned object must be released after use, by calling the [release] method.
-  jni$_.JInteger? component20() {
-    return _component20(
-      reference.pointer,
-      _id_component20 as jni$_.JMethodIDPtr,
-    ).object<jni$_.JInteger?>(const jni$_.$JInteger$NullableType$());
-  }
-
-  static final _id_component21 = _class.instanceMethodId(
-    r'component21',
-    r'()Ljava/lang/Integer;',
-  );
-
-  static final _component21 =
-      jni$_.ProtectedJniExtensions.lookup<
-            jni$_.NativeFunction<
-              jni$_.JniResult Function(
-                jni$_.Pointer<jni$_.Void>,
-                jni$_.JMethodIDPtr,
-              )
-            >
-          >('globalEnv_CallObjectMethod')
-          .asFunction<
-            jni$_.JniResult Function(
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.JMethodIDPtr,
-            )
-          >();
-
-  /// from: `public operator fun component21(): kotlin.Int?`
-  /// The returned object must be released after use, by calling the [release] method.
-  jni$_.JInteger? component21() {
-    return _component21(
-      reference.pointer,
-      _id_component21 as jni$_.JMethodIDPtr,
-    ).object<jni$_.JInteger?>(const jni$_.$JInteger$NullableType$());
-  }
-
-  static final _id_component22 = _class.instanceMethodId(
-    r'component22',
-    r'()Ljava/lang/Integer;',
-  );
-
-  static final _component22 =
-      jni$_.ProtectedJniExtensions.lookup<
-            jni$_.NativeFunction<
-              jni$_.JniResult Function(
-                jni$_.Pointer<jni$_.Void>,
-                jni$_.JMethodIDPtr,
-              )
-            >
-          >('globalEnv_CallObjectMethod')
-          .asFunction<
-            jni$_.JniResult Function(
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.JMethodIDPtr,
-            )
-          >();
-
-  /// from: `public operator fun component22(): kotlin.Int?`
-  /// The returned object must be released after use, by calling the [release] method.
-  jni$_.JInteger? component22() {
-    return _component22(
-      reference.pointer,
-      _id_component22 as jni$_.JMethodIDPtr,
-    ).object<jni$_.JInteger?>(const jni$_.$JInteger$NullableType$());
-  }
-
-  static final _id_component23 = _class.instanceMethodId(
-    r'component23',
-    r'()Ljava/lang/Integer;',
-  );
-
-  static final _component23 =
-      jni$_.ProtectedJniExtensions.lookup<
-            jni$_.NativeFunction<
-              jni$_.JniResult Function(
-                jni$_.Pointer<jni$_.Void>,
-                jni$_.JMethodIDPtr,
-              )
-            >
-          >('globalEnv_CallObjectMethod')
-          .asFunction<
-            jni$_.JniResult Function(
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.JMethodIDPtr,
-            )
-          >();
-
-  /// from: `public operator fun component23(): kotlin.Int?`
-  /// The returned object must be released after use, by calling the [release] method.
-  jni$_.JInteger? component23() {
-    return _component23(
-      reference.pointer,
-      _id_component23 as jni$_.JMethodIDPtr,
-    ).object<jni$_.JInteger?>(const jni$_.$JInteger$NullableType$());
-  }
-
-  static final _id_component24 = _class.instanceMethodId(
-    r'component24',
-    r'()Ljava/lang/Integer;',
-  );
-
-  static final _component24 =
-      jni$_.ProtectedJniExtensions.lookup<
-            jni$_.NativeFunction<
-              jni$_.JniResult Function(
-                jni$_.Pointer<jni$_.Void>,
-                jni$_.JMethodIDPtr,
-              )
-            >
-          >('globalEnv_CallObjectMethod')
-          .asFunction<
-            jni$_.JniResult Function(
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.JMethodIDPtr,
-            )
-          >();
-
-  /// from: `public operator fun component24(): kotlin.Int?`
-  /// The returned object must be released after use, by calling the [release] method.
-  jni$_.JInteger? component24() {
-    return _component24(
-      reference.pointer,
-      _id_component24 as jni$_.JMethodIDPtr,
-    ).object<jni$_.JInteger?>(const jni$_.$JInteger$NullableType$());
-  }
-
-  static final _id_component25 = _class.instanceMethodId(
-    r'component25',
-    r'()Ljava/lang/Integer;',
-  );
-
-  static final _component25 =
-      jni$_.ProtectedJniExtensions.lookup<
-            jni$_.NativeFunction<
-              jni$_.JniResult Function(
-                jni$_.Pointer<jni$_.Void>,
-                jni$_.JMethodIDPtr,
-              )
-            >
-          >('globalEnv_CallObjectMethod')
-          .asFunction<
-            jni$_.JniResult Function(
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.JMethodIDPtr,
-            )
-          >();
-
-  /// from: `public operator fun component25(): kotlin.Int?`
-  /// The returned object must be released after use, by calling the [release] method.
-  jni$_.JInteger? component25() {
-    return _component25(
-      reference.pointer,
-      _id_component25 as jni$_.JMethodIDPtr,
-    ).object<jni$_.JInteger?>(const jni$_.$JInteger$NullableType$());
-  }
-
-  static final _id_component26 = _class.instanceMethodId(
-    r'component26',
-    r'()Ljava/lang/Integer;',
-  );
-
-  static final _component26 =
-      jni$_.ProtectedJniExtensions.lookup<
-            jni$_.NativeFunction<
-              jni$_.JniResult Function(
-                jni$_.Pointer<jni$_.Void>,
-                jni$_.JMethodIDPtr,
-              )
-            >
-          >('globalEnv_CallObjectMethod')
-          .asFunction<
-            jni$_.JniResult Function(
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.JMethodIDPtr,
-            )
-          >();
-
-  /// from: `public operator fun component26(): kotlin.Int?`
-  /// The returned object must be released after use, by calling the [release] method.
-  jni$_.JInteger? component26() {
-    return _component26(
-      reference.pointer,
-      _id_component26 as jni$_.JMethodIDPtr,
-    ).object<jni$_.JInteger?>(const jni$_.$JInteger$NullableType$());
-  }
-
-  static final _id_component27 = _class.instanceMethodId(
-    r'component27',
-    r'()Ljava/lang/Integer;',
-  );
-
-  static final _component27 =
-      jni$_.ProtectedJniExtensions.lookup<
-            jni$_.NativeFunction<
-              jni$_.JniResult Function(
-                jni$_.Pointer<jni$_.Void>,
-                jni$_.JMethodIDPtr,
-              )
-            >
-          >('globalEnv_CallObjectMethod')
-          .asFunction<
-            jni$_.JniResult Function(
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.JMethodIDPtr,
-            )
-          >();
-
-  /// from: `public operator fun component27(): kotlin.Int?`
-  /// The returned object must be released after use, by calling the [release] method.
-  jni$_.JInteger? component27() {
-    return _component27(
-      reference.pointer,
-      _id_component27 as jni$_.JMethodIDPtr,
-    ).object<jni$_.JInteger?>(const jni$_.$JInteger$NullableType$());
-  }
-
-  static final _id_component28 = _class.instanceMethodId(
-    r'component28',
-    r'()Ljava/lang/Integer;',
-  );
-
-  static final _component28 =
-      jni$_.ProtectedJniExtensions.lookup<
-            jni$_.NativeFunction<
-              jni$_.JniResult Function(
-                jni$_.Pointer<jni$_.Void>,
-                jni$_.JMethodIDPtr,
-              )
-            >
-          >('globalEnv_CallObjectMethod')
-          .asFunction<
-            jni$_.JniResult Function(
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.JMethodIDPtr,
-            )
-          >();
-
-  /// from: `public operator fun component28(): kotlin.Int?`
-  /// The returned object must be released after use, by calling the [release] method.
-  jni$_.JInteger? component28() {
-    return _component28(
-      reference.pointer,
-      _id_component28 as jni$_.JMethodIDPtr,
-    ).object<jni$_.JInteger?>(const jni$_.$JInteger$NullableType$());
-  }
-
-  static final _id_component29 = _class.instanceMethodId(
-    r'component29',
-    r'()Ljava/lang/Integer;',
-  );
-
-  static final _component29 =
-      jni$_.ProtectedJniExtensions.lookup<
-            jni$_.NativeFunction<
-              jni$_.JniResult Function(
-                jni$_.Pointer<jni$_.Void>,
-                jni$_.JMethodIDPtr,
-              )
-            >
-          >('globalEnv_CallObjectMethod')
-          .asFunction<
-            jni$_.JniResult Function(
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.JMethodIDPtr,
-            )
-          >();
-
-  /// from: `public operator fun component29(): kotlin.Int?`
-  /// The returned object must be released after use, by calling the [release] method.
-  jni$_.JInteger? component29() {
-    return _component29(
-      reference.pointer,
-      _id_component29 as jni$_.JMethodIDPtr,
-    ).object<jni$_.JInteger?>(const jni$_.$JInteger$NullableType$());
-  }
-
-  static final _id_component30 = _class.instanceMethodId(
-    r'component30',
-    r'()Ljava/lang/Integer;',
-  );
-
-  static final _component30 =
-      jni$_.ProtectedJniExtensions.lookup<
-            jni$_.NativeFunction<
-              jni$_.JniResult Function(
-                jni$_.Pointer<jni$_.Void>,
-                jni$_.JMethodIDPtr,
-              )
-            >
-          >('globalEnv_CallObjectMethod')
-          .asFunction<
-            jni$_.JniResult Function(
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.JMethodIDPtr,
-            )
-          >();
-
-  /// from: `public operator fun component30(): kotlin.Int?`
-  /// The returned object must be released after use, by calling the [release] method.
-  jni$_.JInteger? component30() {
-    return _component30(
-      reference.pointer,
-      _id_component30 as jni$_.JMethodIDPtr,
-    ).object<jni$_.JInteger?>(const jni$_.$JInteger$NullableType$());
-  }
-
-  static final _id_component31 = _class.instanceMethodId(
-    r'component31',
-    r'()Ljava/lang/Integer;',
-  );
-
-  static final _component31 =
-      jni$_.ProtectedJniExtensions.lookup<
-            jni$_.NativeFunction<
-              jni$_.JniResult Function(
-                jni$_.Pointer<jni$_.Void>,
-                jni$_.JMethodIDPtr,
-              )
-            >
-          >('globalEnv_CallObjectMethod')
-          .asFunction<
-            jni$_.JniResult Function(
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.JMethodIDPtr,
-            )
-          >();
-
-  /// from: `public operator fun component31(): kotlin.Int?`
-  /// The returned object must be released after use, by calling the [release] method.
-  jni$_.JInteger? component31() {
-    return _component31(
-      reference.pointer,
-      _id_component31 as jni$_.JMethodIDPtr,
-    ).object<jni$_.JInteger?>(const jni$_.$JInteger$NullableType$());
-  }
-
-  static final _id_component32 = _class.instanceMethodId(
-    r'component32',
-    r'()Ljava/lang/Integer;',
-  );
-
-  static final _component32 =
-      jni$_.ProtectedJniExtensions.lookup<
-            jni$_.NativeFunction<
-              jni$_.JniResult Function(
-                jni$_.Pointer<jni$_.Void>,
-                jni$_.JMethodIDPtr,
-              )
-            >
-          >('globalEnv_CallObjectMethod')
-          .asFunction<
-            jni$_.JniResult Function(
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.JMethodIDPtr,
-            )
-          >();
-
-  /// from: `public operator fun component32(): kotlin.Int?`
-  /// The returned object must be released after use, by calling the [release] method.
-  jni$_.JInteger? component32() {
-    return _component32(
-      reference.pointer,
-      _id_component32 as jni$_.JMethodIDPtr,
-    ).object<jni$_.JInteger?>(const jni$_.$JInteger$NullableType$());
-  }
-
-  static final _id_component33 = _class.instanceMethodId(
-    r'component33',
-    r'()Ljava/lang/Integer;',
-  );
-
-  static final _component33 =
-      jni$_.ProtectedJniExtensions.lookup<
-            jni$_.NativeFunction<
-              jni$_.JniResult Function(
-                jni$_.Pointer<jni$_.Void>,
-                jni$_.JMethodIDPtr,
-              )
-            >
-          >('globalEnv_CallObjectMethod')
-          .asFunction<
-            jni$_.JniResult Function(
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.JMethodIDPtr,
-            )
-          >();
-
-  /// from: `public operator fun component33(): kotlin.Int?`
-  /// The returned object must be released after use, by calling the [release] method.
-  jni$_.JInteger? component33() {
-    return _component33(
-      reference.pointer,
-      _id_component33 as jni$_.JMethodIDPtr,
-    ).object<jni$_.JInteger?>(const jni$_.$JInteger$NullableType$());
-  }
-
-  static final _id_component34 = _class.instanceMethodId(
-    r'component34',
-    r'()Ljava/lang/Integer;',
-  );
-
-  static final _component34 =
-      jni$_.ProtectedJniExtensions.lookup<
-            jni$_.NativeFunction<
-              jni$_.JniResult Function(
-                jni$_.Pointer<jni$_.Void>,
-                jni$_.JMethodIDPtr,
-              )
-            >
-          >('globalEnv_CallObjectMethod')
-          .asFunction<
-            jni$_.JniResult Function(
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.JMethodIDPtr,
-            )
-          >();
-
-  /// from: `public operator fun component34(): kotlin.Int?`
-  /// The returned object must be released after use, by calling the [release] method.
-  jni$_.JInteger? component34() {
-    return _component34(
-      reference.pointer,
-      _id_component34 as jni$_.JMethodIDPtr,
-    ).object<jni$_.JInteger?>(const jni$_.$JInteger$NullableType$());
-  }
-
-  static final _id_component35 = _class.instanceMethodId(
-    r'component35',
-    r'()Ljava/lang/Integer;',
-  );
-
-  static final _component35 =
-      jni$_.ProtectedJniExtensions.lookup<
-            jni$_.NativeFunction<
-              jni$_.JniResult Function(
-                jni$_.Pointer<jni$_.Void>,
-                jni$_.JMethodIDPtr,
-              )
-            >
-          >('globalEnv_CallObjectMethod')
-          .asFunction<
-            jni$_.JniResult Function(
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.JMethodIDPtr,
-            )
-          >();
-
-  /// from: `public operator fun component35(): kotlin.Int?`
-  /// The returned object must be released after use, by calling the [release] method.
-  jni$_.JInteger? component35() {
-    return _component35(
-      reference.pointer,
-      _id_component35 as jni$_.JMethodIDPtr,
-    ).object<jni$_.JInteger?>(const jni$_.$JInteger$NullableType$());
-  }
-
-  static final _id_component36 = _class.instanceMethodId(
-    r'component36',
-    r'()Ljava/lang/Integer;',
-  );
-
-  static final _component36 =
-      jni$_.ProtectedJniExtensions.lookup<
-            jni$_.NativeFunction<
-              jni$_.JniResult Function(
-                jni$_.Pointer<jni$_.Void>,
-                jni$_.JMethodIDPtr,
-              )
-            >
-          >('globalEnv_CallObjectMethod')
-          .asFunction<
-            jni$_.JniResult Function(
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.JMethodIDPtr,
-            )
-          >();
-
-  /// from: `public operator fun component36(): kotlin.Int?`
-  /// The returned object must be released after use, by calling the [release] method.
-  jni$_.JInteger? component36() {
-    return _component36(
-      reference.pointer,
-      _id_component36 as jni$_.JMethodIDPtr,
-    ).object<jni$_.JInteger?>(const jni$_.$JInteger$NullableType$());
-  }
-
-  static final _id_component37 = _class.instanceMethodId(
-    r'component37',
-    r'()Ljava/lang/Integer;',
-  );
-
-  static final _component37 =
-      jni$_.ProtectedJniExtensions.lookup<
-            jni$_.NativeFunction<
-              jni$_.JniResult Function(
-                jni$_.Pointer<jni$_.Void>,
-                jni$_.JMethodIDPtr,
-              )
-            >
-          >('globalEnv_CallObjectMethod')
-          .asFunction<
-            jni$_.JniResult Function(
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.JMethodIDPtr,
-            )
-          >();
-
-  /// from: `public operator fun component37(): kotlin.Int?`
-  /// The returned object must be released after use, by calling the [release] method.
-  jni$_.JInteger? component37() {
-    return _component37(
-      reference.pointer,
-      _id_component37 as jni$_.JMethodIDPtr,
-    ).object<jni$_.JInteger?>(const jni$_.$JInteger$NullableType$());
-  }
-
-  static final _id_component38 = _class.instanceMethodId(
-    r'component38',
-    r'()Ljava/lang/Integer;',
-  );
-
-  static final _component38 =
-      jni$_.ProtectedJniExtensions.lookup<
-            jni$_.NativeFunction<
-              jni$_.JniResult Function(
-                jni$_.Pointer<jni$_.Void>,
-                jni$_.JMethodIDPtr,
-              )
-            >
-          >('globalEnv_CallObjectMethod')
-          .asFunction<
-            jni$_.JniResult Function(
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.JMethodIDPtr,
-            )
-          >();
-
-  /// from: `public operator fun component38(): kotlin.Int?`
-  /// The returned object must be released after use, by calling the [release] method.
-  jni$_.JInteger? component38() {
-    return _component38(
-      reference.pointer,
-      _id_component38 as jni$_.JMethodIDPtr,
-    ).object<jni$_.JInteger?>(const jni$_.$JInteger$NullableType$());
-  }
-
-  static final _id_component39 = _class.instanceMethodId(
-    r'component39',
-    r'()Ljava/lang/Integer;',
-  );
-
-  static final _component39 =
-      jni$_.ProtectedJniExtensions.lookup<
-            jni$_.NativeFunction<
-              jni$_.JniResult Function(
-                jni$_.Pointer<jni$_.Void>,
-                jni$_.JMethodIDPtr,
-              )
-            >
-          >('globalEnv_CallObjectMethod')
-          .asFunction<
-            jni$_.JniResult Function(
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.JMethodIDPtr,
-            )
-          >();
-
-  /// from: `public operator fun component39(): kotlin.Int?`
-  /// The returned object must be released after use, by calling the [release] method.
-  jni$_.JInteger? component39() {
-    return _component39(
-      reference.pointer,
-      _id_component39 as jni$_.JMethodIDPtr,
-    ).object<jni$_.JInteger?>(const jni$_.$JInteger$NullableType$());
-  }
-
-  static final _id_component40 = _class.instanceMethodId(
-    r'component40',
-    r'()Ljava/lang/Integer;',
-  );
-
-  static final _component40 =
-      jni$_.ProtectedJniExtensions.lookup<
-            jni$_.NativeFunction<
-              jni$_.JniResult Function(
-                jni$_.Pointer<jni$_.Void>,
-                jni$_.JMethodIDPtr,
-              )
-            >
-          >('globalEnv_CallObjectMethod')
-          .asFunction<
-            jni$_.JniResult Function(
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.JMethodIDPtr,
-            )
-          >();
-
-  /// from: `public operator fun component40(): kotlin.Int?`
-  /// The returned object must be released after use, by calling the [release] method.
-  jni$_.JInteger? component40() {
-    return _component40(
-      reference.pointer,
-      _id_component40 as jni$_.JMethodIDPtr,
-    ).object<jni$_.JInteger?>(const jni$_.$JInteger$NullableType$());
-  }
-
-  static final _id_component41 = _class.instanceMethodId(
-    r'component41',
-    r'()Ljava/lang/Integer;',
-  );
-
-  static final _component41 =
-      jni$_.ProtectedJniExtensions.lookup<
-            jni$_.NativeFunction<
-              jni$_.JniResult Function(
-                jni$_.Pointer<jni$_.Void>,
-                jni$_.JMethodIDPtr,
-              )
-            >
-          >('globalEnv_CallObjectMethod')
-          .asFunction<
-            jni$_.JniResult Function(
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.JMethodIDPtr,
-            )
-          >();
-
-  /// from: `public operator fun component41(): kotlin.Int?`
-  /// The returned object must be released after use, by calling the [release] method.
-  jni$_.JInteger? component41() {
-    return _component41(
-      reference.pointer,
-      _id_component41 as jni$_.JMethodIDPtr,
-    ).object<jni$_.JInteger?>(const jni$_.$JInteger$NullableType$());
-  }
-
-  static final _id_component42 = _class.instanceMethodId(
-    r'component42',
-    r'()Ljava/lang/Integer;',
-  );
-
-  static final _component42 =
-      jni$_.ProtectedJniExtensions.lookup<
-            jni$_.NativeFunction<
-              jni$_.JniResult Function(
-                jni$_.Pointer<jni$_.Void>,
-                jni$_.JMethodIDPtr,
-              )
-            >
-          >('globalEnv_CallObjectMethod')
-          .asFunction<
-            jni$_.JniResult Function(
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.JMethodIDPtr,
-            )
-          >();
-
-  /// from: `public operator fun component42(): kotlin.Int?`
-  /// The returned object must be released after use, by calling the [release] method.
-  jni$_.JInteger? component42() {
-    return _component42(
-      reference.pointer,
-      _id_component42 as jni$_.JMethodIDPtr,
-    ).object<jni$_.JInteger?>(const jni$_.$JInteger$NullableType$());
-  }
-
-  static final _id_component43 = _class.instanceMethodId(
-    r'component43',
-    r'()Ljava/lang/Integer;',
-  );
-
-  static final _component43 =
-      jni$_.ProtectedJniExtensions.lookup<
-            jni$_.NativeFunction<
-              jni$_.JniResult Function(
-                jni$_.Pointer<jni$_.Void>,
-                jni$_.JMethodIDPtr,
-              )
-            >
-          >('globalEnv_CallObjectMethod')
-          .asFunction<
-            jni$_.JniResult Function(
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.JMethodIDPtr,
-            )
-          >();
-
-  /// from: `public operator fun component43(): kotlin.Int?`
-  /// The returned object must be released after use, by calling the [release] method.
-  jni$_.JInteger? component43() {
-    return _component43(
-      reference.pointer,
-      _id_component43 as jni$_.JMethodIDPtr,
-    ).object<jni$_.JInteger?>(const jni$_.$JInteger$NullableType$());
-  }
-
-  static final _id_component44 = _class.instanceMethodId(
-    r'component44',
-    r'()Ljava/lang/Integer;',
-  );
-
-  static final _component44 =
-      jni$_.ProtectedJniExtensions.lookup<
-            jni$_.NativeFunction<
-              jni$_.JniResult Function(
-                jni$_.Pointer<jni$_.Void>,
-                jni$_.JMethodIDPtr,
-              )
-            >
-          >('globalEnv_CallObjectMethod')
-          .asFunction<
-            jni$_.JniResult Function(
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.JMethodIDPtr,
-            )
-          >();
-
-  /// from: `public operator fun component44(): kotlin.Int?`
-  /// The returned object must be released after use, by calling the [release] method.
-  jni$_.JInteger? component44() {
-    return _component44(
-      reference.pointer,
-      _id_component44 as jni$_.JMethodIDPtr,
-    ).object<jni$_.JInteger?>(const jni$_.$JInteger$NullableType$());
-  }
-
-  static final _id_component45 = _class.instanceMethodId(
-    r'component45',
-    r'()Ljava/lang/Integer;',
-  );
-
-  static final _component45 =
-      jni$_.ProtectedJniExtensions.lookup<
-            jni$_.NativeFunction<
-              jni$_.JniResult Function(
-                jni$_.Pointer<jni$_.Void>,
-                jni$_.JMethodIDPtr,
-              )
-            >
-          >('globalEnv_CallObjectMethod')
-          .asFunction<
-            jni$_.JniResult Function(
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.JMethodIDPtr,
-            )
-          >();
-
-  /// from: `public operator fun component45(): kotlin.Int?`
-  /// The returned object must be released after use, by calling the [release] method.
-  jni$_.JInteger? component45() {
-    return _component45(
-      reference.pointer,
-      _id_component45 as jni$_.JMethodIDPtr,
-    ).object<jni$_.JInteger?>(const jni$_.$JInteger$NullableType$());
-  }
-
-  static final _id_component46 = _class.instanceMethodId(
-    r'component46',
-    r'()Ljava/lang/Integer;',
-  );
-
-  static final _component46 =
-      jni$_.ProtectedJniExtensions.lookup<
-            jni$_.NativeFunction<
-              jni$_.JniResult Function(
-                jni$_.Pointer<jni$_.Void>,
-                jni$_.JMethodIDPtr,
-              )
-            >
-          >('globalEnv_CallObjectMethod')
-          .asFunction<
-            jni$_.JniResult Function(
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.JMethodIDPtr,
-            )
-          >();
-
-  /// from: `public operator fun component46(): kotlin.Int?`
-  /// The returned object must be released after use, by calling the [release] method.
-  jni$_.JInteger? component46() {
-    return _component46(
-      reference.pointer,
-      _id_component46 as jni$_.JMethodIDPtr,
-    ).object<jni$_.JInteger?>(const jni$_.$JInteger$NullableType$());
-  }
-
-  static final _id_component47 = _class.instanceMethodId(
-    r'component47',
-    r'()Ljava/lang/Integer;',
-  );
-
-  static final _component47 =
-      jni$_.ProtectedJniExtensions.lookup<
-            jni$_.NativeFunction<
-              jni$_.JniResult Function(
-                jni$_.Pointer<jni$_.Void>,
-                jni$_.JMethodIDPtr,
-              )
-            >
-          >('globalEnv_CallObjectMethod')
-          .asFunction<
-            jni$_.JniResult Function(
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.JMethodIDPtr,
-            )
-          >();
-
-  /// from: `public operator fun component47(): kotlin.Int?`
-  /// The returned object must be released after use, by calling the [release] method.
-  jni$_.JInteger? component47() {
-    return _component47(
-      reference.pointer,
-      _id_component47 as jni$_.JMethodIDPtr,
-    ).object<jni$_.JInteger?>(const jni$_.$JInteger$NullableType$());
-  }
-
-  static final _id_component48 = _class.instanceMethodId(
-    r'component48',
-    r'()Ljava/lang/Integer;',
-  );
-
-  static final _component48 =
-      jni$_.ProtectedJniExtensions.lookup<
-            jni$_.NativeFunction<
-              jni$_.JniResult Function(
-                jni$_.Pointer<jni$_.Void>,
-                jni$_.JMethodIDPtr,
-              )
-            >
-          >('globalEnv_CallObjectMethod')
-          .asFunction<
-            jni$_.JniResult Function(
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.JMethodIDPtr,
-            )
-          >();
-
-  /// from: `public operator fun component48(): kotlin.Int?`
-  /// The returned object must be released after use, by calling the [release] method.
-  jni$_.JInteger? component48() {
-    return _component48(
-      reference.pointer,
-      _id_component48 as jni$_.JMethodIDPtr,
-    ).object<jni$_.JInteger?>(const jni$_.$JInteger$NullableType$());
-  }
-
-  static final _id_component49 = _class.instanceMethodId(
-    r'component49',
-    r'()Ljava/lang/Integer;',
-  );
-
-  static final _component49 =
-      jni$_.ProtectedJniExtensions.lookup<
-            jni$_.NativeFunction<
-              jni$_.JniResult Function(
-                jni$_.Pointer<jni$_.Void>,
-                jni$_.JMethodIDPtr,
-              )
-            >
-          >('globalEnv_CallObjectMethod')
-          .asFunction<
-            jni$_.JniResult Function(
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.JMethodIDPtr,
-            )
-          >();
-
-  /// from: `public operator fun component49(): kotlin.Int?`
-  /// The returned object must be released after use, by calling the [release] method.
-  jni$_.JInteger? component49() {
-    return _component49(
-      reference.pointer,
-      _id_component49 as jni$_.JMethodIDPtr,
-    ).object<jni$_.JInteger?>(const jni$_.$JInteger$NullableType$());
-  }
-
-  static final _id_component50 = _class.instanceMethodId(
-    r'component50',
-    r'()Ljava/lang/Integer;',
-  );
-
-  static final _component50 =
-      jni$_.ProtectedJniExtensions.lookup<
-            jni$_.NativeFunction<
-              jni$_.JniResult Function(
-                jni$_.Pointer<jni$_.Void>,
-                jni$_.JMethodIDPtr,
-              )
-            >
-          >('globalEnv_CallObjectMethod')
-          .asFunction<
-            jni$_.JniResult Function(
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.JMethodIDPtr,
-            )
-          >();
-
-  /// from: `public operator fun component50(): kotlin.Int?`
-  /// The returned object must be released after use, by calling the [release] method.
-  jni$_.JInteger? component50() {
-    return _component50(
-      reference.pointer,
-      _id_component50 as jni$_.JMethodIDPtr,
-    ).object<jni$_.JInteger?>(const jni$_.$JInteger$NullableType$());
-  }
-
-  static final _id_component51 = _class.instanceMethodId(
-    r'component51',
-    r'()Ljava/lang/Integer;',
-  );
-
-  static final _component51 =
-      jni$_.ProtectedJniExtensions.lookup<
-            jni$_.NativeFunction<
-              jni$_.JniResult Function(
-                jni$_.Pointer<jni$_.Void>,
-                jni$_.JMethodIDPtr,
-              )
-            >
-          >('globalEnv_CallObjectMethod')
-          .asFunction<
-            jni$_.JniResult Function(
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.JMethodIDPtr,
-            )
-          >();
-
-  /// from: `public operator fun component51(): kotlin.Int?`
-  /// The returned object must be released after use, by calling the [release] method.
-  jni$_.JInteger? component51() {
-    return _component51(
-      reference.pointer,
-      _id_component51 as jni$_.JMethodIDPtr,
-    ).object<jni$_.JInteger?>(const jni$_.$JInteger$NullableType$());
-  }
-
-  static final _id_component52 = _class.instanceMethodId(
-    r'component52',
-    r'()Ljava/lang/Integer;',
-  );
-
-  static final _component52 =
-      jni$_.ProtectedJniExtensions.lookup<
-            jni$_.NativeFunction<
-              jni$_.JniResult Function(
-                jni$_.Pointer<jni$_.Void>,
-                jni$_.JMethodIDPtr,
-              )
-            >
-          >('globalEnv_CallObjectMethod')
-          .asFunction<
-            jni$_.JniResult Function(
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.JMethodIDPtr,
-            )
-          >();
-
-  /// from: `public operator fun component52(): kotlin.Int?`
-  /// The returned object must be released after use, by calling the [release] method.
-  jni$_.JInteger? component52() {
-    return _component52(
-      reference.pointer,
-      _id_component52 as jni$_.JMethodIDPtr,
-    ).object<jni$_.JInteger?>(const jni$_.$JInteger$NullableType$());
-  }
-
-  static final _id_component53 = _class.instanceMethodId(
-    r'component53',
-    r'()Ljava/lang/Integer;',
-  );
-
-  static final _component53 =
-      jni$_.ProtectedJniExtensions.lookup<
-            jni$_.NativeFunction<
-              jni$_.JniResult Function(
-                jni$_.Pointer<jni$_.Void>,
-                jni$_.JMethodIDPtr,
-              )
-            >
-          >('globalEnv_CallObjectMethod')
-          .asFunction<
-            jni$_.JniResult Function(
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.JMethodIDPtr,
-            )
-          >();
-
-  /// from: `public operator fun component53(): kotlin.Int?`
-  /// The returned object must be released after use, by calling the [release] method.
-  jni$_.JInteger? component53() {
-    return _component53(
-      reference.pointer,
-      _id_component53 as jni$_.JMethodIDPtr,
-    ).object<jni$_.JInteger?>(const jni$_.$JInteger$NullableType$());
-  }
-
-  static final _id_component54 = _class.instanceMethodId(
-    r'component54',
-    r'()Ljava/lang/Integer;',
-  );
-
-  static final _component54 =
-      jni$_.ProtectedJniExtensions.lookup<
-            jni$_.NativeFunction<
-              jni$_.JniResult Function(
-                jni$_.Pointer<jni$_.Void>,
-                jni$_.JMethodIDPtr,
-              )
-            >
-          >('globalEnv_CallObjectMethod')
-          .asFunction<
-            jni$_.JniResult Function(
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.JMethodIDPtr,
-            )
-          >();
-
-  /// from: `public operator fun component54(): kotlin.Int?`
-  /// The returned object must be released after use, by calling the [release] method.
-  jni$_.JInteger? component54() {
-    return _component54(
-      reference.pointer,
-      _id_component54 as jni$_.JMethodIDPtr,
-    ).object<jni$_.JInteger?>(const jni$_.$JInteger$NullableType$());
-  }
-
-  static final _id_component55 = _class.instanceMethodId(
-    r'component55',
-    r'()Ljava/lang/Integer;',
-  );
-
-  static final _component55 =
-      jni$_.ProtectedJniExtensions.lookup<
-            jni$_.NativeFunction<
-              jni$_.JniResult Function(
-                jni$_.Pointer<jni$_.Void>,
-                jni$_.JMethodIDPtr,
-              )
-            >
-          >('globalEnv_CallObjectMethod')
-          .asFunction<
-            jni$_.JniResult Function(
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.JMethodIDPtr,
-            )
-          >();
-
-  /// from: `public operator fun component55(): kotlin.Int?`
-  /// The returned object must be released after use, by calling the [release] method.
-  jni$_.JInteger? component55() {
-    return _component55(
-      reference.pointer,
-      _id_component55 as jni$_.JMethodIDPtr,
-    ).object<jni$_.JInteger?>(const jni$_.$JInteger$NullableType$());
-  }
-
-  static final _id_component56 = _class.instanceMethodId(
-    r'component56',
-    r'()Ljava/lang/Integer;',
-  );
-
-  static final _component56 =
-      jni$_.ProtectedJniExtensions.lookup<
-            jni$_.NativeFunction<
-              jni$_.JniResult Function(
-                jni$_.Pointer<jni$_.Void>,
-                jni$_.JMethodIDPtr,
-              )
-            >
-          >('globalEnv_CallObjectMethod')
-          .asFunction<
-            jni$_.JniResult Function(
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.JMethodIDPtr,
-            )
-          >();
-
-  /// from: `public operator fun component56(): kotlin.Int?`
-  /// The returned object must be released after use, by calling the [release] method.
-  jni$_.JInteger? component56() {
-    return _component56(
-      reference.pointer,
-      _id_component56 as jni$_.JMethodIDPtr,
-    ).object<jni$_.JInteger?>(const jni$_.$JInteger$NullableType$());
-  }
-
-  static final _id_component57 = _class.instanceMethodId(
-    r'component57',
-    r'()Ljava/lang/Integer;',
-  );
-
-  static final _component57 =
-      jni$_.ProtectedJniExtensions.lookup<
-            jni$_.NativeFunction<
-              jni$_.JniResult Function(
-                jni$_.Pointer<jni$_.Void>,
-                jni$_.JMethodIDPtr,
-              )
-            >
-          >('globalEnv_CallObjectMethod')
-          .asFunction<
-            jni$_.JniResult Function(
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.JMethodIDPtr,
-            )
-          >();
-
-  /// from: `public operator fun component57(): kotlin.Int?`
-  /// The returned object must be released after use, by calling the [release] method.
-  jni$_.JInteger? component57() {
-    return _component57(
-      reference.pointer,
-      _id_component57 as jni$_.JMethodIDPtr,
-    ).object<jni$_.JInteger?>(const jni$_.$JInteger$NullableType$());
-  }
-
-  static final _id_component58 = _class.instanceMethodId(
-    r'component58',
-    r'()Ljava/lang/Integer;',
-  );
-
-  static final _component58 =
-      jni$_.ProtectedJniExtensions.lookup<
-            jni$_.NativeFunction<
-              jni$_.JniResult Function(
-                jni$_.Pointer<jni$_.Void>,
-                jni$_.JMethodIDPtr,
-              )
-            >
-          >('globalEnv_CallObjectMethod')
-          .asFunction<
-            jni$_.JniResult Function(
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.JMethodIDPtr,
-            )
-          >();
-
-  /// from: `public operator fun component58(): kotlin.Int?`
-  /// The returned object must be released after use, by calling the [release] method.
-  jni$_.JInteger? component58() {
-    return _component58(
-      reference.pointer,
-      _id_component58 as jni$_.JMethodIDPtr,
-    ).object<jni$_.JInteger?>(const jni$_.$JInteger$NullableType$());
-  }
-
-  static final _id_component59 = _class.instanceMethodId(
-    r'component59',
-    r'()Ljava/lang/Integer;',
-  );
-
-  static final _component59 =
-      jni$_.ProtectedJniExtensions.lookup<
-            jni$_.NativeFunction<
-              jni$_.JniResult Function(
-                jni$_.Pointer<jni$_.Void>,
-                jni$_.JMethodIDPtr,
-              )
-            >
-          >('globalEnv_CallObjectMethod')
-          .asFunction<
-            jni$_.JniResult Function(
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.JMethodIDPtr,
-            )
-          >();
-
-  /// from: `public operator fun component59(): kotlin.Int?`
-  /// The returned object must be released after use, by calling the [release] method.
-  jni$_.JInteger? component59() {
-    return _component59(
-      reference.pointer,
-      _id_component59 as jni$_.JMethodIDPtr,
-    ).object<jni$_.JInteger?>(const jni$_.$JInteger$NullableType$());
-  }
-
-  static final _id_component60 = _class.instanceMethodId(
-    r'component60',
-    r'()Ljava/lang/Integer;',
-  );
-
-  static final _component60 =
-      jni$_.ProtectedJniExtensions.lookup<
-            jni$_.NativeFunction<
-              jni$_.JniResult Function(
-                jni$_.Pointer<jni$_.Void>,
-                jni$_.JMethodIDPtr,
-              )
-            >
-          >('globalEnv_CallObjectMethod')
-          .asFunction<
-            jni$_.JniResult Function(
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.JMethodIDPtr,
-            )
-          >();
-
-  /// from: `public operator fun component60(): kotlin.Int?`
-  /// The returned object must be released after use, by calling the [release] method.
-  jni$_.JInteger? component60() {
-    return _component60(
-      reference.pointer,
-      _id_component60 as jni$_.JMethodIDPtr,
-    ).object<jni$_.JInteger?>(const jni$_.$JInteger$NullableType$());
-  }
-
-  static final _id_component61 = _class.instanceMethodId(
-    r'component61',
-    r'()Ljava/lang/Integer;',
-  );
-
-  static final _component61 =
-      jni$_.ProtectedJniExtensions.lookup<
-            jni$_.NativeFunction<
-              jni$_.JniResult Function(
-                jni$_.Pointer<jni$_.Void>,
-                jni$_.JMethodIDPtr,
-              )
-            >
-          >('globalEnv_CallObjectMethod')
-          .asFunction<
-            jni$_.JniResult Function(
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.JMethodIDPtr,
-            )
-          >();
-
-  /// from: `public operator fun component61(): kotlin.Int?`
-  /// The returned object must be released after use, by calling the [release] method.
-  jni$_.JInteger? component61() {
-    return _component61(
-      reference.pointer,
-      _id_component61 as jni$_.JMethodIDPtr,
-    ).object<jni$_.JInteger?>(const jni$_.$JInteger$NullableType$());
-  }
-
-  static final _id_component62 = _class.instanceMethodId(
-    r'component62',
-    r'()Ljava/lang/Integer;',
-  );
-
-  static final _component62 =
-      jni$_.ProtectedJniExtensions.lookup<
-            jni$_.NativeFunction<
-              jni$_.JniResult Function(
-                jni$_.Pointer<jni$_.Void>,
-                jni$_.JMethodIDPtr,
-              )
-            >
-          >('globalEnv_CallObjectMethod')
-          .asFunction<
-            jni$_.JniResult Function(
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.JMethodIDPtr,
-            )
-          >();
-
-  /// from: `public operator fun component62(): kotlin.Int?`
-  /// The returned object must be released after use, by calling the [release] method.
-  jni$_.JInteger? component62() {
-    return _component62(
-      reference.pointer,
-      _id_component62 as jni$_.JMethodIDPtr,
-    ).object<jni$_.JInteger?>(const jni$_.$JInteger$NullableType$());
-  }
-
-  static final _id_component63 = _class.instanceMethodId(
-    r'component63',
-    r'()Ljava/lang/Integer;',
-  );
-
-  static final _component63 =
-      jni$_.ProtectedJniExtensions.lookup<
-            jni$_.NativeFunction<
-              jni$_.JniResult Function(
-                jni$_.Pointer<jni$_.Void>,
-                jni$_.JMethodIDPtr,
-              )
-            >
-          >('globalEnv_CallObjectMethod')
-          .asFunction<
-            jni$_.JniResult Function(
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.JMethodIDPtr,
-            )
-          >();
-
-  /// from: `public operator fun component63(): kotlin.Int?`
-  /// The returned object must be released after use, by calling the [release] method.
-  jni$_.JInteger? component63() {
-    return _component63(
-      reference.pointer,
-      _id_component63 as jni$_.JMethodIDPtr,
-    ).object<jni$_.JInteger?>(const jni$_.$JInteger$NullableType$());
-  }
-
-  static final _id_component64 = _class.instanceMethodId(
-    r'component64',
-    r'()Ljava/lang/Integer;',
-  );
-
-  static final _component64 =
-      jni$_.ProtectedJniExtensions.lookup<
-            jni$_.NativeFunction<
-              jni$_.JniResult Function(
-                jni$_.Pointer<jni$_.Void>,
-                jni$_.JMethodIDPtr,
-              )
-            >
-          >('globalEnv_CallObjectMethod')
-          .asFunction<
-            jni$_.JniResult Function(
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.JMethodIDPtr,
-            )
-          >();
-
-  /// from: `public operator fun component64(): kotlin.Int?`
-  /// The returned object must be released after use, by calling the [release] method.
-  jni$_.JInteger? component64() {
-    return _component64(
-      reference.pointer,
-      _id_component64 as jni$_.JMethodIDPtr,
-    ).object<jni$_.JInteger?>(const jni$_.$JInteger$NullableType$());
-  }
-
-  static final _id_component65 = _class.instanceMethodId(
-    r'component65',
-    r'()Ljava/lang/Integer;',
-  );
-
-  static final _component65 =
-      jni$_.ProtectedJniExtensions.lookup<
-            jni$_.NativeFunction<
-              jni$_.JniResult Function(
-                jni$_.Pointer<jni$_.Void>,
-                jni$_.JMethodIDPtr,
-              )
-            >
-          >('globalEnv_CallObjectMethod')
-          .asFunction<
-            jni$_.JniResult Function(
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.JMethodIDPtr,
-            )
-          >();
-
-  /// from: `public operator fun component65(): kotlin.Int?`
-  /// The returned object must be released after use, by calling the [release] method.
-  jni$_.JInteger? component65() {
-    return _component65(
-      reference.pointer,
-      _id_component65 as jni$_.JMethodIDPtr,
-    ).object<jni$_.JInteger?>(const jni$_.$JInteger$NullableType$());
-  }
-
-  static final _id_component66 = _class.instanceMethodId(
-    r'component66',
-    r'()Ljava/lang/Integer;',
-  );
-
-  static final _component66 =
-      jni$_.ProtectedJniExtensions.lookup<
-            jni$_.NativeFunction<
-              jni$_.JniResult Function(
-                jni$_.Pointer<jni$_.Void>,
-                jni$_.JMethodIDPtr,
-              )
-            >
-          >('globalEnv_CallObjectMethod')
-          .asFunction<
-            jni$_.JniResult Function(
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.JMethodIDPtr,
-            )
-          >();
-
-  /// from: `public operator fun component66(): kotlin.Int?`
-  /// The returned object must be released after use, by calling the [release] method.
-  jni$_.JInteger? component66() {
-    return _component66(
-      reference.pointer,
-      _id_component66 as jni$_.JMethodIDPtr,
-    ).object<jni$_.JInteger?>(const jni$_.$JInteger$NullableType$());
-  }
-
-  static final _id_component67 = _class.instanceMethodId(
-    r'component67',
-    r'()Ljava/lang/Integer;',
-  );
-
-  static final _component67 =
-      jni$_.ProtectedJniExtensions.lookup<
-            jni$_.NativeFunction<
-              jni$_.JniResult Function(
-                jni$_.Pointer<jni$_.Void>,
-                jni$_.JMethodIDPtr,
-              )
-            >
-          >('globalEnv_CallObjectMethod')
-          .asFunction<
-            jni$_.JniResult Function(
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.JMethodIDPtr,
-            )
-          >();
-
-  /// from: `public operator fun component67(): kotlin.Int?`
-  /// The returned object must be released after use, by calling the [release] method.
-  jni$_.JInteger? component67() {
-    return _component67(
-      reference.pointer,
-      _id_component67 as jni$_.JMethodIDPtr,
-    ).object<jni$_.JInteger?>(const jni$_.$JInteger$NullableType$());
-  }
-
-  static final _id_component68 = _class.instanceMethodId(
-    r'component68',
-    r'()Ljava/lang/Integer;',
-  );
-
-  static final _component68 =
-      jni$_.ProtectedJniExtensions.lookup<
-            jni$_.NativeFunction<
-              jni$_.JniResult Function(
-                jni$_.Pointer<jni$_.Void>,
-                jni$_.JMethodIDPtr,
-              )
-            >
-          >('globalEnv_CallObjectMethod')
-          .asFunction<
-            jni$_.JniResult Function(
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.JMethodIDPtr,
-            )
-          >();
-
-  /// from: `public operator fun component68(): kotlin.Int?`
-  /// The returned object must be released after use, by calling the [release] method.
-  jni$_.JInteger? component68() {
-    return _component68(
-      reference.pointer,
-      _id_component68 as jni$_.JMethodIDPtr,
-    ).object<jni$_.JInteger?>(const jni$_.$JInteger$NullableType$());
-  }
-
-  static final _id_component69 = _class.instanceMethodId(
-    r'component69',
-    r'()Ljava/lang/Integer;',
-  );
-
-  static final _component69 =
-      jni$_.ProtectedJniExtensions.lookup<
-            jni$_.NativeFunction<
-              jni$_.JniResult Function(
-                jni$_.Pointer<jni$_.Void>,
-                jni$_.JMethodIDPtr,
-              )
-            >
-          >('globalEnv_CallObjectMethod')
-          .asFunction<
-            jni$_.JniResult Function(
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.JMethodIDPtr,
-            )
-          >();
-
-  /// from: `public operator fun component69(): kotlin.Int?`
-  /// The returned object must be released after use, by calling the [release] method.
-  jni$_.JInteger? component69() {
-    return _component69(
-      reference.pointer,
-      _id_component69 as jni$_.JMethodIDPtr,
-    ).object<jni$_.JInteger?>(const jni$_.$JInteger$NullableType$());
-  }
-
-  static final _id_component70 = _class.instanceMethodId(
-    r'component70',
-    r'()Ljava/lang/Integer;',
-  );
-
-  static final _component70 =
-      jni$_.ProtectedJniExtensions.lookup<
-            jni$_.NativeFunction<
-              jni$_.JniResult Function(
-                jni$_.Pointer<jni$_.Void>,
-                jni$_.JMethodIDPtr,
-              )
-            >
-          >('globalEnv_CallObjectMethod')
-          .asFunction<
-            jni$_.JniResult Function(
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.JMethodIDPtr,
-            )
-          >();
-
-  /// from: `public operator fun component70(): kotlin.Int?`
-  /// The returned object must be released after use, by calling the [release] method.
-  jni$_.JInteger? component70() {
-    return _component70(
-      reference.pointer,
-      _id_component70 as jni$_.JMethodIDPtr,
-    ).object<jni$_.JInteger?>(const jni$_.$JInteger$NullableType$());
-  }
-
-  static final _id_component71 = _class.instanceMethodId(
-    r'component71',
-    r'()Ljava/lang/Integer;',
-  );
-
-  static final _component71 =
-      jni$_.ProtectedJniExtensions.lookup<
-            jni$_.NativeFunction<
-              jni$_.JniResult Function(
-                jni$_.Pointer<jni$_.Void>,
-                jni$_.JMethodIDPtr,
-              )
-            >
-          >('globalEnv_CallObjectMethod')
-          .asFunction<
-            jni$_.JniResult Function(
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.JMethodIDPtr,
-            )
-          >();
-
-  /// from: `public operator fun component71(): kotlin.Int?`
-  /// The returned object must be released after use, by calling the [release] method.
-  jni$_.JInteger? component71() {
-    return _component71(
-      reference.pointer,
-      _id_component71 as jni$_.JMethodIDPtr,
-    ).object<jni$_.JInteger?>(const jni$_.$JInteger$NullableType$());
-  }
-
-  static final _id_component72 = _class.instanceMethodId(
-    r'component72',
-    r'()Ljava/lang/Integer;',
-  );
-
-  static final _component72 =
-      jni$_.ProtectedJniExtensions.lookup<
-            jni$_.NativeFunction<
-              jni$_.JniResult Function(
-                jni$_.Pointer<jni$_.Void>,
-                jni$_.JMethodIDPtr,
-              )
-            >
-          >('globalEnv_CallObjectMethod')
-          .asFunction<
-            jni$_.JniResult Function(
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.JMethodIDPtr,
-            )
-          >();
-
-  /// from: `public operator fun component72(): kotlin.Int?`
-  /// The returned object must be released after use, by calling the [release] method.
-  jni$_.JInteger? component72() {
-    return _component72(
-      reference.pointer,
-      _id_component72 as jni$_.JMethodIDPtr,
-    ).object<jni$_.JInteger?>(const jni$_.$JInteger$NullableType$());
-  }
-
-  static final _id_component73 = _class.instanceMethodId(
-    r'component73',
-    r'()Ljava/lang/Integer;',
-  );
-
-  static final _component73 =
-      jni$_.ProtectedJniExtensions.lookup<
-            jni$_.NativeFunction<
-              jni$_.JniResult Function(
-                jni$_.Pointer<jni$_.Void>,
-                jni$_.JMethodIDPtr,
-              )
-            >
-          >('globalEnv_CallObjectMethod')
-          .asFunction<
-            jni$_.JniResult Function(
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.JMethodIDPtr,
-            )
-          >();
-
-  /// from: `public operator fun component73(): kotlin.Int?`
-  /// The returned object must be released after use, by calling the [release] method.
-  jni$_.JInteger? component73() {
-    return _component73(
-      reference.pointer,
-      _id_component73 as jni$_.JMethodIDPtr,
-    ).object<jni$_.JInteger?>(const jni$_.$JInteger$NullableType$());
-  }
-
-  static final _id_component74 = _class.instanceMethodId(
-    r'component74',
-    r'()Ljava/lang/Integer;',
-  );
-
-  static final _component74 =
-      jni$_.ProtectedJniExtensions.lookup<
-            jni$_.NativeFunction<
-              jni$_.JniResult Function(
-                jni$_.Pointer<jni$_.Void>,
-                jni$_.JMethodIDPtr,
-              )
-            >
-          >('globalEnv_CallObjectMethod')
-          .asFunction<
-            jni$_.JniResult Function(
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.JMethodIDPtr,
-            )
-          >();
-
-  /// from: `public operator fun component74(): kotlin.Int?`
-  /// The returned object must be released after use, by calling the [release] method.
-  jni$_.JInteger? component74() {
-    return _component74(
-      reference.pointer,
-      _id_component74 as jni$_.JMethodIDPtr,
-    ).object<jni$_.JInteger?>(const jni$_.$JInteger$NullableType$());
-  }
-
-  static final _id_component75 = _class.instanceMethodId(
-    r'component75',
-    r'()Ljava/lang/Integer;',
-  );
-
-  static final _component75 =
-      jni$_.ProtectedJniExtensions.lookup<
-            jni$_.NativeFunction<
-              jni$_.JniResult Function(
-                jni$_.Pointer<jni$_.Void>,
-                jni$_.JMethodIDPtr,
-              )
-            >
-          >('globalEnv_CallObjectMethod')
-          .asFunction<
-            jni$_.JniResult Function(
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.JMethodIDPtr,
-            )
-          >();
-
-  /// from: `public operator fun component75(): kotlin.Int?`
-  /// The returned object must be released after use, by calling the [release] method.
-  jni$_.JInteger? component75() {
-    return _component75(
-      reference.pointer,
-      _id_component75 as jni$_.JMethodIDPtr,
-    ).object<jni$_.JInteger?>(const jni$_.$JInteger$NullableType$());
-  }
-
-  static final _id_component76 = _class.instanceMethodId(
-    r'component76',
-    r'()Ljava/lang/Integer;',
-  );
-
-  static final _component76 =
-      jni$_.ProtectedJniExtensions.lookup<
-            jni$_.NativeFunction<
-              jni$_.JniResult Function(
-                jni$_.Pointer<jni$_.Void>,
-                jni$_.JMethodIDPtr,
-              )
-            >
-          >('globalEnv_CallObjectMethod')
-          .asFunction<
-            jni$_.JniResult Function(
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.JMethodIDPtr,
-            )
-          >();
-
-  /// from: `public operator fun component76(): kotlin.Int?`
-  /// The returned object must be released after use, by calling the [release] method.
-  jni$_.JInteger? component76() {
-    return _component76(
-      reference.pointer,
-      _id_component76 as jni$_.JMethodIDPtr,
-    ).object<jni$_.JInteger?>(const jni$_.$JInteger$NullableType$());
-  }
-
-  static final _id_component77 = _class.instanceMethodId(
-    r'component77',
-    r'()Ljava/lang/Integer;',
-  );
-
-  static final _component77 =
-      jni$_.ProtectedJniExtensions.lookup<
-            jni$_.NativeFunction<
-              jni$_.JniResult Function(
-                jni$_.Pointer<jni$_.Void>,
-                jni$_.JMethodIDPtr,
-              )
-            >
-          >('globalEnv_CallObjectMethod')
-          .asFunction<
-            jni$_.JniResult Function(
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.JMethodIDPtr,
-            )
-          >();
-
-  /// from: `public operator fun component77(): kotlin.Int?`
-  /// The returned object must be released after use, by calling the [release] method.
-  jni$_.JInteger? component77() {
-    return _component77(
-      reference.pointer,
-      _id_component77 as jni$_.JMethodIDPtr,
-    ).object<jni$_.JInteger?>(const jni$_.$JInteger$NullableType$());
-  }
-
-  static final _id_component78 = _class.instanceMethodId(
-    r'component78',
-    r'()Ljava/lang/Integer;',
-  );
-
-  static final _component78 =
-      jni$_.ProtectedJniExtensions.lookup<
-            jni$_.NativeFunction<
-              jni$_.JniResult Function(
-                jni$_.Pointer<jni$_.Void>,
-                jni$_.JMethodIDPtr,
-              )
-            >
-          >('globalEnv_CallObjectMethod')
-          .asFunction<
-            jni$_.JniResult Function(
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.JMethodIDPtr,
-            )
-          >();
-
-  /// from: `public operator fun component78(): kotlin.Int?`
-  /// The returned object must be released after use, by calling the [release] method.
-  jni$_.JInteger? component78() {
-    return _component78(
-      reference.pointer,
-      _id_component78 as jni$_.JMethodIDPtr,
-    ).object<jni$_.JInteger?>(const jni$_.$JInteger$NullableType$());
-  }
-
-  static final _id_component79 = _class.instanceMethodId(
-    r'component79',
-    r'()Ljava/lang/Integer;',
-  );
-
-  static final _component79 =
-      jni$_.ProtectedJniExtensions.lookup<
-            jni$_.NativeFunction<
-              jni$_.JniResult Function(
-                jni$_.Pointer<jni$_.Void>,
-                jni$_.JMethodIDPtr,
-              )
-            >
-          >('globalEnv_CallObjectMethod')
-          .asFunction<
-            jni$_.JniResult Function(
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.JMethodIDPtr,
-            )
-          >();
-
-  /// from: `public operator fun component79(): kotlin.Int?`
-  /// The returned object must be released after use, by calling the [release] method.
-  jni$_.JInteger? component79() {
-    return _component79(
-      reference.pointer,
-      _id_component79 as jni$_.JMethodIDPtr,
-    ).object<jni$_.JInteger?>(const jni$_.$JInteger$NullableType$());
-  }
-
-  static final _id_component80 = _class.instanceMethodId(
-    r'component80',
-    r'()Ljava/lang/Integer;',
-  );
-
-  static final _component80 =
-      jni$_.ProtectedJniExtensions.lookup<
-            jni$_.NativeFunction<
-              jni$_.JniResult Function(
-                jni$_.Pointer<jni$_.Void>,
-                jni$_.JMethodIDPtr,
-              )
-            >
-          >('globalEnv_CallObjectMethod')
-          .asFunction<
-            jni$_.JniResult Function(
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.JMethodIDPtr,
-            )
-          >();
-
-  /// from: `public operator fun component80(): kotlin.Int?`
-  /// The returned object must be released after use, by calling the [release] method.
-  jni$_.JInteger? component80() {
-    return _component80(
-      reference.pointer,
-      _id_component80 as jni$_.JMethodIDPtr,
-    ).object<jni$_.JInteger?>(const jni$_.$JInteger$NullableType$());
-  }
-
-  static final _id_component81 = _class.instanceMethodId(
-    r'component81',
-    r'()Ljava/lang/Integer;',
-  );
-
-  static final _component81 =
-      jni$_.ProtectedJniExtensions.lookup<
-            jni$_.NativeFunction<
-              jni$_.JniResult Function(
-                jni$_.Pointer<jni$_.Void>,
-                jni$_.JMethodIDPtr,
-              )
-            >
-          >('globalEnv_CallObjectMethod')
-          .asFunction<
-            jni$_.JniResult Function(
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.JMethodIDPtr,
-            )
-          >();
-
-  /// from: `public operator fun component81(): kotlin.Int?`
-  /// The returned object must be released after use, by calling the [release] method.
-  jni$_.JInteger? component81() {
-    return _component81(
-      reference.pointer,
-      _id_component81 as jni$_.JMethodIDPtr,
-    ).object<jni$_.JInteger?>(const jni$_.$JInteger$NullableType$());
-  }
-
-  static final _id_component82 = _class.instanceMethodId(
-    r'component82',
-    r'()Ljava/lang/Integer;',
-  );
-
-  static final _component82 =
-      jni$_.ProtectedJniExtensions.lookup<
-            jni$_.NativeFunction<
-              jni$_.JniResult Function(
-                jni$_.Pointer<jni$_.Void>,
-                jni$_.JMethodIDPtr,
-              )
-            >
-          >('globalEnv_CallObjectMethod')
-          .asFunction<
-            jni$_.JniResult Function(
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.JMethodIDPtr,
-            )
-          >();
-
-  /// from: `public operator fun component82(): kotlin.Int?`
-  /// The returned object must be released after use, by calling the [release] method.
-  jni$_.JInteger? component82() {
-    return _component82(
-      reference.pointer,
-      _id_component82 as jni$_.JMethodIDPtr,
-    ).object<jni$_.JInteger?>(const jni$_.$JInteger$NullableType$());
-  }
-
-  static final _id_component83 = _class.instanceMethodId(
-    r'component83',
-    r'()Ljava/lang/Integer;',
-  );
-
-  static final _component83 =
-      jni$_.ProtectedJniExtensions.lookup<
-            jni$_.NativeFunction<
-              jni$_.JniResult Function(
-                jni$_.Pointer<jni$_.Void>,
-                jni$_.JMethodIDPtr,
-              )
-            >
-          >('globalEnv_CallObjectMethod')
-          .asFunction<
-            jni$_.JniResult Function(
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.JMethodIDPtr,
-            )
-          >();
-
-  /// from: `public operator fun component83(): kotlin.Int?`
-  /// The returned object must be released after use, by calling the [release] method.
-  jni$_.JInteger? component83() {
-    return _component83(
-      reference.pointer,
-      _id_component83 as jni$_.JMethodIDPtr,
-    ).object<jni$_.JInteger?>(const jni$_.$JInteger$NullableType$());
-  }
-
-  static final _id_component84 = _class.instanceMethodId(
-    r'component84',
-    r'()Ljava/lang/Integer;',
-  );
-
-  static final _component84 =
-      jni$_.ProtectedJniExtensions.lookup<
-            jni$_.NativeFunction<
-              jni$_.JniResult Function(
-                jni$_.Pointer<jni$_.Void>,
-                jni$_.JMethodIDPtr,
-              )
-            >
-          >('globalEnv_CallObjectMethod')
-          .asFunction<
-            jni$_.JniResult Function(
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.JMethodIDPtr,
-            )
-          >();
-
-  /// from: `public operator fun component84(): kotlin.Int?`
-  /// The returned object must be released after use, by calling the [release] method.
-  jni$_.JInteger? component84() {
-    return _component84(
-      reference.pointer,
-      _id_component84 as jni$_.JMethodIDPtr,
-    ).object<jni$_.JInteger?>(const jni$_.$JInteger$NullableType$());
-  }
-
-  static final _id_component85 = _class.instanceMethodId(
-    r'component85',
-    r'()Ljava/lang/Integer;',
-  );
-
-  static final _component85 =
-      jni$_.ProtectedJniExtensions.lookup<
-            jni$_.NativeFunction<
-              jni$_.JniResult Function(
-                jni$_.Pointer<jni$_.Void>,
-                jni$_.JMethodIDPtr,
-              )
-            >
-          >('globalEnv_CallObjectMethod')
-          .asFunction<
-            jni$_.JniResult Function(
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.JMethodIDPtr,
-            )
-          >();
-
-  /// from: `public operator fun component85(): kotlin.Int?`
-  /// The returned object must be released after use, by calling the [release] method.
-  jni$_.JInteger? component85() {
-    return _component85(
-      reference.pointer,
-      _id_component85 as jni$_.JMethodIDPtr,
-    ).object<jni$_.JInteger?>(const jni$_.$JInteger$NullableType$());
-  }
-
-  static final _id_component86 = _class.instanceMethodId(
-    r'component86',
-    r'()Ljava/lang/Integer;',
-  );
-
-  static final _component86 =
-      jni$_.ProtectedJniExtensions.lookup<
-            jni$_.NativeFunction<
-              jni$_.JniResult Function(
-                jni$_.Pointer<jni$_.Void>,
-                jni$_.JMethodIDPtr,
-              )
-            >
-          >('globalEnv_CallObjectMethod')
-          .asFunction<
-            jni$_.JniResult Function(
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.JMethodIDPtr,
-            )
-          >();
-
-  /// from: `public operator fun component86(): kotlin.Int?`
-  /// The returned object must be released after use, by calling the [release] method.
-  jni$_.JInteger? component86() {
-    return _component86(
-      reference.pointer,
-      _id_component86 as jni$_.JMethodIDPtr,
-    ).object<jni$_.JInteger?>(const jni$_.$JInteger$NullableType$());
-  }
-
-  static final _id_component87 = _class.instanceMethodId(
-    r'component87',
-    r'()Ljava/lang/Integer;',
-  );
-
-  static final _component87 =
-      jni$_.ProtectedJniExtensions.lookup<
-            jni$_.NativeFunction<
-              jni$_.JniResult Function(
-                jni$_.Pointer<jni$_.Void>,
-                jni$_.JMethodIDPtr,
-              )
-            >
-          >('globalEnv_CallObjectMethod')
-          .asFunction<
-            jni$_.JniResult Function(
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.JMethodIDPtr,
-            )
-          >();
-
-  /// from: `public operator fun component87(): kotlin.Int?`
-  /// The returned object must be released after use, by calling the [release] method.
-  jni$_.JInteger? component87() {
-    return _component87(
-      reference.pointer,
-      _id_component87 as jni$_.JMethodIDPtr,
-    ).object<jni$_.JInteger?>(const jni$_.$JInteger$NullableType$());
-  }
-
-  static final _id_component88 = _class.instanceMethodId(
-    r'component88',
-    r'()Ljava/lang/Integer;',
-  );
-
-  static final _component88 =
-      jni$_.ProtectedJniExtensions.lookup<
-            jni$_.NativeFunction<
-              jni$_.JniResult Function(
-                jni$_.Pointer<jni$_.Void>,
-                jni$_.JMethodIDPtr,
-              )
-            >
-          >('globalEnv_CallObjectMethod')
-          .asFunction<
-            jni$_.JniResult Function(
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.JMethodIDPtr,
-            )
-          >();
-
-  /// from: `public operator fun component88(): kotlin.Int?`
-  /// The returned object must be released after use, by calling the [release] method.
-  jni$_.JInteger? component88() {
-    return _component88(
-      reference.pointer,
-      _id_component88 as jni$_.JMethodIDPtr,
-    ).object<jni$_.JInteger?>(const jni$_.$JInteger$NullableType$());
-  }
-
-  static final _id_component89 = _class.instanceMethodId(
-    r'component89',
-    r'()Ljava/lang/Integer;',
-  );
-
-  static final _component89 =
-      jni$_.ProtectedJniExtensions.lookup<
-            jni$_.NativeFunction<
-              jni$_.JniResult Function(
-                jni$_.Pointer<jni$_.Void>,
-                jni$_.JMethodIDPtr,
-              )
-            >
-          >('globalEnv_CallObjectMethod')
-          .asFunction<
-            jni$_.JniResult Function(
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.JMethodIDPtr,
-            )
-          >();
-
-  /// from: `public operator fun component89(): kotlin.Int?`
-  /// The returned object must be released after use, by calling the [release] method.
-  jni$_.JInteger? component89() {
-    return _component89(
-      reference.pointer,
-      _id_component89 as jni$_.JMethodIDPtr,
-    ).object<jni$_.JInteger?>(const jni$_.$JInteger$NullableType$());
-  }
-
-  static final _id_component90 = _class.instanceMethodId(
-    r'component90',
-    r'()Ljava/lang/Integer;',
-  );
-
-  static final _component90 =
-      jni$_.ProtectedJniExtensions.lookup<
-            jni$_.NativeFunction<
-              jni$_.JniResult Function(
-                jni$_.Pointer<jni$_.Void>,
-                jni$_.JMethodIDPtr,
-              )
-            >
-          >('globalEnv_CallObjectMethod')
-          .asFunction<
-            jni$_.JniResult Function(
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.JMethodIDPtr,
-            )
-          >();
-
-  /// from: `public operator fun component90(): kotlin.Int?`
-  /// The returned object must be released after use, by calling the [release] method.
-  jni$_.JInteger? component90() {
-    return _component90(
-      reference.pointer,
-      _id_component90 as jni$_.JMethodIDPtr,
-    ).object<jni$_.JInteger?>(const jni$_.$JInteger$NullableType$());
-  }
-
-  static final _id_component91 = _class.instanceMethodId(
-    r'component91',
-    r'()Ljava/lang/Integer;',
-  );
-
-  static final _component91 =
-      jni$_.ProtectedJniExtensions.lookup<
-            jni$_.NativeFunction<
-              jni$_.JniResult Function(
-                jni$_.Pointer<jni$_.Void>,
-                jni$_.JMethodIDPtr,
-              )
-            >
-          >('globalEnv_CallObjectMethod')
-          .asFunction<
-            jni$_.JniResult Function(
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.JMethodIDPtr,
-            )
-          >();
-
-  /// from: `public operator fun component91(): kotlin.Int?`
-  /// The returned object must be released after use, by calling the [release] method.
-  jni$_.JInteger? component91() {
-    return _component91(
-      reference.pointer,
-      _id_component91 as jni$_.JMethodIDPtr,
-    ).object<jni$_.JInteger?>(const jni$_.$JInteger$NullableType$());
-  }
-
-  static final _id_component92 = _class.instanceMethodId(
-    r'component92',
-    r'()Ljava/lang/Integer;',
-  );
-
-  static final _component92 =
-      jni$_.ProtectedJniExtensions.lookup<
-            jni$_.NativeFunction<
-              jni$_.JniResult Function(
-                jni$_.Pointer<jni$_.Void>,
-                jni$_.JMethodIDPtr,
-              )
-            >
-          >('globalEnv_CallObjectMethod')
-          .asFunction<
-            jni$_.JniResult Function(
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.JMethodIDPtr,
-            )
-          >();
-
-  /// from: `public operator fun component92(): kotlin.Int?`
-  /// The returned object must be released after use, by calling the [release] method.
-  jni$_.JInteger? component92() {
-    return _component92(
-      reference.pointer,
-      _id_component92 as jni$_.JMethodIDPtr,
-    ).object<jni$_.JInteger?>(const jni$_.$JInteger$NullableType$());
-  }
-
-  static final _id_component93 = _class.instanceMethodId(
-    r'component93',
-    r'()Ljava/lang/Integer;',
-  );
-
-  static final _component93 =
-      jni$_.ProtectedJniExtensions.lookup<
-            jni$_.NativeFunction<
-              jni$_.JniResult Function(
-                jni$_.Pointer<jni$_.Void>,
-                jni$_.JMethodIDPtr,
-              )
-            >
-          >('globalEnv_CallObjectMethod')
-          .asFunction<
-            jni$_.JniResult Function(
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.JMethodIDPtr,
-            )
-          >();
-
-  /// from: `public operator fun component93(): kotlin.Int?`
-  /// The returned object must be released after use, by calling the [release] method.
-  jni$_.JInteger? component93() {
-    return _component93(
-      reference.pointer,
-      _id_component93 as jni$_.JMethodIDPtr,
-    ).object<jni$_.JInteger?>(const jni$_.$JInteger$NullableType$());
-  }
-
-  static final _id_component94 = _class.instanceMethodId(
-    r'component94',
-    r'()Ljava/lang/Integer;',
-  );
-
-  static final _component94 =
-      jni$_.ProtectedJniExtensions.lookup<
-            jni$_.NativeFunction<
-              jni$_.JniResult Function(
-                jni$_.Pointer<jni$_.Void>,
-                jni$_.JMethodIDPtr,
-              )
-            >
-          >('globalEnv_CallObjectMethod')
-          .asFunction<
-            jni$_.JniResult Function(
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.JMethodIDPtr,
-            )
-          >();
-
-  /// from: `public operator fun component94(): kotlin.Int?`
-  /// The returned object must be released after use, by calling the [release] method.
-  jni$_.JInteger? component94() {
-    return _component94(
-      reference.pointer,
-      _id_component94 as jni$_.JMethodIDPtr,
-    ).object<jni$_.JInteger?>(const jni$_.$JInteger$NullableType$());
-  }
-
-  static final _id_copy = _class.instanceMethodId(
-    r'copy',
-    r'(Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;)Ldev/deminearchiver/dynamic_color_ffi/DynamicTonalPalette;',
-  );
-
-  static final _copy =
-      jni$_.ProtectedJniExtensions.lookup<
-            jni$_.NativeFunction<
-              jni$_.JniResult Function(
-                jni$_.Pointer<jni$_.Void>,
-                jni$_.JMethodIDPtr,
-                jni$_.VarArgs<
-                  (
-                    jni$_.Pointer<jni$_.Void>,
-                    jni$_.Pointer<jni$_.Void>,
-                    jni$_.Pointer<jni$_.Void>,
-                    jni$_.Pointer<jni$_.Void>,
-                    jni$_.Pointer<jni$_.Void>,
-                    jni$_.Pointer<jni$_.Void>,
-                    jni$_.Pointer<jni$_.Void>,
-                    jni$_.Pointer<jni$_.Void>,
-                    jni$_.Pointer<jni$_.Void>,
-                    jni$_.Pointer<jni$_.Void>,
-                    jni$_.Pointer<jni$_.Void>,
-                    jni$_.Pointer<jni$_.Void>,
-                    jni$_.Pointer<jni$_.Void>,
-                    jni$_.Pointer<jni$_.Void>,
-                    jni$_.Pointer<jni$_.Void>,
-                    jni$_.Pointer<jni$_.Void>,
-                    jni$_.Pointer<jni$_.Void>,
-                    jni$_.Pointer<jni$_.Void>,
-                    jni$_.Pointer<jni$_.Void>,
-                    jni$_.Pointer<jni$_.Void>,
-                    jni$_.Pointer<jni$_.Void>,
-                    jni$_.Pointer<jni$_.Void>,
-                    jni$_.Pointer<jni$_.Void>,
-                    jni$_.Pointer<jni$_.Void>,
-                    jni$_.Pointer<jni$_.Void>,
-                    jni$_.Pointer<jni$_.Void>,
-                    jni$_.Pointer<jni$_.Void>,
-                    jni$_.Pointer<jni$_.Void>,
-                    jni$_.Pointer<jni$_.Void>,
-                    jni$_.Pointer<jni$_.Void>,
-                    jni$_.Pointer<jni$_.Void>,
-                    jni$_.Pointer<jni$_.Void>,
-                    jni$_.Pointer<jni$_.Void>,
-                    jni$_.Pointer<jni$_.Void>,
-                    jni$_.Pointer<jni$_.Void>,
-                    jni$_.Pointer<jni$_.Void>,
-                    jni$_.Pointer<jni$_.Void>,
-                    jni$_.Pointer<jni$_.Void>,
-                    jni$_.Pointer<jni$_.Void>,
-                    jni$_.Pointer<jni$_.Void>,
-                    jni$_.Pointer<jni$_.Void>,
-                    jni$_.Pointer<jni$_.Void>,
-                    jni$_.Pointer<jni$_.Void>,
-                    jni$_.Pointer<jni$_.Void>,
-                    jni$_.Pointer<jni$_.Void>,
-                    jni$_.Pointer<jni$_.Void>,
-                    jni$_.Pointer<jni$_.Void>,
-                    jni$_.Pointer<jni$_.Void>,
-                    jni$_.Pointer<jni$_.Void>,
-                    jni$_.Pointer<jni$_.Void>,
-                    jni$_.Pointer<jni$_.Void>,
-                    jni$_.Pointer<jni$_.Void>,
-                    jni$_.Pointer<jni$_.Void>,
-                    jni$_.Pointer<jni$_.Void>,
-                    jni$_.Pointer<jni$_.Void>,
-                    jni$_.Pointer<jni$_.Void>,
-                    jni$_.Pointer<jni$_.Void>,
-                    jni$_.Pointer<jni$_.Void>,
-                    jni$_.Pointer<jni$_.Void>,
-                    jni$_.Pointer<jni$_.Void>,
-                    jni$_.Pointer<jni$_.Void>,
-                    jni$_.Pointer<jni$_.Void>,
-                    jni$_.Pointer<jni$_.Void>,
-                    jni$_.Pointer<jni$_.Void>,
-                    jni$_.Pointer<jni$_.Void>,
-                    jni$_.Pointer<jni$_.Void>,
-                    jni$_.Pointer<jni$_.Void>,
-                    jni$_.Pointer<jni$_.Void>,
-                    jni$_.Pointer<jni$_.Void>,
-                    jni$_.Pointer<jni$_.Void>,
-                    jni$_.Pointer<jni$_.Void>,
-                    jni$_.Pointer<jni$_.Void>,
-                    jni$_.Pointer<jni$_.Void>,
-                    jni$_.Pointer<jni$_.Void>,
-                    jni$_.Pointer<jni$_.Void>,
-                    jni$_.Pointer<jni$_.Void>,
-                    jni$_.Pointer<jni$_.Void>,
-                    jni$_.Pointer<jni$_.Void>,
-                    jni$_.Pointer<jni$_.Void>,
-                    jni$_.Pointer<jni$_.Void>,
-                    jni$_.Pointer<jni$_.Void>,
-                    jni$_.Pointer<jni$_.Void>,
-                    jni$_.Pointer<jni$_.Void>,
-                    jni$_.Pointer<jni$_.Void>,
-                    jni$_.Pointer<jni$_.Void>,
-                    jni$_.Pointer<jni$_.Void>,
-                    jni$_.Pointer<jni$_.Void>,
-                    jni$_.Pointer<jni$_.Void>,
-                    jni$_.Pointer<jni$_.Void>,
-                    jni$_.Pointer<jni$_.Void>,
-                    jni$_.Pointer<jni$_.Void>,
-                    jni$_.Pointer<jni$_.Void>,
-                    jni$_.Pointer<jni$_.Void>,
-                    jni$_.Pointer<jni$_.Void>,
-                  )
-                >,
-              )
-            >
-          >('globalEnv_CallObjectMethod')
-          .asFunction<
-            jni$_.JniResult Function(
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.JMethodIDPtr,
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.Pointer<jni$_.Void>,
-            )
-          >();
-
-  /// from: `public fun copy(primary0: kotlin.Int?, primary10: kotlin.Int?, primary20: kotlin.Int?, primary30: kotlin.Int?, primary40: kotlin.Int?, primary50: kotlin.Int?, primary60: kotlin.Int?, primary70: kotlin.Int?, primary80: kotlin.Int?, primary90: kotlin.Int?, primary95: kotlin.Int?, primary98: kotlin.Int?, primary99: kotlin.Int?, primary100: kotlin.Int?, secondary0: kotlin.Int?, secondary10: kotlin.Int?, secondary20: kotlin.Int?, secondary30: kotlin.Int?, secondary40: kotlin.Int?, secondary50: kotlin.Int?, secondary60: kotlin.Int?, secondary70: kotlin.Int?, secondary80: kotlin.Int?, secondary90: kotlin.Int?, secondary95: kotlin.Int?, secondary98: kotlin.Int?, secondary99: kotlin.Int?, secondary100: kotlin.Int?, tertiary0: kotlin.Int?, tertiary10: kotlin.Int?, tertiary20: kotlin.Int?, tertiary30: kotlin.Int?, tertiary40: kotlin.Int?, tertiary50: kotlin.Int?, tertiary60: kotlin.Int?, tertiary70: kotlin.Int?, tertiary80: kotlin.Int?, tertiary90: kotlin.Int?, tertiary95: kotlin.Int?, tertiary98: kotlin.Int?, tertiary99: kotlin.Int?, tertiary100: kotlin.Int?, neutral0: kotlin.Int?, neutral4: kotlin.Int?, neutral6: kotlin.Int?, neutral10: kotlin.Int?, neutral12: kotlin.Int?, neutral17: kotlin.Int?, neutral20: kotlin.Int?, neutral22: kotlin.Int?, neutral24: kotlin.Int?, neutral30: kotlin.Int?, neutral40: kotlin.Int?, neutral50: kotlin.Int?, neutral60: kotlin.Int?, neutral70: kotlin.Int?, neutral80: kotlin.Int?, neutral87: kotlin.Int?, neutral90: kotlin.Int?, neutral92: kotlin.Int?, neutral94: kotlin.Int?, neutral95: kotlin.Int?, neutral96: kotlin.Int?, neutral98: kotlin.Int?, neutral99: kotlin.Int?, neutral100: kotlin.Int?, neutralVariant0: kotlin.Int?, neutralVariant10: kotlin.Int?, neutralVariant20: kotlin.Int?, neutralVariant30: kotlin.Int?, neutralVariant40: kotlin.Int?, neutralVariant50: kotlin.Int?, neutralVariant60: kotlin.Int?, neutralVariant70: kotlin.Int?, neutralVariant80: kotlin.Int?, neutralVariant90: kotlin.Int?, neutralVariant95: kotlin.Int?, neutralVariant98: kotlin.Int?, neutralVariant99: kotlin.Int?, neutralVariant100: kotlin.Int?, error0: kotlin.Int?, error10: kotlin.Int?, error20: kotlin.Int?, error30: kotlin.Int?, error40: kotlin.Int?, error50: kotlin.Int?, error60: kotlin.Int?, error70: kotlin.Int?, error80: kotlin.Int?, error90: kotlin.Int?, error95: kotlin.Int?, error98: kotlin.Int?, error99: kotlin.Int?, error100: kotlin.Int?): dev.deminearchiver.dynamic_color_ffi.DynamicTonalPalette`
-  /// The returned object must be released after use, by calling the [release] method.
-  DynamicTonalPalette copy(
-    jni$_.JInteger? integer,
-    jni$_.JInteger? integer1,
-    jni$_.JInteger? integer2,
-    jni$_.JInteger? integer3,
-    jni$_.JInteger? integer4,
-    jni$_.JInteger? integer5,
-    jni$_.JInteger? integer6,
-    jni$_.JInteger? integer7,
-    jni$_.JInteger? integer8,
-    jni$_.JInteger? integer9,
-    jni$_.JInteger? integer10,
-    jni$_.JInteger? integer11,
-    jni$_.JInteger? integer12,
-    jni$_.JInteger? integer13,
-    jni$_.JInteger? integer14,
-    jni$_.JInteger? integer15,
-    jni$_.JInteger? integer16,
-    jni$_.JInteger? integer17,
-    jni$_.JInteger? integer18,
-    jni$_.JInteger? integer19,
-    jni$_.JInteger? integer20,
-    jni$_.JInteger? integer21,
-    jni$_.JInteger? integer22,
-    jni$_.JInteger? integer23,
-    jni$_.JInteger? integer24,
-    jni$_.JInteger? integer25,
-    jni$_.JInteger? integer26,
-    jni$_.JInteger? integer27,
-    jni$_.JInteger? integer28,
-    jni$_.JInteger? integer29,
-    jni$_.JInteger? integer30,
-    jni$_.JInteger? integer31,
-    jni$_.JInteger? integer32,
-    jni$_.JInteger? integer33,
-    jni$_.JInteger? integer34,
-    jni$_.JInteger? integer35,
-    jni$_.JInteger? integer36,
-    jni$_.JInteger? integer37,
-    jni$_.JInteger? integer38,
-    jni$_.JInteger? integer39,
-    jni$_.JInteger? integer40,
-    jni$_.JInteger? integer41,
-    jni$_.JInteger? integer42,
-    jni$_.JInteger? integer43,
-    jni$_.JInteger? integer44,
-    jni$_.JInteger? integer45,
-    jni$_.JInteger? integer46,
-    jni$_.JInteger? integer47,
-    jni$_.JInteger? integer48,
-    jni$_.JInteger? integer49,
-    jni$_.JInteger? integer50,
-    jni$_.JInteger? integer51,
-    jni$_.JInteger? integer52,
-    jni$_.JInteger? integer53,
-    jni$_.JInteger? integer54,
-    jni$_.JInteger? integer55,
-    jni$_.JInteger? integer56,
-    jni$_.JInteger? integer57,
-    jni$_.JInteger? integer58,
-    jni$_.JInteger? integer59,
-    jni$_.JInteger? integer60,
-    jni$_.JInteger? integer61,
-    jni$_.JInteger? integer62,
-    jni$_.JInteger? integer63,
-    jni$_.JInteger? integer64,
-    jni$_.JInteger? integer65,
-    jni$_.JInteger? integer66,
-    jni$_.JInteger? integer67,
-    jni$_.JInteger? integer68,
-    jni$_.JInteger? integer69,
-    jni$_.JInteger? integer70,
-    jni$_.JInteger? integer71,
-    jni$_.JInteger? integer72,
-    jni$_.JInteger? integer73,
-    jni$_.JInteger? integer74,
-    jni$_.JInteger? integer75,
-    jni$_.JInteger? integer76,
-    jni$_.JInteger? integer77,
-    jni$_.JInteger? integer78,
-    jni$_.JInteger? integer79,
-    jni$_.JInteger? integer80,
-    jni$_.JInteger? integer81,
-    jni$_.JInteger? integer82,
-    jni$_.JInteger? integer83,
-    jni$_.JInteger? integer84,
-    jni$_.JInteger? integer85,
-    jni$_.JInteger? integer86,
-    jni$_.JInteger? integer87,
-    jni$_.JInteger? integer88,
-    jni$_.JInteger? integer89,
-    jni$_.JInteger? integer90,
-    jni$_.JInteger? integer91,
-    jni$_.JInteger? integer92,
-    jni$_.JInteger? integer93,
-  ) {
-    final _$integer = integer?.reference ?? jni$_.jNullReference;
-    final _$integer1 = integer1?.reference ?? jni$_.jNullReference;
-    final _$integer2 = integer2?.reference ?? jni$_.jNullReference;
-    final _$integer3 = integer3?.reference ?? jni$_.jNullReference;
-    final _$integer4 = integer4?.reference ?? jni$_.jNullReference;
-    final _$integer5 = integer5?.reference ?? jni$_.jNullReference;
-    final _$integer6 = integer6?.reference ?? jni$_.jNullReference;
-    final _$integer7 = integer7?.reference ?? jni$_.jNullReference;
-    final _$integer8 = integer8?.reference ?? jni$_.jNullReference;
-    final _$integer9 = integer9?.reference ?? jni$_.jNullReference;
-    final _$integer10 = integer10?.reference ?? jni$_.jNullReference;
-    final _$integer11 = integer11?.reference ?? jni$_.jNullReference;
-    final _$integer12 = integer12?.reference ?? jni$_.jNullReference;
-    final _$integer13 = integer13?.reference ?? jni$_.jNullReference;
-    final _$integer14 = integer14?.reference ?? jni$_.jNullReference;
-    final _$integer15 = integer15?.reference ?? jni$_.jNullReference;
-    final _$integer16 = integer16?.reference ?? jni$_.jNullReference;
-    final _$integer17 = integer17?.reference ?? jni$_.jNullReference;
-    final _$integer18 = integer18?.reference ?? jni$_.jNullReference;
-    final _$integer19 = integer19?.reference ?? jni$_.jNullReference;
-    final _$integer20 = integer20?.reference ?? jni$_.jNullReference;
-    final _$integer21 = integer21?.reference ?? jni$_.jNullReference;
-    final _$integer22 = integer22?.reference ?? jni$_.jNullReference;
-    final _$integer23 = integer23?.reference ?? jni$_.jNullReference;
-    final _$integer24 = integer24?.reference ?? jni$_.jNullReference;
-    final _$integer25 = integer25?.reference ?? jni$_.jNullReference;
-    final _$integer26 = integer26?.reference ?? jni$_.jNullReference;
-    final _$integer27 = integer27?.reference ?? jni$_.jNullReference;
-    final _$integer28 = integer28?.reference ?? jni$_.jNullReference;
-    final _$integer29 = integer29?.reference ?? jni$_.jNullReference;
-    final _$integer30 = integer30?.reference ?? jni$_.jNullReference;
-    final _$integer31 = integer31?.reference ?? jni$_.jNullReference;
-    final _$integer32 = integer32?.reference ?? jni$_.jNullReference;
-    final _$integer33 = integer33?.reference ?? jni$_.jNullReference;
-    final _$integer34 = integer34?.reference ?? jni$_.jNullReference;
-    final _$integer35 = integer35?.reference ?? jni$_.jNullReference;
-    final _$integer36 = integer36?.reference ?? jni$_.jNullReference;
-    final _$integer37 = integer37?.reference ?? jni$_.jNullReference;
-    final _$integer38 = integer38?.reference ?? jni$_.jNullReference;
-    final _$integer39 = integer39?.reference ?? jni$_.jNullReference;
-    final _$integer40 = integer40?.reference ?? jni$_.jNullReference;
-    final _$integer41 = integer41?.reference ?? jni$_.jNullReference;
-    final _$integer42 = integer42?.reference ?? jni$_.jNullReference;
-    final _$integer43 = integer43?.reference ?? jni$_.jNullReference;
-    final _$integer44 = integer44?.reference ?? jni$_.jNullReference;
-    final _$integer45 = integer45?.reference ?? jni$_.jNullReference;
-    final _$integer46 = integer46?.reference ?? jni$_.jNullReference;
-    final _$integer47 = integer47?.reference ?? jni$_.jNullReference;
-    final _$integer48 = integer48?.reference ?? jni$_.jNullReference;
-    final _$integer49 = integer49?.reference ?? jni$_.jNullReference;
-    final _$integer50 = integer50?.reference ?? jni$_.jNullReference;
-    final _$integer51 = integer51?.reference ?? jni$_.jNullReference;
-    final _$integer52 = integer52?.reference ?? jni$_.jNullReference;
-    final _$integer53 = integer53?.reference ?? jni$_.jNullReference;
-    final _$integer54 = integer54?.reference ?? jni$_.jNullReference;
-    final _$integer55 = integer55?.reference ?? jni$_.jNullReference;
-    final _$integer56 = integer56?.reference ?? jni$_.jNullReference;
-    final _$integer57 = integer57?.reference ?? jni$_.jNullReference;
-    final _$integer58 = integer58?.reference ?? jni$_.jNullReference;
-    final _$integer59 = integer59?.reference ?? jni$_.jNullReference;
-    final _$integer60 = integer60?.reference ?? jni$_.jNullReference;
-    final _$integer61 = integer61?.reference ?? jni$_.jNullReference;
-    final _$integer62 = integer62?.reference ?? jni$_.jNullReference;
-    final _$integer63 = integer63?.reference ?? jni$_.jNullReference;
-    final _$integer64 = integer64?.reference ?? jni$_.jNullReference;
-    final _$integer65 = integer65?.reference ?? jni$_.jNullReference;
-    final _$integer66 = integer66?.reference ?? jni$_.jNullReference;
-    final _$integer67 = integer67?.reference ?? jni$_.jNullReference;
-    final _$integer68 = integer68?.reference ?? jni$_.jNullReference;
-    final _$integer69 = integer69?.reference ?? jni$_.jNullReference;
-    final _$integer70 = integer70?.reference ?? jni$_.jNullReference;
-    final _$integer71 = integer71?.reference ?? jni$_.jNullReference;
-    final _$integer72 = integer72?.reference ?? jni$_.jNullReference;
-    final _$integer73 = integer73?.reference ?? jni$_.jNullReference;
-    final _$integer74 = integer74?.reference ?? jni$_.jNullReference;
-    final _$integer75 = integer75?.reference ?? jni$_.jNullReference;
-    final _$integer76 = integer76?.reference ?? jni$_.jNullReference;
-    final _$integer77 = integer77?.reference ?? jni$_.jNullReference;
-    final _$integer78 = integer78?.reference ?? jni$_.jNullReference;
-    final _$integer79 = integer79?.reference ?? jni$_.jNullReference;
-    final _$integer80 = integer80?.reference ?? jni$_.jNullReference;
-    final _$integer81 = integer81?.reference ?? jni$_.jNullReference;
-    final _$integer82 = integer82?.reference ?? jni$_.jNullReference;
-    final _$integer83 = integer83?.reference ?? jni$_.jNullReference;
-    final _$integer84 = integer84?.reference ?? jni$_.jNullReference;
-    final _$integer85 = integer85?.reference ?? jni$_.jNullReference;
-    final _$integer86 = integer86?.reference ?? jni$_.jNullReference;
-    final _$integer87 = integer87?.reference ?? jni$_.jNullReference;
-    final _$integer88 = integer88?.reference ?? jni$_.jNullReference;
-    final _$integer89 = integer89?.reference ?? jni$_.jNullReference;
-    final _$integer90 = integer90?.reference ?? jni$_.jNullReference;
-    final _$integer91 = integer91?.reference ?? jni$_.jNullReference;
-    final _$integer92 = integer92?.reference ?? jni$_.jNullReference;
-    final _$integer93 = integer93?.reference ?? jni$_.jNullReference;
-    return _copy(
-      reference.pointer,
-      _id_copy as jni$_.JMethodIDPtr,
-      _$integer.pointer,
-      _$integer1.pointer,
-      _$integer2.pointer,
-      _$integer3.pointer,
-      _$integer4.pointer,
-      _$integer5.pointer,
-      _$integer6.pointer,
-      _$integer7.pointer,
-      _$integer8.pointer,
-      _$integer9.pointer,
-      _$integer10.pointer,
-      _$integer11.pointer,
-      _$integer12.pointer,
-      _$integer13.pointer,
-      _$integer14.pointer,
-      _$integer15.pointer,
-      _$integer16.pointer,
-      _$integer17.pointer,
-      _$integer18.pointer,
-      _$integer19.pointer,
-      _$integer20.pointer,
-      _$integer21.pointer,
-      _$integer22.pointer,
-      _$integer23.pointer,
-      _$integer24.pointer,
-      _$integer25.pointer,
-      _$integer26.pointer,
-      _$integer27.pointer,
-      _$integer28.pointer,
-      _$integer29.pointer,
-      _$integer30.pointer,
-      _$integer31.pointer,
-      _$integer32.pointer,
-      _$integer33.pointer,
-      _$integer34.pointer,
-      _$integer35.pointer,
-      _$integer36.pointer,
-      _$integer37.pointer,
-      _$integer38.pointer,
-      _$integer39.pointer,
-      _$integer40.pointer,
-      _$integer41.pointer,
-      _$integer42.pointer,
-      _$integer43.pointer,
-      _$integer44.pointer,
-      _$integer45.pointer,
-      _$integer46.pointer,
-      _$integer47.pointer,
-      _$integer48.pointer,
-      _$integer49.pointer,
-      _$integer50.pointer,
-      _$integer51.pointer,
-      _$integer52.pointer,
-      _$integer53.pointer,
-      _$integer54.pointer,
-      _$integer55.pointer,
-      _$integer56.pointer,
-      _$integer57.pointer,
-      _$integer58.pointer,
-      _$integer59.pointer,
-      _$integer60.pointer,
-      _$integer61.pointer,
-      _$integer62.pointer,
-      _$integer63.pointer,
-      _$integer64.pointer,
-      _$integer65.pointer,
-      _$integer66.pointer,
-      _$integer67.pointer,
-      _$integer68.pointer,
-      _$integer69.pointer,
-      _$integer70.pointer,
-      _$integer71.pointer,
-      _$integer72.pointer,
-      _$integer73.pointer,
-      _$integer74.pointer,
-      _$integer75.pointer,
-      _$integer76.pointer,
-      _$integer77.pointer,
-      _$integer78.pointer,
-      _$integer79.pointer,
-      _$integer80.pointer,
-      _$integer81.pointer,
-      _$integer82.pointer,
-      _$integer83.pointer,
-      _$integer84.pointer,
-      _$integer85.pointer,
-      _$integer86.pointer,
-      _$integer87.pointer,
-      _$integer88.pointer,
-      _$integer89.pointer,
-      _$integer90.pointer,
-      _$integer91.pointer,
-      _$integer92.pointer,
-      _$integer93.pointer,
-    ).object<DynamicTonalPalette>(const $DynamicTonalPalette$Type$());
-  }
-
-  static final _id_toString$1 = _class.instanceMethodId(
-    r'toString',
-    r'()Ljava/lang/String;',
-  );
-
-  static final _toString$1 =
-      jni$_.ProtectedJniExtensions.lookup<
-            jni$_.NativeFunction<
-              jni$_.JniResult Function(
-                jni$_.Pointer<jni$_.Void>,
-                jni$_.JMethodIDPtr,
-              )
-            >
-          >('globalEnv_CallObjectMethod')
-          .asFunction<
-            jni$_.JniResult Function(
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.JMethodIDPtr,
-            )
-          >();
-
-  /// from: `public fun toString(): kotlin.String`
-  /// The returned object must be released after use, by calling the [release] method.
-  jni$_.JString toString$1() {
-    return _toString$1(
-      reference.pointer,
-      _id_toString$1 as jni$_.JMethodIDPtr,
-    ).object<jni$_.JString>(const jni$_.$JString$Type$());
-  }
-
-  static final _id_hashCode$1 = _class.instanceMethodId(r'hashCode', r'()I');
-
-  static final _hashCode$1 =
-      jni$_.ProtectedJniExtensions.lookup<
-            jni$_.NativeFunction<
-              jni$_.JniResult Function(
-                jni$_.Pointer<jni$_.Void>,
-                jni$_.JMethodIDPtr,
-              )
-            >
-          >('globalEnv_CallIntMethod')
-          .asFunction<
-            jni$_.JniResult Function(
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.JMethodIDPtr,
-            )
-          >();
-
-  /// from: `public fun hashCode(): kotlin.Int`
-  int hashCode$1() {
-    return _hashCode$1(
-      reference.pointer,
-      _id_hashCode$1 as jni$_.JMethodIDPtr,
-    ).integer;
-  }
-
-  static final _id_equals = _class.instanceMethodId(
-    r'equals',
-    r'(Ljava/lang/Object;)Z',
-  );
-
-  static final _equals =
-      jni$_.ProtectedJniExtensions.lookup<
-            jni$_.NativeFunction<
-              jni$_.JniResult Function(
-                jni$_.Pointer<jni$_.Void>,
-                jni$_.JMethodIDPtr,
-                jni$_.VarArgs<(jni$_.Pointer<jni$_.Void>,)>,
-              )
-            >
-          >('globalEnv_CallBooleanMethod')
-          .asFunction<
-            jni$_.JniResult Function(
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.JMethodIDPtr,
-              jni$_.Pointer<jni$_.Void>,
-            )
-          >();
-
-  /// from: `public operator fun equals(other: kotlin.Any?): kotlin.Boolean`
-  bool equals(jni$_.JObject? object) {
-    final _$object = object?.reference ?? jni$_.jNullReference;
-    return _equals(
-      reference.pointer,
-      _id_equals as jni$_.JMethodIDPtr,
-      _$object.pointer,
-    ).boolean;
   }
 
   static final _id_new$2 = _class.constructorId(r'()V');
