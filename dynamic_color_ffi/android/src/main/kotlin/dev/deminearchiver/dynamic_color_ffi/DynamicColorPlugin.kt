@@ -1,6 +1,7 @@
 package dev.deminearchiver.dynamic_color_ffi
 
 import android.content.Context
+import android.content.res.Resources
 import android.os.Build
 import androidx.annotation.ColorInt
 import androidx.annotation.ColorRes
@@ -50,21 +51,21 @@ object DynamicColorPlugin {
       neutral99 = ColorResourceHelper.getColor(context, android.R.color.system_neutral1_10),
       neutral98 =
         ColorResourceHelper.getColor(context, android.R.color.system_neutral1_600)
-          .setLuminance(98f),
+          ?.setLuminance(98f),
       neutral96 =
         ColorResourceHelper.getColor(context, android.R.color.system_neutral1_600)
-          .setLuminance(96f),
+          ?.setLuminance(96f),
       neutral95 = ColorResourceHelper.getColor(context, android.R.color.system_neutral1_50),
       neutral94 =
         ColorResourceHelper.getColor(context, android.R.color.system_neutral1_600)
-          .setLuminance(94f),
+          ?.setLuminance(94f),
       neutral92 =
         ColorResourceHelper.getColor(context, android.R.color.system_neutral1_600)
-          .setLuminance(92f),
+          ?.setLuminance(92f),
       neutral90 = ColorResourceHelper.getColor(context, android.R.color.system_neutral1_100),
       neutral87 =
         ColorResourceHelper.getColor(context, android.R.color.system_neutral1_600)
-          .setLuminance(87f),
+          ?.setLuminance(87f),
       neutral80 = ColorResourceHelper.getColor(context, android.R.color.system_neutral1_200),
       neutral70 = ColorResourceHelper.getColor(context, android.R.color.system_neutral1_300),
       neutral60 = ColorResourceHelper.getColor(context, android.R.color.system_neutral1_400),
@@ -73,24 +74,24 @@ object DynamicColorPlugin {
       neutral30 = ColorResourceHelper.getColor(context, android.R.color.system_neutral1_700),
       neutral24 =
         ColorResourceHelper.getColor(context, android.R.color.system_neutral1_600)
-          .setLuminance(24f),
+          ?.setLuminance(24f),
       neutral22 =
         ColorResourceHelper.getColor(context, android.R.color.system_neutral1_600)
-          .setLuminance(22f),
+          ?.setLuminance(22f),
       neutral20 = ColorResourceHelper.getColor(context, android.R.color.system_neutral1_800),
       neutral17 =
         ColorResourceHelper.getColor(context, android.R.color.system_neutral1_600)
-          .setLuminance(17f),
+          ?.setLuminance(17f),
       neutral12 =
         ColorResourceHelper.getColor(context, android.R.color.system_neutral1_600)
-          .setLuminance(12f),
+          ?.setLuminance(12f),
       neutral10 = ColorResourceHelper.getColor(context, android.R.color.system_neutral1_900),
       neutral6 =
         ColorResourceHelper.getColor(context, android.R.color.system_neutral1_600)
-          .setLuminance(6f),
+          ?.setLuminance(6f),
       neutral4 =
         ColorResourceHelper.getColor(context, android.R.color.system_neutral1_600)
-          .setLuminance(4f),
+          ?.setLuminance(4f),
       neutral0 = ColorResourceHelper.getColor(context, android.R.color.system_neutral1_1000),
 
       // The neutral variant tonal range, sometimes called "neutral 2",  from the
@@ -101,23 +102,23 @@ object DynamicColorPlugin {
         ColorResourceHelper.getColor(context, android.R.color.system_neutral2_10),
       neutralVariant98 =
         ColorResourceHelper.getColor(context, android.R.color.system_neutral2_600)
-          .setLuminance(98f),
+          ?.setLuminance(98f),
       neutralVariant96 =
         ColorResourceHelper.getColor(context, android.R.color.system_neutral2_600)
-          .setLuminance(96f),
+          ?.setLuminance(96f),
       neutralVariant95 =
         ColorResourceHelper.getColor(context, android.R.color.system_neutral2_50),
       neutralVariant94 =
         ColorResourceHelper.getColor(context, android.R.color.system_neutral2_600)
-          .setLuminance(94f),
+          ?.setLuminance(94f),
       neutralVariant92 =
         ColorResourceHelper.getColor(context, android.R.color.system_neutral2_600)
-          .setLuminance(92f),
+          ?.setLuminance(92f),
       neutralVariant90 =
         ColorResourceHelper.getColor(context, android.R.color.system_neutral2_100),
       neutralVariant87 =
         ColorResourceHelper.getColor(context, android.R.color.system_neutral2_600)
-          .setLuminance(87f),
+          ?.setLuminance(87f),
       neutralVariant80 =
         ColorResourceHelper.getColor(context, android.R.color.system_neutral2_200),
       neutralVariant70 =
@@ -132,26 +133,26 @@ object DynamicColorPlugin {
         ColorResourceHelper.getColor(context, android.R.color.system_neutral2_700),
       neutralVariant24 =
         ColorResourceHelper.getColor(context, android.R.color.system_neutral2_600)
-          .setLuminance(24f),
+          ?.setLuminance(24f),
       neutralVariant22 =
         ColorResourceHelper.getColor(context, android.R.color.system_neutral2_600)
-          .setLuminance(22f),
+          ?.setLuminance(22f),
       neutralVariant20 =
         ColorResourceHelper.getColor(context, android.R.color.system_neutral2_800),
       neutralVariant17 =
         ColorResourceHelper.getColor(context, android.R.color.system_neutral2_600)
-          .setLuminance(17f),
+          ?.setLuminance(17f),
       neutralVariant12 =
         ColorResourceHelper.getColor(context, android.R.color.system_neutral2_600)
-          .setLuminance(12f),
+          ?.setLuminance(12f),
       neutralVariant10 =
         ColorResourceHelper.getColor(context, android.R.color.system_neutral2_900),
       neutralVariant6 =
         ColorResourceHelper.getColor(context, android.R.color.system_neutral2_600)
-          .setLuminance(6f),
+          ?.setLuminance(6f),
       neutralVariant4 =
         ColorResourceHelper.getColor(context, android.R.color.system_neutral2_600)
-          .setLuminance(4f),
+          ?.setLuminance(4f),
       neutralVariant0 =
         ColorResourceHelper.getColor(context, android.R.color.system_neutral2_1000),
 
@@ -530,7 +531,11 @@ internal fun Int.setLuminance(@FloatRange(from = 0.0, to = 100.0) newLuminance: 
 
 internal object ColorResourceHelper {
   @ColorInt
-  fun getColor(context: Context, @ColorRes id: Int): Int {
-    return context.resources.getColor(id, context.theme)
+  fun getColor(context: Context, @ColorRes id: Int): Int? {
+    return try {
+      context.resources.getColor(id, context.theme)
+    } catch (_: Resources.NotFoundException) {
+      null
+    }
   }
 }

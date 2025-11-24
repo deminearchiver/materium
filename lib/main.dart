@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:dynamic_color_ffi/dynamic_color.dart';
 import 'package:materium/flutter.dart';
 import 'package:materium/assets/assets.gen.dart';
 import 'package:materium/database/database.dart';
@@ -12,7 +13,6 @@ import 'package:materium/providers/source_provider.dart';
 import 'package:materium/theme/legacy.dart';
 import 'package:materium/theme/theme.dart';
 import 'package:provider/provider.dart';
-import 'package:dynamic_color/dynamic_color.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:background_fetch/background_fetch.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -169,7 +169,6 @@ void main() async {
   final np = NotificationsProvider();
   await np.initialize();
   FlutterForegroundTask.initCommunicationPort();
-  await DynamicColorBuilder.preload();
   final settingsProvider = await SettingsProvider.ensureInitialized();
   runApp(
     MultiProvider(
@@ -183,9 +182,7 @@ void main() async {
         path: localeDir,
         fallbackLocale: fallbackLocale,
         useOnlyLangCode: false,
-        child: DynamicColorBuilder(
-          builder: (context, source) => Obtainium(dynamicColorSource: source),
-        ),
+        child: const Obtainium(),
       ),
     ),
   );
@@ -193,9 +190,7 @@ void main() async {
 }
 
 class Obtainium extends StatefulWidget {
-  const Obtainium({super.key, required this.dynamicColorSource});
-
-  final DynamicColorSource? dynamicColorSource;
+  const Obtainium({super.key});
 
   @override
   State<Obtainium> createState() => _ObtainiumState();
@@ -321,43 +316,60 @@ class _ObtainiumState extends State<Obtainium> {
     const variant = DynamicSchemeVariant.vibrant;
     const platform = DynamicSchemePlatform.phone;
     const specVersion = DynamicSchemeSpecVersion.spec2025;
+    final contrastLevel = highContrast ? 1.0 : 0.0;
     if (settingsProvider.useMaterialYou) {
-      final sourceColor = switch (widget.dynamicColorSource) {
-        AccentColorSource(:final accentColor) => accentColor,
-        _ => const Color(0xFF6750A4),
-      };
+      final provided = DynamicColor.dynamicColorScheme(
+        brightness,
+      ).toColorTheme();
+
+      final sourceColor = const Color(0xFF6750A4);
       final fallback = ColorThemeData.fromSeed(
         sourceColor: sourceColor,
         brightness: brightness,
-        contrastLevel: highContrast ? 1.0 : 0.0,
+        contrastLevel: contrastLevel,
         variant: variant,
         platform: platform,
         specVersion: specVersion,
       );
-      final provided = switch (widget.dynamicColorSource) {
-        DynamicColorSchemesSource(
-          :final dynamicLightColorScheme,
-          :final dynamicDarkColorScheme,
-        ) =>
-          switch (brightness) {
-            Brightness.light => dynamicLightColorScheme.toColorTheme(),
-            Brightness.dark => dynamicDarkColorScheme.toColorTheme(),
-          },
-        DynamicColorSchemeSource(
-          brightness: final availableBrightness,
-          :final dynamicColorScheme,
-        ) =>
-          availableBrightness == brightness
-              ? dynamicColorScheme.toColorTheme()
-              : null,
-        _ => null,
-      };
+
       return fallback.merge(provided);
+
+      // final sourceColor = switch (widget.dynamicColorSource) {
+      //   AccentColorSource(:final accentColor) => accentColor,
+      //   _ => const Color(0xFF6750A4),
+      // };
+      // final fallback = ColorThemeData.fromSeed(
+      //   sourceColor: sourceColor,
+      //   brightness: brightness,
+      //   contrastLevel: contrastLevel,
+      //   variant: variant,
+      //   platform: platform,
+      //   specVersion: specVersion,
+      // );
+      // final provided = switch (widget.dynamicColorSource) {
+      //   DynamicColorSchemesSource(
+      //     :final dynamicLightColorScheme,
+      //     :final dynamicDarkColorScheme,
+      //   ) =>
+      //     switch (brightness) {
+      //       Brightness.light => dynamicLightColorScheme.toColorTheme(),
+      //       Brightness.dark => dynamicDarkColorScheme.toColorTheme(),
+      //     },
+      //   DynamicColorSchemeSource(
+      //     brightness: final availableBrightness,
+      //     :final dynamicColorScheme,
+      //   ) =>
+      //     availableBrightness == brightness
+      //         ? dynamicColorScheme.toColorTheme()
+      //         : null,
+      //   _ => null,
+      // };
+      // return fallback.merge(provided);
     } else {
       return ColorThemeData.fromSeed(
         sourceColor: settingsProvider.themeColor,
         brightness: brightness,
-        contrastLevel: highContrast ? 1.0 : 0.0,
+        contrastLevel: contrastLevel,
         variant: variant,
         platform: platform,
         specVersion: specVersion,

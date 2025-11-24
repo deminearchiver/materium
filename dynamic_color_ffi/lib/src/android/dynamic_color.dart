@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:flutter/material.dart' show ColorScheme, Brightness, Color;
+import 'package:flutter/material.dart' show Brightness, Color;
 import 'package:jni/jni.dart';
 
 import 'jni_bindings.dart' as jb;

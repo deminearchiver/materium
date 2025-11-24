@@ -1,6 +1,6 @@
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:drift/drift.dart';
-import 'package:dynamic_color/dynamic_color.dart';
+import 'package:dynamic_color_ffi/dynamic_color.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flex_color_picker/flex_color_picker.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -51,7 +51,6 @@ class _SettingsPageState extends State<SettingsPage> {
   ];
 
   late Future<AndroidDeviceInfo> _androidInfo;
-  late Future<bool> _isDynamicColorAvailable;
 
   int updateInterval = 0;
 
@@ -117,7 +116,6 @@ class _SettingsPageState extends State<SettingsPage> {
   void initState() {
     super.initState();
     _androidInfo = DeviceInfoPlugin().androidInfo;
-    _isDynamicColorAvailable = const DynamicColor().isDynamicColorAvailable();
   }
 
   @override
@@ -960,45 +958,35 @@ class _SettingsPageState extends State<SettingsPage> {
                   ),
                 ),
                 const SizedBox(height: 8.0),
-                FutureBuilder(
-                  key: const ValueKey("useMaterialYou"),
-                  future: _isDynamicColorAvailable,
-                  builder: (context, snapshot) {
-                    return snapshot.data == true
-                        ? ListItemContainer(
-                            isFirst: true,
-                            isLast: settingsProvider.useMaterialYou,
-                            child: MergeSemantics(
-                              child: ListItemInteraction(
-                                onTap: () => settingsProvider.useMaterialYou =
-                                    !settingsProvider.useMaterialYou,
-                                child: ListItemLayout(
-                                  isMultiline: true,
-                                  padding: const EdgeInsets.fromLTRB(
-                                    16.0,
-                                    12.0,
-                                    16.0 - 8.0,
-                                    12.0,
-                                  ),
-                                  headline: Text(
-                                    tr("useMaterialYou"),
-                                    maxLines: 2,
-                                  ),
-                                  trailing: ExcludeFocus(
-                                    child: Switch(
-                                      onCheckedChanged: (value) =>
-                                          settingsProvider.useMaterialYou =
-                                              value,
-                                      checked: settingsProvider.useMaterialYou,
-                                    ),
-                                  ),
-                                ),
-                              ),
+                if (DynamicColor.isDynamicColorAvailable())
+                  ListItemContainer(
+                    key: const ValueKey("useMaterialYou"),
+                    isFirst: true,
+                    isLast: settingsProvider.useMaterialYou,
+                    child: MergeSemantics(
+                      child: ListItemInteraction(
+                        onTap: () => settingsProvider.useMaterialYou =
+                            !settingsProvider.useMaterialYou,
+                        child: ListItemLayout(
+                          isMultiline: true,
+                          padding: const EdgeInsets.fromLTRB(
+                            16.0,
+                            12.0,
+                            16.0 - 8.0,
+                            12.0,
+                          ),
+                          headline: Text(tr("useMaterialYou"), maxLines: 2),
+                          trailing: ExcludeFocus(
+                            child: Switch(
+                              onCheckedChanged: (value) =>
+                                  settingsProvider.useMaterialYou = value,
+                              checked: settingsProvider.useMaterialYou,
                             ),
-                          )
-                        : const SizedBox.shrink();
-                  },
-                ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
                 if (!settingsProvider.useMaterialYou) ...[
                   const SizedBox(height: 2.0),
                   ListItemContainer(
