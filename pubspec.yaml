@@ -27,8 +27,6 @@ dependencies:
     sdk: flutter
   flutter_localizations:
     sdk: flutter
-  dynamic_color:
-    path: dynamic_color
   dynamic_color_ffi:
     path: dynamic_color_ffi
   layout:
