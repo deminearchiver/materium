@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'package:screen_corners_ffi/screen_corners.dart';
+import 'package:screen_corners_ffi/screen_corners_ffi.dart';
 
 void main() {
   runApp(const MainApp());
