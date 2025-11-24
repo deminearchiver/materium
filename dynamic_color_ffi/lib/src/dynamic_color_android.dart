@@ -40,6 +40,10 @@ class DynamicColorAndroid extends DynamicColorPlatform {
     return result;
   }
 
+  static void registerWith() {
+    DynamicColorPlatform.instance = DynamicColorAndroid();
+  }
+
   static DynamicColorScheme _dynamicColorSchemeFromNative(
     jb.DynamicColorScheme object, {
     required Brightness brightness,
@@ -246,10 +250,6 @@ class DynamicColorAndroid extends DynamicColorPlatform {
         ?.intValue(releaseOriginal: true)
         ._asColor,
   );
-
-  static void registerWith() {
-    DynamicColorPlatform.instance = DynamicColorAndroid();
-  }
 }
 
 extension on int {
