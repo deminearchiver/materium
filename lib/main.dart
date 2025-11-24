@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:dynamic_color_ffi/dynamic_color.dart';
+import 'package:dynamic_color_ffi/dynamic_color_ffi.dart';
 import 'package:materium/flutter.dart';
 import 'package:materium/assets/assets.gen.dart';
 import 'package:materium/database/database.dart';
@@ -320,7 +320,7 @@ class _ObtainiumState extends State<Obtainium> {
     if (settingsProvider.useMaterialYou) {
       final provided = DynamicColor.dynamicColorScheme(
         brightness,
-      ).toColorTheme();
+      )?.toColorTheme();
 
       final sourceColor = const Color(0xFF6750A4);
       final fallback = ColorThemeData.fromSeed(

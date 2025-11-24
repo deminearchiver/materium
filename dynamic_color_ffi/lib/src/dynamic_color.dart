@@ -1,13 +1,6 @@
-import 'dart:io';
+import 'dart:ui' show Color, Brightness;
 
-import 'package:flutter/material.dart' show Brightness, Color;
-import 'package:jni/jni.dart';
-
-import 'jni_bindings.dart' as jb;
-
-extension on int {
-  Color _toColor() => Color(this);
-}
+import 'package:dynamic_color_ffi/dynamic_color_ffi_platform_interface.dart';
 
 class DynamicColorScheme {
   const DynamicColorScheme({
@@ -72,222 +65,6 @@ class DynamicColorScheme {
     this.errorContainer,
     this.onErrorContainer,
   });
-
-  factory DynamicColorScheme._fromNative(
-    jb.DynamicColorScheme object, {
-    required Brightness brightness,
-  }) => DynamicColorScheme(
-    brightness: brightness,
-    primaryPaletteKeyColor: object
-        .getPrimaryPaletteKeyColor()
-        ?.intValue(releaseOriginal: true)
-        ._toColor(),
-    secondaryPaletteKeyColor: object
-        .getSecondaryPaletteKeyColor()
-        ?.intValue(releaseOriginal: true)
-        ._toColor(),
-    tertiaryPaletteKeyColor: object
-        .getTertiaryPaletteKeyColor()
-        ?.intValue(releaseOriginal: true)
-        ._toColor(),
-    neutralPaletteKeyColor: object
-        .getNeutralPaletteKeyColor()
-        ?.intValue(releaseOriginal: true)
-        ._toColor(),
-    neutralVariantPaletteKeyColor: object
-        .getNeutralVariantPaletteKeyColor()
-        ?.intValue(releaseOriginal: true)
-        ._toColor(),
-    errorPaletteKeyColor: object
-        .getErrorPaletteKeyColor()
-        ?.intValue(releaseOriginal: true)
-        ._toColor(),
-    background: object
-        .getBackground()
-        ?.intValue(releaseOriginal: true)
-        ._toColor(),
-    onBackground: object
-        .getOnBackground()
-        ?.intValue(releaseOriginal: true)
-        ._toColor(),
-    surface: object.getSurface()?.intValue(releaseOriginal: true)._toColor(),
-    surfaceDim: object
-        .getSurfaceDim()
-        ?.intValue(releaseOriginal: true)
-        ._toColor(),
-    surfaceBright: object
-        .getSurfaceBright()
-        ?.intValue(releaseOriginal: true)
-        ._toColor(),
-    surfaceContainerLowest: object
-        .getSurfaceContainerLowest()
-        ?.intValue(releaseOriginal: true)
-        ._toColor(),
-    surfaceContainerLow: object
-        .getSurfaceContainerLow()
-        ?.intValue(releaseOriginal: true)
-        ._toColor(),
-    surfaceContainer: object
-        .getSurfaceContainer()
-        ?.intValue(releaseOriginal: true)
-        ._toColor(),
-    surfaceContainerHigh: object
-        .getSurfaceContainerHigh()
-        ?.intValue(releaseOriginal: true)
-        ._toColor(),
-    surfaceContainerHighest: object
-        .getSurfaceContainerHighest()
-        ?.intValue(releaseOriginal: true)
-        ._toColor(),
-    onSurface: object
-        .getOnSurface()
-        ?.intValue(releaseOriginal: true)
-        ._toColor(),
-    surfaceVariant: object
-        .getSurfaceVariant()
-        ?.intValue(releaseOriginal: true)
-        ._toColor(),
-    onSurfaceVariant: object
-        .getOnSurfaceVariant()
-        ?.intValue(releaseOriginal: true)
-        ._toColor(),
-    outline: object.getOutline()?.intValue(releaseOriginal: true)._toColor(),
-    outlineVariant: object
-        .getOutlineVariant()
-        ?.intValue(releaseOriginal: true)
-        ._toColor(),
-    inverseSurface: object
-        .getInverseSurface()
-        ?.intValue(releaseOriginal: true)
-        ._toColor(),
-    inverseOnSurface: object
-        .getInverseOnSurface()
-        ?.intValue(releaseOriginal: true)
-        ._toColor(),
-    shadow: object.getShadow()?.intValue(releaseOriginal: true)._toColor(),
-    scrim: object.getScrim()?.intValue(releaseOriginal: true)._toColor(),
-    surfaceTint: object
-        .getSurfaceTint()
-        ?.intValue(releaseOriginal: true)
-        ._toColor(),
-    primary: object.getPrimary()?.intValue(releaseOriginal: true)._toColor(),
-    primaryDim: object
-        .getPrimaryDim()
-        ?.intValue(releaseOriginal: true)
-        ._toColor(),
-    onPrimary: object
-        .getOnPrimary()
-        ?.intValue(releaseOriginal: true)
-        ._toColor(),
-    primaryContainer: object
-        .getPrimaryContainer()
-        ?.intValue(releaseOriginal: true)
-        ._toColor(),
-    onPrimaryContainer: object
-        .getOnPrimaryContainer()
-        ?.intValue(releaseOriginal: true)
-        ._toColor(),
-    primaryFixed: object
-        .getPrimaryFixed()
-        ?.intValue(releaseOriginal: true)
-        ._toColor(),
-    primaryFixedDim: object
-        .getPrimaryFixedDim()
-        ?.intValue(releaseOriginal: true)
-        ._toColor(),
-    onPrimaryFixed: object
-        .getOnPrimaryFixed()
-        ?.intValue(releaseOriginal: true)
-        ._toColor(),
-    onPrimaryFixedVariant: object
-        .getOnPrimaryFixedVariant()
-        ?.intValue(releaseOriginal: true)
-        ._toColor(),
-    inversePrimary: object
-        .getInversePrimary()
-        ?.intValue(releaseOriginal: true)
-        ._toColor(),
-    secondary: object
-        .getSecondary()
-        ?.intValue(releaseOriginal: true)
-        ._toColor(),
-    secondaryDim: object
-        .getSecondaryDim()
-        ?.intValue(releaseOriginal: true)
-        ._toColor(),
-    onSecondary: object
-        .getOnSecondary()
-        ?.intValue(releaseOriginal: true)
-        ._toColor(),
-    secondaryContainer: object
-        .getSecondaryContainer()
-        ?.intValue(releaseOriginal: true)
-        ._toColor(),
-    onSecondaryContainer: object
-        .getOnSecondaryContainer()
-        ?.intValue(releaseOriginal: true)
-        ._toColor(),
-    secondaryFixed: object
-        .getSecondaryFixed()
-        ?.intValue(releaseOriginal: true)
-        ._toColor(),
-    secondaryFixedDim: object
-        .getSecondaryFixedDim()
-        ?.intValue(releaseOriginal: true)
-        ._toColor(),
-    onSecondaryFixed: object
-        .getOnSecondaryFixed()
-        ?.intValue(releaseOriginal: true)
-        ._toColor(),
-    onSecondaryFixedVariant: object
-        .getOnSecondaryFixedVariant()
-        ?.intValue(releaseOriginal: true)
-        ._toColor(),
-    tertiary: object.getTertiary()?.intValue(releaseOriginal: true)._toColor(),
-    tertiaryDim: object
-        .getTertiaryDim()
-        ?.intValue(releaseOriginal: true)
-        ._toColor(),
-    onTertiary: object
-        .getOnTertiary()
-        ?.intValue(releaseOriginal: true)
-        ._toColor(),
-    tertiaryContainer: object
-        .getTertiaryContainer()
-        ?.intValue(releaseOriginal: true)
-        ._toColor(),
-    onTertiaryContainer: object
-        .getOnTertiaryContainer()
-        ?.intValue(releaseOriginal: true)
-        ._toColor(),
-    tertiaryFixed: object
-        .getTertiaryFixed()
-        ?.intValue(releaseOriginal: true)
-        ._toColor(),
-    tertiaryFixedDim: object
-        .getTertiaryFixedDim()
-        ?.intValue(releaseOriginal: true)
-        ._toColor(),
-    onTertiaryFixed: object
-        .getOnTertiaryFixed()
-        ?.intValue(releaseOriginal: true)
-        ._toColor(),
-    onTertiaryFixedVariant: object
-        .getOnTertiaryFixedVariant()
-        ?.intValue(releaseOriginal: true)
-        ._toColor(),
-    error: object.getError()?.intValue(releaseOriginal: true)._toColor(),
-    errorDim: object.getErrorDim()?.intValue(releaseOriginal: true)._toColor(),
-    onError: object.getOnError()?.intValue(releaseOriginal: true)._toColor(),
-    errorContainer: object
-        .getErrorContainer()
-        ?.intValue(releaseOriginal: true)
-        ._toColor(),
-    onErrorContainer: object
-        .getOnErrorContainer()
-        ?.intValue(releaseOriginal: true)
-        ._toColor(),
-  );
 
   final Brightness brightness;
   final Color? primaryPaletteKeyColor;
@@ -483,36 +260,16 @@ class DynamicColorScheme {
 }
 
 abstract final class DynamicColor {
-  static bool isDynamicColorAvailable() {
-    if (!Platform.isAndroid) return false;
-    return jb.DynamicColorPlugin.isDynamicColorAvailable();
-  }
+  static bool isDynamicColorAvailable() =>
+      DynamicColorPlatform.instance.isDynamicColorAvailable();
 
-  static DynamicColorScheme dynamicLightColorScheme() {
-    if (!Platform.isAndroid) {
-      return const DynamicColorScheme(brightness: .light);
-    }
-    final context = Jni.androidApplicationContext;
-    final object = jb.DynamicColorPlugin.dynamicLightColorScheme(context);
-    final result = DynamicColorScheme._fromNative(object, brightness: .light);
-    object.release();
-    context.release();
-    return result;
-  }
+  static DynamicColorScheme? dynamicLightColorScheme() =>
+      DynamicColorPlatform.instance.dynamicLightColorScheme();
 
-  static DynamicColorScheme dynamicDarkColorScheme() {
-    if (!Platform.isAndroid) {
-      return const DynamicColorScheme(brightness: .dark);
-    }
-    final context = Jni.androidApplicationContext;
-    final object = jb.DynamicColorPlugin.dynamicDarkColorScheme(context);
-    final result = DynamicColorScheme._fromNative(object, brightness: .dark);
-    object.release();
-    context.release();
-    return result;
-  }
+  static DynamicColorScheme? dynamicDarkColorScheme() =>
+      DynamicColorPlatform.instance.dynamicDarkColorScheme();
 
-  static DynamicColorScheme dynamicColorScheme(Brightness brightness) =>
+  static DynamicColorScheme? dynamicColorScheme(Brightness brightness) =>
       switch (brightness) {
         .light => dynamicLightColorScheme(),
         .dark => dynamicDarkColorScheme(),

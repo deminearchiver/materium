@@ -1,6 +1,6 @@
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:drift/drift.dart';
-import 'package:dynamic_color_ffi/dynamic_color.dart';
+import 'package:dynamic_color_ffi/dynamic_color_ffi.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flex_color_picker/flex_color_picker.dart';
 import 'package:fluttertoast/fluttertoast.dart';

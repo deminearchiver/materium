@@ -72,7 +72,7 @@ export 'package:material/material.dart';
 
 // Self-import
 
-import 'package:dynamic_color_ffi/dynamic_color.dart';
+import 'package:dynamic_color_ffi/dynamic_color_ffi.dart';
 import 'package:materium/flutter.dart';
 
 @immutable

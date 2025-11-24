@@ -12,5 +12,5 @@ classes:
 
 output:
   dart:
-    path: lib/src/android/jni_bindings.dart
+    path: lib/src/jni_bindings.dart
     structure: single_file
