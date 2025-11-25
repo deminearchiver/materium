@@ -74,6 +74,7 @@ export 'package:material/material.dart';
 
 import 'package:dynamic_color_ffi/dynamic_color_ffi.dart';
 import 'package:materium/flutter.dart';
+import 'package:screen_corners_ffi/screen_corners_ffi.dart';
 
 @immutable
 class CombiningBuilder extends StatelessWidget {
@@ -164,6 +165,15 @@ extension DynamicColorSchemeToColorTheme on DynamicColorScheme {
     onError: onError,
     errorContainer: errorContainer,
     onErrorContainer: onErrorContainer,
+  );
+}
+
+extension ScreenCornersDataExtension on ScreenCornersData {
+  Corners toCorners() => Corners.only(
+    topLeft: Corner.circular(topLeft),
+    topRight: Corner.circular(topRight),
+    bottomLeft: Corner.circular(bottomLeft),
+    bottomRight: Corner.circular(bottomRight),
   );
 }
 

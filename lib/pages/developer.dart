@@ -19,6 +19,7 @@ import 'package:materium/flutter.dart' hide Cubic;
 
 import 'package:markdown/markdown.dart' as md;
 import 'package:materium/theme/theme.dart';
+import 'package:screen_corners_ffi/screen_corners_ffi.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:super_editor/super_editor.dart';
 
@@ -1290,10 +1291,18 @@ class SettingsAppBar extends StatefulWidget {
 class _SettingsAppBarState extends State<SettingsAppBar> {
   final GlobalKey _containerKey = GlobalKey();
 
+  _SettingsAppBarRoute? _route;
+
   Future<void> _openView() async {
     final navigator = Navigator.of(context);
     final route = _SettingsAppBarRoute(containerKey: _containerKey);
+    _route = route;
     navigator.push(route);
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
   }
 
   @override
@@ -1487,6 +1496,8 @@ class _SettingsAppBarRoute<T extends Object?> extends PopupRoute<T> {
     curve: Curves.linear,
   );
 
+  final Tween<Rect?> _rectTween = RectTween();
+
   void _didChangeState({required Animation<double> animation}) {
     if (_curvedAnimation.parent != animation) {
       _curvedAnimation.dispose();
@@ -1534,52 +1545,132 @@ class _SettingsAppBarRoute<T extends Object?> extends PopupRoute<T> {
   ) {
     _didChangeState(animation: animation);
 
-    final containerBox =
-        containerKey.currentContext?.findRenderObject()! as RenderBox;
-    final containerRect =
-        containerBox.localToGlobal(Offset.zero) & containerBox.size;
-
-    final Tween<Rect?> rectTween = RectTween(begin: containerRect);
+    final screenCorners = ScreenCorners.of(context);
 
     final colorTheme = ColorTheme.of(context);
     final shapeTheme = ShapeTheme.of(context);
     final stateTheme = StateTheme.of(context);
     final typescaleTheme = TypescaleTheme.of(context);
 
-    final colorTween = ColorTween(
-      begin: colorTheme.surfaceBright,
-      end: colorTheme.surfaceContainerHigh,
-    );
-    final shapeTween = ShapeBorderTween(
-      begin: CornersBorder.rounded(
-        corners: Corners.all(Corner.circular(containerRect.shortestSide / 2.0)),
-      ),
-      end: CornersBorder.rounded(corners: Corners.all(shapeTheme.corner.none)),
-    );
+    final scrimColor = Color.lerp(
+      colorTheme.scrim.withAlpha(0),
+      colorTheme.scrim.withValues(alpha: 0.32),
+      animation.value,
+    )!;
+
+    final containerColor = Color.lerp(
+      colorTheme.surfaceBright,
+      colorTheme.surfaceContainerHigh,
+      _curvedAnimation.value,
+    )!;
 
     final padding = MediaQuery.paddingOf(context);
 
     final extent = padding.top + 72.0;
 
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        final viewRect = Offset.zero & constraints.biggest;
-        assert(viewRect.isFinite);
-        rectTween.end = viewRect;
-        final rect = rectTween.evaluate(_curvedAnimation)!;
-        return Stack(
-          fit: StackFit.expand,
-          children: [
-            Positioned.fill(
-              child: ColoredBox(
-                color: Color.lerp(
-                  colorTheme.surfaceContainerHigh.withValues(alpha: 0.0),
-                  colorTheme.surfaceContainerHigh,
-                  _curvedAnimation.value,
-                )!,
+    // Positioned.fill(
+    //   child: ColoredBox(
+    //     color: Color.lerp(
+    //       colorTheme.surfaceContainerHigh.withValues(alpha: 0.0),
+    //       colorTheme.surfaceContainerHigh,
+    //       _curvedAnimation.value,
+    //     )!,
+    //   ),
+    // ),
+
+    final viewShape = CornersBorder.rounded(
+      corners: animation.isCompleted ? Corners.none : screenCorners.toCorners(),
+    );
+
+    return AbsorbPointer(
+      absorbing: !animation.isForwardOrCompleted,
+      child: ColoredBox(
+        color: scrimColor,
+        child: LayoutBuilder(
+          builder: (context, constraints) {
+            Rect? containerRect;
+            final containerBox =
+                containerKey.currentContext?.findRenderObject() as RenderBox?;
+            if (containerBox != null && containerBox.hasSize) {
+              try {
+                containerRect =
+                    containerBox.localToGlobal(Offset.zero) & containerBox.size;
+              } on Object catch (_) {
+                containerRect = _rectTween.begin;
+              }
+            }
+
+            Rect? viewRect;
+            if (constraints.hasTightWidth && constraints.hasTightHeight) {
+              try {
+                viewRect = Offset.zero & constraints.biggest;
+              } on Object catch (_) {
+                viewRect = _rectTween.end;
+              }
+            }
+
+            Rect? rect;
+            if (containerRect != null) {
+              _rectTween.begin = containerRect;
+            }
+            if (viewRect != null) {
+              _rectTween.end = viewRect;
+            }
+            if (_rectTween.begin != null && _rectTween.end != null) {
+              rect = _rectTween.evaluate(_curvedAnimation)!;
+            }
+            containerRect ??= _rectTween.begin ?? Rect.zero;
+            viewRect ??= _rectTween.end ?? Rect.zero;
+
+            final showSharedElement = rect != null && !animation.isCompleted;
+
+            rect ??= animation.isDismissed ? containerRect : viewRect;
+
+            final shape = ShapeBorder.lerp(
+              CornersBorder.rounded(
+                corners: Corners.all(
+                  Corner.circular(containerRect.shortestSide / 2.0),
+                ),
               ),
-            ),
-            Align.topLeft(
+              viewShape,
+              _curvedAnimation.value,
+            )!;
+
+            final backIconButton = IconButton(
+              onPressed: () => Navigator.of(context).pop(),
+              style: ButtonStyle(
+                animationDuration: Duration.zero,
+                elevation: const WidgetStatePropertyAll(0.0),
+                shadowColor: WidgetStateColor.transparent,
+                minimumSize: const WidgetStatePropertyAll(Size.zero),
+                fixedSize: const WidgetStatePropertyAll(Size(40.0, 40.0)),
+                maximumSize: const WidgetStatePropertyAll(Size.infinite),
+                padding: const WidgetStatePropertyAll(EdgeInsets.zero),
+                iconSize: const WidgetStatePropertyAll(24.0),
+                shape: WidgetStatePropertyAll(
+                  CornersBorder.rounded(
+                    corners: Corners.all(shapeTheme.corner.full),
+                  ),
+                ),
+                overlayColor: WidgetStateLayerColor(
+                  color: WidgetStatePropertyAll(colorTheme.onSurfaceVariant),
+                  opacity: stateTheme.stateLayerOpacity,
+                ),
+                backgroundColor: WidgetStateProperty.resolveWith(
+                  (states) => states.contains(WidgetState.disabled)
+                      ? colorTheme.onSurface.withValues(alpha: 0.1)
+                      : Colors.transparent,
+                ),
+                iconColor: WidgetStateProperty.resolveWith(
+                  (states) => states.contains(WidgetState.disabled)
+                      ? colorTheme.onSurface.withValues(alpha: 0.38)
+                      : colorTheme.onSurface,
+                ),
+              ),
+              icon: const IconLegacy(Symbols.arrow_back_rounded),
+            );
+
+            return Align.topLeft(
               child: Transform.translate(
                 offset: rect.topLeft,
                 child: SizedBox(
@@ -1588,8 +1679,8 @@ class _SettingsAppBarRoute<T extends Object?> extends PopupRoute<T> {
                   child: Material(
                     animationDuration: Duration.zero,
                     clipBehavior: Clip.antiAlias,
-                    color: colorTween.evaluate(_curvedAnimation)!,
-                    shape: shapeTween.evaluate(_curvedAnimation),
+                    color: containerColor,
+                    shape: shape,
                     child: OverflowBox(
                       alignment: Alignment.topLeft,
                       minWidth: viewRect.width,
@@ -1610,111 +1701,54 @@ class _SettingsAppBarRoute<T extends Object?> extends PopupRoute<T> {
                             SliverHeader(
                               minExtent: extent,
                               maxExtent: extent,
-                              builder: (context, shrinkOffset, overlapsContent) => SizedBox(
-                                width: double.infinity,
-                                height: extent,
-                                child: Padding(
-                                  padding: EdgeInsets.fromLTRB(
-                                    0.0,
-                                    padding.top,
-                                    0.0,
-                                    0.0,
-                                  ),
-                                  child: KeyedSubtree(
-                                    child: Flex.horizontal(
-                                      children: [
-                                        const SizedBox(width: 8.0 - 4.0),
-                                        IconButton(
-                                          onPressed: () =>
-                                              Navigator.of(context).pop(),
-                                          style: ButtonStyle(
-                                            animationDuration: Duration.zero,
-                                            elevation:
-                                                const WidgetStatePropertyAll(
-                                                  0.0,
-                                                ),
-                                            shadowColor:
-                                                WidgetStateColor.transparent,
-                                            minimumSize:
-                                                const WidgetStatePropertyAll(
-                                                  Size.zero,
-                                                ),
-                                            fixedSize:
-                                                const WidgetStatePropertyAll(
-                                                  Size(40.0, 40.0),
-                                                ),
-                                            maximumSize:
-                                                const WidgetStatePropertyAll(
-                                                  Size.infinite,
-                                                ),
-                                            padding:
-                                                const WidgetStatePropertyAll(
-                                                  EdgeInsets.zero,
-                                                ),
-                                            iconSize:
-                                                const WidgetStatePropertyAll(
-                                                  24.0,
-                                                ),
-                                            shape: WidgetStatePropertyAll(
-                                              CornersBorder.rounded(
-                                                corners: Corners.all(
-                                                  shapeTheme.corner.full,
+                              builder:
+                                  (
+                                    context,
+                                    shrinkOffset,
+                                    overlapsContent,
+                                  ) => SizedBox(
+                                    width: double.infinity,
+                                    height: extent,
+                                    child: Padding(
+                                      padding: EdgeInsets.fromLTRB(
+                                        0.0,
+                                        padding.top,
+                                        0.0,
+                                        0.0,
+                                      ),
+                                      child: KeyedSubtree(
+                                        child: Flex.horizontal(
+                                          children: [
+                                            const SizedBox(width: 8.0 - 4.0),
+                                            backIconButton,
+                                            const SizedBox(width: 8.0 - 4.0),
+                                            Flexible.tight(
+                                              child: TextField(
+                                                autofocus: false,
+                                                style: typescaleTheme.bodyLarge
+                                                    .toTextStyle(
+                                                      color:
+                                                          colorTheme.onSurface,
+                                                    ),
+                                                decoration: InputDecoration(
+                                                  border: InputBorder.none,
+                                                  hintText: "Search Settings",
+                                                  hintStyle: typescaleTheme
+                                                      .bodyLarge
+                                                      .toTextStyle(
+                                                        color: colorTheme
+                                                            .onSurfaceVariant,
+                                                      ),
                                                 ),
                                               ),
                                             ),
-                                            overlayColor: WidgetStateLayerColor(
-                                              color: WidgetStatePropertyAll(
-                                                colorTheme.onSurfaceVariant,
-                                              ),
-                                              opacity:
-                                                  stateTheme.stateLayerOpacity,
-                                            ),
-                                            backgroundColor:
-                                                WidgetStateProperty.resolveWith(
-                                                  (states) =>
-                                                      states.contains(
-                                                        WidgetState.disabled,
-                                                      )
-                                                      ? colorTheme.onSurface
-                                                            .withValues(
-                                                              alpha: 0.1,
-                                                            )
-                                                      : Colors.transparent,
-                                                ),
-                                            iconColor:
-                                                WidgetStateProperty.resolveWith(
-                                                  (states) =>
-                                                      states.contains(
-                                                        WidgetState.disabled,
-                                                      )
-                                                      ? colorTheme.onSurface
-                                                            .withValues(
-                                                              alpha: 0.38,
-                                                            )
-                                                      : colorTheme.onSurface,
-                                                ),
-                                          ),
-                                          icon: const IconLegacy(
-                                            Symbols.arrow_back_rounded,
-                                          ),
+                                            const SizedBox(width: 8.0 - 4.0),
+                                            const SizedBox(width: 8.0 - 4.0),
+                                          ],
                                         ),
-                                        const SizedBox(width: 8.0 - 4.0),
-                                        Flexible.tight(
-                                          child: TextField(
-                                            autofocus: true,
-                                            decoration: InputDecoration(
-                                              border: InputBorder.none,
-                                              hintText: "Search Settings",
-                                            ),
-                                          ),
-                                        ),
-                                        const SizedBox(width: 8.0 - 4.0),
-                                        const SizedBox(width: 8.0 - 4.0),
-                                      ],
+                                      ),
                                     ),
                                   ),
-                                ),
-                              ),
                             ),
                           ],
                         ),
@@ -1723,10 +1757,10 @@ class _SettingsAppBarRoute<T extends Object?> extends PopupRoute<T> {
                   ),
                 ),
               ),
-            ),
-          ],
-        );
-      },
+            );
+          },
+        ),
+      ),
     );
   }
 
