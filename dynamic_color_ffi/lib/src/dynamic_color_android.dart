@@ -1,6 +1,5 @@
 import 'dart:io';
 
-import 'package:dynamic_color_ffi/dynamic_color_ffi.dart';
 import 'package:dynamic_color_ffi/dynamic_color_ffi_platform_interface.dart';
 import 'package:flutter/material.dart' show Brightness, Color;
 import 'package:jni/jni.dart';
@@ -19,7 +18,6 @@ class DynamicColorAndroid extends DynamicColorPlatform {
   @override
   DynamicColorScheme? dynamicLightColorScheme() {
     if (!Platform.isAndroid) return null;
-
     final context = Jni.androidApplicationContext;
     final object = jb.DynamicColorPlugin.dynamicLightColorScheme(context);
     final result = _dynamicColorSchemeFromNative(object, brightness: .light);
@@ -31,7 +29,6 @@ class DynamicColorAndroid extends DynamicColorPlatform {
   @override
   DynamicColorScheme? dynamicDarkColorScheme() {
     if (!Platform.isAndroid) return null;
-
     final context = Jni.androidApplicationContext;
     final object = jb.DynamicColorPlugin.dynamicDarkColorScheme(context);
     final result = _dynamicColorSchemeFromNative(object, brightness: .dark);
@@ -49,209 +46,144 @@ class DynamicColorAndroid extends DynamicColorPlatform {
     required Brightness brightness,
   }) => DynamicColorScheme(
     brightness: brightness,
-    primaryPaletteKeyColor: object
-        .getPrimaryPaletteKeyColor()
-        ?.intValue(releaseOriginal: true)
-        ._asColor,
-    secondaryPaletteKeyColor: object
-        .getSecondaryPaletteKeyColor()
-        ?.intValue(releaseOriginal: true)
-        ._asColor,
-    tertiaryPaletteKeyColor: object
-        .getTertiaryPaletteKeyColor()
-        ?.intValue(releaseOriginal: true)
-        ._asColor,
-    neutralPaletteKeyColor: object
-        .getNeutralPaletteKeyColor()
-        ?.intValue(releaseOriginal: true)
-        ._asColor,
+    primaryPaletteKeyColor: object.getPrimaryPaletteKeyColor()?._colorValue(
+      releaseOriginal: true,
+    ),
+    secondaryPaletteKeyColor: object.getSecondaryPaletteKeyColor()?._colorValue(
+      releaseOriginal: true,
+    ),
+    tertiaryPaletteKeyColor: object.getTertiaryPaletteKeyColor()?._colorValue(
+      releaseOriginal: true,
+    ),
+    neutralPaletteKeyColor: object.getNeutralPaletteKeyColor()?._colorValue(
+      releaseOriginal: true,
+    ),
     neutralVariantPaletteKeyColor: object
         .getNeutralVariantPaletteKeyColor()
-        ?.intValue(releaseOriginal: true)
-        ._asColor,
-    errorPaletteKeyColor: object
-        .getErrorPaletteKeyColor()
-        ?.intValue(releaseOriginal: true)
-        ._asColor,
-    background: object
-        .getBackground()
-        ?.intValue(releaseOriginal: true)
-        ._asColor,
-    onBackground: object
-        .getOnBackground()
-        ?.intValue(releaseOriginal: true)
-        ._asColor,
-    surface: object.getSurface()?.intValue(releaseOriginal: true)._asColor,
-    surfaceDim: object
-        .getSurfaceDim()
-        ?.intValue(releaseOriginal: true)
-        ._asColor,
-    surfaceBright: object
-        .getSurfaceBright()
-        ?.intValue(releaseOriginal: true)
-        ._asColor,
-    surfaceContainerLowest: object
-        .getSurfaceContainerLowest()
-        ?.intValue(releaseOriginal: true)
-        ._asColor,
-    surfaceContainerLow: object
-        .getSurfaceContainerLow()
-        ?.intValue(releaseOriginal: true)
-        ._asColor,
-    surfaceContainer: object
-        .getSurfaceContainer()
-        ?.intValue(releaseOriginal: true)
-        ._asColor,
-    surfaceContainerHigh: object
-        .getSurfaceContainerHigh()
-        ?.intValue(releaseOriginal: true)
-        ._asColor,
-    surfaceContainerHighest: object
-        .getSurfaceContainerHighest()
-        ?.intValue(releaseOriginal: true)
-        ._asColor,
-    onSurface: object.getOnSurface()?.intValue(releaseOriginal: true)._asColor,
-    surfaceVariant: object
-        .getSurfaceVariant()
-        ?.intValue(releaseOriginal: true)
-        ._asColor,
-    onSurfaceVariant: object
-        .getOnSurfaceVariant()
-        ?.intValue(releaseOriginal: true)
-        ._asColor,
-    outline: object.getOutline()?.intValue(releaseOriginal: true)._asColor,
-    outlineVariant: object
-        .getOutlineVariant()
-        ?.intValue(releaseOriginal: true)
-        ._asColor,
-    inverseSurface: object
-        .getInverseSurface()
-        ?.intValue(releaseOriginal: true)
-        ._asColor,
-    inverseOnSurface: object
-        .getInverseOnSurface()
-        ?.intValue(releaseOriginal: true)
-        ._asColor,
-    shadow: object.getShadow()?.intValue(releaseOriginal: true)._asColor,
-    scrim: object.getScrim()?.intValue(releaseOriginal: true)._asColor,
-    surfaceTint: object
-        .getSurfaceTint()
-        ?.intValue(releaseOriginal: true)
-        ._asColor,
-    primary: object.getPrimary()?.intValue(releaseOriginal: true)._asColor,
-    primaryDim: object
-        .getPrimaryDim()
-        ?.intValue(releaseOriginal: true)
-        ._asColor,
-    onPrimary: object.getOnPrimary()?.intValue(releaseOriginal: true)._asColor,
-    primaryContainer: object
-        .getPrimaryContainer()
-        ?.intValue(releaseOriginal: true)
-        ._asColor,
-    onPrimaryContainer: object
-        .getOnPrimaryContainer()
-        ?.intValue(releaseOriginal: true)
-        ._asColor,
-    primaryFixed: object
-        .getPrimaryFixed()
-        ?.intValue(releaseOriginal: true)
-        ._asColor,
-    primaryFixedDim: object
-        .getPrimaryFixedDim()
-        ?.intValue(releaseOriginal: true)
-        ._asColor,
-    onPrimaryFixed: object
-        .getOnPrimaryFixed()
-        ?.intValue(releaseOriginal: true)
-        ._asColor,
-    onPrimaryFixedVariant: object
-        .getOnPrimaryFixedVariant()
-        ?.intValue(releaseOriginal: true)
-        ._asColor,
-    inversePrimary: object
-        .getInversePrimary()
-        ?.intValue(releaseOriginal: true)
-        ._asColor,
-    secondary: object.getSecondary()?.intValue(releaseOriginal: true)._asColor,
-    secondaryDim: object
-        .getSecondaryDim()
-        ?.intValue(releaseOriginal: true)
-        ._asColor,
-    onSecondary: object
-        .getOnSecondary()
-        ?.intValue(releaseOriginal: true)
-        ._asColor,
-    secondaryContainer: object
-        .getSecondaryContainer()
-        ?.intValue(releaseOriginal: true)
-        ._asColor,
-    onSecondaryContainer: object
-        .getOnSecondaryContainer()
-        ?.intValue(releaseOriginal: true)
-        ._asColor,
-    secondaryFixed: object
-        .getSecondaryFixed()
-        ?.intValue(releaseOriginal: true)
-        ._asColor,
-    secondaryFixedDim: object
-        .getSecondaryFixedDim()
-        ?.intValue(releaseOriginal: true)
-        ._asColor,
-    onSecondaryFixed: object
-        .getOnSecondaryFixed()
-        ?.intValue(releaseOriginal: true)
-        ._asColor,
-    onSecondaryFixedVariant: object
-        .getOnSecondaryFixedVariant()
-        ?.intValue(releaseOriginal: true)
-        ._asColor,
-    tertiary: object.getTertiary()?.intValue(releaseOriginal: true)._asColor,
-    tertiaryDim: object
-        .getTertiaryDim()
-        ?.intValue(releaseOriginal: true)
-        ._asColor,
-    onTertiary: object
-        .getOnTertiary()
-        ?.intValue(releaseOriginal: true)
-        ._asColor,
-    tertiaryContainer: object
-        .getTertiaryContainer()
-        ?.intValue(releaseOriginal: true)
-        ._asColor,
-    onTertiaryContainer: object
-        .getOnTertiaryContainer()
-        ?.intValue(releaseOriginal: true)
-        ._asColor,
-    tertiaryFixed: object
-        .getTertiaryFixed()
-        ?.intValue(releaseOriginal: true)
-        ._asColor,
-    tertiaryFixedDim: object
-        .getTertiaryFixedDim()
-        ?.intValue(releaseOriginal: true)
-        ._asColor,
-    onTertiaryFixed: object
-        .getOnTertiaryFixed()
-        ?.intValue(releaseOriginal: true)
-        ._asColor,
-    onTertiaryFixedVariant: object
-        .getOnTertiaryFixedVariant()
-        ?.intValue(releaseOriginal: true)
-        ._asColor,
-    error: object.getError()?.intValue(releaseOriginal: true)._asColor,
-    errorDim: object.getErrorDim()?.intValue(releaseOriginal: true)._asColor,
-    onError: object.getOnError()?.intValue(releaseOriginal: true)._asColor,
-    errorContainer: object
-        .getErrorContainer()
-        ?.intValue(releaseOriginal: true)
-        ._asColor,
-    onErrorContainer: object
-        .getOnErrorContainer()
-        ?.intValue(releaseOriginal: true)
-        ._asColor,
+        ?._colorValue(releaseOriginal: true),
+    errorPaletteKeyColor: object.getErrorPaletteKeyColor()?._colorValue(
+      releaseOriginal: true,
+    ),
+    background: object.getBackground()?._colorValue(releaseOriginal: true),
+    onBackground: object.getOnBackground()?._colorValue(releaseOriginal: true),
+    surface: object.getSurface()?._colorValue(releaseOriginal: true),
+    surfaceDim: object.getSurfaceDim()?._colorValue(releaseOriginal: true),
+    surfaceBright: object.getSurfaceBright()?._colorValue(
+      releaseOriginal: true,
+    ),
+    surfaceContainerLowest: object.getSurfaceContainerLowest()?._colorValue(
+      releaseOriginal: true,
+    ),
+    surfaceContainerLow: object.getSurfaceContainerLow()?._colorValue(
+      releaseOriginal: true,
+    ),
+    surfaceContainer: object.getSurfaceContainer()?._colorValue(
+      releaseOriginal: true,
+    ),
+    surfaceContainerHigh: object.getSurfaceContainerHigh()?._colorValue(
+      releaseOriginal: true,
+    ),
+    surfaceContainerHighest: object.getSurfaceContainerHighest()?._colorValue(
+      releaseOriginal: true,
+    ),
+    onSurface: object.getOnSurface()?._colorValue(releaseOriginal: true),
+    surfaceVariant: object.getSurfaceVariant()?._colorValue(
+      releaseOriginal: true,
+    ),
+    onSurfaceVariant: object.getOnSurfaceVariant()?._colorValue(
+      releaseOriginal: true,
+    ),
+    outline: object.getOutline()?._colorValue(releaseOriginal: true),
+    outlineVariant: object.getOutlineVariant()?._colorValue(
+      releaseOriginal: true,
+    ),
+    inverseSurface: object.getInverseSurface()?._colorValue(
+      releaseOriginal: true,
+    ),
+    inverseOnSurface: object.getInverseOnSurface()?._colorValue(
+      releaseOriginal: true,
+    ),
+    shadow: object.getShadow()?._colorValue(releaseOriginal: true),
+    scrim: object.getScrim()?._colorValue(releaseOriginal: true),
+    surfaceTint: object.getSurfaceTint()?._colorValue(releaseOriginal: true),
+    primary: object.getPrimary()?._colorValue(releaseOriginal: true),
+    primaryDim: object.getPrimaryDim()?._colorValue(releaseOriginal: true),
+    onPrimary: object.getOnPrimary()?._colorValue(releaseOriginal: true),
+    primaryContainer: object.getPrimaryContainer()?._colorValue(
+      releaseOriginal: true,
+    ),
+    onPrimaryContainer: object.getOnPrimaryContainer()?._colorValue(
+      releaseOriginal: true,
+    ),
+    primaryFixed: object.getPrimaryFixed()?._colorValue(releaseOriginal: true),
+    primaryFixedDim: object.getPrimaryFixedDim()?._colorValue(
+      releaseOriginal: true,
+    ),
+    onPrimaryFixed: object.getOnPrimaryFixed()?._colorValue(
+      releaseOriginal: true,
+    ),
+    onPrimaryFixedVariant: object.getOnPrimaryFixedVariant()?._colorValue(
+      releaseOriginal: true,
+    ),
+    inversePrimary: object.getInversePrimary()?._colorValue(
+      releaseOriginal: true,
+    ),
+    secondary: object.getSecondary()?._colorValue(releaseOriginal: true),
+    secondaryDim: object.getSecondaryDim()?._colorValue(releaseOriginal: true),
+    onSecondary: object.getOnSecondary()?._colorValue(releaseOriginal: true),
+    secondaryContainer: object.getSecondaryContainer()?._colorValue(
+      releaseOriginal: true,
+    ),
+    onSecondaryContainer: object.getOnSecondaryContainer()?._colorValue(
+      releaseOriginal: true,
+    ),
+    secondaryFixed: object.getSecondaryFixed()?._colorValue(
+      releaseOriginal: true,
+    ),
+    secondaryFixedDim: object.getSecondaryFixedDim()?._colorValue(
+      releaseOriginal: true,
+    ),
+    onSecondaryFixed: object.getOnSecondaryFixed()?._colorValue(
+      releaseOriginal: true,
+    ),
+    onSecondaryFixedVariant: object.getOnSecondaryFixedVariant()?._colorValue(
+      releaseOriginal: true,
+    ),
+    tertiary: object.getTertiary()?._colorValue(releaseOriginal: true),
+    tertiaryDim: object.getTertiaryDim()?._colorValue(releaseOriginal: true),
+    onTertiary: object.getOnTertiary()?._colorValue(releaseOriginal: true),
+    tertiaryContainer: object.getTertiaryContainer()?._colorValue(
+      releaseOriginal: true,
+    ),
+    onTertiaryContainer: object.getOnTertiaryContainer()?._colorValue(
+      releaseOriginal: true,
+    ),
+    tertiaryFixed: object.getTertiaryFixed()?._colorValue(
+      releaseOriginal: true,
+    ),
+    tertiaryFixedDim: object.getTertiaryFixedDim()?._colorValue(
+      releaseOriginal: true,
+    ),
+    onTertiaryFixed: object.getOnTertiaryFixed()?._colorValue(
+      releaseOriginal: true,
+    ),
+    onTertiaryFixedVariant: object.getOnTertiaryFixedVariant()?._colorValue(
+      releaseOriginal: true,
+    ),
+    error: object.getError()?._colorValue(releaseOriginal: true),
+    errorDim: object.getErrorDim()?._colorValue(releaseOriginal: true),
+    onError: object.getOnError()?._colorValue(releaseOriginal: true),
+    errorContainer: object.getErrorContainer()?._colorValue(
+      releaseOriginal: true,
+    ),
+    onErrorContainer: object.getOnErrorContainer()?._colorValue(
+      releaseOriginal: true,
+    ),
   );
 }
 
-extension on int {
-  Color get _asColor => Color(this);
+extension on JInteger {
+  @pragma("vm:prefer-inline")
+  Color _colorValue({bool releaseOriginal = false}) =>
+      Color(intValue(releaseOriginal: releaseOriginal));
 }

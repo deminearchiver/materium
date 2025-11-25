@@ -1,4 +1,3 @@
-import 'package:dynamic_color_ffi/dynamic_color_ffi.dart';
 import 'package:dynamic_color_ffi/dynamic_color_ffi_platform_interface.dart';
 
 class DynamicColorDefault extends DynamicColorPlatform {
