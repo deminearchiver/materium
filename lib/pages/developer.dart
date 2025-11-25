@@ -1290,12 +1290,16 @@ class SettingsAppBar extends StatefulWidget {
 
 class _SettingsAppBarState extends State<SettingsAppBar> {
   final GlobalKey _containerKey = GlobalKey();
+  final GlobalKey _textKey = GlobalKey();
 
   _SettingsAppBarRoute? _route;
 
   Future<void> _openView() async {
     final navigator = Navigator.of(context);
-    final route = _SettingsAppBarRoute(containerKey: _containerKey);
+    final route = _SettingsAppBarRoute(
+      containerKey: _containerKey,
+      textKey: _textKey,
+    );
     _route = route;
     navigator.push(route);
   }
@@ -1394,14 +1398,18 @@ class _SettingsAppBarState extends State<SettingsAppBar> {
                             child: Flex.horizontal(
                               children: [
                                 Flexible.tight(
-                                  child: Text(
-                                    "Search Settings",
-                                    textAlign: TextAlign.center,
-                                    overflow: TextOverflow.ellipsis,
-                                    maxLines: 1,
-                                    softWrap: false,
-                                    style: typescaleTheme.bodyLarge.toTextStyle(
-                                      color: colorTheme.onSurfaceVariant,
+                                  child: Align.center(
+                                    child: Text(
+                                      "Search Settings",
+                                      key: _textKey,
+                                      textAlign: TextAlign.center,
+                                      overflow: TextOverflow.ellipsis,
+                                      maxLines: 1,
+                                      softWrap: false,
+                                      style: typescaleTheme.bodyLarge
+                                          .toTextStyle(
+                                            color: colorTheme.onSurfaceVariant,
+                                          ),
                                     ),
                                   ),
                                 ),
@@ -1414,7 +1422,6 @@ class _SettingsAppBarState extends State<SettingsAppBar> {
                   ),
                 ),
                 const SizedBox(width: 8.0 - 4.0),
-
                 MenuAnchor(
                   consumeOutsideTap: true,
                   crossAxisUnconstrained: false,
@@ -1482,6 +1489,7 @@ class _SettingsAppBarState extends State<SettingsAppBar> {
 class _SettingsAppBarRoute<T extends Object?> extends PopupRoute<T> {
   _SettingsAppBarRoute({
     required this.containerKey,
+    required this.textKey,
     super.directionalTraversalEdgeBehavior,
     super.filter,
     super.requestFocus,
@@ -1490,6 +1498,10 @@ class _SettingsAppBarRoute<T extends Object?> extends PopupRoute<T> {
   });
 
   final GlobalKey containerKey;
+  final GlobalKey textKey;
+
+  final GlobalKey _viewKey = GlobalKey();
+  final GlobalKey _textFieldKey = GlobalKey();
 
   CurvedAnimation _curvedAnimation = CurvedAnimation(
     parent: kAlwaysDismissedAnimation,
@@ -1497,6 +1509,7 @@ class _SettingsAppBarRoute<T extends Object?> extends PopupRoute<T> {
   );
 
   final Tween<Rect?> _rectTween = RectTween();
+  final Tween<Offset> _textFieldPositionTween = Tween<Offset>();
 
   void _didChangeState({required Animation<double> animation}) {
     if (_curvedAnimation.parent != animation) {
@@ -1587,6 +1600,7 @@ class _SettingsAppBarRoute<T extends Object?> extends PopupRoute<T> {
       child: ColoredBox(
         color: scrimColor,
         child: LayoutBuilder(
+          key: _viewKey,
           builder: (context, constraints) {
             Rect? containerRect;
             final containerBox =
@@ -1599,7 +1613,6 @@ class _SettingsAppBarRoute<T extends Object?> extends PopupRoute<T> {
                 containerRect = _rectTween.begin;
               }
             }
-
             Rect? viewRect;
             if (constraints.hasTightWidth && constraints.hasTightHeight) {
               try {
@@ -1670,6 +1683,40 @@ class _SettingsAppBarRoute<T extends Object?> extends PopupRoute<T> {
               icon: const IconLegacy(Symbols.arrow_back_rounded),
             );
 
+            final clearIconButton = IconButton(
+              onPressed: () {},
+              style: ButtonStyle(
+                animationDuration: Duration.zero,
+                elevation: const WidgetStatePropertyAll(0.0),
+                shadowColor: WidgetStateColor.transparent,
+                minimumSize: const WidgetStatePropertyAll(Size.zero),
+                fixedSize: const WidgetStatePropertyAll(Size(40.0, 40.0)),
+                maximumSize: const WidgetStatePropertyAll(Size.infinite),
+                padding: const WidgetStatePropertyAll(EdgeInsets.zero),
+                iconSize: const WidgetStatePropertyAll(24.0),
+                shape: WidgetStatePropertyAll(
+                  CornersBorder.rounded(
+                    corners: Corners.all(shapeTheme.corner.full),
+                  ),
+                ),
+                overlayColor: WidgetStateLayerColor(
+                  color: WidgetStatePropertyAll(colorTheme.onSurfaceVariant),
+                  opacity: stateTheme.stateLayerOpacity,
+                ),
+                backgroundColor: WidgetStateProperty.resolveWith(
+                  (states) => states.contains(WidgetState.disabled)
+                      ? colorTheme.onSurface.withValues(alpha: 0.1)
+                      : Colors.transparent,
+                ),
+                iconColor: WidgetStateProperty.resolveWith(
+                  (states) => states.contains(WidgetState.disabled)
+                      ? colorTheme.onSurface.withValues(alpha: 0.38)
+                      : colorTheme.onSurfaceVariant,
+                ),
+              ),
+              icon: const IconLegacy(Symbols.close_rounded),
+            );
+
             return Align.topLeft(
               child: Transform.translate(
                 offset: rect.topLeft,
@@ -1688,67 +1735,110 @@ class _SettingsAppBarRoute<T extends Object?> extends PopupRoute<T> {
                       minHeight: viewRect.height,
                       maxHeight: viewRect.height,
                       child: Transform.translate(
-                        offset: Offset.lerp(
-                          Offset(
-                            viewRect.left - containerRect.left,
-                            viewRect.top - containerRect.top,
-                          ),
-                          Offset.zero,
-                          _curvedAnimation.value,
-                        )!,
+                        offset: viewRect.topLeft - rect.topLeft,
                         child: CustomScrollView(
                           slivers: [
                             SliverHeader(
                               minExtent: extent,
                               maxExtent: extent,
+                              pinned: true,
                               builder:
                                   (
                                     context,
                                     shrinkOffset,
                                     overlapsContent,
-                                  ) => SizedBox(
-                                    width: double.infinity,
-                                    height: extent,
-                                    child: Padding(
-                                      padding: EdgeInsets.fromLTRB(
-                                        0.0,
-                                        padding.top,
-                                        0.0,
-                                        0.0,
-                                      ),
-                                      child: KeyedSubtree(
-                                        child: Flex.horizontal(
-                                          children: [
-                                            const SizedBox(width: 8.0 - 4.0),
-                                            backIconButton,
-                                            const SizedBox(width: 8.0 - 4.0),
-                                            Flexible.tight(
-                                              child: TextField(
-                                                autofocus: false,
-                                                style: typescaleTheme.bodyLarge
-                                                    .toTextStyle(
-                                                      color:
-                                                          colorTheme.onSurface,
-                                                    ),
-                                                decoration: InputDecoration(
-                                                  border: InputBorder.none,
-                                                  hintText: "Search Settings",
-                                                  hintStyle: typescaleTheme
+                                  ) => Material(
+                                    animationDuration: Duration.zero,
+                                    clipBehavior: Clip.antiAlias,
+                                    color: containerColor,
+                                    child: SizedBox(
+                                      width: double.infinity,
+                                      height: extent,
+                                      child: Padding(
+                                        padding: EdgeInsets.fromLTRB(
+                                          0.0,
+                                          padding.top,
+                                          0.0,
+                                          0.0,
+                                        ),
+                                        child: KeyedSubtree(
+                                          child: Flex.horizontal(
+                                            children: [
+                                              const SizedBox(width: 8.0 - 4.0),
+                                              backIconButton,
+                                              const SizedBox(width: 8.0 - 4.0),
+                                              Flexible.tight(
+                                                child: TextField(
+                                                  key: _textFieldKey,
+                                                  autofocus: false,
+                                                  style: typescaleTheme
                                                       .bodyLarge
                                                       .toTextStyle(
                                                         color: colorTheme
-                                                            .onSurfaceVariant,
+                                                            .onSurface,
                                                       ),
+                                                  decoration: InputDecoration(
+                                                    border: InputBorder.none,
+                                                    hintText: "Search Settings",
+                                                    hintStyle: typescaleTheme
+                                                        .bodyLarge
+                                                        .toTextStyle(
+                                                          color: colorTheme
+                                                              .onSurfaceVariant,
+                                                        ),
+                                                  ),
                                                 ),
                                               ),
-                                            ),
-                                            const SizedBox(width: 8.0 - 4.0),
-                                            const SizedBox(width: 8.0 - 4.0),
-                                          ],
+
+                                              const SizedBox(width: 8.0 - 4.0),
+                                              clearIconButton,
+                                              const SizedBox(width: 8.0 - 4.0),
+                                            ],
+                                          ),
                                         ),
                                       ),
                                     ),
                                   ),
+                            ),
+                            SliverPadding(
+                              padding: const EdgeInsets.fromLTRB(
+                                16.0,
+                                0.0,
+                                16.0,
+                                16.0,
+                              ),
+                              sliver: SliverTransform.translate(
+                                offset: Offset.lerp(
+                                  Offset(0.0, 100.0),
+                                  Offset.zero,
+                                  _curvedAnimation.value,
+                                )!,
+                                sliver: SliverOpacity(
+                                  opacity: _curvedAnimation.value,
+                                  sliver: SliverList.separated(
+                                    separatorBuilder: (context, index) =>
+                                        const SizedBox(height: 2.0),
+                                    itemBuilder: (context, index) =>
+                                        ListItemContainer(
+                                          isFirst: index == 0,
+                                          containerColor:
+                                              colorTheme.surfaceContainerLow,
+                                          child: ListItemInteraction(
+                                            onTap: () => navigator?.pop(),
+
+                                            child: ListItemLayout(
+                                              leading: const Icon(
+                                                Symbols.search_rounded,
+                                              ),
+                                              headline: Text(
+                                                "Search suggestion ${index + 1}",
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                  ),
+                                ),
+                              ),
                             ),
                           ],
                         ),
