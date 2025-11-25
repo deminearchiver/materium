@@ -44,7 +44,7 @@ class DynamicColorAndroid extends DynamicColorPlatform {
   static DynamicColorScheme _dynamicColorSchemeFromNative(
     jb.DynamicColorScheme object, {
     required Brightness brightness,
-  }) => DynamicColorScheme(
+  }) => DynamicColorScheme.from(
     brightness: brightness,
     primaryPaletteKeyColor: object.getPrimaryPaletteKeyColor()?._colorValue(
       releaseOriginal: true,
