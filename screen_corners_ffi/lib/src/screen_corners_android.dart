@@ -2,9 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/widgets.dart' show WidgetsBinding;
 import 'package:jni/jni.dart';
-
 import 'package:screen_corners_ffi/screen_corners_ffi_platform_interface.dart';
-import 'package:screen_corners_ffi/src/screen_corners.dart';
 
 import 'jni_bindings.dart' as jb;
 

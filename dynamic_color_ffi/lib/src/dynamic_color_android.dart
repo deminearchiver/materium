@@ -1,8 +1,8 @@
 import 'dart:io';
 
-import 'package:dynamic_color_ffi/dynamic_color_ffi_platform_interface.dart';
 import 'package:flutter/material.dart' show Brightness, Color;
 import 'package:jni/jni.dart';
+import 'package:dynamic_color_ffi/dynamic_color_ffi_platform_interface.dart';
 
 import 'jni_bindings.dart' as jb;
 

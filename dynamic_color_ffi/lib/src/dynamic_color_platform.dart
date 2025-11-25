@@ -1,5 +1,5 @@
-import 'package:dynamic_color_ffi/dynamic_color_ffi.dart';
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
+import 'package:dynamic_color_ffi/dynamic_color_ffi.dart';
 
 abstract class DynamicColorPlatform extends PlatformInterface {
   DynamicColorPlatform() : super(token: _token);
