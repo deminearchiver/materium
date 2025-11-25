@@ -90,7 +90,7 @@ dependencies:
   flutter_markdown_plus: ^1.0.5
   skeletonizer: ^2.1.0+1
   super_keyboard: ^0.3.0
-  super_editor: ^0.3.0-dev.40
+  super_editor: ^0.3.0-dev.41
   freezed_annotation: ^3.1.0
   json_annotation: ^4.9.0
   flutter_svg: ^2.2.3
