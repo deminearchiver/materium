@@ -16,7 +16,7 @@ class ScreenCornersAndroid extends ScreenCornersPlatform {
     ScreenCornersPlatform.instance = ScreenCornersAndroid();
   }
 
-  static JObject? _activity() {
+  static JObject? _androidActivity() {
     if (!Platform.isAndroid) return null;
     final platformDispatcher = WidgetsBinding.instance.platformDispatcher;
     final engineId = platformDispatcher.engineId;
@@ -32,19 +32,9 @@ class ScreenCornersAndroid extends ScreenCornersPlatform {
     bottomRight: object.getBottomRight()?.doubleValue(releaseOriginal: true),
   );
 
-  static ScreenCornersDataPartial _screenCornersFromActivity(JObject activity) {
-    final object = jb.ScreenCorners.fromActivity(activity);
-    final result = _screenCornersFromNative(object);
-    object.release();
-    return result;
-  }
-
-  static ScreenCornersDataPartial? _screenCorners() {
-    if (!Platform.isAndroid) return null;
-    final activity = _activity();
-    if (activity == null) return null;
-    final result = _screenCornersFromActivity(activity);
-    activity.release();
-    return result;
-  }
+  static ScreenCornersDataPartial? _screenCorners() => Platform.isAndroid
+      ? _androidActivity()
+            ?.use(jb.ScreenCorners.fromActivity)
+            .use(_screenCornersFromNative)
+      : null;
 }

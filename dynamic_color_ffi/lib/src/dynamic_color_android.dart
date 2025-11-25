@@ -16,26 +16,24 @@ class DynamicColorAndroid extends DynamicColorPlatform {
   }
 
   @override
-  DynamicColorScheme? dynamicLightColorScheme() {
-    if (!Platform.isAndroid) return null;
-    final context = Jni.androidApplicationContext;
-    final object = jb.DynamicColorPlugin.dynamicLightColorScheme(context);
-    final result = _dynamicColorSchemeFromNative(object, brightness: .light);
-    object.release();
-    context.release();
-    return result;
-  }
+  DynamicColorScheme? dynamicLightColorScheme() => Platform.isAndroid
+      ? Jni.androidApplicationContext
+            .use(jb.DynamicColorPlugin.dynamicLightColorScheme)
+            .use(
+              (object) =>
+                  _dynamicColorSchemeFromNative(object, brightness: .light),
+            )
+      : null;
 
   @override
-  DynamicColorScheme? dynamicDarkColorScheme() {
-    if (!Platform.isAndroid) return null;
-    final context = Jni.androidApplicationContext;
-    final object = jb.DynamicColorPlugin.dynamicDarkColorScheme(context);
-    final result = _dynamicColorSchemeFromNative(object, brightness: .dark);
-    object.release();
-    context.release();
-    return result;
-  }
+  DynamicColorScheme? dynamicDarkColorScheme() => Platform.isAndroid
+      ? Jni.androidApplicationContext
+            .use(jb.DynamicColorPlugin.dynamicDarkColorScheme)
+            .use(
+              (object) =>
+                  _dynamicColorSchemeFromNative(object, brightness: .dark),
+            )
+      : null;
 
   static void registerWith() {
     DynamicColorPlatform.instance = DynamicColorAndroid();
