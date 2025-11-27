@@ -8,6 +8,7 @@ import androidx.annotation.ColorRes
 import androidx.annotation.FloatRange
 import androidx.annotation.Keep
 import androidx.annotation.RequiresApi
+import androidx.core.content.res.ResourcesCompat
 import com.google.android.material.color.DynamicColors
 import dev.deminearchiver.dynamic_color_ffi.utils.Cam
 import dev.deminearchiver.dynamic_color_ffi.utils.CamUtils
@@ -532,7 +533,7 @@ internal fun Int.setLuminance(@FloatRange(from = 0.0, to = 100.0) newLuminance: 
 internal object ColorResourceHelper {
   @ColorInt
   fun getColor(context: Context, @ColorRes id: Int): Int? {
-    return try {
+    return if (id == Resources.ID_NULL) null else try {
       context.resources.getColor(id, context.theme)
     } catch (_: Resources.NotFoundException) {
       null
