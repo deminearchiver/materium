@@ -443,6 +443,7 @@ class _SettingsPageState extends State<SettingsPage> {
                 ),
                 const SizedBox(height: 8.0),
                 ListItemContainer(
+                  key: const ValueKey("updateIntervalSliderVal"),
                   isFirst: true,
                   child: Flex.vertical(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -491,6 +492,7 @@ class _SettingsPageState extends State<SettingsPage> {
                     children: [
                       const SizedBox(height: 2.0),
                       ListItemContainer(
+                        key: const ValueKey("useFGService"),
                         child: MergeSemantics(
                           child: ListItemInteraction(
                             onTap: () => settingsProvider.useFGService =
@@ -520,6 +522,7 @@ class _SettingsPageState extends State<SettingsPage> {
                       ),
                       const SizedBox(height: 2.0),
                       ListItemContainer(
+                        key: const ValueKey("enableBackgroundUpdates"),
                         child: Flex.vertical(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
@@ -583,6 +586,7 @@ class _SettingsPageState extends State<SettingsPage> {
                           children: [
                             const SizedBox(height: 2.0),
                             ListItemContainer(
+                              key: const ValueKey("bgUpdatesOnWiFiOnly"),
                               child: MergeSemantics(
                                 child: ListItemInteraction(
                                   onTap: () =>
@@ -616,6 +620,7 @@ class _SettingsPageState extends State<SettingsPage> {
                             ),
                             const SizedBox(height: 2.0),
                             ListItemContainer(
+                              key: const ValueKey("bgUpdatesWhileChargingOnly"),
                               child: MergeSemantics(
                                 child: ListItemInteraction(
                                   onTap: () =>
@@ -655,6 +660,7 @@ class _SettingsPageState extends State<SettingsPage> {
                   ),
                 const SizedBox(height: 2.0),
                 ListItemContainer(
+                  key: const ValueKey("checkOnStart"),
                   child: MergeSemantics(
                     child: ListItemInteraction(
                       onTap: () => settingsProvider.checkOnStart =
@@ -681,6 +687,7 @@ class _SettingsPageState extends State<SettingsPage> {
                 ),
                 const SizedBox(height: 2.0),
                 ListItemContainer(
+                  key: const ValueKey("checkUpdateOnDetailPage"),
                   child: MergeSemantics(
                     child: ListItemInteraction(
                       onTap: () => settingsProvider.checkUpdateOnDetailPage =
@@ -711,6 +718,7 @@ class _SettingsPageState extends State<SettingsPage> {
                 ),
                 const SizedBox(height: 2.0),
                 ListItemContainer(
+                  key: const ValueKey("onlyCheckInstalledOrTrackOnlyApps"),
                   child: MergeSemantics(
                     child: ListItemInteraction(
                       onTap: () =>
@@ -745,6 +753,7 @@ class _SettingsPageState extends State<SettingsPage> {
                 ),
                 const SizedBox(height: 2.0),
                 ListItemContainer(
+                  key: const ValueKey("removeOnExternalUninstall"),
                   child: ListItemInteraction(
                     onTap: () => settingsProvider.removeOnExternalUninstall =
                         !settingsProvider.removeOnExternalUninstall,
@@ -773,6 +782,7 @@ class _SettingsPageState extends State<SettingsPage> {
                 ),
                 const SizedBox(height: 2.0),
                 ListItemContainer(
+                  key: const ValueKey("parallelDownloads"),
                   child: MergeSemantics(
                     child: ListItemInteraction(
                       onTap: () => settingsProvider.parallelDownloads =
@@ -799,6 +809,7 @@ class _SettingsPageState extends State<SettingsPage> {
                 ),
                 const SizedBox(height: 2.0),
                 ListItemContainer(
+                  key: const ValueKey("beforeNewInstallsShareToAppVerifier"),
                   child: Flex.vertical(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
@@ -849,6 +860,7 @@ class _SettingsPageState extends State<SettingsPage> {
                 ),
                 const SizedBox(height: 2.0),
                 ListItemContainer(
+                  key: const ValueKey("useShizuku"),
                   child: MergeSemantics(
                     child: ListItemInteraction(
                       onTap: () =>
@@ -874,6 +886,7 @@ class _SettingsPageState extends State<SettingsPage> {
                 ),
                 const SizedBox(height: 2.0),
                 ListItemContainer(
+                  key: const ValueKey("shizukuPretendToBeGooglePlay"),
                   isLast: true,
                   child: MergeSemantics(
                     child: ListItemInteraction(
@@ -960,6 +973,7 @@ class _SettingsPageState extends State<SettingsPage> {
                 if (!settingsProvider.useMaterialYou) ...[
                   const SizedBox(height: 2.0),
                   ListItemContainer(
+                    key: const ValueKey("selectColor"),
                     isLast: true,
                     child: ListItemInteraction(
                       onTap: selectColor,
@@ -993,6 +1007,7 @@ class _SettingsPageState extends State<SettingsPage> {
                 ],
                 const SizedBox(height: 16.0),
                 DropdownMenuFormField<ThemeSettings>(
+                  key: const ValueKey("theme"),
                   expandedInsets: EdgeInsets.zero,
                   inputDecorationTheme: const InputDecorationThemeData(
                     border: UnderlineInputBorder(),
@@ -1037,6 +1052,7 @@ class _SettingsPageState extends State<SettingsPage> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Flexible.tight(
+                      key: const ValueKey("appSortBy"),
                       child: DropdownMenuFormField<SortColumnSettings>(
                         expandedInsets: EdgeInsets.zero,
                         inputDecorationTheme: const InputDecorationThemeData(
@@ -1072,6 +1088,7 @@ class _SettingsPageState extends State<SettingsPage> {
                     ),
                     const SizedBox(width: 16),
                     Flexible.tight(
+                      key: const ValueKey("appSortOrder"),
                       child: DropdownMenuFormField<SortOrderSettings>(
                         expandedInsets: EdgeInsets.zero,
                         inputDecorationTheme: const InputDecorationThemeData(
@@ -1101,6 +1118,7 @@ class _SettingsPageState extends State<SettingsPage> {
                 ),
                 const SizedBox(height: 16.0),
                 DropdownMenuFormField<Locale?>(
+                  key: const ValueKey("language"),
                   expandedInsets: EdgeInsets.zero,
                   inputDecorationTheme: const InputDecorationThemeData(
                     border: UnderlineInputBorder(),
@@ -1128,6 +1146,7 @@ class _SettingsPageState extends State<SettingsPage> {
                 ),
                 const SizedBox(height: 16.0),
                 ListItemContainer(
+                  key: const ValueKey("showWebInAppView"),
                   isFirst: true,
                   child: MergeSemantics(
                     child: ListItemInteraction(
