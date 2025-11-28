@@ -135,9 +135,6 @@ class MyTaskHandler extends TaskHandler {
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  await AppDatabase.ensureInitialized();
-  await LogsProvider.ensureInitialized();
-
   LicenseRegistry.addLicense(() async* {
     final List<String> assets = <String>[
       materium_fonts.Assets.fonts.firacode.ofl,
@@ -159,17 +156,29 @@ void main() async {
   } catch (e) {
     // Already added, do nothing (see #375)
   }
+
+  await AppDatabase.ensureInitialized();
+
+  final settingsProvider = await SettingsProvider.ensureInitialized();
+
   await EasyLocalization.ensureInitialized();
+
+  // Make sure to always initialize LogsProvider after EasyLocalization
+  // TODO: refactor after migrating to slang
+  await LogsProvider.ensureInitialized();
+
+  final np = NotificationsProvider();
+  await np.initialize();
+
+  FlutterForegroundTask.initCommunicationPort();
+
   if ((await DeviceInfoPlugin().androidInfo).version.sdkInt >= 29) {
     SystemChrome.setSystemUIOverlayStyle(
       const SystemUiOverlayStyle(systemNavigationBarColor: Colors.transparent),
     );
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
   }
-  final np = NotificationsProvider();
-  await np.initialize();
-  FlutterForegroundTask.initCommunicationPort();
-  final settingsProvider = await SettingsProvider.ensureInitialized();
+
   runApp(
     MultiProvider(
       providers: [
@@ -186,6 +195,7 @@ void main() async {
       ),
     ),
   );
+
   BackgroundFetch.registerHeadlessTask(backgroundFetchHeadlessTask);
 }
 
