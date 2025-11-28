@@ -1,6 +1,6 @@
 library;
 
-export 'package:screen_corners_ffi/screen_corners_ffi_platform_interface.dart';
+export 'screen_corners_ffi_platform_interface.dart';
 
 export 'src/screen_corners_android.dart';
 export 'src/screen_corners_default.dart';
