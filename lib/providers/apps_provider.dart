@@ -14,7 +14,7 @@ import 'package:android_intent_plus/flag.dart';
 import 'package:android_package_installer/android_package_installer.dart';
 import 'package:android_package_manager/android_package_manager.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
-import 'package:device_info_plus/device_info_plus.dart';
+import 'package:device_info_ffi/device_info_ffi.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:materium/flutter.dart';
 import 'package:http/io_client.dart';
@@ -781,7 +781,7 @@ class AppsProvider with ChangeNotifier {
       return false; // Manual API selection means silent install is not possible
     }
 
-    var osInfo = await DeviceInfoPlugin().androidInfo;
+    var osInfo = DeviceInfo.androidInfo!;
     String? installerPackageName;
     try {
       installerPackageName = osInfo.version.sdkInt >= 30
@@ -1009,7 +1009,7 @@ class AppsProvider with ChangeNotifier {
     if (!file.path.toLowerCase().endsWith('.obb')) return;
 
     // TODO: Does not support Android 11+
-    if ((await DeviceInfoPlugin().androidInfo).version.sdkInt <= 29) {
+    if (DeviceInfo.androidInfo!.version.sdkInt <= 29) {
       await Permission.storage.request();
     }
 
@@ -1046,7 +1046,7 @@ class AppsProvider with ChangeNotifier {
             ? app.preferredApkIndex
             : 0];
     // get device supported architecture
-    List<String> archs = (await DeviceInfoPlugin().androidInfo).supportedAbis;
+    List<String> archs = DeviceInfo.androidInfo!.supportedAbis;
 
     if ((urlsToSelectFrom.length > 1 || evenIfSingleChoice) &&
         context != null) {

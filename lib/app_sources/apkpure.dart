@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:device_info_plus/device_info_plus.dart';
+import 'package:device_info_ffi/device_info_ffi.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:materium/components/generated_form.dart';
 import 'package:materium/custom_errors.dart';
@@ -149,7 +149,7 @@ class ApkPure extends AppSource {
       return {
         "Ual-Access-Businessid": "projecta",
         "Ual-Access-ProjectA":
-            '{"device_info":{"os_ver":"${((await DeviceInfoPlugin().androidInfo).version.sdkInt)}"}}',
+            '{"device_info":{"os_ver":"${(DeviceInfo.androidInfo!.version.sdkInt)}"}}',
       };
     }
   }
@@ -161,8 +161,7 @@ class ApkPure extends AppSource {
   ) async {
     String appId = (await tryInferringAppId(standardUrl))!;
 
-    List<String> supportedArchs =
-        (await DeviceInfoPlugin().androidInfo).supportedAbis;
+    List<String> supportedArchs = DeviceInfo.androidInfo!.supportedAbis;
 
     // request versions from API
     var res = await sourceRequest(

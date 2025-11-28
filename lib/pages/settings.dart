@@ -1,4 +1,4 @@
-import 'package:device_info_plus/device_info_plus.dart';
+import 'package:device_info_ffi/device_info_ffi.dart';
 import 'package:drift/drift.dart';
 import 'package:dynamic_color_ffi/dynamic_color_ffi.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -49,8 +49,6 @@ class _SettingsPageState extends State<SettingsPage> {
     20160,
     43200,
   ];
-
-  late Future<AndroidDeviceInfo> _androidInfo;
 
   int updateInterval = 0;
 
@@ -110,12 +108,6 @@ class _SettingsPageState extends State<SettingsPage> {
       updateInterval = valRounded;
       updateIntervalLabel = plural('day', valRounded ~/ (24 * 60));
     }
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    _androidInfo = DeviceInfoPlugin().androidInfo;
   }
 
   @override
@@ -491,198 +483,176 @@ class _SettingsPageState extends State<SettingsPage> {
                     ],
                   ),
                 ),
-                FutureBuilder(
-                  future: _androidInfo,
-                  builder: (context, snapshot) {
-                    return (settingsProvider.updateInterval > 0) &&
-                            (((snapshot.data?.version.sdkInt ?? 0) >= 30) ||
-                                settingsProvider.useShizuku)
-                        ? Flex.vertical(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              const SizedBox(height: 2.0),
-                              ListItemContainer(
-                                child: MergeSemantics(
-                                  child: ListItemInteraction(
-                                    onTap: () => settingsProvider.useFGService =
-                                        !settingsProvider.useFGService,
-                                    child: ListItemLayout(
-                                      isMultiline: true,
-                                      padding: const EdgeInsets.fromLTRB(
-                                        16.0,
-                                        12.0,
-                                        16.0 - 8.0,
-                                        12.0,
-                                      ),
-                                      headline: Text(
-                                        tr("foregroundServiceExplanation"),
-                                        maxLines: 3,
-                                      ),
-                                      trailing: ExcludeFocus(
-                                        child: Switch(
-                                          onCheckedChanged: (value) =>
-                                              settingsProvider.useFGService =
-                                                  value,
-                                          checked:
-                                              settingsProvider.useFGService,
-                                        ),
+                if ((settingsProvider.updateInterval > 0) &&
+                    (((DeviceInfo.androidInfo?.version.sdkInt ?? 0) >= 30) ||
+                        settingsProvider.useShizuku))
+                  Flex.vertical(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const SizedBox(height: 2.0),
+                      ListItemContainer(
+                        child: MergeSemantics(
+                          child: ListItemInteraction(
+                            onTap: () => settingsProvider.useFGService =
+                                !settingsProvider.useFGService,
+                            child: ListItemLayout(
+                              isMultiline: true,
+                              padding: const EdgeInsets.fromLTRB(
+                                16.0,
+                                12.0,
+                                16.0 - 8.0,
+                                12.0,
+                              ),
+                              headline: Text(
+                                tr("foregroundServiceExplanation"),
+                                maxLines: 3,
+                              ),
+                              trailing: ExcludeFocus(
+                                child: Switch(
+                                  onCheckedChanged: (value) =>
+                                      settingsProvider.useFGService = value,
+                                  checked: settingsProvider.useFGService,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 2.0),
+                      ListItemContainer(
+                        child: Flex.vertical(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            MergeSemantics(
+                              child: ListItemInteraction(
+                                onTap: () =>
+                                    settingsProvider.enableBackgroundUpdates =
+                                        !settingsProvider
+                                            .enableBackgroundUpdates,
+                                child: ListItemLayout(
+                                  isMultiline: false,
+                                  padding: const EdgeInsets.fromLTRB(
+                                    16.0,
+                                    8.0,
+                                    16.0 - 8.0,
+                                    8.0,
+                                  ),
+                                  headline: Text(tr("enableBackgroundUpdates")),
+                                  trailing: ExcludeFocus(
+                                    child: Switch(
+                                      onCheckedChanged: (value) =>
+                                          settingsProvider
+                                                  .enableBackgroundUpdates =
+                                              value,
+                                      checked: settingsProvider
+                                          .enableBackgroundUpdates,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.fromLTRB(
+                                16.0,
+                                0.0,
+                                16.0,
+                                12.0,
+                              ),
+                              child: DefaultTextStyle(
+                                style: TypescaleTheme.of(context).bodyMedium
+                                    .toTextStyle(
+                                      color: colorTheme.onSurfaceVariant,
+                                    ),
+                                child: Flex.vertical(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  spacing: 8.0,
+                                  children: [
+                                    Text(tr('backgroundUpdateReqsExplanation')),
+                                    Text(
+                                      tr('backgroundUpdateLimitsExplanation'),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      if (settingsProvider.enableBackgroundUpdates)
+                        Flex.vertical(
+                          children: [
+                            const SizedBox(height: 2.0),
+                            ListItemContainer(
+                              child: MergeSemantics(
+                                child: ListItemInteraction(
+                                  onTap: () =>
+                                      settingsProvider.bgUpdatesOnWiFiOnly =
+                                          !settingsProvider.bgUpdatesOnWiFiOnly,
+                                  child: ListItemLayout(
+                                    isMultiline: true,
+                                    padding: const EdgeInsets.fromLTRB(
+                                      16.0,
+                                      12.0,
+                                      16.0 - 8.0,
+                                      12.0,
+                                    ),
+                                    headline: Text(
+                                      tr("bgUpdatesOnWiFiOnly"),
+                                      maxLines: 3,
+                                    ),
+                                    trailing: ExcludeFocus(
+                                      child: Switch(
+                                        onCheckedChanged: (value) =>
+                                            settingsProvider
+                                                    .bgUpdatesOnWiFiOnly =
+                                                value,
+                                        checked: settingsProvider
+                                            .bgUpdatesOnWiFiOnly,
                                       ),
                                     ),
                                   ),
                                 ),
                               ),
-                              const SizedBox(height: 2.0),
-                              ListItemContainer(
-                                child: Flex.vertical(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    MergeSemantics(
-                                      child: ListItemInteraction(
-                                        onTap: () =>
+                            ),
+                            const SizedBox(height: 2.0),
+                            ListItemContainer(
+                              child: MergeSemantics(
+                                child: ListItemInteraction(
+                                  onTap: () =>
+                                      settingsProvider
+                                              .bgUpdatesWhileChargingOnly =
+                                          !settingsProvider
+                                              .bgUpdatesWhileChargingOnly,
+                                  child: ListItemLayout(
+                                    isMultiline: true,
+                                    padding: const EdgeInsets.fromLTRB(
+                                      16.0,
+                                      12.0,
+                                      16.0 - 8.0,
+                                      12.0,
+                                    ),
+                                    headline: Text(
+                                      tr("bgUpdatesWhileChargingOnly"),
+                                      maxLines: 3,
+                                    ),
+                                    trailing: ExcludeFocus(
+                                      child: Switch(
+                                        onCheckedChanged: (value) =>
                                             settingsProvider
-                                                    .enableBackgroundUpdates =
-                                                !settingsProvider
-                                                    .enableBackgroundUpdates,
-                                        child: ListItemLayout(
-                                          isMultiline: false,
-                                          padding: const EdgeInsets.fromLTRB(
-                                            16.0,
-                                            8.0,
-                                            16.0 - 8.0,
-                                            8.0,
-                                          ),
-                                          headline: Text(
-                                            tr("enableBackgroundUpdates"),
-                                          ),
-                                          trailing: ExcludeFocus(
-                                            child: Switch(
-                                              onCheckedChanged: (value) =>
-                                                  settingsProvider
-                                                          .enableBackgroundUpdates =
-                                                      value,
-                                              checked: settingsProvider
-                                                  .enableBackgroundUpdates,
-                                            ),
-                                          ),
-                                        ),
+                                                    .bgUpdatesWhileChargingOnly =
+                                                value,
+                                        checked: settingsProvider
+                                            .bgUpdatesWhileChargingOnly,
                                       ),
                                     ),
-                                    Padding(
-                                      padding: const EdgeInsets.fromLTRB(
-                                        16.0,
-                                        0.0,
-                                        16.0,
-                                        12.0,
-                                      ),
-                                      child: DefaultTextStyle(
-                                        style: TypescaleTheme.of(context)
-                                            .bodyMedium
-                                            .toTextStyle(
-                                              color:
-                                                  colorTheme.onSurfaceVariant,
-                                            ),
-                                        child: Flex.vertical(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          spacing: 8.0,
-                                          children: [
-                                            Text(
-                                              tr(
-                                                'backgroundUpdateReqsExplanation',
-                                              ),
-                                            ),
-                                            Text(
-                                              tr(
-                                                'backgroundUpdateLimitsExplanation',
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-                                  ],
+                                  ),
                                 ),
                               ),
-                              if (settingsProvider.enableBackgroundUpdates)
-                                Flex.vertical(
-                                  children: [
-                                    const SizedBox(height: 2.0),
-                                    ListItemContainer(
-                                      child: MergeSemantics(
-                                        child: ListItemInteraction(
-                                          onTap: () =>
-                                              settingsProvider
-                                                      .bgUpdatesOnWiFiOnly =
-                                                  !settingsProvider
-                                                      .bgUpdatesOnWiFiOnly,
-                                          child: ListItemLayout(
-                                            isMultiline: true,
-                                            padding: const EdgeInsets.fromLTRB(
-                                              16.0,
-                                              12.0,
-                                              16.0 - 8.0,
-                                              12.0,
-                                            ),
-                                            headline: Text(
-                                              tr("bgUpdatesOnWiFiOnly"),
-                                              maxLines: 3,
-                                            ),
-                                            trailing: ExcludeFocus(
-                                              child: Switch(
-                                                onCheckedChanged: (value) =>
-                                                    settingsProvider
-                                                            .bgUpdatesOnWiFiOnly =
-                                                        value,
-                                                checked: settingsProvider
-                                                    .bgUpdatesOnWiFiOnly,
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                    const SizedBox(height: 2.0),
-                                    ListItemContainer(
-                                      child: MergeSemantics(
-                                        child: ListItemInteraction(
-                                          onTap: () =>
-                                              settingsProvider
-                                                      .bgUpdatesWhileChargingOnly =
-                                                  !settingsProvider
-                                                      .bgUpdatesWhileChargingOnly,
-                                          child: ListItemLayout(
-                                            isMultiline: true,
-                                            padding: const EdgeInsets.fromLTRB(
-                                              16.0,
-                                              12.0,
-                                              16.0 - 8.0,
-                                              12.0,
-                                            ),
-                                            headline: Text(
-                                              tr("bgUpdatesWhileChargingOnly"),
-                                              maxLines: 3,
-                                            ),
-                                            trailing: ExcludeFocus(
-                                              child: Switch(
-                                                onCheckedChanged: (value) =>
-                                                    settingsProvider
-                                                            .bgUpdatesWhileChargingOnly =
-                                                        value,
-                                                checked: settingsProvider
-                                                    .bgUpdatesWhileChargingOnly,
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                            ],
-                          )
-                        : const SizedBox.shrink();
-                  },
-                ),
+                            ),
+                          ],
+                        ),
+                    ],
+                  ),
                 const SizedBox(height: 2.0),
                 ListItemContainer(
                   child: MergeSemantics(
@@ -1055,17 +1025,11 @@ class _SettingsPageState extends State<SettingsPage> {
                   },
                 ),
                 const SizedBox(height: 4.0),
-                if (settingsProvider.theme == ThemeSettings.system)
-                  FutureBuilder(
-                    future: _androidInfo,
-                    builder: (context, snapshot) {
-                      return ((snapshot.data?.version.sdkInt ?? 30) < 29)
-                          ? Text(
-                              tr('followSystemThemeExplanation'),
-                              style: typescaleTheme.labelSmall.toTextStyle(),
-                            )
-                          : const SizedBox.shrink();
-                    },
+                if (settingsProvider.theme == ThemeSettings.system &&
+                    (DeviceInfo.androidInfo?.version.sdkInt ?? 30) < 29)
+                  Text(
+                    tr('followSystemThemeExplanation'),
+                    style: typescaleTheme.labelSmall.toTextStyle(),
                   ),
                 const SizedBox(height: 12.0),
                 Flex.horizontal(

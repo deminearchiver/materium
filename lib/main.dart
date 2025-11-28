@@ -13,7 +13,7 @@ import 'package:materium/providers/source_provider.dart';
 import 'package:materium/theme/legacy.dart';
 import 'package:materium/theme/theme.dart';
 import 'package:provider/provider.dart';
-import 'package:device_info_plus/device_info_plus.dart';
+import 'package:device_info_ffi/device_info_ffi.dart';
 import 'package:background_fetch/background_fetch.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter_foreground_task/flutter_foreground_task.dart';
@@ -174,7 +174,7 @@ void main() async {
 
   FlutterForegroundTask.initCommunicationPort();
 
-  if ((await DeviceInfoPlugin().androidInfo).version.sdkInt >= 29) {
+  if (DeviceInfo.androidInfo!.version.sdkInt >= 29) {
     SystemChrome.setSystemUIOverlayStyle(
       const SystemUiOverlayStyle(systemNavigationBarColor: Colors.transparent),
     );

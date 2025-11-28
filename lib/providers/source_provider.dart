@@ -6,7 +6,7 @@ import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'dart:typed_data';
 
-import 'package:device_info_plus/device_info_plus.dart';
+import 'package:device_info_ffi/device_info_ffi.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:html/dom.dart';
 import 'package:materium/app_sources/apkmirror.dart';
@@ -518,7 +518,7 @@ Future<List<MapEntry<String, String>>> filterApksByArch(
   List<MapEntry<String, String>> apkUrls,
 ) async {
   if (apkUrls.length > 1) {
-    var abis = (await DeviceInfoPlugin().androidInfo).supportedAbis;
+    var abis = DeviceInfo.androidInfo!.supportedAbis;
     for (var abi in abis) {
       var urls2 = apkUrls
           .where((element) => RegExp('.*$abi.*').hasMatch(element.key))
