@@ -5,6 +5,8 @@ repository: https://github.com/deminearchiver/materium
 publish_to: none
 
 workspace:
+  - device_info_ffi
+  - device_info_ffi/example
   - dynamic_color
   - dynamic_color/example
   - dynamic_color_ffi
@@ -27,6 +29,8 @@ dependencies:
     sdk: flutter
   flutter_localizations:
     sdk: flutter
+  device_info_ffi:
+    path: device_info_ffi
   dynamic_color_ffi:
     path: dynamic_color_ffi
   layout:

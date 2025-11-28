@@ -1,0 +1,15 @@
+android_sdk_config:
+  add_gradle_deps: true
+  android_example: example/
+
+source_path:
+  - android/src/main/kotlin
+
+classes:
+  - dev.deminearchiver.device_info_ffi.DeviceInfo
+  - dev.deminearchiver.device_info_ffi.DeviceInfoPlugin
+
+output:
+  dart:
+    path: lib/src/jni_bindings.dart
+    structure: single_file
