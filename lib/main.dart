@@ -132,21 +132,23 @@ class MyTaskHandler extends TaskHandler {
   void onReceiveData(Object data) {}
 }
 
+Stream<LicenseEntry> _licenses() async* {
+  final List<String> assets = <String>[
+    materium_fonts.Assets.fonts.firacode.ofl,
+    materium_fonts.Assets.fonts.googlesanscode.ofl,
+    materium_fonts.Assets.fonts.googlesansflex.ofl,
+    materium_fonts.Assets.fonts.robotoflex.ofl,
+  ];
+  for (final asset in assets) {
+    final license = await rootBundle.loadString(asset);
+    yield LicenseEntryWithLineBreaks(const <String>["google_fonts"], license);
+  }
+}
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  LicenseRegistry.addLicense(() async* {
-    final List<String> assets = <String>[
-      materium_fonts.Assets.fonts.firacode.ofl,
-      materium_fonts.Assets.fonts.googlesanscode.ofl,
-      materium_fonts.Assets.fonts.googlesansflex.ofl,
-      materium_fonts.Assets.fonts.robotoflex.ofl,
-    ];
-    for (final asset in assets) {
-      final license = await rootBundle.loadString(asset);
-      yield LicenseEntryWithLineBreaks(const <String>["google_fonts"], license);
-    }
-  });
+  LicenseRegistry.addLicense(_licenses);
 
   try {
     ByteData data = await rootBundle.load(Assets.ca.letsEncryptR3);
