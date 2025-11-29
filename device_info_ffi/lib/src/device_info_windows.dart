@@ -8,7 +8,7 @@ import 'package:win32/win32.dart';
 import 'package:win32_registry/win32_registry.dart';
 
 /// Object encapsulating WINDOWS device information.
-class WindowsDeviceInfo implements BaseDeviceInfo {
+class WindowsDeviceInfo with Diagnosticable implements BaseDeviceInfo {
   /// Constructs a [WindowsDeviceInfo].
   const WindowsDeviceInfo({
     required this.computerName,
@@ -146,6 +146,37 @@ class WindowsDeviceInfo implements BaseDeviceInfo {
   /// Displayed as "Device ID" in Windows Settings. Value of
   /// `HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\SQMClient\MachineId` registry key.
   final String deviceId;
+
+  @override
+  // ignore: must_call_super
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    properties
+      ..add(StringProperty("computerName", computerName))
+      ..add(IntProperty("numberOfCores", numberOfCores))
+      ..add(IntProperty("systemMemoryInMegabytes", systemMemoryInMegabytes))
+      ..add(StringProperty("userName", userName))
+      ..add(IntProperty("majorVersion", majorVersion))
+      ..add(IntProperty("minorVersion", minorVersion))
+      ..add(IntProperty("buildNumber", buildNumber))
+      ..add(IntProperty("platformId", platformId))
+      ..add(StringProperty("csdVersion", csdVersion))
+      ..add(IntProperty("servicePackMajor", servicePackMajor))
+      ..add(IntProperty("servicePackMinor", servicePackMinor))
+      ..add(IntProperty("suitMask", suitMask))
+      ..add(IntProperty("productType", productType))
+      ..add(IntProperty("reserved", reserved))
+      ..add(StringProperty("buildLab", buildLab))
+      ..add(StringProperty("buildLabEx", buildLabEx))
+      ..add(IterableProperty("digitalProductId", digitalProductId))
+      ..add(StringProperty("displayVersion", displayVersion))
+      ..add(StringProperty("editionId", editionId))
+      ..add(DiagnosticsProperty<DateTime>("installDate", installDate))
+      ..add(StringProperty("productId", productId))
+      ..add(StringProperty("productName", productName))
+      ..add(StringProperty("registeredOwner", registeredOwner))
+      ..add(StringProperty("releaseId", releaseId))
+      ..add(StringProperty("deviceId", deviceId));
+  }
 
   @override
   bool operator ==(Object other) =>
