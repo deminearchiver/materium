@@ -2,6 +2,12 @@ import 'dart:math' as math;
 
 import 'package:materium/flutter.dart';
 
+enum LegacyButtonSize { extraSmall, small, medium, large, extraLarge }
+
+enum LegacyButtonShape { round, square }
+
+enum LegacyButtonColor { elevated, filled, tonal, outlined, text }
+
 enum MenuVariant { standard, vibrant }
 
 abstract final class LegacyThemeFactory {
@@ -169,6 +175,188 @@ abstract final class LegacyThemeFactory {
           ),
         },
       ),
+    );
+  }
+
+  static ButtonStyle createButtonStyle({
+    required ColorThemeData colorTheme,
+    required ElevationThemeData elevationTheme,
+    required ShapeThemeData shapeTheme,
+    required StateThemeData stateTheme,
+    required TypescaleThemeData typescaleTheme,
+    LegacyButtonSize size = .small,
+    LegacyButtonShape shape = .round,
+    LegacyButtonColor color = .filled,
+    bool? isSelected,
+    TextStyle? textStyle,
+    TextStyle? unselectedTextStyle,
+    TextStyle? selectedTextStyle,
+    Color? containerColor,
+    Color? unselectedContainerColor,
+    Color? selectedContainerColor,
+  }) {
+    final isUnselectedNotDefault = isSelected == false;
+    final isUnselectedDefault = isSelected != true;
+    final isSelectedNotDefault = isSelected == true;
+    final isSelectedDefault = isSelected != false;
+
+    final minWidth = 48.0;
+    final minHeight = switch (size) {
+      .extraSmall => 32.0,
+      .small => 40.0,
+      .medium => 56.0,
+      .large => 96.0,
+      .extraLarge => 136.0,
+    };
+
+    final padding = switch (size) {
+      .extraSmall => const EdgeInsets.symmetric(
+        horizontal: 12.0,
+        vertical: 6.0,
+      ),
+      .small => const EdgeInsets.symmetric(horizontal: 16.0, vertical: 10.0),
+      .medium => const EdgeInsets.symmetric(horizontal: 24.0, vertical: 16.0),
+      .large => const EdgeInsets.symmetric(horizontal: 48.0, vertical: 32.0),
+      .extraLarge => const EdgeInsets.symmetric(
+        horizontal: 64.0,
+        vertical: 48.0,
+      ),
+    };
+
+    final cornerRound = shapeTheme.corner.full;
+    final cornerSquare = switch (size) {
+      .extraSmall => shapeTheme.corner.medium,
+      .small => shapeTheme.corner.medium,
+      .medium => shapeTheme.corner.large,
+      .large => shapeTheme.corner.extraLarge,
+      .extraLarge => shapeTheme.corner.extraLarge,
+    };
+    final corner = isSelectedNotDefault
+        ? switch (shape) {
+            .round => cornerSquare,
+            .square => cornerRound,
+          }
+        : switch (shape) {
+            .round => cornerRound,
+            .square => cornerSquare,
+          };
+
+    final typeStyle = switch (size) {
+      .extraSmall => typescaleTheme.labelLarge,
+      .small => typescaleTheme.labelLarge,
+      .medium => typescaleTheme.titleMedium,
+      .large => typescaleTheme.headlineSmall,
+      .extraLarge => typescaleTheme.headlineLarge,
+    };
+
+    final resolvedTextStyle =
+        switch (isSelected) {
+          null => textStyle,
+          false => unselectedTextStyle,
+          true => selectedTextStyle,
+        } ??
+        typeStyle.toTextStyle();
+
+    final backgroundColor =
+        switch (isSelected) {
+          null => containerColor,
+          false => unselectedContainerColor,
+          true => selectedContainerColor,
+        } ??
+        switch (color) {
+          .elevated =>
+            isSelectedNotDefault
+                ? colorTheme.primary
+                : colorTheme.surfaceContainerLow,
+          .filled =>
+            isSelectedDefault
+                ? colorTheme.primary
+                : colorTheme.surfaceContainer,
+          .tonal =>
+            isSelectedNotDefault
+                ? colorTheme.secondary
+                : colorTheme.secondaryContainer,
+          .outlined =>
+            isSelectedNotDefault
+                ? colorTheme.inverseSurface
+                : Colors.transparent,
+          .text => Colors.transparent,
+        };
+    final foregroundColor = switch (color) {
+      .elevated =>
+        isSelectedNotDefault ? colorTheme.onPrimary : colorTheme.primary,
+      .filled =>
+        isSelectedDefault ? colorTheme.onPrimary : colorTheme.onSurfaceVariant,
+      .tonal =>
+        isSelectedNotDefault
+            ? colorTheme.onSecondary
+            : colorTheme.onSecondaryContainer,
+      .outlined =>
+        isSelectedNotDefault
+            ? colorTheme.inverseOnSurface
+            : colorTheme.onSurfaceVariant,
+      .text => colorTheme.primary,
+    };
+    final disabledBackgroundColor = colorTheme.onSurface.withValues(
+      alpha: 0.10,
+    );
+    final disabledForegroundColor = colorTheme.onSurface.withValues(
+      alpha: 0.38,
+    );
+    final outlineWidth = switch (size) {
+      .extraSmall => 1.0,
+      .small => 1.0,
+      .medium => 1.0,
+      .large => 2.0,
+      .extraLarge => 3.0,
+    };
+    final side = switch (color) {
+      .outlined when isUnselectedDefault => BorderSide(
+        style: BorderStyle.solid,
+        color: colorTheme.outlineVariant,
+        width: outlineWidth,
+        strokeAlign: BorderSide.strokeAlignInside,
+      ),
+      _ => BorderSide(
+        style: BorderStyle.none,
+        color: colorTheme.background,
+        width: 0.0,
+        strokeAlign: BorderSide.strokeAlignInside,
+      ),
+    };
+    return ButtonStyle(
+      animationDuration: Duration.zero,
+      alignment: Alignment.center,
+      enableFeedback: true,
+      iconAlignment: IconAlignment.start,
+      mouseCursor: WidgetStateMouseCursor.clickable,
+      tapTargetSize: MaterialTapTargetSize.padded,
+      elevation: const WidgetStatePropertyAll(0.0),
+      shadowColor: WidgetStateColor.transparent,
+      minimumSize: WidgetStatePropertyAll(Size(minWidth, minHeight)),
+      fixedSize: const WidgetStatePropertyAll(null),
+      maximumSize: const WidgetStatePropertyAll(Size.infinite),
+      padding: WidgetStatePropertyAll(padding),
+      iconSize: const WidgetStatePropertyAll(24.0),
+      shape: WidgetStatePropertyAll(
+        CornersBorder.rounded(corners: Corners.all(corner)),
+      ),
+      side: WidgetStatePropertyAll(side),
+      overlayColor: WidgetStateLayerColor(
+        color: WidgetStatePropertyAll(foregroundColor),
+        opacity: stateTheme.stateLayerOpacity,
+      ),
+      backgroundColor: WidgetStateProperty.resolveWith(
+        (states) => states.contains(WidgetState.disabled)
+            ? disabledBackgroundColor
+            : backgroundColor,
+      ),
+      foregroundColor: WidgetStateProperty.resolveWith(
+        (states) => states.contains(WidgetState.disabled)
+            ? disabledForegroundColor
+            : foregroundColor,
+      ),
+      textStyle: WidgetStatePropertyAll(resolvedTextStyle),
     );
   }
 
