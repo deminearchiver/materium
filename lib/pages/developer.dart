@@ -18,6 +18,7 @@ import 'package:materium/components/custom_refresh_indicator.dart';
 import 'package:materium/flutter.dart' hide Cubic;
 
 import 'package:markdown/markdown.dart' as md;
+import 'package:materium/theme/legacy.dart';
 import 'package:materium/theme/theme.dart';
 import 'package:screen_corners_ffi/screen_corners_ffi.dart';
 import 'package:share_plus/share_plus.dart';
@@ -288,7 +289,6 @@ class _DeveloperPageState extends State<DeveloperPage> {
                       ),
                     ),
                     ListItemContainer(
-                      isLast: true,
                       containerColor: colorTheme.surfaceBright,
                       child: MergeSemantics(
                         child: ListItemInteraction(
@@ -328,6 +328,46 @@ class _DeveloperPageState extends State<DeveloperPage> {
                         ),
                       ),
                     ),
+                    ListItemContainer(
+                      isLast: true,
+                      containerColor: colorTheme.surfaceBright,
+                      child: MergeSemantics(
+                        child: ListItemInteraction(
+                          onTap: () => Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  const _DeveloperAddAppPage(),
+                            ),
+                          ),
+                          child: ListItemLayout(
+                            isMultiline: true,
+                            leading: SizedBox.square(
+                              dimension: 40.0,
+                              child: Material(
+                                animationDuration: Duration.zero,
+                                type: MaterialType.card,
+                                clipBehavior: Clip.antiAlias,
+                                color: staticColors.cyan.colorFixed,
+                                shape: const StadiumBorder(),
+                                child: Align.center(
+                                  child: Icon(
+                                    Symbols.add_rounded,
+                                    fill: 1.0,
+                                    color:
+                                        staticColors.cyan.onColorFixedVariant,
+                                  ),
+                                ),
+                              ),
+                            ),
+                            headline: const Text("Add app page redesign"),
+                            supportingText: const Text("The title says it all"),
+                            trailing: const Icon(
+                              Symbols.keyboard_arrow_right_rounded,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
                   ],
                 ),
               ),
@@ -335,6 +375,155 @@ class _DeveloperPageState extends State<DeveloperPage> {
             ],
           ),
         ],
+      ),
+    );
+  }
+}
+
+class _DeveloperAddAppPage extends StatefulWidget {
+  const _DeveloperAddAppPage({super.key});
+
+  @override
+  State<_DeveloperAddAppPage> createState() => _DeveloperAddAppPageState();
+}
+
+class _DeveloperAddAppPageState extends State<_DeveloperAddAppPage> {
+  @override
+  Widget build(BuildContext context) {
+    final padding = MediaQuery.paddingOf(context);
+
+    final colorTheme = ColorTheme.of(context);
+    final elevationTheme = ElevationTheme.of(context);
+    final shapeTheme = ShapeTheme.of(context);
+    final stateTheme = StateTheme.of(context);
+    final typescaleTheme = TypescaleTheme.of(context);
+
+    return Scaffold(
+      backgroundColor: colorTheme.surfaceContainer,
+      body: SafeArea(
+        top: false,
+        bottom: false,
+        child: CustomScrollView(
+          slivers: [
+            CustomAppBar(
+              leading: const Padding(
+                padding: EdgeInsets.only(left: 8.0 - 4.0),
+                child: DeveloperPageBackButton(),
+              ),
+              type: CustomAppBarType.largeFlexible,
+              behavior: CustomAppBarBehavior.duplicate,
+              expandedContainerColor: colorTheme.surfaceContainer,
+              collapsedContainerColor: colorTheme.surfaceContainer,
+              collapsedPadding: const EdgeInsets.fromLTRB(
+                8.0 + 40.0 + 8.0,
+                0.0,
+                16.0,
+                0.0,
+              ),
+              title: const Text("Add app"),
+            ),
+            SliverFillRemaining(
+              fillOverscroll: false,
+              hasScrollBody: false,
+              child: Flex.vertical(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Flexible.tight(
+                    child: Flex.vertical(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        const Flexible.space(flex: 2.0),
+                        Padding(
+                          padding: const EdgeInsets.fromLTRB(
+                            16.0,
+                            0.0,
+                            16.0,
+                            0.0,
+                          ),
+                          child: ConstrainedBox(
+                            constraints: BoxConstraints(minHeight: 56.0),
+                            child: Material(
+                              animationDuration: Duration.zero,
+                              clipBehavior: Clip.antiAlias,
+                              color: colorTheme.surfaceBright,
+                              shape: CornersBorder.rounded(
+                                corners: Corners.all(
+                                  shapeTheme.corner.extraLarge,
+                                ),
+                              ),
+                              child: TextField(
+                                style: typescaleTheme.bodyLarge.toTextStyle(
+                                  color: colorTheme.onSurface,
+                                ),
+                                decoration: InputDecoration(
+                                  border: InputBorder.none,
+                                  contentPadding: EdgeInsets.fromLTRB(
+                                    24.0,
+                                    16.0,
+                                    24.0,
+                                    16.0,
+                                  ),
+                                  hintText: "Search or type URL",
+                                  hintStyle: typescaleTheme.bodyLarge
+                                      .toTextStyle(
+                                        color: colorTheme.onSurfaceVariant,
+                                      ),
+                                ),
+                                maxLength: null,
+                                maxLines: null,
+                              ),
+                            ),
+                          ),
+                        ),
+                        const Flexible.space(flex: 3.0),
+                      ],
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 16.0),
+                    child: Flex.vertical(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      spacing: 8.0,
+                      children: [
+                        FilledButton(
+                          style: LegacyThemeFactory.createButtonStyle(
+                            colorTheme: colorTheme,
+                            elevationTheme: elevationTheme,
+                            shapeTheme: shapeTheme,
+                            stateTheme: stateTheme,
+                            typescaleTheme: typescaleTheme,
+                            size: .medium,
+                            shape: .round,
+                            color: .outlined,
+                          ),
+                          onPressed: () => Navigator.pop(context),
+                          child: Text("Cancel"),
+                        ),
+                        FilledButton(
+                          style: LegacyThemeFactory.createButtonStyle(
+                            colorTheme: colorTheme,
+                            elevationTheme: elevationTheme,
+                            shapeTheme: shapeTheme,
+                            stateTheme: stateTheme,
+                            typescaleTheme: typescaleTheme,
+                            size: .medium,
+                            shape: .round,
+                            color: .filled,
+                            textStyle: typescaleTheme.titleMediumEmphasized
+                                .toTextStyle(),
+                          ),
+                          onPressed: () {},
+                          child: Text("Next"),
+                        ),
+                      ],
+                    ),
+                  ),
+                  SizedBox(height: padding.bottom),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
