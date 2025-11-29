@@ -342,7 +342,7 @@ class CornersBorder extends OutlinedBorder {
       delegate.getInnerPath(
         rect: rect,
         side: side,
-        borderRadius: corners.resolve(textDirection).toBorderRadius(rect),
+        borderRadius: corners.resolve(textDirection).toBorderRadius(rect.size),
       );
 
   @override
@@ -350,7 +350,7 @@ class CornersBorder extends OutlinedBorder {
       delegate.getOuterPath(
         rect: rect,
         side: side,
-        borderRadius: corners.resolve(textDirection).toBorderRadius(rect),
+        borderRadius: corners.resolve(textDirection).toBorderRadius(rect.size),
       );
 
   @override
@@ -362,7 +362,7 @@ class CornersBorder extends OutlinedBorder {
       canvas: canvas,
       rect: rect,
       side: side,
-      borderRadius: corners.resolve(textDirection).toBorderRadius(rect),
+      borderRadius: corners.resolve(textDirection).toBorderRadius(rect.size),
     );
   }
 
@@ -378,7 +378,7 @@ class CornersBorder extends OutlinedBorder {
       rect: rect,
       paint: paint,
       side: side,
-      borderRadius: corners.resolve(textDirection).toBorderRadius(rect),
+      borderRadius: corners.resolve(textDirection).toBorderRadius(rect.size),
     );
   }
 

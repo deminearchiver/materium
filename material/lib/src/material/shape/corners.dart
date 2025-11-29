@@ -41,13 +41,12 @@ class Corner {
   );
 
   Radius toRadius({
-    required Rect rect,
+    required Size size,
     required double? adjacentX,
     required double? adjacentY,
   }) {
-    final Corner(:x, :y) = this;
-    final Rect(:width, :height, :shortestSide) = rect;
-    var resultX = switch ((x, adjacentX)) {
+    final Size(:width, :height, :shortestSide) = size;
+    final resultX = switch ((x, adjacentX)) {
       (null, null) => shortestSide / 2.0,
       (null, final adjacentX?) => clampDouble(
         width - adjacentX,
@@ -56,7 +55,7 @@ class Corner {
       ),
       (final x?, _) => x,
     };
-    var resultY = switch ((y, adjacentY)) {
+    final resultY = switch ((y, adjacentY)) {
       (null, null) => shortestSide / 2.0,
       (null, final adjacentY?) => clampDouble(
         height - adjacentY,
@@ -209,12 +208,12 @@ class _CornerLerp implements Corner {
 
   @override
   Radius toRadius({
-    required Rect rect,
+    required Size size,
     required double? adjacentX,
     required double? adjacentY,
   }) => Radius.lerp(
-    a.toRadius(rect: rect, adjacentX: adjacentX, adjacentY: adjacentY),
-    b.toRadius(rect: rect, adjacentX: adjacentX, adjacentY: adjacentY),
+    a.toRadius(size: size, adjacentX: adjacentX, adjacentY: adjacentY),
+    b.toRadius(size: size, adjacentX: adjacentX, adjacentY: adjacentY),
     t,
   )!;
 
@@ -303,7 +302,7 @@ abstract class CornersGeometry {
 
   Corner get _bottomEnd;
 
-  BorderRadiusGeometry toBorderRadius(Rect rect);
+  BorderRadiusGeometry toBorderRadius(Size size);
 
   Corners resolve(TextDirection? textDirection);
 
@@ -503,9 +502,9 @@ class _CornersGeometryLerp extends CornersGeometry {
   Corner get _bottomEnd => Corner.none;
 
   @override
-  BorderRadiusGeometry toBorderRadius(Rect rect) => BorderRadiusGeometry.lerp(
-    a.toBorderRadius(rect),
-    b.toBorderRadius(rect),
+  BorderRadiusGeometry toBorderRadius(Size size) => BorderRadiusGeometry.lerp(
+    a.toBorderRadius(size),
+    b.toBorderRadius(size),
     t,
   )!;
 
@@ -635,39 +634,39 @@ class Corners extends CornersGeometry {
   Corner get _bottomEnd => Corner.none;
 
   @override
-  BorderRadius toBorderRadius(Rect rect) {
+  BorderRadius toBorderRadius(Size size) {
     final topLeft = this.topLeft.clamp();
     final topRight = this.topRight.clamp();
     final bottomLeft = this.bottomLeft.clamp();
     final bottomRight = this.bottomRight.clamp();
     return BorderRadius.only(
       topLeft: topLeft.toRadius(
-        rect: rect,
+        size: size,
         adjacentX: topRight.x,
         adjacentY: bottomLeft.y,
       ),
       topRight: topRight.toRadius(
-        rect: rect,
+        size: size,
         adjacentX: topLeft.x,
         adjacentY: bottomRight.y,
       ),
       bottomLeft: bottomLeft.toRadius(
-        rect: rect,
+        size: size,
         adjacentX: bottomRight.x,
         adjacentY: topLeft.y,
       ),
       bottomRight: bottomRight.toRadius(
-        rect: rect,
+        size: size,
         adjacentX: bottomLeft.x,
         adjacentY: topRight.y,
       ),
     );
   }
 
-  RRect toRRect(Rect rect) => toBorderRadius(rect).toRRect(rect);
+  RRect toRRect(Rect rect) => toBorderRadius(rect.size).toRRect(rect);
 
   RSuperellipse toRSuperellipse(Rect rect) =>
-      toBorderRadius(rect).toRSuperellipse(rect);
+      toBorderRadius(rect.size).toRSuperellipse(rect);
 
   @override
   Corners resolve(TextDirection? direction) => this;
@@ -791,7 +790,7 @@ class _CornersGeometryFromBorderRadiusGeometry extends CornersGeometry {
   Corner get _bottomEnd => Corner.none;
 
   @override
-  BorderRadiusGeometry toBorderRadius(Rect rect) => _borderRadius;
+  BorderRadiusGeometry toBorderRadius(Size size) => _borderRadius;
 
   @override
   Corners resolve(TextDirection? textDirection) =>
@@ -853,8 +852,8 @@ class _CornersLerp extends Corners {
   final double t;
 
   @override
-  BorderRadius toBorderRadius(Rect rect) =>
-      BorderRadius.lerp(a.toBorderRadius(rect), b.toBorderRadius(rect), t)!;
+  BorderRadius toBorderRadius(Size size) =>
+      BorderRadius.lerp(a.toBorderRadius(size), b.toBorderRadius(size), t)!;
 
   @override
   bool operator ==(Object other) =>
@@ -945,29 +944,29 @@ class CornersDirectional extends CornersGeometry {
   Corner get _bottomEnd => bottomEnd;
 
   @override
-  BorderRadiusDirectional toBorderRadius(Rect rect) {
+  BorderRadiusDirectional toBorderRadius(Size size) {
     final topStart = this.topStart.clamp();
     final topEnd = this.topEnd.clamp();
     final bottomStart = this.bottomStart.clamp();
     final bottomEnd = this.bottomEnd.clamp();
     return BorderRadiusDirectional.only(
       topStart: topStart.toRadius(
-        rect: rect,
+        size: size,
         adjacentX: topEnd.x,
         adjacentY: bottomStart.y,
       ),
       topEnd: topEnd.toRadius(
-        rect: rect,
+        size: size,
         adjacentX: topStart.x,
         adjacentY: bottomEnd.y,
       ),
       bottomStart: bottomStart.toRadius(
-        rect: rect,
+        size: size,
         adjacentX: bottomEnd.x,
         adjacentY: topStart.y,
       ),
       bottomEnd: bottomEnd.toRadius(
-        rect: rect,
+        size: size,
         adjacentX: bottomStart.x,
         adjacentY: topEnd.y,
       ),
@@ -1155,7 +1154,7 @@ class _CornersMixed extends CornersGeometry {
   final Corner _bottomEnd;
 
   @override
-  BorderRadiusGeometry toBorderRadius(Rect rect) {
+  BorderRadiusGeometry toBorderRadius(Size size) {
     final corners = Corners.only(
       topLeft: _topLeft,
       topRight: _topRight,
@@ -1168,8 +1167,8 @@ class _CornersMixed extends CornersGeometry {
       bottomStart: _bottomStart,
       bottomEnd: _bottomEnd,
     );
-    final borderRadius = corners.toBorderRadius(rect);
-    final borderRadiusDirectional = cornersDirectional.toBorderRadius(rect);
+    final borderRadius = corners.toBorderRadius(size);
+    final borderRadiusDirectional = cornersDirectional.toBorderRadius(size);
     return borderRadius.add(borderRadiusDirectional);
   }
 

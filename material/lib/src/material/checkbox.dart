@@ -930,7 +930,9 @@ class _RenderCheckboxPaint extends RenderBox
   }
 
   void _paintBox(PaintingContext context, Rect shiftedRect) {
-    final borderRadius = _resolvedContainerShape.toBorderRadius(shiftedRect);
+    final borderRadius = _resolvedContainerShape.toBorderRadius(
+      shiftedRect.size,
+    );
 
     final containerColor = this.containerColor.value;
     final outlineColor = this.outlineColor.value;
