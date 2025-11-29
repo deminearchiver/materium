@@ -7,7 +7,7 @@ class ListItemContainer extends StatelessWidget {
     super.key,
     this.isFirst = false,
     this.isLast = false,
-    this.opticalCenterEnabled = true,
+    this.opticalCenterEnabled = false,
     this.opticalCenterMaxOffsets = const .all(.infinity),
     this.containerShape,
     this.containerColor,
