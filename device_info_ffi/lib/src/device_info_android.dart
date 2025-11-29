@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flutter/foundation.dart';
 import 'package:jni/jni.dart';
 import 'package:device_info_ffi/device_info_ffi_platform_interface.dart';
@@ -9,8 +7,8 @@ import 'jni_bindings.dart' as jb;
 /// Information derived from `android.os.Build`.
 ///
 /// See: https://developer.android.com/reference/android/os/Build.html
-class AndroidDeviceInfo extends BaseDeviceInfo with Diagnosticable {
-  AndroidDeviceInfo._({
+class AndroidDeviceInfo with Diagnosticable implements BaseDeviceInfo {
+  AndroidDeviceInfo({
     required this.version,
     required this.board,
     required this.bootloader,
@@ -283,7 +281,7 @@ class AndroidDeviceInfo extends BaseDeviceInfo with Diagnosticable {
 ///
 /// See: https://developer.android.com/reference/android/os/Build.VERSION.html
 class AndroidBuildVersion with Diagnosticable {
-  const AndroidBuildVersion._({
+  const AndroidBuildVersion({
     this.baseOS,
     required this.codename,
     required this.incremental,
@@ -365,7 +363,7 @@ class DeviceInfoAndroid extends DeviceInfoPlatform {
   AndroidDeviceInfo? _cachedAndroidDeviceInfo;
 
   @override
-  AndroidDeviceInfo? deviceInfo() =>
+  AndroidDeviceInfo deviceInfo() =>
       _cachedAndroidDeviceInfo ??= _androidDeviceInfo();
 
   static void registerWith() {
@@ -380,15 +378,13 @@ class DeviceInfoAndroid extends DeviceInfoPlatform {
     ];
   }
 
-  static AndroidDeviceInfo? _androidDeviceInfo() => Platform.isAndroid
-      ? Jni.androidApplicationContext
-            .use(jb.DeviceInfoPlugin.getDeviceInfo)
-            .use(_androidDeviceInfoFromNative)
-      : null;
+  static AndroidDeviceInfo _androidDeviceInfo() => Jni.androidApplicationContext
+      .use(jb.DeviceInfoPlugin.getDeviceInfo)
+      .use(_androidDeviceInfoFromNative);
 
   static AndroidBuildVersion _androidBuildVersionFromNative(
     jb.DeviceInfo$BuildVersion object,
-  ) => AndroidBuildVersion._(
+  ) => AndroidBuildVersion(
     baseOS: object.getBaseOS()?.toDartString(releaseOriginal: true),
     codename: object.getCodename().toDartString(releaseOriginal: true),
     incremental: object.getIncremental().toDartString(releaseOriginal: true),
@@ -402,7 +398,7 @@ class DeviceInfoAndroid extends DeviceInfoPlatform {
 
   static AndroidDeviceInfo _androidDeviceInfoFromNative(
     jb.DeviceInfo object,
-  ) => AndroidDeviceInfo._(
+  ) => AndroidDeviceInfo(
     version: object.getVersion().use(_androidBuildVersionFromNative),
     board: object.getBoard().toDartString(releaseOriginal: true),
     bootloader: object.getBootloader().toDartString(releaseOriginal: true),

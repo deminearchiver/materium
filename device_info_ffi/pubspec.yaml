@@ -10,11 +10,18 @@ environment:
   flutter: ">=3.38.0"
 
 dependencies:
+  ffi: ^2.1.4
+  file: ^7.0.1
   flutter:
+    sdk: flutter
+  flutter_web_plugins:
     sdk: flutter
   jni: ^0.15.2
   meta: ^1.17.0
   plugin_platform_interface: ^2.1.8
+  web: ^1.1.1
+  win32: ^5.15.0
+  win32_registry: ^2.1.0
 
 dev_dependencies:
   flutter_test:
@@ -28,3 +35,7 @@ flutter:
       android:
         dartPluginClass: DeviceInfoAndroid
         ffiPlugin: true
+      linux:
+        dartPluginClass: DeviceInfoLinux
+      windows:
+        dartPluginClass: DeviceInfoWindows

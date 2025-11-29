@@ -8,4 +8,14 @@ abstract final class DeviceInfo {
     final AndroidDeviceInfo value => value,
     _ => null,
   };
+
+  static LinuxDeviceInfo? get linuxInfo => switch (deviceInfo) {
+    final LinuxDeviceInfo value => value,
+    _ => null,
+  };
+
+  static WindowsDeviceInfo? get windowsInfo => switch (deviceInfo) {
+    final WindowsDeviceInfo value => value,
+    _ => null,
+  };
 }

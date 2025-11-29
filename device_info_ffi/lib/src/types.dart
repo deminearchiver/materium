@@ -1,1 +1,1 @@
-class BaseDeviceInfo {}
+abstract interface class BaseDeviceInfo {}
