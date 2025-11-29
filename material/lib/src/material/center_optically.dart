@@ -120,38 +120,48 @@ class RenderCenterOptically extends RenderShiftedBox {
     _markNeedResolution();
   }
 
-  double _computePaddingCorrection(
-    double averageStart,
-    double averageEnd,
-    double maxStartOffset,
-    double maxEndOffset,
-  ) => clampDouble(
-    _kCenterOpticallyCoefficient * (averageStart - averageEnd),
-    -maxStartOffset,
-    maxEndOffset,
-  );
+  @protected
+  double computeHorizontalPaddingCorrection(BorderRadius borderRadius) =>
+      _kCenterOpticallyCoefficient /
+      2.0 *
+      (borderRadius.topLeft.x +
+          borderRadius.bottomLeft.x -
+          borderRadius.topRight.x -
+          borderRadius.bottomRight.x);
 
-  double _computeHorizontalCorrection(Size size, BorderRadius borderRadius) {
+  @protected
+  double computeVerticalPaddingCorrection(BorderRadius borderRadius) =>
+      _kCenterOpticallyCoefficient /
+      2.0 *
+      (borderRadius.topLeft.x +
+          borderRadius.topRight.x -
+          borderRadius.bottomLeft.x -
+          borderRadius.bottomRight.x);
+
+  double getHorizontalPaddingCorrection(BorderRadius borderRadius) {
     final maxOffsets = _resolvedMaxOffsets;
-    if (maxOffsets.horizontal == 0.0) return 0.0;
-    return _computePaddingCorrection(
-      (borderRadius.topLeft.y + borderRadius.bottomLeft.y) / 2.0,
-      (borderRadius.topRight.y + borderRadius.bottomRight.y) / 2.0,
-      maxOffsets.left,
+    if (maxOffsets.left == 0.0 && maxOffsets.right == 0.0) return 0.0;
+    return clampDouble(
+      computeHorizontalPaddingCorrection(borderRadius),
+      -maxOffsets.left,
       maxOffsets.right,
     );
   }
 
-  double _computeVerticalCorrection(Size size, BorderRadius borderRadius) {
+  double getVerticalPaddingCorrection(BorderRadius borderRadius) {
     final maxOffsets = _resolvedMaxOffsets;
-    if (maxOffsets.vertical == 0.0) return 0.0;
-    return _computePaddingCorrection(
-      (borderRadius.topLeft.x + borderRadius.topRight.x) / 2.0,
-      (borderRadius.bottomLeft.x + borderRadius.bottomRight.x) / 2.0,
-      maxOffsets.top,
+    if (maxOffsets.top == 0.0 && maxOffsets.bottom == 0.0) return 0.0;
+    return clampDouble(
+      computeVerticalPaddingCorrection(borderRadius),
+      -maxOffsets.top,
       maxOffsets.bottom,
     );
   }
+
+  Offset _getPaddingCorrection(BorderRadius borderRadius) => Offset(
+    getHorizontalPaddingCorrection(borderRadius),
+    getVerticalPaddingCorrection(borderRadius),
+  );
 
   void _dryPositionChild(RenderBox _, Offset _) {}
 
@@ -170,11 +180,8 @@ class RenderCenterOptically extends RenderShiftedBox {
     final size = constraints.constrain(layoutChild(child, constraints));
     if (enabled) {
       final borderRadius = _resolvedCorners.toBorderRadius(size);
-      final offset = Offset(
-        _computeHorizontalCorrection(size, borderRadius),
-        _computeVerticalCorrection(size, borderRadius),
-      );
-      positionChild(child, offset);
+      final paddingCorrection = _getPaddingCorrection(borderRadius);
+      positionChild(child, paddingCorrection);
     } else {
       positionChild(child, .zero);
     }
@@ -224,4 +231,15 @@ class RenderCenterOptically extends RenderShiftedBox {
         ),
       );
   }
+
+  static double calculatePaddingCorrection(
+    double averageStart,
+    double averageEnd,
+    double maxStartOffset,
+    double maxEndOffset,
+  ) => clampDouble(
+    _kCenterOpticallyCoefficient * (averageStart - averageEnd),
+    -maxStartOffset,
+    maxEndOffset,
+  );
 }
