@@ -3328,6 +3328,48 @@ class _MaterialDemoViewState extends State<_MaterialDemoView> {
                       ),
                     ),
                   ),
+                  // Builder(
+                  //   builder: (context) {
+                  //     final startCorners = Corners.horizontal(
+                  //       left: shapeTheme.corner.full,
+                  //       right: shapeTheme.corner.extraSmall,
+                  //     );
+                  //     return Flex.horizontal(
+                  //       spacing: 2.0,
+                  //       children: [
+                  //         SizedBox(
+                  //           height: 40.0,
+                  //           child: Material(
+                  //             animationDuration: Duration.zero,
+                  //             clipBehavior: .antiAlias,
+                  //             shape: CornersBorder.rounded(
+                  //               corners: startCorners,
+                  //             ),
+                  //             color: colorTheme.secondaryContainer,
+                  //             child: CenterOptically(
+                  //               corners: startCorners,
+                  //               maxOffsets: EdgeInsets.all(double.infinity),
+                  //               child: Padding(
+                  //                 padding: EdgeInsets.symmetric(
+                  //                   horizontal: 16.0,
+                  //                   vertical: 10.0,
+                  //                 ),
+                  //                 child: Text(
+                  //                   "Hello world!",
+                  //                   style: typescaleTheme.labelLarge
+                  //                       .toTextStyle(
+                  //                         color:
+                  //                             colorTheme.onSecondaryContainer,
+                  //                       ),
+                  //                 ),
+                  //               ),
+                  //             ),
+                  //           ),
+                  //         ),
+                  //       ],
+                  //     );
+                  //   },
+                  // ),
                   const SizedBox(height: 16.0),
                 ],
               ),

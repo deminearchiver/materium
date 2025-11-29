@@ -7,6 +7,8 @@ class ListItemContainer extends StatelessWidget {
     super.key,
     this.isFirst = false,
     this.isLast = false,
+    this.opticalCenterEnabled = true,
+    this.opticalCenterMaxOffsets = const .all(.infinity),
     this.containerShape,
     this.containerColor,
     required this.child,
@@ -14,6 +16,8 @@ class ListItemContainer extends StatelessWidget {
 
   final bool isFirst;
   final bool isLast;
+  final bool opticalCenterEnabled;
+  final EdgeInsetsGeometry opticalCenterMaxOffsets;
   final ShapeBorder? containerShape;
   final Color? containerColor;
   final Widget child;
@@ -22,24 +26,79 @@ class ListItemContainer extends StatelessWidget {
   Widget build(BuildContext context) {
     final colorTheme = ColorTheme.of(context);
     final shapeTheme = ShapeTheme.of(context);
-    final edgeCorner = shapeTheme.corner.largeIncreased;
-    final middleCorner = shapeTheme.corner.extraSmall;
-    return Material(
-      animationDuration: Duration.zero,
-      type: MaterialType.card,
-      clipBehavior: Clip.antiAlias,
-      color: containerColor ?? colorTheme.surfaceBright,
-      shape:
-          containerShape ??
-          CornersBorder.rounded(
-            corners: Corners.vertical(
-              top: isFirst ? edgeCorner : middleCorner,
-              bottom: isLast ? edgeCorner : middleCorner,
-            ),
+
+    final resolvedShape =
+        containerShape ??
+        CornersBorder.rounded(
+          corners: Corners.vertical(
+            top: isFirst
+                ? shapeTheme.corner.largeIncreased
+                : shapeTheme.corner.extraSmall,
+            bottom: isLast
+                ? shapeTheme.corner.largeIncreased
+                : shapeTheme.corner.extraSmall,
           ),
-      child: child,
+        );
+
+    final corners = opticalCenterEnabled
+        ? _cornersFromShape(resolvedShape)
+        : null;
+
+    return Material(
+      animationDuration: .zero,
+      type: .card,
+      clipBehavior: .antiAlias,
+      color: containerColor ?? colorTheme.surfaceBright,
+      shape: resolvedShape,
+      child: CenterOptically(
+        enabled: corners != null,
+        corners: corners ?? .none,
+        maxOffsets: corners != null ? opticalCenterMaxOffsets : .zero,
+        child: child,
+      ),
     );
   }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties
+      ..add(DiagnosticsProperty<bool>("isFirst", isFirst, defaultValue: false))
+      ..add(DiagnosticsProperty<bool>("isLast", isLast, defaultValue: false))
+      ..add(
+        DiagnosticsProperty<bool>(
+          "opticalCenterEnabled",
+          opticalCenterEnabled,
+          defaultValue: true,
+        ),
+      )
+      ..add(
+        DiagnosticsProperty<EdgeInsetsGeometry>(
+          "opticalCenterMaxOffsets",
+          opticalCenterMaxOffsets,
+          defaultValue: const EdgeInsets.all(.infinity),
+        ),
+      )
+      ..add(
+        DiagnosticsProperty<ShapeBorder>(
+          "containerShape",
+          containerShape,
+          defaultValue: null,
+        ),
+      )
+      ..add(
+        ColorProperty("containerColor", containerColor, defaultValue: null),
+      );
+  }
+
+  static CornersGeometry? _cornersFromShape(ShapeBorder shape) =>
+      switch (shape) {
+        CornersBorder(:final corners) => corners,
+        RoundedRectangleBorder(:final borderRadius) =>
+          CornersGeometry.fromBorderRadius(borderRadius),
+        StadiumBorder() => Corners.full,
+        _ => null,
+      };
 }
 
 class ListItemInteraction extends StatefulWidget {
