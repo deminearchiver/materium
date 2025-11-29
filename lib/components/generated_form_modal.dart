@@ -1,6 +1,7 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:materium/flutter.dart';
 import 'package:materium/components/generated_form.dart';
+import 'package:materium/theme/legacy.dart';
 
 class GeneratedFormModal extends StatefulWidget {
   const GeneratedFormModal({
@@ -39,6 +40,7 @@ class _GeneratedFormModalState extends State<GeneratedFormModal> {
   @override
   Widget build(BuildContext context) {
     final colorTheme = ColorTheme.of(context);
+    final elevationTheme = ElevationTheme.of(context);
     final shapeTheme = ShapeTheme.of(context);
     final stateTheme = StateTheme.of(context);
     final typescaleTheme = TypescaleTheme.of(context);
@@ -78,43 +80,19 @@ class _GeneratedFormModalState extends State<GeneratedFormModal> {
       ),
       actions: [
         TextButton(
+          style: LegacyThemeFactory.createButtonStyle(
+            colorTheme: colorTheme,
+            elevationTheme: elevationTheme,
+            shapeTheme: shapeTheme,
+            stateTheme: stateTheme,
+            typescaleTheme: typescaleTheme,
+            size: .small,
+            shape: .round,
+            color: .text,
+          ),
           onPressed: () {
             Navigator.of(context).pop(null);
           },
-          style: ButtonStyle(
-            animationDuration: Duration.zero,
-            elevation: const WidgetStatePropertyAll(0.0),
-            shadowColor: WidgetStateColor.transparent,
-            minimumSize: const WidgetStatePropertyAll(Size(48.0, 40.0)),
-            fixedSize: const WidgetStatePropertyAll(null),
-            maximumSize: const WidgetStatePropertyAll(Size.infinite),
-            padding: const WidgetStatePropertyAll(
-              EdgeInsets.symmetric(horizontal: 16.0, vertical: 10.0),
-            ),
-            iconSize: const WidgetStatePropertyAll(20.0),
-            shape: WidgetStatePropertyAll(
-              CornersBorder.rounded(
-                corners: Corners.all(shapeTheme.corner.full),
-              ),
-            ),
-            overlayColor: WidgetStateLayerColor(
-              color: WidgetStatePropertyAll(colorTheme.primary),
-              opacity: stateTheme.stateLayerOpacity,
-            ),
-            backgroundColor: WidgetStateProperty.resolveWith(
-              (states) => states.contains(WidgetState.disabled)
-                  ? colorTheme.onSurface.withValues(alpha: 0.1)
-                  : Colors.transparent,
-            ),
-            foregroundColor: WidgetStateProperty.resolveWith(
-              (states) => states.contains(WidgetState.disabled)
-                  ? colorTheme.onSurface.withValues(alpha: 0.38)
-                  : colorTheme.primary,
-            ),
-            textStyle: WidgetStateProperty.resolveWith(
-              (states) => typescaleTheme.labelLarge.toTextStyle(),
-            ),
-          ),
           child: Text(
             widget.singleNullReturnButton == null
                 ? tr('cancel')
@@ -125,6 +103,22 @@ class _GeneratedFormModalState extends State<GeneratedFormModal> {
         ),
         if (widget.singleNullReturnButton == null)
           TextButton(
+            // TODO: find usages of primaryActionColour
+            // style: widget.primaryActionColour == null
+            //     ? null
+            //     : TextButton.styleFrom(
+            //         foregroundColor: widget.primaryActionColour,
+            //       ),
+            style: LegacyThemeFactory.createButtonStyle(
+              colorTheme: colorTheme,
+              elevationTheme: elevationTheme,
+              shapeTheme: shapeTheme,
+              stateTheme: stateTheme,
+              typescaleTheme: typescaleTheme,
+              size: .small,
+              shape: .round,
+              color: .text,
+            ),
             onPressed: !valid
                 ? null
                 : () {
@@ -133,46 +127,6 @@ class _GeneratedFormModalState extends State<GeneratedFormModal> {
                       Navigator.of(context).pop(values);
                     }
                   },
-            // TODO: find usages of primaryActionColour
-            // style: widget.primaryActionColour == null
-            //     ? null
-            //     : TextButton.styleFrom(
-            //         foregroundColor: widget.primaryActionColour,
-            //       ),
-            style: ButtonStyle(
-              animationDuration: Duration.zero,
-              elevation: const WidgetStatePropertyAll(0.0),
-              shadowColor: WidgetStateColor.transparent,
-              minimumSize: const WidgetStatePropertyAll(Size(48.0, 40.0)),
-              fixedSize: const WidgetStatePropertyAll(null),
-              maximumSize: const WidgetStatePropertyAll(Size.infinite),
-              padding: const WidgetStatePropertyAll(
-                EdgeInsets.symmetric(horizontal: 16.0, vertical: 10.0),
-              ),
-              iconSize: const WidgetStatePropertyAll(20.0),
-              shape: WidgetStatePropertyAll(
-                CornersBorder.rounded(
-                  corners: Corners.all(shapeTheme.corner.full),
-                ),
-              ),
-              overlayColor: WidgetStateLayerColor(
-                color: WidgetStatePropertyAll(colorTheme.primary),
-                opacity: stateTheme.stateLayerOpacity,
-              ),
-              backgroundColor: WidgetStateProperty.resolveWith(
-                (states) => states.contains(WidgetState.disabled)
-                    ? colorTheme.onSurface.withValues(alpha: 0.1)
-                    : Colors.transparent,
-              ),
-              foregroundColor: WidgetStateProperty.resolveWith(
-                (states) => states.contains(WidgetState.disabled)
-                    ? colorTheme.onSurface.withValues(alpha: 0.38)
-                    : colorTheme.primary,
-              ),
-              textStyle: WidgetStateProperty.resolveWith(
-                (states) => typescaleTheme.labelLarge.toTextStyle(),
-              ),
-            ),
             child: Text(
               tr('continue'),
               maxLines: 2,

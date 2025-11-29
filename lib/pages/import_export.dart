@@ -13,6 +13,7 @@ import 'package:materium/pages/developer.dart';
 import 'package:materium/providers/apps_provider.dart';
 import 'package:materium/providers/settings_provider.dart';
 import 'package:materium/providers/source_provider.dart';
+import 'package:materium/theme/legacy.dart';
 import 'package:provider/provider.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:url_launcher/url_launcher_string.dart';
@@ -36,6 +37,7 @@ class _ImportExportPageState extends State<ImportExportPage> {
     final canPop = ModalRoute.canPopOf(context) ?? false;
 
     final colorTheme = ColorTheme.of(context);
+    final elevationTheme = ElevationTheme.of(context);
     final shapeTheme = ShapeTheme.of(context);
     final stateTheme = StateTheme.of(context);
     final typescaleTheme = TypescaleTheme.of(context);
@@ -381,37 +383,17 @@ class _ImportExportPageState extends State<ImportExportPage> {
       title: Text(tr("importExport")),
     );
 
-    final ButtonStyle otherImportButtonsStyle = ButtonStyle(
-      animationDuration: Duration.zero,
-      elevation: const WidgetStatePropertyAll(0.0),
-      shadowColor: WidgetStateColor.transparent,
-      minimumSize: const WidgetStatePropertyAll(Size(48.0, 40.0)),
-      fixedSize: const WidgetStatePropertyAll(null),
-      maximumSize: const WidgetStatePropertyAll(Size.infinite),
-      padding: const WidgetStatePropertyAll(
-        EdgeInsets.symmetric(horizontal: 16.0, vertical: 10.0),
-      ),
-      iconSize: const WidgetStatePropertyAll(20.0),
-      shape: WidgetStatePropertyAll(
-        CornersBorder.rounded(corners: Corners.all(shapeTheme.corner.full)),
-      ),
-      overlayColor: WidgetStateLayerColor(
-        color: WidgetStatePropertyAll(colorTheme.onSurfaceVariant),
-        opacity: stateTheme.stateLayerOpacity,
-      ),
-      backgroundColor: WidgetStateProperty.resolveWith(
-        (states) => states.contains(WidgetState.disabled)
-            ? colorTheme.onSurface.withValues(alpha: 0.1)
-            : colorTheme.surfaceBright,
-      ),
-      foregroundColor: WidgetStateProperty.resolveWith(
-        (states) => states.contains(WidgetState.disabled)
-            ? colorTheme.onSurface.withValues(alpha: 0.38)
-            : colorTheme.onSurfaceVariant,
-      ),
-      textStyle: WidgetStateProperty.resolveWith(
-        (states) => typescaleTheme.labelLarge.toTextStyle(),
-      ),
+    final otherImportButtonsStyle = LegacyThemeFactory.createButtonStyle(
+      colorTheme: colorTheme,
+      elevationTheme: elevationTheme,
+      shapeTheme: shapeTheme,
+      stateTheme: stateTheme,
+      typescaleTheme: typescaleTheme,
+      size: .small,
+      shape: .round,
+      color: .filled,
+      isSelected: false,
+      unselectedContainerColor: colorTheme.surfaceBright,
     );
 
     Widget getSliverList() => SliverPadding(

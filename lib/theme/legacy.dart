@@ -241,6 +241,14 @@ abstract final class LegacyThemeFactory {
             .square => cornerSquare,
           };
 
+    final iconSize = switch (size) {
+      .extraSmall => 20.0,
+      .small => 20.0,
+      .medium => 24.0,
+      .large => 32.0,
+      .extraLarge => 40.0,
+    };
+
     final typeStyle = switch (size) {
       .extraSmall => typescaleTheme.labelLarge,
       .small => typescaleTheme.labelLarge,
@@ -337,7 +345,7 @@ abstract final class LegacyThemeFactory {
       fixedSize: const WidgetStatePropertyAll(null),
       maximumSize: const WidgetStatePropertyAll(Size.infinite),
       padding: WidgetStatePropertyAll(padding),
-      iconSize: const WidgetStatePropertyAll(24.0),
+      iconSize: WidgetStatePropertyAll(iconSize),
       shape: WidgetStatePropertyAll(
         CornersBorder.rounded(corners: Corners.all(corner)),
       ),

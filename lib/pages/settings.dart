@@ -1615,6 +1615,7 @@ class _LogsPageState extends State<_LogsPage> {
     final settingsProvider = context.read<SettingsProvider>();
 
     final colorTheme = ColorTheme.of(context);
+    final elevationTheme = ElevationTheme.of(context);
     final shapeTheme = ShapeTheme.of(context);
     final stateTheme = StateTheme.of(context);
     final typescaleTheme = TypescaleTheme.of(context);
@@ -1625,70 +1626,28 @@ class _LogsPageState extends State<_LogsPage> {
       specVersion: DynamicSchemeSpecVersion.spec2025,
     ).harmonizeWithPrimary(colorTheme);
 
-    final actionButtonStyle = ButtonStyle(
-      animationDuration: Duration.zero,
-      elevation: const WidgetStatePropertyAll(0.0),
-      shadowColor: WidgetStateColor.transparent,
-      minimumSize: const WidgetStatePropertyAll(Size(48.0, 56.0)),
-      fixedSize: const WidgetStatePropertyAll(null),
-      maximumSize: const WidgetStatePropertyAll(Size.infinite),
-      padding: const WidgetStatePropertyAll(
-        EdgeInsets.fromLTRB(24.0, 16.0, 24.0, 16.0),
-      ),
-      iconSize: const WidgetStatePropertyAll(24.0),
-      shape: WidgetStatePropertyAll(
-        CornersBorder.rounded(corners: Corners.all(shapeTheme.corner.large)),
-      ),
-      overlayColor: WidgetStateLayerColor(
-        color: WidgetStatePropertyAll(colorTheme.onPrimary),
-        opacity: stateTheme.stateLayerOpacity,
-      ),
-      backgroundColor: WidgetStateProperty.resolveWith(
-        (states) => states.contains(WidgetState.disabled)
-            ? colorTheme.onSurface.withValues(alpha: 0.1)
-            : colorTheme.primary,
-      ),
-      foregroundColor: WidgetStateProperty.resolveWith(
-        (states) => states.contains(WidgetState.disabled)
-            ? colorTheme.onSurface.withValues(alpha: 0.38)
-            : colorTheme.onPrimary,
-      ),
-      textStyle: WidgetStateProperty.resolveWith(
-        (states) => typescaleTheme.titleMedium.toTextStyle(),
-      ),
+    final actionButtonStyle = LegacyThemeFactory.createButtonStyle(
+      colorTheme: colorTheme,
+      elevationTheme: elevationTheme,
+      shapeTheme: shapeTheme,
+      stateTheme: stateTheme,
+      typescaleTheme: typescaleTheme,
+      size: .medium,
+      shape: .square,
+      color: .filled,
     );
 
-    final developerButtonStyle = ButtonStyle(
-      animationDuration: Duration.zero,
-      elevation: const WidgetStatePropertyAll(0.0),
-      shadowColor: WidgetStateColor.transparent,
-      minimumSize: const WidgetStatePropertyAll(Size(48.0, 40.0)),
-      fixedSize: const WidgetStatePropertyAll(null),
-      maximumSize: const WidgetStatePropertyAll(Size.infinite),
-      padding: const WidgetStatePropertyAll(
-        EdgeInsets.fromLTRB(16.0, 10.0, 16.0, 10.0),
-      ),
-      iconSize: const WidgetStatePropertyAll(20.0),
-      shape: WidgetStatePropertyAll(
-        CornersBorder.rounded(corners: Corners.all(shapeTheme.corner.full)),
-      ),
-      overlayColor: WidgetStateLayerColor(
-        color: WidgetStatePropertyAll(colorTheme.onSurfaceVariant),
-        opacity: stateTheme.stateLayerOpacity,
-      ),
-      backgroundColor: WidgetStateProperty.resolveWith(
-        (states) => states.contains(WidgetState.disabled)
-            ? colorTheme.onSurface.withValues(alpha: 0.1)
-            : colorTheme.surfaceBright,
-      ),
-      foregroundColor: WidgetStateProperty.resolveWith(
-        (states) => states.contains(WidgetState.disabled)
-            ? colorTheme.onSurface.withValues(alpha: 0.38)
-            : colorTheme.onSurfaceVariant,
-      ),
-      textStyle: WidgetStateProperty.resolveWith(
-        (states) => typescaleTheme.labelLarge.toTextStyle(),
-      ),
+    final developerButtonStyle = LegacyThemeFactory.createButtonStyle(
+      colorTheme: colorTheme,
+      elevationTheme: elevationTheme,
+      shapeTheme: shapeTheme,
+      stateTheme: stateTheme,
+      typescaleTheme: typescaleTheme,
+      size: .small,
+      shape: .round,
+      color: .filled,
+      isSelected: false,
+      unselectedContainerColor: colorTheme.surfaceContainerHighest,
     );
 
     return Scaffold(
