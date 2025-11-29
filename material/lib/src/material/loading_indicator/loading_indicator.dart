@@ -393,6 +393,7 @@ class _IndeterminateLoadingIndicatorState
   @override
   void dispose() {
     _controller.dispose();
+    _globalAngle.dispose();
     _morphIndex.dispose();
     super.dispose();
   }
