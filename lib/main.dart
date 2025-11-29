@@ -164,6 +164,7 @@ void main() async {
   final settingsProvider = await SettingsProvider.ensureInitialized();
 
   await EasyLocalization.ensureInitialized();
+  await loadTranslations();
 
   // Make sure to always initialize LogsProvider after EasyLocalization
   // TODO: refactor after migrating to slang
