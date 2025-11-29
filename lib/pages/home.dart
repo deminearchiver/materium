@@ -12,6 +12,7 @@ import 'package:materium/pages/import_export.dart';
 import 'package:materium/pages/settings.dart';
 import 'package:materium/providers/apps_provider.dart';
 import 'package:materium/providers/settings_provider.dart';
+import 'package:materium/theme/legacy.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
@@ -232,10 +233,10 @@ class _HomePageState extends State<HomePage> {
           context: context,
           builder: (ctx) {
             final colorTheme = ColorTheme.of(ctx);
+            final elevationTheme = ElevationTheme.of(ctx);
             final shapeTheme = ShapeTheme.of(ctx);
             final stateTheme = StateTheme.of(ctx);
             final typescaleTheme = TypescaleTheme.of(ctx);
-
             return AlertDialog(
               title: Text(tr('welcome')),
               content: Flex.vertical(
@@ -287,44 +288,20 @@ class _HomePageState extends State<HomePage> {
               ),
               actions: [
                 TextButton(
+                  style: LegacyThemeFactory.createButtonStyle(
+                    colorTheme: colorTheme,
+                    elevationTheme: elevationTheme,
+                    shapeTheme: shapeTheme,
+                    stateTheme: stateTheme,
+                    typescaleTheme: typescaleTheme,
+                    size: .small,
+                    shape: .round,
+                    color: .text,
+                  ),
                   onPressed: () {
                     sp.welcomeShown = true;
                     Navigator.of(context).pop();
                   },
-                  style: ButtonStyle(
-                    animationDuration: Duration.zero,
-                    elevation: const WidgetStatePropertyAll(0.0),
-                    shadowColor: WidgetStateColor.transparent,
-                    minimumSize: const WidgetStatePropertyAll(Size(48.0, 40.0)),
-                    fixedSize: const WidgetStatePropertyAll(null),
-                    maximumSize: const WidgetStatePropertyAll(Size.infinite),
-                    padding: const WidgetStatePropertyAll(
-                      EdgeInsets.symmetric(horizontal: 16.0, vertical: 10.0),
-                    ),
-                    iconSize: const WidgetStatePropertyAll(20.0),
-                    shape: WidgetStatePropertyAll(
-                      CornersBorder.rounded(
-                        corners: Corners.all(shapeTheme.corner.full),
-                      ),
-                    ),
-                    overlayColor: WidgetStateLayerColor(
-                      color: WidgetStatePropertyAll(colorTheme.primary),
-                      opacity: stateTheme.stateLayerOpacity,
-                    ),
-                    backgroundColor: WidgetStateProperty.resolveWith(
-                      (states) => states.contains(WidgetState.disabled)
-                          ? colorTheme.onSurface.withValues(alpha: 0.1)
-                          : Colors.transparent,
-                    ),
-                    foregroundColor: WidgetStateProperty.resolveWith(
-                      (states) => states.contains(WidgetState.disabled)
-                          ? colorTheme.onSurface.withValues(alpha: 0.38)
-                          : colorTheme.primary,
-                    ),
-                    textStyle: WidgetStateProperty.resolveWith(
-                      (states) => typescaleTheme.labelLarge.toTextStyle(),
-                    ),
-                  ),
                   child: Text(tr('ok')),
                 ),
               ],

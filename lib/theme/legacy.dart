@@ -167,6 +167,54 @@ abstract final class LegacyThemeFactory {
         typescaleTheme: typescaleTheme,
         variant: MenuVariant.standard,
       ),
+      elevatedButtonTheme: ElevatedButtonThemeData(
+        style: createButtonStyle(
+          colorTheme: colorTheme,
+          elevationTheme: elevationTheme,
+          shapeTheme: shapeTheme,
+          stateTheme: stateTheme,
+          typescaleTheme: typescaleTheme,
+          size: .small,
+          shape: .round,
+          color: .elevated,
+        ),
+      ),
+      filledButtonTheme: FilledButtonThemeData(
+        style: createButtonStyle(
+          colorTheme: colorTheme,
+          elevationTheme: elevationTheme,
+          shapeTheme: shapeTheme,
+          stateTheme: stateTheme,
+          typescaleTheme: typescaleTheme,
+          size: .small,
+          shape: .round,
+          color: .filled,
+        ),
+      ),
+      outlinedButtonTheme: OutlinedButtonThemeData(
+        style: createButtonStyle(
+          colorTheme: colorTheme,
+          elevationTheme: elevationTheme,
+          shapeTheme: shapeTheme,
+          stateTheme: stateTheme,
+          typescaleTheme: typescaleTheme,
+          size: .small,
+          shape: .round,
+          color: .outlined,
+        ),
+      ),
+      textButtonTheme: TextButtonThemeData(
+        style: createButtonStyle(
+          colorTheme: colorTheme,
+          elevationTheme: elevationTheme,
+          shapeTheme: shapeTheme,
+          stateTheme: stateTheme,
+          typescaleTheme: typescaleTheme,
+          size: .small,
+          shape: .round,
+          color: .text,
+        ),
+      ),
       pageTransitionsTheme: PageTransitionsTheme(
         builders: {
           // TODO: replace with  a custom transition system and add support for background color

@@ -30,6 +30,7 @@ import 'package:materium_fonts/src/assets/fonts.gen.dart';
 // ignore: implementation_imports
 import 'package:material/src/material_shapes/material_shapes.dart'
     show RoundedPolygonInternalExtension;
+import 'package:super_keyboard/super_keyboard.dart';
 
 import 'package:syntax_highlight/syntax_highlight.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -371,7 +372,7 @@ class _DeveloperPageState extends State<DeveloperPage> {
                   ],
                 ),
               ),
-              SizedBox(height: MediaQuery.sizeOf(context).height),
+              SizedBox(height: MediaQuery.paddingOf(context).bottom),
             ],
           ),
         ],
@@ -398,133 +399,143 @@ class _DeveloperAddAppPageState extends State<_DeveloperAddAppPage> {
     final stateTheme = StateTheme.of(context);
     final typescaleTheme = TypescaleTheme.of(context);
 
-    return Scaffold(
-      backgroundColor: colorTheme.surfaceContainer,
-      body: SafeArea(
-        top: false,
-        bottom: false,
-        child: CustomScrollView(
-          slivers: [
-            CustomAppBar(
-              leading: const Padding(
-                padding: EdgeInsets.only(left: 8.0 - 4.0),
-                child: DeveloperPageBackButton(),
-              ),
-              type: CustomAppBarType.largeFlexible,
-              behavior: CustomAppBarBehavior.duplicate,
-              expandedContainerColor: colorTheme.surfaceContainer,
-              collapsedContainerColor: colorTheme.surfaceContainer,
-              collapsedPadding: const EdgeInsets.fromLTRB(
-                8.0 + 40.0 + 8.0,
-                0.0,
-                16.0,
-                0.0,
-              ),
-              title: const Text("Add app"),
-            ),
-            SliverFillRemaining(
-              fillOverscroll: false,
-              hasScrollBody: false,
-              child: Flex.vertical(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  Flexible.tight(
-                    child: Flex.vertical(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: [
-                        const Flexible.space(flex: 2.0),
-                        Padding(
-                          padding: const EdgeInsets.fromLTRB(
-                            16.0,
-                            0.0,
-                            16.0,
-                            0.0,
-                          ),
-                          child: ConstrainedBox(
-                            constraints: BoxConstraints(minHeight: 56.0),
-                            child: Material(
-                              animationDuration: Duration.zero,
-                              clipBehavior: Clip.antiAlias,
-                              color: colorTheme.surfaceBright,
-                              shape: CornersBorder.rounded(
-                                corners: Corners.all(
-                                  shapeTheme.corner.extraLarge,
-                                ),
+    return SuperKeyboardBuilder(
+      builder: (context, mobileGeometry) {
+        // TODO: integrate padding with keyboard opening animation
+        return Scaffold(
+          backgroundColor: colorTheme.surfaceContainer,
+          body: SafeArea(
+            top: false,
+            bottom: false,
+            child: CustomScrollView(
+              slivers: [
+                CustomAppBar(
+                  leading: const Padding(
+                    padding: EdgeInsets.only(left: 8.0 - 4.0),
+                    child: DeveloperPageBackButton(),
+                  ),
+                  type: CustomAppBarType.largeFlexible,
+                  behavior: CustomAppBarBehavior.duplicate,
+                  expandedContainerColor: colorTheme.surfaceContainer,
+                  collapsedContainerColor: colorTheme.surfaceContainer,
+                  collapsedPadding: const EdgeInsets.fromLTRB(
+                    8.0 + 40.0 + 8.0,
+                    0.0,
+                    16.0,
+                    0.0,
+                  ),
+                  title: const Text("Add app"),
+                ),
+                SliverFillRemaining(
+                  fillOverscroll: false,
+                  hasScrollBody: false,
+                  child: Flex.vertical(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      Flexible.tight(
+                        child: Flex.vertical(
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          children: [
+                            const Flexible.space(flex: 2.0),
+                            Padding(
+                              padding: const EdgeInsets.fromLTRB(
+                                16.0,
+                                0.0,
+                                16.0,
+                                0.0,
                               ),
-                              child: TextField(
-                                style: typescaleTheme.bodyLarge.toTextStyle(
-                                  color: colorTheme.onSurface,
-                                ),
-                                decoration: InputDecoration(
-                                  border: InputBorder.none,
-                                  contentPadding: EdgeInsets.fromLTRB(
-                                    24.0,
-                                    16.0,
-                                    24.0,
-                                    16.0,
+                              child: ConstrainedBox(
+                                constraints: BoxConstraints(minHeight: 56.0),
+                                child: Material(
+                                  animationDuration: Duration.zero,
+                                  clipBehavior: Clip.antiAlias,
+                                  color: colorTheme.surfaceBright,
+                                  shape: CornersBorder.rounded(
+                                    corners: Corners.all(
+                                      shapeTheme.corner.extraLarge,
+                                    ),
                                   ),
-                                  hintText: "Search or type URL",
-                                  hintStyle: typescaleTheme.bodyLarge
-                                      .toTextStyle(
-                                        color: colorTheme.onSurfaceVariant,
+                                  child: TextField(
+                                    style: typescaleTheme.bodyLarge.toTextStyle(
+                                      color: colorTheme.onSurface,
+                                    ),
+                                    decoration: InputDecoration(
+                                      border: InputBorder.none,
+                                      contentPadding: EdgeInsets.fromLTRB(
+                                        24.0,
+                                        16.0,
+                                        24.0,
+                                        16.0,
                                       ),
+                                      hintText: "Search or type URL",
+                                      hintStyle: typescaleTheme.bodyLarge
+                                          .toTextStyle(
+                                            color: colorTheme.onSurfaceVariant,
+                                          ),
+                                    ),
+                                    maxLength: null,
+                                    maxLines: null,
+                                  ),
                                 ),
-                                maxLength: null,
-                                maxLines: null,
                               ),
                             ),
-                          ),
+                            const Flexible.space(flex: 3.0),
+                          ],
                         ),
-                        const Flexible.space(flex: 3.0),
-                      ],
-                    ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(
+                          16.0,
+                          16.0,
+                          16.0,
+                          16.0,
+                        ),
+                        child: Flex.vertical(
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          spacing: 8.0,
+                          children: [
+                            FilledButton(
+                              style: LegacyThemeFactory.createButtonStyle(
+                                colorTheme: colorTheme,
+                                elevationTheme: elevationTheme,
+                                shapeTheme: shapeTheme,
+                                stateTheme: stateTheme,
+                                typescaleTheme: typescaleTheme,
+                                size: .medium,
+                                shape: .round,
+                                color: .outlined,
+                              ),
+                              onPressed: () => Navigator.pop(context),
+                              child: Text("Cancel"),
+                            ),
+                            FilledButton(
+                              style: LegacyThemeFactory.createButtonStyle(
+                                colorTheme: colorTheme,
+                                elevationTheme: elevationTheme,
+                                shapeTheme: shapeTheme,
+                                stateTheme: stateTheme,
+                                typescaleTheme: typescaleTheme,
+                                size: .medium,
+                                shape: .round,
+                                color: .filled,
+                                textStyle: typescaleTheme.titleMediumEmphasized
+                                    .toTextStyle(),
+                              ),
+                              onPressed: null,
+                              child: Text("Next"),
+                            ),
+                          ],
+                        ),
+                      ),
+                      SizedBox(height: padding.bottom),
+                    ],
                   ),
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 16.0),
-                    child: Flex.vertical(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      spacing: 8.0,
-                      children: [
-                        FilledButton(
-                          style: LegacyThemeFactory.createButtonStyle(
-                            colorTheme: colorTheme,
-                            elevationTheme: elevationTheme,
-                            shapeTheme: shapeTheme,
-                            stateTheme: stateTheme,
-                            typescaleTheme: typescaleTheme,
-                            size: .medium,
-                            shape: .round,
-                            color: .outlined,
-                          ),
-                          onPressed: () => Navigator.pop(context),
-                          child: Text("Cancel"),
-                        ),
-                        FilledButton(
-                          style: LegacyThemeFactory.createButtonStyle(
-                            colorTheme: colorTheme,
-                            elevationTheme: elevationTheme,
-                            shapeTheme: shapeTheme,
-                            stateTheme: stateTheme,
-                            typescaleTheme: typescaleTheme,
-                            size: .medium,
-                            shape: .round,
-                            color: .filled,
-                            textStyle: typescaleTheme.titleMediumEmphasized
-                                .toTextStyle(),
-                          ),
-                          onPressed: () {},
-                          child: Text("Next"),
-                        ),
-                      ],
-                    ),
-                  ),
-                  SizedBox(height: padding.bottom),
-                ],
-              ),
+                ),
+              ],
             ),
-          ],
-        ),
-      ),
+          ),
+        );
+      },
     );
   }
 }
@@ -1721,10 +1732,10 @@ class _SettingsAppBarRoute<T extends Object?> extends PopupRoute<T> {
   String? get barrierLabel => null;
 
   @override
-  Duration get transitionDuration => Durations.extralong4;
+  Duration get transitionDuration => Durations.long2;
 
   @override
-  Duration get reverseTransitionDuration => Durations.extralong4;
+  Duration get reverseTransitionDuration => Durations.medium2;
 
   @override
   void install() {
