@@ -29,27 +29,22 @@ class ListItemContainer extends StatelessWidget {
 
     final resolvedShape =
         containerShape ??
-        CornersBorder.rounded(
-          corners: Corners.vertical(
-            top: isFirst
-                ? shapeTheme.corner.largeIncreased
-                : shapeTheme.corner.extraSmall,
-            bottom: isLast
-                ? shapeTheme.corner.largeIncreased
-                : shapeTheme.corner.extraSmall,
-          ),
-        );
+        _defaultShape(shapeTheme: shapeTheme, isFirst: isFirst, isLast: isLast);
 
     final corners = opticalCenterEnabled
         ? _cornersFromShape(resolvedShape)
         : null;
 
+    final resolvedContainerColor = containerColor ?? colorTheme.surfaceBright;
+
     return Material(
       animationDuration: .zero,
       type: .card,
       clipBehavior: .antiAlias,
-      color: containerColor ?? colorTheme.surfaceBright,
+      color: resolvedContainerColor,
       shape: resolvedShape,
+      elevation: 0.0,
+      shadowColor: Colors.transparent,
       child: CenterOptically(
         enabled: corners != null,
         corners: corners ?? .none,
@@ -91,12 +86,32 @@ class ListItemContainer extends StatelessWidget {
       );
   }
 
+  static ShapeBorder _defaultShape({
+    required ShapeThemeData shapeTheme,
+    required bool isFirst,
+    required bool isLast,
+  }) {
+    final edgeCorner = shapeTheme.corner.largeIncreased;
+    final connectionCorner = shapeTheme.corner.extraSmall;
+    return CornersBorder.rounded(
+      corners: Corners.vertical(
+        top: isFirst ? edgeCorner : connectionCorner,
+        bottom: isLast ? edgeCorner : connectionCorner,
+      ),
+    );
+  }
+
   static CornersGeometry? _cornersFromShape(ShapeBorder shape) =>
       switch (shape) {
         CornersBorder(:final corners) => corners,
-        RoundedRectangleBorder(:final borderRadius) =>
-          CornersGeometry.fromBorderRadius(borderRadius),
-        StadiumBorder() => Corners.full,
+        RoundedRectangleBorder(:final borderRadius) ||
+        RoundedSuperellipseBorder(:final borderRadius) ||
+        BeveledRectangleBorder(:final borderRadius) ||
+        ContinuousRectangleBorder(
+          :final borderRadius,
+        ) => CornersGeometry.fromBorderRadius(borderRadius),
+        StadiumBorder() || CircleBorder() || StarBorder() => .full,
+        LinearBorder() => .none,
         _ => null,
       };
 }
