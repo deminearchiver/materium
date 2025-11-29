@@ -161,3 +161,13 @@ extension CanvasExtension on Canvas {
     restore();
   }
 }
+
+extension OverlayChildLayoutInfoExtension on OverlayChildLayoutInfo {
+  double get translationX => childPaintTransform.storage[12];
+  double get translationY => childPaintTransform.storage[13];
+  double get translationZ => childPaintTransform.storage[14];
+
+  double get scaleX => childPaintTransform[0];
+  double get scaleY => childPaintTransform[5];
+  double get scaleZ => childPaintTransform[10];
+}

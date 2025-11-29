@@ -3,13 +3,6 @@ import 'package:flutter/scheduler.dart';
 
 enum FocusRingPlacement { inward, outward }
 
-extension OverlayChildLayoutInfoExtension on OverlayChildLayoutInfo {
-  double get translateX => childPaintTransform.storage[12];
-  double get translateY => childPaintTransform.storage[13];
-  double get scaleX => childPaintTransform[0];
-  double get scaleY => childPaintTransform[5];
-}
-
 typedef FocusRingLayoutBuilder =
     Widget Function(
       BuildContext context,
