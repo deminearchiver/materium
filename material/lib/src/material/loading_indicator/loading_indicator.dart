@@ -38,6 +38,230 @@ final List<RoundedPolygon> _determinateIndicatorPolygons = <RoundedPolygon>[
   MaterialShapes.softBurst,
 ];
 
+class LoadingIndicatorController {
+  // TODO: add vsync here
+  // TODO: this class manages LoadingIndicator animations and allows syncing multiple loading indicators together
+}
+
+class DeterminateLoadingIndicator extends StatefulWidget {
+  const DeterminateLoadingIndicator({
+    super.key,
+    required this.contained,
+    required this.progress,
+    this.indicatorPolygons,
+    this.containerColor,
+    this.indicatorColor,
+  }) : assert(progress >= 0.0 && progress <= 1.0),
+       assert(
+         indicatorPolygons == null || indicatorPolygons.length >= 2,
+         "indicatorPolygons should have, at least, two RoundedPolygons",
+       );
+
+  final bool contained;
+
+  final double progress;
+
+  final List<RoundedPolygon>? indicatorPolygons;
+
+  final Color? containerColor;
+
+  final Color? indicatorColor;
+
+  List<RoundedPolygon> get _indicatorPolygons =>
+      indicatorPolygons ?? _determinateIndicatorPolygons;
+
+  @override
+  State<DeterminateLoadingIndicator> createState() =>
+      _DeterminateLoadingIndicatorState();
+}
+
+class _DeterminateLoadingIndicatorState
+    extends State<DeterminateLoadingIndicator> {
+  double get _progressValue => widget.progress;
+
+  late List<Morph> _morphSequence;
+  late double _morphScaleFactor;
+
+  final Matrix4 _scaleMatrix = Matrix4.zero();
+
+  void _updateMorphScaleFactor(List<RoundedPolygon> indicatorPolygons) {
+    _morphScaleFactor =
+        _calculateScaleFactor(widget._indicatorPolygons) *
+        _kActiveIndicatorScale;
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _morphSequence = _updateMorphSequence(
+      polygons: widget._indicatorPolygons,
+      circularSequence: false,
+    );
+    _updateMorphScaleFactor(widget._indicatorPolygons);
+  }
+
+  @override
+  void didUpdateWidget(covariant DeterminateLoadingIndicator oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (!listEquals(widget._indicatorPolygons, oldWidget._indicatorPolygons)) {
+      _morphSequence = _updateMorphSequence(
+        morphSequence: _morphSequence,
+        polygons: widget._indicatorPolygons,
+        circularSequence: false,
+      );
+      _updateMorphScaleFactor(widget._indicatorPolygons);
+    }
+  }
+
+  @override
+  void reassemble() {
+    super.reassemble();
+    _morphSequence = _updateMorphSequence(
+      morphSequence: _morphSequence,
+      polygons: widget._indicatorPolygons,
+      circularSequence: false,
+    );
+    _updateMorphScaleFactor(widget._indicatorPolygons);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final colorTheme = ColorTheme.of(context);
+    final elevationTheme = ElevationTheme.of(context);
+    final shapeTheme = ShapeTheme.of(context);
+
+    final loadingIndicatorTheme = LoadingIndicatorTheme.of(context);
+
+    final indicatorColor =
+        widget.indicatorColor ??
+        (widget.contained
+            ? loadingIndicatorTheme.containedIndicatorColor
+            : loadingIndicatorTheme.indicatorColor);
+
+    final containerColor =
+        widget.containerColor ?? loadingIndicatorTheme.containedContainerColor;
+
+    // Adjust the active morph index according to the progress.
+    final activeMorphIndex = math.min(
+      (_morphSequence.length * _progressValue).toInt(),
+      (_morphSequence.length - 1),
+    );
+
+    // Prepare the progress value that will be used for the active Morph.
+    final adjustedProgressValue =
+        _progressValue == 1.0 && activeMorphIndex == _morphSequence.length - 1
+        // Prevents a zero when the progress is one and we are at the last
+        // shape morph.
+        ? 1.0
+        : (_progressValue * _morphSequence.length) % 1.0;
+
+    final currentMorph = _morphSequence[activeMorphIndex];
+
+    // Rotate counterclockwise.
+    final rotation = -_progressValue * math.pi;
+
+    return RepaintBoundary(
+      child: Semantics(
+        label: "$_progressValue",
+        value: "$_progressValue",
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(
+            minWidth: _kContainerWidth,
+            minHeight: _kContainerHeight,
+          ),
+          child: Material(
+            animationDuration: Duration.zero,
+            clipBehavior: Clip.antiAlias,
+            type: MaterialType.card,
+            shape: CornersBorder.rounded(
+              corners: Corners.all(shapeTheme.corner.full),
+            ),
+            color: widget.contained ? containerColor : Colors.transparent,
+            elevation: widget.contained ? elevationTheme.level0 : 0.0,
+            shadowColor: widget.contained
+                ? colorTheme.shadow
+                : Colors.transparent,
+            child: CustomPaint(
+              isComplex: true,
+              willChange: false,
+              painter: _DeterminateLoadingIndicatorPainter(
+                currentMorph: currentMorph,
+                morphScaleFactor: _morphScaleFactor,
+                adjustedProgressValue: adjustedProgressValue,
+                rotation: rotation,
+                indicatorColor: indicatorColor,
+                scaleMatrix: _scaleMatrix,
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _DeterminateLoadingIndicatorPainter extends CustomPainter {
+  _DeterminateLoadingIndicatorPainter({
+    required this.currentMorph,
+    required this.morphScaleFactor,
+    required this.adjustedProgressValue,
+    required this.rotation,
+    required this.indicatorColor,
+    this.scaleMatrix,
+  });
+
+  final Morph currentMorph;
+  final double morphScaleFactor;
+  final double adjustedProgressValue;
+  final double rotation;
+  final Color indicatorColor;
+  final Matrix4? scaleMatrix;
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final center = size.center(Offset.zero);
+
+    final morphPath = currentMorph.toPath(
+      progress: adjustedProgressValue,
+      startAngle: 0,
+    );
+
+    final processedPath = _processPath(
+      path: morphPath,
+      size: size,
+      scaleFactor: morphScaleFactor,
+      scaleMatrix: scaleMatrix,
+    );
+
+    final paint = Paint()
+      ..style = PaintingStyle.fill
+      ..color = indicatorColor;
+
+    canvas
+      // Save the canvas before applying the transform
+      ..save()
+      // Rotate the canvas around the size's center
+      ..translate(center.dx, center.dy)
+      ..rotate(rotation)
+      ..translate(-center.dx, -center.dy)
+      // Draw the processed path onto the canvas
+      ..drawPath(processedPath, paint)
+      // Restore the canvas after applying the transform
+      ..restore();
+  }
+
+  @override
+  bool shouldRepaint(_DeterminateLoadingIndicatorPainter oldDelegate) {
+    // TODO: measure the performance impact of these comparisons
+    return currentMorph != oldDelegate.currentMorph ||
+        morphScaleFactor != oldDelegate.morphScaleFactor ||
+        adjustedProgressValue != oldDelegate.adjustedProgressValue ||
+        rotation != oldDelegate.rotation ||
+        indicatorColor != oldDelegate.indicatorColor ||
+        scaleMatrix != oldDelegate.scaleMatrix;
+  }
+}
+
 class IndeterminateLoadingIndicator extends StatefulWidget {
   const IndeterminateLoadingIndicator({
     super.key,
@@ -324,230 +548,6 @@ class _IndeterminateLoadingIndicatorPainter extends CustomPainter {
         rotation != oldDelegate.rotation ||
         scale != oldDelegate.scale ||
         morphProgress != oldDelegate.morphProgress ||
-        scaleMatrix != oldDelegate.scaleMatrix;
-  }
-}
-
-class LoadingIndicatorController {
-  // TODO: add vsync here
-  // TODO: this class manages LoadingIndicator animations and allows syncing multiple loading indicators together
-}
-
-class DeterminateLoadingIndicator extends StatefulWidget {
-  const DeterminateLoadingIndicator({
-    super.key,
-    required this.contained,
-    required this.progress,
-    this.indicatorPolygons,
-    this.containerColor,
-    this.indicatorColor,
-  }) : assert(progress >= 0.0 && progress <= 1.0),
-       assert(
-         indicatorPolygons == null || indicatorPolygons.length >= 2,
-         "indicatorPolygons should have, at least, two RoundedPolygons",
-       );
-
-  final bool contained;
-
-  final double progress;
-
-  final List<RoundedPolygon>? indicatorPolygons;
-
-  final Color? containerColor;
-
-  final Color? indicatorColor;
-
-  List<RoundedPolygon> get _indicatorPolygons =>
-      indicatorPolygons ?? _determinateIndicatorPolygons;
-
-  @override
-  State<DeterminateLoadingIndicator> createState() =>
-      _DeterminateLoadingIndicatorState();
-}
-
-class _DeterminateLoadingIndicatorState
-    extends State<DeterminateLoadingIndicator> {
-  double get _progressValue => widget.progress;
-
-  late List<Morph> _morphSequence;
-  late double _morphScaleFactor;
-
-  final Matrix4 _scaleMatrix = Matrix4.zero();
-
-  void _updateMorphScaleFactor(List<RoundedPolygon> indicatorPolygons) {
-    _morphScaleFactor =
-        _calculateScaleFactor(widget._indicatorPolygons) *
-        _kActiveIndicatorScale;
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    _morphSequence = _updateMorphSequence(
-      polygons: widget._indicatorPolygons,
-      circularSequence: false,
-    );
-    _updateMorphScaleFactor(widget._indicatorPolygons);
-  }
-
-  @override
-  void didUpdateWidget(covariant DeterminateLoadingIndicator oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    if (!listEquals(widget._indicatorPolygons, oldWidget._indicatorPolygons)) {
-      _morphSequence = _updateMorphSequence(
-        morphSequence: _morphSequence,
-        polygons: widget._indicatorPolygons,
-        circularSequence: false,
-      );
-      _updateMorphScaleFactor(widget._indicatorPolygons);
-    }
-  }
-
-  @override
-  void reassemble() {
-    super.reassemble();
-    _morphSequence = _updateMorphSequence(
-      morphSequence: _morphSequence,
-      polygons: widget._indicatorPolygons,
-      circularSequence: false,
-    );
-    _updateMorphScaleFactor(widget._indicatorPolygons);
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final colorTheme = ColorTheme.of(context);
-    final elevationTheme = ElevationTheme.of(context);
-    final shapeTheme = ShapeTheme.of(context);
-
-    final loadingIndicatorTheme = LoadingIndicatorTheme.of(context);
-
-    final indicatorColor =
-        widget.indicatorColor ??
-        (widget.contained
-            ? loadingIndicatorTheme.containedIndicatorColor
-            : loadingIndicatorTheme.indicatorColor);
-
-    final containerColor =
-        widget.containerColor ?? loadingIndicatorTheme.containedContainerColor;
-
-    // Adjust the active morph index according to the progress.
-    final activeMorphIndex = math.min(
-      (_morphSequence.length * _progressValue).toInt(),
-      (_morphSequence.length - 1),
-    );
-
-    // Prepare the progress value that will be used for the active Morph.
-    final adjustedProgressValue =
-        _progressValue == 1.0 && activeMorphIndex == _morphSequence.length - 1
-        // Prevents a zero when the progress is one and we are at the last
-        // shape morph.
-        ? 1.0
-        : (_progressValue * _morphSequence.length) % 1.0;
-
-    final currentMorph = _morphSequence[activeMorphIndex];
-
-    // Rotate counterclockwise.
-    final rotation = -_progressValue * math.pi;
-
-    return RepaintBoundary(
-      child: Semantics(
-        label: "$_progressValue",
-        value: "$_progressValue",
-        child: ConstrainedBox(
-          constraints: const BoxConstraints(
-            minWidth: _kContainerWidth,
-            minHeight: _kContainerHeight,
-          ),
-          child: Material(
-            animationDuration: Duration.zero,
-            clipBehavior: Clip.antiAlias,
-            type: MaterialType.card,
-            shape: CornersBorder.rounded(
-              corners: Corners.all(shapeTheme.corner.full),
-            ),
-            color: widget.contained ? containerColor : Colors.transparent,
-            elevation: widget.contained ? elevationTheme.level0 : 0.0,
-            shadowColor: widget.contained
-                ? colorTheme.shadow
-                : Colors.transparent,
-            child: CustomPaint(
-              isComplex: true,
-              willChange: false,
-              painter: _DeterminateLoadingIndicatorPainter(
-                currentMorph: currentMorph,
-                morphScaleFactor: _morphScaleFactor,
-                adjustedProgressValue: adjustedProgressValue,
-                rotation: rotation,
-                indicatorColor: indicatorColor,
-                scaleMatrix: _scaleMatrix,
-              ),
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class _DeterminateLoadingIndicatorPainter extends CustomPainter {
-  _DeterminateLoadingIndicatorPainter({
-    required this.currentMorph,
-    required this.morphScaleFactor,
-    required this.adjustedProgressValue,
-    required this.rotation,
-    required this.indicatorColor,
-    this.scaleMatrix,
-  });
-
-  final Morph currentMorph;
-  final double morphScaleFactor;
-  final double adjustedProgressValue;
-  final double rotation;
-  final Color indicatorColor;
-  final Matrix4? scaleMatrix;
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    final center = size.center(Offset.zero);
-
-    final morphPath = currentMorph.toPath(
-      progress: adjustedProgressValue,
-      startAngle: 0,
-    );
-
-    final processedPath = _processPath(
-      path: morphPath,
-      size: size,
-      scaleFactor: morphScaleFactor,
-      scaleMatrix: scaleMatrix,
-    );
-
-    final paint = Paint()
-      ..style = PaintingStyle.fill
-      ..color = indicatorColor;
-
-    canvas
-      // Save the canvas before applying the transform
-      ..save()
-      // Rotate the canvas around the size's center
-      ..translate(center.dx, center.dy)
-      ..rotate(rotation)
-      ..translate(-center.dx, -center.dy)
-      // Draw the processed path onto the canvas
-      ..drawPath(processedPath, paint)
-      // Restore the canvas after applying the transform
-      ..restore();
-  }
-
-  @override
-  bool shouldRepaint(_DeterminateLoadingIndicatorPainter oldDelegate) {
-    // TODO: measure the performance impact of these comparisons
-    return currentMorph != oldDelegate.currentMorph ||
-        morphScaleFactor != oldDelegate.morphScaleFactor ||
-        adjustedProgressValue != oldDelegate.adjustedProgressValue ||
-        rotation != oldDelegate.rotation ||
-        indicatorColor != oldDelegate.indicatorColor ||
         scaleMatrix != oldDelegate.scaleMatrix;
   }
 }
