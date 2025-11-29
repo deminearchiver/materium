@@ -1,5 +1,55 @@
 import 'package:materium/flutter.dart';
 
+class _InverseCenterOptically extends CenterOptically {
+  const _InverseCenterOptically({
+    super.key,
+    super.enabled,
+    super.corners,
+    super.maxOffsets,
+    super.textDirection,
+    super.child,
+  });
+
+  @override
+  _RenderInverseCenterOptically createRenderObject(BuildContext context) =>
+      _RenderInverseCenterOptically(
+        enabled: enabled,
+        corners: corners,
+        maxOffsets: maxOffsets,
+        textDirection: textDirection ?? Directionality.maybeOf(context),
+      );
+
+  @override
+  void updateRenderObject(
+    BuildContext context,
+    _RenderInverseCenterOptically renderObject,
+  ) {
+    renderObject
+      ..enabled = enabled
+      ..corners = corners
+      ..maxOffsets = maxOffsets
+      ..textDirection = textDirection ?? Directionality.maybeOf(context);
+  }
+}
+
+class _RenderInverseCenterOptically extends RenderCenterOptically {
+  _RenderInverseCenterOptically({
+    super.enabled,
+    super.corners,
+    super.maxOffsets,
+    super.textDirection,
+    super.child,
+  });
+
+  @override
+  double getHorizontalPaddingCorrection(BorderRadius borderRadius) =>
+      -super.getHorizontalPaddingCorrection(borderRadius);
+
+  @override
+  double getVerticalPaddingCorrection(BorderRadius borderRadius) =>
+      -super.getVerticalPaddingCorrection(borderRadius);
+}
+
 enum ListItemControlAffinity { leading, trailing }
 
 class ListItemContainer extends StatelessWidget {
@@ -7,7 +57,7 @@ class ListItemContainer extends StatelessWidget {
     super.key,
     this.isFirst = false,
     this.isLast = false,
-    this.opticalCenterEnabled = false,
+    this.opticalCenterEnabled = true,
     this.opticalCenterMaxOffsets = const .all(.infinity),
     this.containerShape,
     this.containerColor,
@@ -49,7 +99,14 @@ class ListItemContainer extends StatelessWidget {
         enabled: corners != null,
         corners: corners ?? .none,
         maxOffsets: corners != null ? opticalCenterMaxOffsets : .zero,
-        child: child,
+        child: _ListItemContainerScope(
+          opticalCenterEnabled: corners != null,
+          opticalCenterCorners: corners ?? .none,
+          opticalCenterMaxOffsets: corners != null
+              ? opticalCenterMaxOffsets
+              : .zero,
+          child: child,
+        ),
       ),
     );
   }
@@ -114,6 +171,59 @@ class ListItemContainer extends StatelessWidget {
         LinearBorder() => .none,
         _ => null,
       };
+}
+
+class _ListItemContainerScope extends InheritedWidget {
+  const _ListItemContainerScope({
+    super.key,
+    this.opticalCenterEnabled = false,
+    this.opticalCenterCorners = .none,
+    this.opticalCenterMaxOffsets = .zero,
+    required super.child,
+  });
+
+  final bool opticalCenterEnabled;
+  final CornersGeometry opticalCenterCorners;
+  final EdgeInsetsGeometry opticalCenterMaxOffsets;
+
+  @override
+  bool updateShouldNotify(_ListItemContainerScope oldWidget) =>
+      opticalCenterCorners != oldWidget.opticalCenterCorners ||
+      opticalCenterMaxOffsets != oldWidget.opticalCenterMaxOffsets;
+
+  static _ListItemContainerScope? maybeOf(BuildContext context) =>
+      context.dependOnInheritedWidgetOfExactType<_ListItemContainerScope>();
+}
+
+typedef _CenterOpticallyConstructor =
+    CenterOptically Function({
+      Key? key,
+      bool enabled,
+      CornersGeometry corners,
+      EdgeInsetsGeometry maxOffsets,
+      TextDirection? textDirection,
+      Widget? child,
+    });
+
+extension on _ListItemContainerScope? {
+  Widget buildCenterOptically({
+    Key? key,
+    required bool inverse,
+    TextDirection? textDirection,
+    Widget? child,
+  }) {
+    final _CenterOpticallyConstructor constructor = inverse
+        ? _InverseCenterOptically.new
+        : CenterOptically.new;
+    return constructor(
+      key: key,
+      enabled: this?.opticalCenterEnabled ?? false,
+      corners: this?.opticalCenterCorners ?? .none,
+      maxOffsets: this?.opticalCenterMaxOffsets ?? .zero,
+      textDirection: textDirection,
+      child: child,
+    );
+  }
 }
 
 class ListItemInteraction extends StatefulWidget {
@@ -261,76 +371,83 @@ class _ListItemInteractionState extends State<ListItemInteraction> {
   Widget build(BuildContext context) {
     final states = _resolveStates();
     final isDisabled = states.contains(WidgetState.disabled);
-    return FocusRingTheme.merge(
-      data: FocusRingThemeDataPartial.from(
-        shape: Corners.all(_shapeTheme.corner.large),
-      ),
-      child: FocusRing(
-        visible: states.contains(WidgetState.focused),
-        placement: FocusRingPlacement.inward,
-        layoutBuilder: (context, info, child) => child,
-        child: Listener(
-          behavior: HitTestBehavior.deferToChild,
-          onPointerDown: !isDisabled
-              ? (_) {
-                  setState(() {
-                    _focused = false;
-                    _pressed = true;
-                  });
-                }
-              : null,
-          onPointerUp: !isDisabled
-              ? (_) {
-                  setState(() {
-                    _focused = false;
-                    _pressed = false;
-                  });
-                }
-              : null,
-          onPointerCancel: !isDisabled
-              ? (_) {
-                  setState(() {
-                    _focused = false;
-                    _pressed = false;
-                  });
-                }
-              : null,
-          child: InkWell(
-            statesController: widget.statesController,
-            focusNode: widget.focusNode,
-            canRequestFocus: widget.canRequestFocus,
-            autofocus: widget.autofocus,
-            overlayColor: WidgetStateLayerColor(
-              color: widget.stateLayerColor ?? _stateLayerColor,
-              opacity: widget.stateLayerOpacity ?? _stateLayerOpacity,
-            ),
-            onTap: !isDisabled ? widget.onTap : null,
-            onLongPress: !isDisabled ? widget.onLongPress : null,
-            onTapDown: !isDisabled
-                ? (_) => setState(() {
-                    _focused = false;
-                    _pressed = true;
-                  })
-                : null,
-            onTapUp: !isDisabled
-                ? (_) => setState(() {
-                    _focused = false;
-                    _pressed = false;
-                  })
-                : null,
-            onTapCancel: !isDisabled
-                ? () => setState(() {
-                    _focused = false;
-                    _pressed = false;
-                  })
-                : null,
-            onFocusChange: !isDisabled
-                ? (value) {
-                    setState(() => _focused = value);
-                    widget.onFocusChange?.call(value);
+    final listItemContainerScope = _ListItemContainerScope.maybeOf(context);
+    return listItemContainerScope.buildCenterOptically(
+      inverse: true,
+      child: FocusRingTheme.merge(
+        data: FocusRingThemeDataPartial.from(
+          shape: Corners.all(_shapeTheme.corner.large),
+        ),
+        child: FocusRing(
+          visible: states.contains(WidgetState.focused),
+          placement: FocusRingPlacement.inward,
+          layoutBuilder: (context, info, child) => child,
+          child: Listener(
+            behavior: HitTestBehavior.deferToChild,
+            onPointerDown: !isDisabled
+                ? (_) {
+                    setState(() {
+                      _focused = false;
+                      _pressed = true;
+                    });
                   }
                 : null,
-            child: widget.child,
+            onPointerUp: !isDisabled
+                ? (_) {
+                    setState(() {
+                      _focused = false;
+                      _pressed = false;
+                    });
+                  }
+                : null,
+            onPointerCancel: !isDisabled
+                ? (_) {
+                    setState(() {
+                      _focused = false;
+                      _pressed = false;
+                    });
+                  }
+                : null,
+            child: InkWell(
+              statesController: widget.statesController,
+              focusNode: widget.focusNode,
+              canRequestFocus: widget.canRequestFocus,
+              autofocus: widget.autofocus,
+              overlayColor: WidgetStateLayerColor(
+                color: widget.stateLayerColor ?? _stateLayerColor,
+                opacity: widget.stateLayerOpacity ?? _stateLayerOpacity,
+              ),
+              onTap: !isDisabled ? widget.onTap : null,
+              onLongPress: !isDisabled ? widget.onLongPress : null,
+              onTapDown: !isDisabled
+                  ? (_) => setState(() {
+                      _focused = false;
+                      _pressed = true;
+                    })
+                  : null,
+              onTapUp: !isDisabled
+                  ? (_) => setState(() {
+                      _focused = false;
+                      _pressed = false;
+                    })
+                  : null,
+              onTapCancel: !isDisabled
+                  ? () => setState(() {
+                      _focused = false;
+                      _pressed = false;
+                    })
+                  : null,
+              onFocusChange: !isDisabled
+                  ? (value) {
+                      setState(() => _focused = value);
+                      widget.onFocusChange?.call(value);
+                    }
+                  : null,
+              child: listItemContainerScope.buildCenterOptically(
+                inverse: false,
+                child: widget.child,
+              ),
+            ),
           ),
         ),
       ),
