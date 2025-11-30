@@ -124,7 +124,7 @@ abstract class Feature {
 
   static bool _isContinuous(Feature feature) {
     var prevCubic = feature.cubics.first;
-    for (int index = 1; index < feature.cubics.length; index++) {
+    for (var index = 1; index < feature.cubics.length; index++) {
       final cubic = feature.cubics[index];
       if ((cubic.anchor0X - prevCubic.anchor1X).abs() > distanceEpsilon ||
           (cubic.anchor0Y - prevCubic.anchor1Y).abs() > distanceEpsilon) {

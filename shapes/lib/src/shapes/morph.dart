@@ -51,14 +51,14 @@ final class Morph {
   }
 
   List<Cubic> asCubics(double progress) {
-    final List<Cubic> result = <Cubic>[];
+    final result = <Cubic>[];
 
     // The first/last mechanism here ensures that the final anchor point in the shape
     // exactly matches the first anchor point. There can be rendering artifacts introduced
     // by those points being slightly off, even by much less than a pixel
     Cubic? firstCubic;
     Cubic? lastCubic;
-    for (int i = 0; i < morphMatch.length; i++) {
+    for (var i = 0; i < morphMatch.length; i++) {
       final cubic = Cubic.interpolate(
         morphMatch[i].$1,
         morphMatch[i].$2,
@@ -92,7 +92,7 @@ final class Morph {
     MutableCubic? mutableCubic,
   ]) {
     mutableCubic ??= MutableCubic.empty(0.0, 0.0);
-    for (int i = 0; i < morphMatch.length; i++) {
+    for (var i = 0; i < morphMatch.length; i++) {
       mutableCubic.interpolate(morphMatch[i].$1, morphMatch[i].$2, progress);
       callback(mutableCubic);
     }
@@ -184,10 +184,10 @@ final class Morph {
     // of cubics [ret], which are the start/end curves that represent the Morph object
     // and the start and end shapes, and which can be interpolated to animate the
     // between those shapes.
-    final List<(Cubic, Cubic)> ret = <(Cubic, Cubic)>[];
+    final ret = <(Cubic, Cubic)>[];
     // i1/i2 are the indices of the current cubic on the start (1) and end (2) shapes
-    int i1 = 0;
-    int i2 = 0;
+    var i1 = 0;
+    var i2 = 0;
     // b1, b2 are the current measured cubic for each polygon
     var b1 = bs1.elementAtOrNull(i1++);
     var b2 = bs2.elementAtOrNull(i2++);

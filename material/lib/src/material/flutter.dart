@@ -69,5 +69,3 @@ export 'package:material_symbols_icons/material_symbols_icons.dart';
 
 export 'package:layout/layout.dart';
 export 'package:material/material.dart';
-
-import 'package:material/src/material/flutter.dart';

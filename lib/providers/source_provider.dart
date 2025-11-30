@@ -377,7 +377,7 @@ class App {
     latestVersion,
     apkUrls,
     preferredApkIndex,
-    Map.from(additionalSettings),
+    Map.of(additionalSettings),
     lastUpdateCheck,
     pinned,
     categories: categories,
@@ -389,7 +389,7 @@ class App {
   );
 
   factory App.fromJson(Map<String, dynamic> json) {
-    Map<String, dynamic> originalJSON = Map.from(json);
+    final originalJSON = Map.of(json);
     try {
       json = appJSONCompatibilityModifiers(json);
     } catch (e) {
@@ -499,13 +499,11 @@ List<String> getLinksFromParsedHTML(
 
 Map<String, dynamic> getDefaultValuesFromFormItems(
   List<List<GeneratedFormItem>> items,
-) {
-  return Map.fromEntries(
-    items
-        .map((row) => row.map((el) => MapEntry(el.key, el.defaultValue ?? '')))
-        .reduce((value, element) => [...value, ...element]),
-  );
-}
+) => Map.fromEntries(
+  items
+      .map((row) => row.map((el) => MapEntry(el.key, el.defaultValue ?? '')))
+      .reduce((value, element) => [...value, ...element]),
+);
 
 List<MapEntry<String, String>> getApkUrlsFromUrls(List<String> urls) =>
     urls.map((e) {

@@ -2120,23 +2120,23 @@ class AppsProvider with ChangeNotifier {
     await saveApps(importedApps, onlyIfExists: false);
     notifyListeners();
     if (newFormat && decodedJSON['settings'] != null) {
-      var settingsMap = decodedJSON['settings'] as Map<String, Object?>;
-      settingsMap.forEach((key, value) {
-        if (value is int) {
-          settingsProvider.prefsWithCache.setInt(key, value);
-        } else if (value is double) {
-          settingsProvider.prefsWithCache.setDouble(key, value);
-        } else if (value is bool) {
-          settingsProvider.prefsWithCache.setBool(key, value);
-        } else if (value is List) {
-          settingsProvider.prefsWithCache.setStringList(
-            key,
-            value.map((e) => e as String).toList(),
-          );
-        } else {
-          settingsProvider.prefsWithCache.setString(key, value as String);
-        }
-      });
+      var settingsMap = decodedJSON['settings'] as Map<String, Object?>
+        ..forEach((key, value) {
+          if (value is int) {
+            settingsProvider.prefsWithCache.setInt(key, value);
+          } else if (value is double) {
+            settingsProvider.prefsWithCache.setDouble(key, value);
+          } else if (value is bool) {
+            settingsProvider.prefsWithCache.setBool(key, value);
+          } else if (value is List) {
+            settingsProvider.prefsWithCache.setStringList(
+              key,
+              value.map((e) => e as String).toList(),
+            );
+          } else {
+            settingsProvider.prefsWithCache.setString(key, value as String);
+          }
+        });
     }
     return MapEntry<List<App>, bool>(
       importedApps,
@@ -2154,21 +2154,21 @@ class AppsProvider with ChangeNotifier {
     List<String> urls, {
     AppSource? sourceOverride,
   }) async {
-    List<dynamic> results = await SourceProvider().getAppsByURLNaive(
+    final List<dynamic> results = await SourceProvider().getAppsByURLNaive(
       urls,
       alreadyAddedUrls: apps.values.map((e) => e.app.url).toList(),
       sourceOverride: sourceOverride,
     );
-    List<App> pps = results[0];
-    Map<String, dynamic> errorsMap = results[1];
-    for (var app in pps) {
+    final List<App> pps = results[0];
+    final Map<String, dynamic> errorsMap = results[1];
+    for (final app in pps) {
       if (apps.containsKey(app.id)) {
         errorsMap.addAll({app.id: tr('appAlreadyAdded')});
       } else {
         await saveApps([app], onlyIfExists: false);
       }
     }
-    List<List<String>> errors = errorsMap.keys
+    final List<List<String>> errors = errorsMap.keys
         .map((e) => [e, errorsMap[e].toString()])
         .toList();
     return errors;

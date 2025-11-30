@@ -84,7 +84,7 @@ Path _pathFromCubics({
 
   path.reset();
 
-  for (int i = 0; i < cubics.length; i++) {
+  for (var i = 0; i < cubics.length; i++) {
     final it = cubics[i];
 
     if (first) {
@@ -108,7 +108,7 @@ Path _pathFromCubics({
   if (repeatPath) {
     var firstInRepeat = true;
 
-    for (int i = 0; i < cubics.length; i++) {
+    for (var i = 0; i < cubics.length; i++) {
       final it = cubics[i];
 
       if (firstInRepeat) {
@@ -551,22 +551,22 @@ abstract final class MaterialShapes {
     bool mirroring,
   ) {
     if (mirroring) {
-      final List<_PointNRound> result = <_PointNRound>[];
+      final result = <_PointNRound>[];
 
-      final List<double> angles = <double>[
+      final angles = <double>[
         for (int i = 0; i < points.length; i++)
           (points[i].o - center)._angleRadians(),
       ];
 
-      final List<double> distances = <double>[
+      final distances = <double>[
         for (int i = 0; i < points.length; i++) (points[i].o - center).distance,
       ];
 
       final actualReps = reps * 2;
       final sectionAngle = math.pi * 2.0 / actualReps;
 
-      for (int it = 0; it < actualReps; it++) {
-        for (int index = 0; index < points.length; index++) {
+      for (var it = 0; it < actualReps; it++) {
+        for (var index = 0; index < points.length; index++) {
           final i = it.isEven ? index : points.length - 1 - index;
           if (i > 0 || it.isEven) {
             final a =

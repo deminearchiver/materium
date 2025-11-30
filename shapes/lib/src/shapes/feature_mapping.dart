@@ -1,4 +1,3 @@
-import 'package:collection/collection.dart';
 import 'package:meta/meta.dart';
 
 import 'features.dart';
@@ -132,7 +131,7 @@ List<(double, double)> doMapping(
   }
 
   final mh = _MappingHelper();
-  for (int i = 0; i < distanceVertexList.length; i++) {
+  for (var i = 0; i < distanceVertexList.length; i++) {
     mh.addMapping(distanceVertexList[i].f1, distanceVertexList[i].f2);
   }
   return mh.mapping;

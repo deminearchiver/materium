@@ -43,7 +43,7 @@ final class DoubleMapper {
   DoubleMapper(List<(double, double)> mappings)
     : _sourceValues = List.filled(mappings.length, 0.0),
       _targetValues = List.filled(mappings.length, 0.0) {
-    for (int i = 0; i < mappings.length; i++) {
+    for (var i = 0; i < mappings.length; i++) {
       _sourceValues[i] = mappings[i].$1;
       _targetValues[i] = mappings[i].$2;
     }
@@ -67,8 +67,8 @@ final class DoubleMapper {
 @internal
 void validateProgress(List<double> p) {
   var prev = p.last;
-  int wraps = 0;
-  for (int i = 0; i < p.length; i++) {
+  var wraps = 0;
+  for (var i = 0; i < p.length; i++) {
     final curr = p[i];
     if (curr < 0.0 || curr >= 1.0) {
       throw ArgumentError("FloatMapping - Progress outside of range: $p.");
@@ -94,7 +94,7 @@ double progressDistance(double p1, double p2) {
 
 extension IterableExtensions<T> on Iterable<T> {
   Iterable<int> get indices sync* {
-    int index = 0;
+    var index = 0;
     for (final _ in this) {
       yield index++;
     }

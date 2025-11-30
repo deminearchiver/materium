@@ -40,8 +40,8 @@ final class MeasuredPolygon extends DelegatingList<MeasuredCubic> {
     //             outlineProgress.joinToString()
     //     }
     // }
-    double startOutlineProgress = 0.0;
-    for (int index = 0; index < cubics.length; index++) {
+    var startOutlineProgress = 0.0;
+    for (var index = 0; index < cubics.length; index++) {
       // Filter out "empty" cubics
       if ((outlineProgress[index + 1] - outlineProgress[index]) >
           distanceEpsilon) {
@@ -102,8 +102,8 @@ final class MeasuredPolygon extends DelegatingList<MeasuredCubic> {
     // * All cubics after the target, until the end + All cubics from the start, before the
     //   target cubic
     // * The first part of the target cubic (before the cut)
-    final List<Cubic> retCubics = <Cubic>[b2.cubic];
-    for (int i = 1; i < length; i++) {
+    final retCubics = <Cubic>[b2.cubic];
+    for (var i = 1; i < length; i++) {
       retCubics.add(this[(i + targetIndex) % length].cubic);
     }
     retCubics.add(b1.cubic);
@@ -128,7 +128,7 @@ final class MeasuredPolygon extends DelegatingList<MeasuredCubic> {
     });
 
     // Shift the feature's outline progress too.
-    final List<ProgressableFeature> newFeatures = <ProgressableFeature>[
+    final newFeatures = <ProgressableFeature>[
       for (int i = 0; i < features.length; i++)
         ProgressableFeature(
           positiveModulo(features[i].progress - cuttingPoint, 1.0),
@@ -150,19 +150,19 @@ final class MeasuredPolygon extends DelegatingList<MeasuredCubic> {
     Measurer measurer,
     RoundedPolygon polygon,
   ) {
-    final List<Cubic> cubics = <Cubic>[];
-    final List<(Feature, int)> featureToCubic = <(Feature, int)>[];
+    final cubics = <Cubic>[];
+    final featureToCubic = <(Feature, int)>[];
 
     // Get the cubics from the polygon, at the same time, extract the features and keep a
     // reference to the representative cubic we will use.
     for (
-      int featureIndex = 0;
+      var featureIndex = 0;
       featureIndex < polygon.features.length;
       featureIndex++
     ) {
       final feature = polygon.features[featureIndex];
       for (
-        int cubicIndex = 0;
+        var cubicIndex = 0;
         cubicIndex < feature.cubics.length;
         cubicIndex++
       ) {
@@ -188,13 +188,13 @@ final class MeasuredPolygon extends DelegatingList<MeasuredCubic> {
     final totalMeasure = measures.last;
 
     // Equivalent to `measures.map { it / totalMeasure }` but without Iterator allocation.
-    final List<double> outlineProgress = <double>[
+    final outlineProgress = <double>[
       for (int i = 0; i < measures.length; i++) measures[i] / totalMeasure,
     ];
 
     // debugLog(LOG_TAG) { "Total size: $totalMeasure" }
 
-    final List<ProgressableFeature> features = <ProgressableFeature>[
+    final features = <ProgressableFeature>[
       for (int i = 0; i < featureToCubic.length; i++)
         ProgressableFeature(
           positiveModulo(
@@ -367,11 +367,11 @@ final class LengthMeasurer implements Measurer {
   static const int _segments = 3;
 
   (double, double) _closestProgressTo(Cubic cubic, double threshold) {
-    double total = 0.0;
+    var total = 0.0;
     var remainder = threshold;
     var prev = Point(cubic.anchor0X, cubic.anchor0Y);
 
-    for (int i = 1; i <= _segments; i++) {
+    for (var i = 1; i <= _segments; i++) {
       final progress = i / _segments;
       final point = cubic.pointOnCurve(progress);
       final segment = (point - prev).getDistance();

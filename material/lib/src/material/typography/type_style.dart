@@ -70,14 +70,10 @@ extension on FontWeight {
 }
 
 extension on TextStyle {
-  Map<String, double>? get _variableFontAxesOrNull => fontVariations != null
-      ? Map.fromEntries(
-          fontVariations!.map(
-            (fontVariation) =>
-                MapEntry(fontVariation.axis, fontVariation.value),
-          ),
-        )
-      : null;
+  Map<String, double>? get _variableFontAxesOrNull => <String, double>{
+    for (final fontVariation in fontVariations ?? const <FontVariation>[])
+      fontVariation.axis: fontVariation.value,
+  };
 
   // Map<String, double> get _variableFontAxes => _variableFontAxesOrNull ?? {};
 

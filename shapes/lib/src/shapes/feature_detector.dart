@@ -17,7 +17,7 @@ List<Feature> detectFeatures(List<Cubic> cubics) {
   // iteration. Just like a snowball, subsequent cubics that align to one
   // feature merge until the streak breaks, the result is added, and a new
   // streak starts.
-  for (int i = 0; i < cubics.length; i++) {
+  for (var i = 0; i < cubics.length; i++) {
     final next = cubics[(i + 1) % (cubics.length)];
 
     if (i < cubics.length - 1 && current.alignsIshWith(next)) {

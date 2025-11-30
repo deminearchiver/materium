@@ -19,7 +19,7 @@ final class RoundedPolygon {
     : cubics = _buildCubics(features, center) {
     var prevCubic = cubics[cubics.length - 1];
     // debugLog("RoundedPolygon") { "Cubic-1 = $prevCubic" }
-    for (int index = 0; index < cubics.length; index++) {
+    for (var index = 0; index < cubics.length; index++) {
       final cubic = cubics[index];
       // debugLog("RoundedPolygon") { "Cubic = $cubic" }
       if ((cubic.anchor0X - prevCubic.anchor1X).abs() > distanceEpsilon ||
@@ -110,10 +110,10 @@ final class RoundedPolygon {
       );
     }
 
-    final List<List<Cubic>> corners = <List<Cubic>>[];
+    final corners = <List<Cubic>>[];
     final n = vertices.length ~/ 2;
-    final List<_RoundedCorner> roundedCorners = <_RoundedCorner>[];
-    for (int i = 0; i < n; i++) {
+    final roundedCorners = <_RoundedCorner>[];
+    for (var i = 0; i < n; i++) {
       final vtxRounding = perVertexRounding?[i] ?? rounding;
       final prevIndex = ((i + n - 1) % n) * 2;
       final nextIndex = ((i + 1) % n) * 2;
@@ -163,11 +163,11 @@ final class RoundedPolygon {
     });
 
     // Create and store list of beziers for each [potentially] rounded corner
-    for (int i = 0; i < n; i++) {
+    for (var i = 0; i < n; i++) {
       // allowedCuts[0] is for the side from the previous corner to this one,
       // allowedCuts[1] is for the side from this corner to the next one.
-      final List<double> allowedCuts = List.filled(2, 0.0);
-      for (int delta = 0; delta <= 1; delta++) {
+      final allowedCuts = List<double>.filled(2, 0.0);
+      for (var delta = 0; delta <= 1; delta++) {
         final (roundCutRatio, cutRatio) = cutAdjusts[(i + n - 1 + delta) % n];
         allowedCuts[delta] =
             roundedCorners[i].expectedRoundCut * roundCutRatio +
@@ -180,8 +180,8 @@ final class RoundedPolygon {
 
     // Finally, store the calculated cubics. This includes all of the rounded corners
     // from above, along with new cubics representing the edges between those corners.
-    final List<Feature> tempFeatures = <Feature>[];
-    for (int i = 0; i < n; i++) {
+    final tempFeatures = <Feature>[];
+    for (var i = 0; i < n; i++) {
       // Note that these indices are for pairs of values (points), they need to be
       // doubled to access the xy values in the vertices float array
       final prevVtxIndex = (i + n - 1) % n;
@@ -195,19 +195,18 @@ final class RoundedPolygon {
         vertices[nextVtxIndex * 2],
         vertices[nextVtxIndex * 2 + 1],
       );
-      tempFeatures.add(
-        Corner(corners[i], convex(prevVertex, currVertex, nextVertex)),
-      );
-      tempFeatures.add(
-        Edge([
-          Cubic.straightLine(
-            corners[i].last.anchor1X,
-            corners[i].last.anchor1Y,
-            corners[(i + 1) % n].first.anchor0X,
-            corners[(i + 1) % n].first.anchor0Y,
-          ),
-        ]),
-      );
+      tempFeatures
+        ..add(Corner(corners[i], convex(prevVertex, currVertex, nextVertex)))
+        ..add(
+          Edge([
+            Cubic.straightLine(
+              corners[i].last.anchor1X,
+              corners[i].last.anchor1Y,
+              corners[(i + 1) % n].first.anchor0X,
+              corners[(i + 1) % n].first.anchor0Y,
+            ),
+          ]),
+        );
     }
 
     final c = centerX == double.minPositive || centerY == double.minPositive
@@ -483,8 +482,8 @@ final class RoundedPolygon {
   }
 
   ui.Rect calculateMaxBounds() {
-    double maxDistSquared = 0.0;
-    for (int i = 0; i < cubics.length; i++) {
+    var maxDistSquared = 0.0;
+    for (var i = 0; i < cubics.length; i++) {
       final cubic = cubics[i];
       final anchorDistance = distanceSquared(
         cubic.anchor0X - centerX,
@@ -514,7 +513,7 @@ final class RoundedPolygon {
     var minY = double.maxFinite;
     var maxX = double.minPositive;
     var maxY = double.minPositive;
-    for (int i = 0; i < cubics.length; i++) {
+    for (var i = 0; i < cubics.length; i++) {
       final cubic = cubics[i];
       final bounds = cubic.calculateBounds(approximate: approximate);
       minX = math.min(minX, bounds.left);
@@ -545,7 +544,7 @@ final class RoundedPolygon {
   int get hashCode => Object.hash(runtimeType, features);
 
   static List<Cubic> _buildCubics(List<Feature> features, Point center) {
-    final List<Cubic> cubics = <Cubic>[];
+    final cubics = <Cubic>[];
 
     // The first/last mechanism here ensures that the final anchor point in the shape
     // exactly matches the first anchor point. There can be rendering artifacts introduced
@@ -562,7 +561,7 @@ final class RoundedPolygon {
     }
     // iterating one past the features list size allows us to insert the initial split
     // cubic if it exists
-    for (int i = 0; i <= features.length; i++) {
+    for (var i = 0; i <= features.length; i++) {
       final List<Cubic> featureCubics;
       if (i == 0 && firstFeatureSplitEnd != null) {
         featureCubics = firstFeatureSplitEnd;
@@ -576,7 +575,7 @@ final class RoundedPolygon {
         featureCubics = features[i].cubics;
       }
 
-      for (int j = 0; j < featureCubics.length; j++) {
+      for (var j = 0; j < featureCubics.length; j++) {
         // Skip zero-length curves; they add nothing and can trigger rendering artifacts
         final cubic = featureCubics[j];
         if (!cubic.zeroLength()) {
@@ -639,9 +638,9 @@ final class RoundedPolygon {
 
 @internal
 Point calculateCenter(List<double> vertices) {
-  double cumulativeX = 0.0;
-  double cumulativeY = 0.0;
-  int index = 0;
+  var cumulativeX = 0.0;
+  var cumulativeY = 0.0;
+  var index = 0;
   while (index < vertices.length) {
     cumulativeX += vertices[index++];
     cumulativeY += vertices[index++];
@@ -886,9 +885,9 @@ List<double> _verticesFromNumVerts(
   double centerY,
 ) {
   final center = Point(centerX, centerY);
-  final List<double> result = List.filled(numVertices * 2, 0.0);
-  int arrayIndex = 0;
-  for (int i = 0; i < numVertices; i++) {
+  final result = List<double>.filled(numVertices * 2, 0.0);
+  var arrayIndex = 0;
+  for (var i = 0; i < numVertices; i++) {
     final vertex =
         radialToCartesian(radius, (math.pi / numVertices * 2.0 * i)) + center;
     result[arrayIndex++] = vertex.x;
@@ -936,7 +935,7 @@ List<double> _pillStarVerticesFromNumVerts(
   // The sections array holds the t start values of that part of the outline. We use these to
   // determine which section a given vertex lies in, based on its t value, as well as where
   // in that section it lies.
-  final List<double> sections = List.filled(11, 0.0);
+  final sections = List<double>.filled(11, 0.0);
   sections[0] = 0.0;
   sections[1] = vSegLen / 2.0;
   sections[2] = sections[1] + circlePerimeter / 4.0;
@@ -958,22 +957,22 @@ List<double> _pillStarVerticesFromNumVerts(
   var inner = false;
 
   // Increment section index as we walk around the pill contour with our increasing t values
-  int currSecIndex = 0;
+  var currSecIndex = 0;
 
   // secStart/End are used to determine how far along a given vertex is in the section
   // in which it lands
-  double secStart = 0.0;
-  double secEnd = sections[1];
+  var secStart = 0.0;
+  var secEnd = sections[1];
 
   // t value is used to place each vertex. 0 is on the positive x axis,
   // moving into section 0 to begin with. startLocation, a value from 0 to 1, varies the location
   // anywhere on the perimeter of the shape
-  double t = startLocation * perimeter;
+  var t = startLocation * perimeter;
 
   // The list of vertices to be returned
-  final List<double> result = List.filled(numVerticesPerRadius * 4, 0.0);
+  final result = List<double>.filled(numVerticesPerRadius * 4, 0.0);
 
-  int arrayIndex = 0;
+  var arrayIndex = 0;
 
   final rectBR = Point(hSegHalf, vSegHalf);
   final rectBL = Point(-hSegHalf, vSegHalf);
@@ -981,7 +980,7 @@ List<double> _pillStarVerticesFromNumVerts(
   final rectTR = Point(hSegHalf, -vSegHalf);
 
   // Each iteration through this loop uses the next t value as we walk around the shape
-  for (int i = 0; i < numVerticesPerRadius * 2; i++) {
+  for (var i = 0; i < numVerticesPerRadius * 2; i++) {
     // t could start (and end) after 0; extra boundedT logic makes sure it does the right
     // thing when crossing the boundar past 0 again
     final boundedT = t % perimeter;
@@ -1042,9 +1041,9 @@ List<double> _starVerticesFromNumVerts(
   double centerX,
   double centerY,
 ) {
-  final List<double> result = List.filled(numVerticesPerRadius * 4, 0.0);
-  int arrayIndex = 0;
-  for (int i = 0; i < numVerticesPerRadius; i++) {
+  final result = List<double>.filled(numVerticesPerRadius * 4, 0.0);
+  var arrayIndex = 0;
+  for (var i = 0; i < numVerticesPerRadius; i++) {
     var vertex = radialToCartesian(
       radius,
       (math.pi / numVerticesPerRadius * 2 * i),

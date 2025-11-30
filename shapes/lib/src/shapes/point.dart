@@ -6,6 +6,7 @@ import 'cubic.dart';
 import 'utils.dart';
 
 @internal
+@immutable
 final class Point {
   const Point(this.x, this.y);
 
