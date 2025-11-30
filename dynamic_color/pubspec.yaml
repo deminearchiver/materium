@@ -23,6 +23,8 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^6.0.0
+  materium_lints:
+    path: ../materium_lints
   build_runner: ^2.10.4
   json_serializable: ^6.11.2
   freezed: ^3.2.3

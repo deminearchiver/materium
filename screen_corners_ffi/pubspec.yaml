@@ -19,6 +19,8 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  materium_lints:
+    path: ../materium_lints
   flutter_lints: ^6.0.0
   jnigen: ^0.15.0
 

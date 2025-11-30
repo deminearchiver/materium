@@ -1,6 +1,1 @@
-include: package:flutter_lints/flutter.yaml
-linter:
-  rules:
-    - prefer_const_constructors
-    - prefer_const_constructors_in_immutables
-    - always_declare_return_types
+include: package:materium_lints/flutter.yaml
