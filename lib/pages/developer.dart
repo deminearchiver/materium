@@ -1703,23 +1703,110 @@ class _SettingsAppBarRoute<T extends Object?> extends PopupRoute<T> {
   final GlobalKey _viewKey = GlobalKey();
   final GlobalKey _textFieldKey = GlobalKey();
 
+  final Tween<double> _exitOpacityTween = Tween<double>(begin: 1.0, end: 0.0);
+
+  final Tween<double> _enterOpacityTween = Tween<double>(begin: 0.0, end: 1.0);
+
+  CurvedAnimation _linearExitAnimation = CurvedAnimation(
+    parent: kAlwaysDismissedAnimation,
+    curve: Curves.linear,
+  );
+  CurvedAnimation _linearEnterAnimation = CurvedAnimation(
+    parent: kAlwaysDismissedAnimation,
+    curve: Curves.linear,
+  );
+  CurvedAnimation _curvedExitAnimation = CurvedAnimation(
+    parent: kAlwaysDismissedAnimation,
+    curve: Curves.linear,
+  );
+  CurvedAnimation _curvedEnterAnimation = CurvedAnimation(
+    parent: kAlwaysDismissedAnimation,
+    curve: Curves.linear,
+  );
   CurvedAnimation _curvedAnimation = CurvedAnimation(
     parent: kAlwaysDismissedAnimation,
     curve: Curves.linear,
   );
 
-  final Tween<Rect?> _rectTween = RectTween();
-  final Tween<Offset> _textFieldPositionTween = Tween<Offset>();
+  final Tween<Rect?> _containerRectTween = RectTween();
+  final Tween<Rect?> _textRectTween = RectTween();
 
-  void _didChangeState({required Animation<double> animation}) {
-    if (_curvedAnimation.parent != animation) {
-      _curvedAnimation.dispose();
-      _curvedAnimation = CurvedAnimation(
-        parent: animation,
-        curve: Curves.easeInOutCubicEmphasized,
-        reverseCurve: Curves.easeInOutCubicEmphasized.flipped,
+  bool _sharedElementVisible = false;
+
+  void _didChangeState({required Animation<double> linearAnimation}) {
+    final easingTheme = const EasingThemeData.fallback();
+    final linearExitInterval = Interval(0.0, 0.25, curve: easingTheme.linear);
+    final linearEnterInterval = Interval(0.25, 0.75, curve: easingTheme.linear);
+    final reverseLinearExitInterval = Interval(
+      1.0 - linearEnterInterval.end,
+      1.0 - linearEnterInterval.begin,
+      curve: linearEnterInterval.curve,
+    );
+    final reverseLinearEnterInterval = Interval(
+      1.0 - linearExitInterval.end,
+      1.0 - linearExitInterval.begin,
+      curve: linearEnterInterval.curve,
+    );
+    final curvedExitInterval = linearExitInterval.copyWith(
+      curve: easingTheme.emphasizedAccelerate,
+    );
+    final curvedEnterInterval = linearEnterInterval.copyWith(
+      curve: easingTheme.emphasizedDecelerate,
+    );
+    final reverseCurvedExitInterval = reverseLinearExitInterval.copyWith(
+      curve: easingTheme.emphasizedDecelerate.flipped,
+    );
+    final reverseCurvedEnterInterval = reverseLinearEnterInterval.copyWith(
+      curve: easingTheme.emphasizedAccelerate.flipped,
+    );
+    if (_linearExitAnimation.parent != linearAnimation) {
+      _linearExitAnimation.dispose();
+      _linearExitAnimation = CurvedAnimation(
+        parent: linearAnimation,
+        curve: linearExitInterval,
+        reverseCurve: reverseLinearExitInterval,
       );
     }
+    if (_linearEnterAnimation.parent != linearAnimation) {
+      _linearEnterAnimation.dispose();
+      _linearEnterAnimation = CurvedAnimation(
+        parent: linearAnimation,
+        curve: linearEnterInterval,
+        reverseCurve: reverseLinearEnterInterval,
+      );
+    }
+    if (_curvedExitAnimation.parent != linearAnimation) {
+      _curvedExitAnimation.dispose();
+      _curvedExitAnimation = CurvedAnimation(
+        parent: linearAnimation,
+        curve: curvedExitInterval,
+        reverseCurve: reverseCurvedExitInterval,
+      );
+    }
+    if (_curvedEnterAnimation.parent != linearAnimation) {
+      _curvedEnterAnimation.dispose();
+      _curvedEnterAnimation = CurvedAnimation(
+        parent: linearAnimation,
+        curve: curvedEnterInterval,
+        reverseCurve: reverseCurvedEnterInterval,
+      );
+    }
+    if (_curvedAnimation.parent != linearAnimation) {
+      _curvedAnimation.dispose();
+      final curve = easingTheme.emphasized;
+      _curvedAnimation = CurvedAnimation(
+        parent: linearAnimation,
+        curve: curve,
+        reverseCurve: curve.flipped,
+      );
+    }
+  }
+
+  void _animationListener() {
+    assert(this.animation != null);
+    final animation = this.animation!;
+    final sharedElementVisible = !offstage && !animation.isDismissed;
+    setState(() => _sharedElementVisible = sharedElementVisible);
   }
 
   @override
@@ -1732,20 +1819,27 @@ class _SettingsAppBarRoute<T extends Object?> extends PopupRoute<T> {
   String? get barrierLabel => null;
 
   @override
-  Duration get transitionDuration => Durations.long2;
+  Duration get transitionDuration =>
+      kDebugMode ? Durations.extralong4 : Durations.long2;
 
   @override
-  Duration get reverseTransitionDuration => Durations.medium2;
+  Duration get reverseTransitionDuration =>
+      kDebugMode ? Durations.extralong4 : Durations.medium2;
 
   @override
   void install() {
-    // TODO: implement install
     super.install();
+    animation?.addListener(_animationListener);
   }
 
   @override
   void dispose() {
     _curvedAnimation.dispose();
+    _curvedEnterAnimation.dispose();
+    _curvedExitAnimation.dispose();
+    _linearEnterAnimation.dispose();
+    _linearExitAnimation.dispose();
+    animation?.removeListener(_animationListener);
     super.dispose();
   }
 
@@ -1756,7 +1850,7 @@ class _SettingsAppBarRoute<T extends Object?> extends PopupRoute<T> {
     Animation<double> secondaryAnimation,
     Widget child,
   ) {
-    _didChangeState(animation: animation);
+    _didChangeState(linearAnimation: animation);
 
     final screenCorners = ScreenCorners.of(context);
 
@@ -1780,6 +1874,7 @@ class _SettingsAppBarRoute<T extends Object?> extends PopupRoute<T> {
     final padding = MediaQuery.paddingOf(context);
 
     final extent = padding.top + 72.0;
+    // padding.top + lerpDouble(56.0, 72.0, _curvedAnimation.value)!;
 
     // Positioned.fill(
     //   child: ColoredBox(
@@ -1802,47 +1897,96 @@ class _SettingsAppBarRoute<T extends Object?> extends PopupRoute<T> {
         child: LayoutBuilder(
           key: _viewKey,
           builder: (context, constraints) {
-            Rect? containerRect;
+            Rect? beginContainerRect;
             final containerBox =
                 containerKey.currentContext?.findRenderObject() as RenderBox?;
             if (containerBox != null && containerBox.hasSize) {
               try {
-                containerRect =
+                beginContainerRect =
                     containerBox.localToGlobal(Offset.zero) & containerBox.size;
               } on Object catch (_) {
-                containerRect = _rectTween.begin;
+                beginContainerRect = _containerRectTween.begin;
               }
             }
-            Rect? viewRect;
+
+            Rect? endContainerRect;
             if (constraints.hasTightWidth && constraints.hasTightHeight) {
               try {
-                viewRect = Offset.zero & constraints.biggest;
+                endContainerRect = Offset.zero & constraints.biggest;
               } on Object catch (_) {
-                viewRect = _rectTween.end;
+                endContainerRect = _containerRectTween.end;
               }
             }
 
-            Rect? rect;
-            if (containerRect != null) {
-              _rectTween.begin = containerRect;
+            Rect? containerRect;
+            if (beginContainerRect != null) {
+              _containerRectTween.begin = beginContainerRect;
             }
-            if (viewRect != null) {
-              _rectTween.end = viewRect;
+            if (endContainerRect != null) {
+              _containerRectTween.end = endContainerRect;
             }
-            if (_rectTween.begin != null && _rectTween.end != null) {
-              rect = _rectTween.evaluate(_curvedAnimation)!;
+            if (_containerRectTween.begin != null &&
+                _containerRectTween.end != null) {
+              containerRect = _containerRectTween.evaluate(_curvedAnimation)!;
             }
-            containerRect ??= _rectTween.begin ?? Rect.zero;
-            viewRect ??= _rectTween.end ?? Rect.zero;
+            beginContainerRect ??= _containerRectTween.begin ?? Rect.zero;
+            endContainerRect ??= _containerRectTween.end ?? Rect.zero;
 
-            final showSharedElement = rect != null && !animation.isCompleted;
+            // final showSharedElement =
+            //     containerRect != null && !animation.isCompleted;
 
-            rect ??= animation.isDismissed ? containerRect : viewRect;
+            containerRect ??= animation.isDismissed
+                ? beginContainerRect
+                : endContainerRect;
+
+            Rect? beginTextRect;
+            final textBox =
+                textKey.currentContext?.findRenderObject() as RenderBox?;
+            if (textBox != null && textBox.hasSize) {
+              try {
+                beginTextRect =
+                    textBox.localToGlobal(Offset.zero) & textBox.size;
+              } on Object catch (_) {
+                beginTextRect = _textRectTween.begin;
+              }
+            }
+
+            Rect? endTextRect;
+            final textFieldBox =
+                _textFieldKey.currentContext?.findRenderObject() as RenderBox?;
+            if (textFieldBox != null && textFieldBox.hasSize) {
+              try {
+                endTextRect =
+                    textFieldBox.localToGlobal(Offset.zero) & textFieldBox.size;
+              } on Object catch (_) {
+                endTextRect = _textRectTween.end;
+              }
+            }
+
+            Rect? textRect;
+            if (beginTextRect != null) {
+              _textRectTween.begin = beginTextRect;
+            }
+            if (endTextRect != null) {
+              _textRectTween.end = endTextRect;
+            }
+            if (_textRectTween.begin != null && _textRectTween.end != null) {
+              textRect = _textRectTween.evaluate(_curvedAnimation)!;
+            }
+            beginTextRect ??= _textRectTween.begin ?? Rect.zero;
+            endTextRect ??= _textRectTween.end ?? Rect.zero;
+
+            // final showSharedElement =
+            //     textRect != null && !animation.isCompleted;
+            final showSharedElement =
+                textRect != null && !offstage && !animation.isCompleted;
+
+            textRect ??= animation.isDismissed ? beginTextRect : endTextRect;
 
             final shape = ShapeBorder.lerp(
               CornersBorder.rounded(
                 corners: Corners.all(
-                  Corner.circular(containerRect.shortestSide / 2.0),
+                  Corner.circular(beginContainerRect.shortestSide / 2.0),
                 ),
               ),
               viewShape,
@@ -1919,10 +2063,10 @@ class _SettingsAppBarRoute<T extends Object?> extends PopupRoute<T> {
 
             return Align.topLeft(
               child: Transform.translate(
-                offset: rect.topLeft,
+                offset: containerRect.topLeft,
                 child: SizedBox(
-                  width: rect.width,
-                  height: rect.height,
+                  width: containerRect.width,
+                  height: containerRect.height,
                   child: Material(
                     animationDuration: Duration.zero,
                     clipBehavior: Clip.antiAlias,
@@ -1930,116 +2074,166 @@ class _SettingsAppBarRoute<T extends Object?> extends PopupRoute<T> {
                     shape: shape,
                     child: OverflowBox(
                       alignment: Alignment.topLeft,
-                      minWidth: viewRect.width,
-                      maxWidth: viewRect.width,
-                      minHeight: viewRect.height,
-                      maxHeight: viewRect.height,
+                      minWidth: containerRect.width,
+                      maxWidth: containerRect.width,
+                      minHeight: endContainerRect.height,
+                      maxHeight: endContainerRect.height,
                       child: Transform.translate(
-                        offset: viewRect.topLeft - rect.topLeft,
-                        child: CustomScrollView(
-                          slivers: [
-                            SliverHeader(
-                              minExtent: extent,
-                              maxExtent: extent,
-                              pinned: true,
-                              builder:
-                                  (
-                                    context,
-                                    shrinkOffset,
-                                    overlapsContent,
-                                  ) => Material(
-                                    animationDuration: Duration.zero,
-                                    clipBehavior: Clip.antiAlias,
-                                    color: containerColor,
-                                    child: SizedBox(
-                                      width: double.infinity,
-                                      height: extent,
-                                      child: Padding(
-                                        padding: EdgeInsets.fromLTRB(
-                                          0.0,
-                                          padding.top,
-                                          0.0,
-                                          0.0,
-                                        ),
-                                        child: KeyedSubtree(
-                                          child: Flex.horizontal(
-                                            children: [
-                                              const SizedBox(width: 8.0 - 4.0),
-                                              backIconButton,
-                                              const SizedBox(width: 8.0 - 4.0),
-                                              Flexible.tight(
-                                                child: TextField(
-                                                  key: _textFieldKey,
-                                                  autofocus: false,
-                                                  style: typescaleTheme
-                                                      .bodyLarge
-                                                      .toTextStyle(
-                                                        color: colorTheme
-                                                            .onSurface,
-                                                      ),
-                                                  decoration: InputDecoration(
-                                                    border: InputBorder.none,
-                                                    hintText: "Search Settings",
-                                                    hintStyle: typescaleTheme
-                                                        .bodyLarge
-                                                        .toTextStyle(
-                                                          color: colorTheme
-                                                              .onSurfaceVariant,
-                                                        ),
+                        // offset: viewRect.topLeft - rect.topLeft,
+                        offset: Offset(
+                          0.0,
+                          lerpDouble(
+                            -(padding.top + (72.0 - 56.0) / 2.0),
+                            0.0,
+                            _curvedAnimation.value,
+                          )!,
+                        ),
+                        child: Stack(
+                          fit: StackFit.expand,
+                          children: [
+                            CustomScrollView(
+                              slivers: [
+                                SliverHeader(
+                                  minExtent: extent,
+                                  maxExtent: extent,
+                                  pinned: true,
+                                  builder:
+                                      (
+                                        context,
+                                        shrinkOffset,
+                                        overlapsContent,
+                                      ) => Material(
+                                        animationDuration: Duration.zero,
+                                        clipBehavior: Clip.antiAlias,
+                                        color: containerColor,
+                                        child: SizedBox(
+                                          width: double.infinity,
+                                          height: extent,
+                                          child: Padding(
+                                            padding: EdgeInsets.fromLTRB(
+                                              0.0,
+                                              padding.top,
+                                              0.0,
+                                              0.0,
+                                            ),
+                                            child: KeyedSubtree(
+                                              child: Flex.horizontal(
+                                                children: [
+                                                  const SizedBox(
+                                                    width: 8.0 - 4.0,
                                                   ),
-                                                ),
-                                              ),
+                                                  Opacity(
+                                                    opacity: _enterOpacityTween
+                                                        .evaluate(
+                                                          _linearEnterAnimation,
+                                                        ),
+                                                    child: backIconButton,
+                                                  ),
+                                                  const SizedBox(
+                                                    width: 8.0 - 4.0,
+                                                  ),
+                                                  Flexible.tight(
+                                                    child: Visibility.maintain(
+                                                      visible:
+                                                          !showSharedElement,
+                                                      child: TextField(
+                                                        key: _textFieldKey,
+                                                        autofocus: false,
+                                                        style: typescaleTheme
+                                                            .bodyLarge
+                                                            .toTextStyle(
+                                                              color: colorTheme
+                                                                  .onSurface,
+                                                            ),
+                                                        decoration: InputDecoration(
+                                                          border:
+                                                              InputBorder.none,
+                                                          hintText:
+                                                              "Search Settings",
+                                                          hintStyle: typescaleTheme
+                                                              .bodyLarge
+                                                              .toTextStyle(
+                                                                color: colorTheme
+                                                                    .onSurfaceVariant,
+                                                              ),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ),
 
-                                              const SizedBox(width: 8.0 - 4.0),
-                                              clearIconButton,
-                                              const SizedBox(width: 8.0 - 4.0),
-                                            ],
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                            ),
-                            SliverPadding(
-                              padding: const EdgeInsets.fromLTRB(
-                                16.0,
-                                0.0,
-                                16.0,
-                                16.0,
-                              ),
-                              sliver: SliverTransform.translate(
-                                offset: Offset.lerp(
-                                  Offset(0.0, 100.0),
-                                  Offset.zero,
-                                  _curvedAnimation.value,
-                                )!,
-                                sliver: SliverOpacity(
-                                  opacity: _curvedAnimation.value,
-                                  sliver: SliverList.separated(
-                                    separatorBuilder: (context, index) =>
-                                        const SizedBox(height: 2.0),
-                                    itemBuilder: (context, index) =>
-                                        ListItemContainer(
-                                          isFirst: index == 0,
-                                          containerColor:
-                                              colorTheme.surfaceContainerLow,
-                                          child: ListItemInteraction(
-                                            onTap: () => navigator?.pop(),
-
-                                            child: ListItemLayout(
-                                              leading: const Icon(
-                                                Symbols.search_rounded,
-                                              ),
-                                              headline: Text(
-                                                "Search suggestion ${index + 1}",
+                                                  const SizedBox(
+                                                    width: 8.0 - 4.0,
+                                                  ),
+                                                  Opacity(
+                                                    opacity: _enterOpacityTween
+                                                        .evaluate(
+                                                          _linearEnterAnimation,
+                                                        ),
+                                                    child: clearIconButton,
+                                                  ),
+                                                  const SizedBox(
+                                                    width: 8.0 - 4.0,
+                                                  ),
+                                                ],
                                               ),
                                             ),
                                           ),
                                         ),
+                                      ),
+                                ),
+                                SliverPadding(
+                                  padding: const EdgeInsets.fromLTRB(
+                                    8.0,
+                                    0.0,
+                                    8.0,
+                                    16.0,
+                                  ),
+                                  sliver: SliverOpacity(
+                                    opacity: _enterOpacityTween.evaluate(
+                                      _linearEnterAnimation,
+                                    ),
+                                    sliver: SliverList.separated(
+                                      separatorBuilder: (context, index) =>
+                                          const SizedBox(height: 2.0),
+                                      itemBuilder: (context, index) =>
+                                          ListItemContainer(
+                                            isFirst: index == 0,
+                                            opticalCenterEnabled: false,
+                                            containerColor:
+                                                colorTheme.surfaceContainerLow,
+                                            child: ListItemInteraction(
+                                              onTap: () => navigator?.pop(),
+
+                                              child: ListItemLayout(
+                                                isMultiline: false,
+                                                leading: const Icon(
+                                                  Symbols.search_rounded,
+                                                ),
+                                                headline: Text(
+                                                  "Search suggestion ${index + 1}",
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            if (showSharedElement)
+                              Positioned(
+                                top:
+                                    padding.top +
+                                    (72.0 - beginTextRect.height) / 2.0,
+                                left: textRect.left - containerRect.left,
+                                child: Text(
+                                  "Search Settings",
+                                  textAlign: TextAlign.start,
+                                  style: typescaleTheme.bodyLarge.toTextStyle(
+                                    color: colorTheme.onSurfaceVariant,
                                   ),
                                 ),
                               ),
-                            ),
                           ],
                         ),
                       ),
@@ -2060,6 +2254,40 @@ class _SettingsAppBarRoute<T extends Object?> extends PopupRoute<T> {
     Animation<double> animation,
     Animation<double> secondaryAnimation,
   ) {
+    return const Placeholder();
+  }
+}
+
+class _SettingsAppBarView extends StatefulWidget {
+  const _SettingsAppBarView({super.key});
+
+  @override
+  State<_SettingsAppBarView> createState() => _SettingsAppBarViewState();
+}
+
+class _SettingsAppBarViewState extends State<_SettingsAppBarView> {
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
+  void didUpdateWidget(_SettingsAppBarView oldWidget) {
+    super.didUpdateWidget(oldWidget);
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return const Placeholder();
   }
 }
