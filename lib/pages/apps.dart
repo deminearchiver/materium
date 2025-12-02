@@ -222,80 +222,81 @@ class AppsPageState extends State<AppsPage> with TickerProviderStateMixin {
       });
     }
 
-    listedApps = listedApps.where((app) {
-      if (app.app.installedVersion == app.app.latestVersion &&
-          !(filter.includeUptodate)) {
-        return false;
-      }
-      if (app.app.installedVersion == null && !(filter.includeNonInstalled)) {
-        return false;
-      }
-      if (filter.nameFilter.isNotEmpty || filter.authorFilter.isNotEmpty) {
-        List<String> nameTokens = filter.nameFilter
-            .split(' ')
-            .where((element) => element.trim().isNotEmpty)
-            .toList();
-        List<String> authorTokens = filter.authorFilter
-            .split(' ')
-            .where((element) => element.trim().isNotEmpty)
-            .toList();
-
-        for (var t in nameTokens) {
-          if (!app.name.toLowerCase().contains(t.toLowerCase())) {
+    listedApps =
+        listedApps.where((app) {
+          if (app.app.installedVersion == app.app.latestVersion &&
+              !(filter.includeUptodate)) {
             return false;
           }
-        }
-        for (var t in authorTokens) {
-          if (!app.author.toLowerCase().contains(t.toLowerCase())) {
+          if (app.app.installedVersion == null &&
+              !(filter.includeNonInstalled)) {
             return false;
           }
-        }
-      }
-      if (filter.idFilter.isNotEmpty) {
-        if (!app.app.id.contains(filter.idFilter)) {
-          return false;
-        }
-      }
-      if (filter.categoryFilter.isNotEmpty &&
-          filter.categoryFilter
-              .intersection(app.app.categories.toSet())
-              .isEmpty) {
-        return false;
-      }
-      if (filter.sourceFilter.isNotEmpty &&
-          sourceProvider
-                  .getSource(
-                    app.app.url,
-                    overrideSource: app.app.overrideSource,
-                  )
-                  .runtimeType
-                  .toString() !=
-              filter.sourceFilter) {
-        return false;
-      }
-      return true;
-    }).toList();
+          if (filter.nameFilter.isNotEmpty || filter.authorFilter.isNotEmpty) {
+            List<String> nameTokens = filter.nameFilter
+                .split(' ')
+                .where((element) => element.trim().isNotEmpty)
+                .toList();
+            List<String> authorTokens = filter.authorFilter
+                .split(' ')
+                .where((element) => element.trim().isNotEmpty)
+                .toList();
 
-    listedApps.sort((a, b) {
-      int result = 0;
-      if (settingsProvider.sortColumn == SortColumnSettings.authorName) {
-        result = ((a.author + a.name).toLowerCase()).compareTo(
-          (b.author + b.name).toLowerCase(),
-        );
-      } else if (settingsProvider.sortColumn == SortColumnSettings.nameAuthor) {
-        result = ((a.name + a.author).toLowerCase()).compareTo(
-          (b.name + b.author).toLowerCase(),
-        );
-      } else if (settingsProvider.sortColumn ==
-          SortColumnSettings.releaseDate) {
-        result =
-            (a.app.releaseDate)?.compareTo(
-              b.app.releaseDate ?? DateTime.fromMicrosecondsSinceEpoch(0),
-            ) ??
-            0;
-      }
-      return result;
-    });
+            for (var t in nameTokens) {
+              if (!app.name.toLowerCase().contains(t.toLowerCase())) {
+                return false;
+              }
+            }
+            for (var t in authorTokens) {
+              if (!app.author.toLowerCase().contains(t.toLowerCase())) {
+                return false;
+              }
+            }
+          }
+          if (filter.idFilter.isNotEmpty) {
+            if (!app.app.id.contains(filter.idFilter)) {
+              return false;
+            }
+          }
+          if (filter.categoryFilter.isNotEmpty &&
+              filter.categoryFilter
+                  .intersection(app.app.categories.toSet())
+                  .isEmpty) {
+            return false;
+          }
+          if (filter.sourceFilter.isNotEmpty &&
+              sourceProvider
+                      .getSource(
+                        app.app.url,
+                        overrideSource: app.app.overrideSource,
+                      )
+                      .runtimeType
+                      .toString() !=
+                  filter.sourceFilter) {
+            return false;
+          }
+          return true;
+        }).toList()..sort((a, b) {
+          var result = 0;
+          if (settingsProvider.sortColumn == SortColumnSettings.authorName) {
+            result = ((a.author + a.name).toLowerCase()).compareTo(
+              (b.author + b.name).toLowerCase(),
+            );
+          } else if (settingsProvider.sortColumn ==
+              SortColumnSettings.nameAuthor) {
+            result = ((a.name + a.author).toLowerCase()).compareTo(
+              (b.name + b.author).toLowerCase(),
+            );
+          } else if (settingsProvider.sortColumn ==
+              SortColumnSettings.releaseDate) {
+            result =
+                (a.app.releaseDate)?.compareTo(
+                  b.app.releaseDate ?? DateTime.fromMicrosecondsSinceEpoch(0),
+                ) ??
+                0;
+          }
+          return result;
+        });
 
     if (settingsProvider.sortOrder == SortOrderSettings.descending) {
       listedApps = listedApps.reversed.toList();
@@ -381,14 +382,14 @@ class AppsPageState extends State<AppsPage> with TickerProviderStateMixin {
           : [];
     }
 
-    var listedCategories = getListedCategories();
-    listedCategories.sort((a, b) {
-      return a != null && b != null
-          ? a.toLowerCase().compareTo(b.toLowerCase())
-          : a == null
-          ? 1
-          : -1;
-    });
+    final listedCategories = getListedCategories()
+      ..sort((a, b) {
+        return a != null && b != null
+            ? a.toLowerCase().compareTo(b.toLowerCase())
+            : a == null
+            ? 1
+            : -1;
+      });
 
     Set<App> selectedApps = listedApps
         .map((e) => e.app)

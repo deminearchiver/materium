@@ -74,20 +74,21 @@ class TypographyDefaults with Diagnosticable {
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
-    properties.add(
-      DiagnosticsProperty<TypefaceThemeDataPartial>(
-        "typeface",
-        typeface,
-        defaultValue: const TypefaceThemeDataPartial.from(),
-      ),
-    );
-    properties.add(
-      DiagnosticsProperty<TypescaleThemeDataPartial>(
-        "typescale",
-        typescale,
-        defaultValue: const TypescaleThemeDataPartial.from(),
-      ),
-    );
+    properties
+      ..add(
+        DiagnosticsProperty<TypefaceThemeDataPartial>(
+          "typeface",
+          typeface,
+          defaultValue: const TypefaceThemeDataPartial.from(),
+        ),
+      )
+      ..add(
+        DiagnosticsProperty<TypescaleThemeDataPartial>(
+          "typescale",
+          typescale,
+          defaultValue: const TypescaleThemeDataPartial.from(),
+        ),
+      );
   }
 
   @override

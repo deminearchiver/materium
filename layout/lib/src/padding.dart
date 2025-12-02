@@ -64,12 +64,10 @@ class Padding extends SingleChildRenderObjectWidget {
   final EdgeInsetsGeometry padding;
 
   @override
-  RenderPadding createRenderObject(BuildContext context) {
-    return RenderPadding(
-      padding: padding,
-      textDirection: Directionality.maybeOf(context),
-    );
-  }
+  RenderPadding createRenderObject(BuildContext context) => RenderPadding(
+    padding: padding,
+    textDirection: Directionality.maybeOf(context),
+  );
 
   @override
   void updateRenderObject(BuildContext context, RenderPadding renderObject) {
@@ -103,7 +101,7 @@ class RenderPadding extends RenderShiftedBox {
 
   EdgeInsets? _resolvedPaddingCache;
   EdgeInsets get _resolvedPadding {
-    final EdgeInsets returnValue = _resolvedPaddingCache ??= padding.resolve(
+    final returnValue = _resolvedPaddingCache ??= padding.resolve(
       textDirection,
     );
     return returnValue;
@@ -144,12 +142,12 @@ class RenderPadding extends RenderShiftedBox {
 
   @override
   double computeMinIntrinsicWidth(double height) {
-    final EdgeInsets padding = _resolvedPadding;
-    if (child != null) {
+    final padding = _resolvedPadding;
+    if (child case final child?) {
       // Relies on double.infinity absorption.
       return math.max(
         0.0,
-        child!.getMinIntrinsicWidth(math.max(0.0, height - padding.vertical)) +
+        child.getMinIntrinsicWidth(math.max(0.0, height - padding.vertical)) +
             padding.horizontal,
       );
     }
@@ -158,54 +156,50 @@ class RenderPadding extends RenderShiftedBox {
 
   @override
   double computeMaxIntrinsicWidth(double height) {
-    final EdgeInsets padding = _resolvedPadding;
-    if (child != null) {
+    final padding = _resolvedPadding;
+    return switch (child) {
       // Relies on double.infinity absorption.
-      return math.max(
+      final child? => math.max(
         0.0,
-        child!.getMaxIntrinsicWidth(math.max(0.0, height - padding.vertical)) +
+        child.getMaxIntrinsicWidth(math.max(0.0, height - padding.vertical)) +
             padding.horizontal,
-      );
-    }
-    return math.max(0.0, padding.horizontal);
+      ),
+      _ => math.max(0.0, padding.horizontal),
+    };
   }
 
   @override
   double computeMinIntrinsicHeight(double width) {
-    final EdgeInsets padding = _resolvedPadding;
-    if (child != null) {
+    final padding = _resolvedPadding;
+    return switch (child) {
       // Relies on double.infinity absorption.
-      return math.max(
+      final child? => math.max(
         0.0,
-        child!.getMinIntrinsicHeight(
-              math.max(0.0, width - padding.horizontal),
-            ) +
+        child.getMinIntrinsicHeight(math.max(0.0, width - padding.horizontal)) +
             padding.vertical,
-      );
-    }
-    return math.max(0.0, padding.vertical);
+      ),
+      _ => math.max(0.0, padding.vertical),
+    };
   }
 
   @override
   double computeMaxIntrinsicHeight(double width) {
     final EdgeInsets padding = _resolvedPadding;
-    if (child != null) {
+    return switch (child) {
       // Relies on double.infinity absorption.
-      return math.max(
+      final child? => math.max(
         0.0,
-        child!.getMaxIntrinsicHeight(
-              math.max(0.0, width - padding.horizontal),
-            ) +
+        child.getMaxIntrinsicHeight(math.max(0.0, width - padding.horizontal)) +
             padding.vertical,
-      );
-    }
-    return math.max(0.0, padding.vertical);
+      ),
+      _ => math.max(0.0, padding.vertical),
+    };
   }
 
   @override
   @protected
   Size computeDryLayout(covariant BoxConstraints constraints) {
-    final EdgeInsets padding = _resolvedPadding;
+    final padding = _resolvedPadding;
     if (child case final child?) {
       final innerConstraints = constraints.deflate(padding);
       final childSize = child.getDryLayout(innerConstraints);
@@ -215,14 +209,10 @@ class RenderPadding extends RenderShiftedBox {
           math.max(0.0, padding.vertical + childSize.height),
         ),
       );
-    } else {
-      return constraints.constrain(
-        Size(
-          math.max(0.0, padding.horizontal),
-          math.max(0.0, padding.vertical),
-        ),
-      );
     }
+    return constraints.constrain(
+      Size(math.max(0.0, padding.horizontal), math.max(0.0, padding.vertical)),
+    );
   }
 
   @override
@@ -237,22 +227,23 @@ class RenderPadding extends RenderShiftedBox {
           BaselineOffset(child.getDryBaseline(innerConstraints, baseline)) +
           padding.top;
       return result.offset;
-    } else {
-      return null;
     }
+    return null;
   }
 
   @override
   void performLayout() {
-    final BoxConstraints constraints = this.constraints;
-    final EdgeInsets padding = _resolvedPadding;
+    final constraints = this.constraints;
+    final padding = _resolvedPadding;
     if (child case final child?) {
       final innerConstraints = constraints.deflate(padding);
 
       child.layout(innerConstraints, parentUsesSize: true);
 
-      final childParentData = child.parentData! as BoxParentData;
-      childParentData.offset = Offset(padding.left, padding.top);
+      (child.parentData! as BoxParentData).offset = Offset(
+        padding.left,
+        padding.top,
+      );
 
       size = constraints.constrain(
         Size(

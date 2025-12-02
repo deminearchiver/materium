@@ -4266,10 +4266,10 @@ Future<ui.Image> _imageProviderToScaled(ImageProvider imageProvider) async {
 }
 
 int _getArgbFromAbgr(int abgr) {
-  const int exceptRMask = 0xFF00FFFF;
-  const int onlyRMask = ~exceptRMask;
-  const int exceptBMask = 0xFFFFFF00;
-  const int onlyBMask = ~exceptBMask;
+  const exceptRMask = 0xFF00FFFF;
+  const onlyRMask = ~exceptRMask;
+  const exceptBMask = 0xFFFFFF00;
+  const onlyBMask = ~exceptBMask;
   final r = (abgr & onlyRMask) >> 16;
   final b = abgr & onlyBMask;
   return (abgr & exceptRMask & exceptBMask) | (b << 16) | r;

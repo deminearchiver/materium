@@ -265,14 +265,12 @@ class _HomePageState extends State<HomePage> {
                       Text(tr('batteryOptimizationNote')),
                       GestureDetector(
                         onTap: () {
-                          const intent = AndroidIntent(
+                          const AndroidIntent(
                             action:
                                 'android.settings.IGNORE_BATTERY_OPTIMIZATION_SETTINGS',
                             package:
                                 obtainiumId, // Replace with your app's package name
-                          );
-
-                          intent.launch();
+                          ).launch();
                         },
                         child: Text(
                           tr('settings'),

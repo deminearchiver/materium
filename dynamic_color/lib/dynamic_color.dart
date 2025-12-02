@@ -162,13 +162,14 @@ class DynamicColorSchemeSource extends DynamicColorSource {
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
-    properties.add(EnumProperty<Brightness>("brightness", brightness));
-    properties.add(
-      DiagnosticsProperty<DynamicColorScheme>(
-        "dynamicColorScheme",
-        dynamicColorScheme,
-      ),
-    );
+    properties
+      ..add(EnumProperty<Brightness>("brightness", brightness))
+      ..add(
+        DiagnosticsProperty<DynamicColorScheme>(
+          "dynamicColorScheme",
+          dynamicColorScheme,
+        ),
+      );
   }
 
   @override
@@ -197,18 +198,19 @@ class DynamicColorSchemesSource extends DynamicColorSource {
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
-    properties.add(
-      DiagnosticsProperty<DynamicColorScheme>(
-        "dynamicLightColorScheme",
-        dynamicLightColorScheme,
-      ),
-    );
-    properties.add(
-      DiagnosticsProperty<DynamicColorScheme>(
-        "dynamicDarkColorScheme",
-        dynamicDarkColorScheme,
-      ),
-    );
+    properties
+      ..add(
+        DiagnosticsProperty<DynamicColorScheme>(
+          "dynamicLightColorScheme",
+          dynamicLightColorScheme,
+        ),
+      )
+      ..add(
+        DiagnosticsProperty<DynamicColorScheme>(
+          "dynamicDarkColorScheme",
+          dynamicDarkColorScheme,
+        ),
+      );
   }
 
   @override

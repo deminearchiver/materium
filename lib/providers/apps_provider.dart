@@ -72,25 +72,27 @@ class DownloadedDir {
 }
 
 List<String> generateStandardVersionRegExStrings() {
-  var basics = [
+  final basics = [
     '[0-9]+',
     '[0-9]+\\.[0-9]+',
     '[0-9]+\\.[0-9]+\\.[0-9]+',
     '[0-9]+\\.[0-9]+\\.[0-9]+\\.[0-9]+',
   ];
-  var preSuffixes = ['-', '\\+'];
-  var suffixes = ['alpha', 'beta', 'ose', '[0-9]+'];
-  var finals = ['\\+[0-9]+', '[0-9]+'];
-  List<String> results = [];
-  for (var b in basics) {
+  final preSuffixes = ['-', '\\+'];
+  final suffixes = ['alpha', 'beta', 'ose', '[0-9]+'];
+  final finals = ['\\+[0-9]+', '[0-9]+'];
+  final results = <String>[];
+  for (final b in basics) {
     results.add(b);
-    for (var p in preSuffixes) {
-      for (var s in suffixes) {
-        results.add('$b$s');
-        results.add('$b$p$s');
-        for (var f in finals) {
-          results.add('$b$s$f');
-          results.add('$b$p$s$f');
+    for (final p in preSuffixes) {
+      for (final s in suffixes) {
+        results
+          ..add('$b$s')
+          ..add('$b$p$s');
+        for (final f in finals) {
+          results
+            ..add('$b$s$f')
+            ..add('$b$p$s$f');
         }
       }
     }
@@ -971,8 +973,10 @@ class AppsProvider with ChangeNotifier {
     }
     int? code;
     if (!settingsProvider.useShizuku) {
-      var allAPKs = [file.file.path];
-      allAPKs.addAll(additionalAPKs.map((a) => a.file.path));
+      final allAPKs = [
+        file.file.path,
+        ...additionalAPKs.map((a) => a.file.path),
+      ];
       code = await AndroidPackageInstaller.installApk(
         apkFilePath: allAPKs.join(','),
       );
@@ -1912,32 +1916,33 @@ class AppsProvider with ChangeNotifier {
     DateTime? ignoreAppsCheckedAfter,
     bool onlyCheckInstalledOrTrackOnlyApps = false,
   }) {
-    List<String> appIds = apps.values
-        .where(
-          (app) =>
-              app.app.lastUpdateCheck == null ||
-              ignoreAppsCheckedAfter == null ||
-              app.app.lastUpdateCheck!.isBefore(ignoreAppsCheckedAfter),
-        )
-        .where((app) {
-          if (!onlyCheckInstalledOrTrackOnlyApps) {
-            return true;
-          } else {
-            return app.app.installedVersion != null ||
-                app.app.additionalSettings['trackOnly'] == true;
-          }
-        })
-        .map((e) => e.app.id)
-        .toList();
-    appIds.sort(
-      (a, b) =>
-          (apps[a]!.app.lastUpdateCheck ??
-                  DateTime.fromMicrosecondsSinceEpoch(0))
-              .compareTo(
-                apps[b]!.app.lastUpdateCheck ??
-                    DateTime.fromMicrosecondsSinceEpoch(0),
-              ),
-    );
+    List<String> appIds =
+        apps.values
+            .where(
+              (app) =>
+                  app.app.lastUpdateCheck == null ||
+                  ignoreAppsCheckedAfter == null ||
+                  app.app.lastUpdateCheck!.isBefore(ignoreAppsCheckedAfter),
+            )
+            .where((app) {
+              if (!onlyCheckInstalledOrTrackOnlyApps) {
+                return true;
+              } else {
+                return app.app.installedVersion != null ||
+                    app.app.additionalSettings['trackOnly'] == true;
+              }
+            })
+            .map((e) => e.app.id)
+            .toList()
+          ..sort(
+            (a, b) =>
+                (apps[a]!.app.lastUpdateCheck ??
+                        DateTime.fromMicrosecondsSinceEpoch(0))
+                    .compareTo(
+                      apps[b]!.app.lastUpdateCheck ??
+                          DateTime.fromMicrosecondsSinceEpoch(0),
+                    ),
+          );
     return appIds;
   }
 

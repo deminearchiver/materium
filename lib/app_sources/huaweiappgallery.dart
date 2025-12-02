@@ -46,15 +46,10 @@ class HuaweiAppGallery extends AppSource {
   }
 
   String appIdFromRedirectDlUrl(String redirectDlUrl) {
-    var parts = redirectDlUrl
-        .split('?')[0]
-        .split('/')
-        .last
-        .split('.')
-        .reversed
-        .toList();
-    parts.removeAt(0);
-    parts.removeAt(0);
+    final parts =
+        redirectDlUrl.split('?')[0].split('/').last.split('.').reversed.toList()
+          ..removeAt(0)
+          ..removeAt(0);
     return parts.reversed.join('.');
   }
 

@@ -119,14 +119,16 @@ class _AnimationMapValue<T, U> extends Animation<U>
 
   @override
   void didStartListening() {
-    _parent.addListener(notifyListeners);
-    _parent.addStatusListener(notifyStatusListeners);
+    _parent
+      ..addListener(notifyListeners)
+      ..addStatusListener(notifyStatusListeners);
   }
 
   @override
   void didStopListening() {
-    _parent.removeStatusListener(notifyStatusListeners);
-    _parent.removeListener(notifyListeners);
+    _parent
+      ..removeStatusListener(notifyStatusListeners)
+      ..removeListener(notifyListeners);
   }
 
   @override
@@ -151,14 +153,16 @@ class _AnimationMapStatus<T> extends Animation<T>
 
   @override
   void didStartListening() {
-    _parent.addListener(notifyListeners);
-    _parent.addStatusListener(notifyStatusListeners);
+    _parent
+      ..addListener(notifyListeners)
+      ..addStatusListener(notifyStatusListeners);
   }
 
   @override
   void didStopListening() {
-    _parent.removeStatusListener(notifyStatusListeners);
-    _parent.removeListener(notifyListeners);
+    _parent
+      ..removeStatusListener(notifyStatusListeners)
+      ..removeListener(notifyListeners);
   }
 
   @override
@@ -192,14 +196,16 @@ class _NonNullAnimation<T extends Object> extends Animation<T>
 
   @override
   void didStartListening() {
-    _parent.addListener(notifyListeners);
-    _parent.addStatusListener(notifyStatusListeners);
+    _parent
+      ..addListener(notifyListeners)
+      ..addStatusListener(notifyStatusListeners);
   }
 
   @override
   void didStopListening() {
-    _parent.removeStatusListener(notifyStatusListeners);
-    _parent.removeListener(notifyListeners);
+    _parent
+      ..removeStatusListener(notifyStatusListeners)
+      ..removeListener(notifyListeners);
   }
 
   @override

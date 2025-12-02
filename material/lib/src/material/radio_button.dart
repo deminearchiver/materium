@@ -6,10 +6,10 @@ import 'package:flutter/material.dart' as flutter;
 
 import 'package:material/src/material/flutter.dart';
 
-typedef RadioLegacy = flutter.Radio;
+typedef RadioLegacy<T extends Object?> = flutter.Radio<T>;
 typedef RadioThemeLegacy = flutter.RadioTheme;
 typedef RadioThemeDataLegacy = flutter.RadioThemeData;
-typedef RadioListTileLegacy = flutter.RadioListTile;
+typedef RadioListTileLegacy<T extends Object?> = flutter.RadioListTile<T>;
 
 class RadioButton extends StatefulWidget {
   const RadioButton({super.key, required this.onTap, required this.selected});
@@ -569,8 +569,8 @@ class _RenderRadioButtonPaint extends RenderBox
       context.canvas.translate(center.dx, center.dy);
       context.canvas.scale(scale);
       context.canvas.translate(-center.dx, -center.dy);
-      final paint = Paint()..color = iconColor.value;
-      paint
+      final paint = Paint()
+        ..color = iconColor.value
         ..style = PaintingStyle.stroke
         ..strokeWidth = relativeStrokeWidth;
 

@@ -649,9 +649,9 @@ abstract class AppSource {
           (e) {
             return e.map((e2) {
               if (e2.key == key) {
-                var item = e2 as GeneratedFormSwitch;
-                item.disabled = disabled;
-                item.defaultValue = defaultValue;
+                e2 as GeneratedFormSwitch
+                  ..disabled = disabled
+                  ..defaultValue = defaultValue;
               }
               return e2;
             }).toList();
@@ -1139,24 +1139,25 @@ class SourceProvider {
   AppSource getSource(String url, {String? overrideSource}) {
     url = preStandardizeUrl(url);
     if (overrideSource != null) {
-      var srcs = sources.where(
+      final srcs = sources.where(
         (e) => e.runtimeType.toString() == overrideSource,
       );
       if (srcs.isEmpty) {
         throw UnsupportedURLError();
       }
-      var res = srcs.first;
-      var originalHosts = res.hosts;
-      var newHost = Uri.parse(url).host;
-      res.hosts = [newHost];
-      res.hostChanged = true;
+      final res = srcs.first;
+      final originalHosts = res.hosts;
+      final newHost = Uri.parse(url).host;
+      res
+        ..hosts = [newHost]
+        ..hostChanged = true;
       if (originalHosts.contains(newHost)) {
         res.hostIdenticalDespiteAnyChange = true;
       }
       return res;
     }
     AppSource? source;
-    for (var s in sources.where((element) => element.hosts.isNotEmpty)) {
+    for (final s in sources.where((element) => element.hosts.isNotEmpty)) {
       try {
         if (RegExp(
           '^${s.allowSubDomains ? '([^\\.]+\\.)*' : '(www\\.)?'}(${getSourceRegex(s.hosts)})\$',
@@ -1169,7 +1170,7 @@ class SourceProvider {
       }
     }
     if (source == null) {
-      for (var s in sources.where(
+      for (final s in sources.where(
         (element) => element.hosts.isEmpty && !element.neverAutoSelect,
       )) {
         try {
@@ -1188,8 +1189,8 @@ class SourceProvider {
   }
 
   bool ifRequiredAppSpecificSettingsExist(AppSource source) {
-    for (var row in source.combinedAppSpecificSettingFormItems) {
-      for (var element in row) {
+    for (final row in source.combinedAppSpecificSettingFormItems) {
+      for (final element in row) {
         if (element is GeneratedFormTextField && element.required) {
           return true;
         }

@@ -39,14 +39,15 @@ class CustomDecoratedSliver extends SingleChildRenderObjectWidget {
       DecorationPosition.background => "bg",
       DecorationPosition.foreground => "fg",
     };
-    properties.add(
-      EnumProperty<DecorationPosition>(
-        "position",
-        position,
-        level: DiagnosticLevel.hidden,
-      ),
-    );
-    properties.add(DiagnosticsProperty<Decoration>(label, decoration));
+    properties
+      ..add(
+        EnumProperty<DecorationPosition>(
+          "position",
+          position,
+          level: DiagnosticLevel.hidden,
+        ),
+      )
+      ..add(DiagnosticsProperty<Decoration>(label, decoration));
   }
 }
 

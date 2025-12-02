@@ -1,4 +1,5 @@
 import 'package:easy_localization/easy_localization.dart';
+import 'package:html/dom.dart';
 import 'package:html/parser.dart';
 import 'package:http/http.dart' as http;
 import 'package:materium/components/generated_form.dart';
@@ -228,7 +229,7 @@ class FDroidRepo extends AppSource {
           .querySelector('marketvercode')
           ?.innerHtml;
       int? marketvercode = int.tryParse(marketvercodeStr ?? '');
-      List selectedReleases = [];
+      var selectedReleases = <Element>[];
       if (trySelectingSuggestedVersionCode && marketvercode != null) {
         selectedReleases = releases
             .where(

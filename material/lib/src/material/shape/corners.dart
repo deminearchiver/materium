@@ -350,9 +350,8 @@ abstract class CornersGeometry {
       }
     } else {
       // visuals aren't the same and at least one isn't none
-      final StringBuffer result = StringBuffer();
-      result.write("Corners.only(");
-      bool comma = false;
+      final result = StringBuffer()..write("Corners.only(");
+      var comma = false;
       if (_topLeft != Corner.none) {
         result.write("topLeft: $_topLeft");
         comma = true;
@@ -393,9 +392,8 @@ abstract class CornersGeometry {
       }
     } else {
       // logicals aren't the same and at least one isn't none
-      final StringBuffer result = StringBuffer();
-      result.write("CornersDirectional.only(");
-      bool comma = false;
+      final result = StringBuffer()..write("CornersDirectional.only(");
+      var comma = false;
       if (_topStart != Corner.none) {
         result.write("topStart: $_topStart");
         comma = true;

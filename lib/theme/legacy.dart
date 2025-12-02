@@ -592,8 +592,8 @@ class _SliderValueIndicatorPathPainterYear2024 {
     horizontal: 16.0,
     vertical: 12.0,
   );
-  static const double _minLabelWidth = 16.0;
-  static const double _rectYOffset = 12.0;
+  static const _minLabelWidth = 16.0;
+  static const _rectYOffset = 12.0;
 
   Size getPreferredSize(TextPainter labelPainter, double textScaleFactor) {
     final width =
@@ -614,30 +614,30 @@ class _SliderValueIndicatorPathPainterYear2024 {
   }) {
     assert(!sizeWithOverflow.isEmpty);
 
-    const double edgePadding = 8.0;
-    final double rectangleWidth = _upperRectangleWidth(labelPainter, scale);
+    const edgePadding = 8.0;
+    final rectangleWidth = _upperRectangleWidth(labelPainter, scale);
 
     /// Value indicator draws on the Overlay and by using the global Offset
     /// we are making sure we use the bounds of the Overlay instead of the Slider.
-    final Offset globalCenter = parentBox.localToGlobal(center);
+    final globalCenter = parentBox.localToGlobal(center);
 
     // The rectangle must be shifted towards the center so that it minimizes the
     // chance of it rendering outside the bounds of the render box. If the shift
     // is negative, then the lobe is shifted from right to left, and if it is
     // positive, then the lobe is shifted from left to right.
-    final double overflowLeft = math.max(
-      0,
-      rectangleWidth / 2 - globalCenter.dx + edgePadding,
+    final overflowLeft = math.max(
+      0.0,
+      rectangleWidth / 2.0 - globalCenter.dx + edgePadding,
     );
     final double overflowRight = math.max(
-      0,
-      rectangleWidth / 2 -
+      0.0,
+      rectangleWidth / 2.0 -
           (sizeWithOverflow.width - globalCenter.dx - edgePadding),
     );
 
     if (rectangleWidth < sizeWithOverflow.width) {
       return overflowLeft - overflowRight;
-    } else if (overflowLeft - overflowRight > 0) {
+    } else if (overflowLeft - overflowRight > 0.0) {
       return overflowLeft - (edgePadding * textScaleFactor);
     } else {
       return -overflowRight + (edgePadding * textScaleFactor);
@@ -675,7 +675,7 @@ class _SliderValueIndicatorPathPainterYear2024 {
     final rectangleWidth = _upperRectangleWidth(labelPainter, scale);
     final rectangleHeight = _upperRectangleHeight(labelPainter, scale);
     final halfRectangleHeight = rectangleHeight / 2.0;
-    final double horizontalShift = getHorizontalShift(
+    final horizontalShift = getHorizontalShift(
       parentBox: parentBox,
       center: center,
       labelPainter: labelPainter,
@@ -684,27 +684,28 @@ class _SliderValueIndicatorPathPainterYear2024 {
       scale: scale,
     );
 
-    final Rect upperRect = Rect.fromLTWH(
+    final upperRect = Rect.fromLTWH(
       -rectangleWidth / 2 + horizontalShift,
       -_rectYOffset - rectangleHeight,
       rectangleWidth,
       rectangleHeight,
     );
 
-    final Paint fillPaint = Paint()..color = backgroundPaintColor;
+    final fillPaint = Paint()..color = backgroundPaintColor;
 
-    canvas.save();
-    // Prepare the canvas for the base of the tooltip, which is relative to the
-    // center of the thumb.
-    canvas.translate(center.dx, center.dy - _labelPadding.bottom - 4.0);
-    canvas.scale(scale, scale);
+    canvas
+      ..save()
+      // Prepare the canvas for the base of the tooltip, which is relative to the
+      // center of the thumb.
+      ..translate(center.dx, center.dy - _labelPadding.bottom - 4.0)
+      ..scale(scale, scale);
 
-    final RRect rrect = RRect.fromRectAndRadius(
+    final rrect = RRect.fromRectAndRadius(
       upperRect,
       Radius.circular(upperRect.height / 2),
     );
     if (strokePaintColor != null) {
-      final Paint strokePaint = Paint()
+      final strokePaint = Paint()
         ..color = strokePaintColor
         ..strokeWidth = 1.0
         ..style = PaintingStyle.stroke;
@@ -714,15 +715,15 @@ class _SliderValueIndicatorPathPainterYear2024 {
     canvas.drawRRect(rrect, fillPaint);
 
     // The label text is centered within the value indicator.
-    final double bottomTipToUpperRectTranslateY =
-        -halfRectangleHeight / 2 - upperRect.height;
-    canvas.translate(0, bottomTipToUpperRectTranslateY);
-    final Offset boxCenter = Offset(horizontalShift, upperRect.height / 2.3);
-    final Offset halfLabelPainterOffset = Offset(
-      labelPainter.width / 2,
-      labelPainter.height / 2,
+    final bottomTipToUpperRectTranslateY =
+        -halfRectangleHeight / 2.0 - upperRect.height;
+    canvas.translate(0.0, bottomTipToUpperRectTranslateY);
+    final boxCenter = Offset(horizontalShift, upperRect.height / 2.3);
+    final halfLabelPainterOffset = Offset(
+      labelPainter.width / 2.0,
+      labelPainter.height / 2.0,
     );
-    final Offset labelOffset = boxCenter - halfLabelPainterOffset;
+    final labelOffset = boxCenter - halfLabelPainterOffset;
     labelPainter.paint(canvas, labelOffset);
     canvas.restore();
   }

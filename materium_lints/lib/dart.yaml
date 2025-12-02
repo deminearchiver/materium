@@ -1,2 +1,52 @@
-
 include: package:lints/recommended.yaml
+
+analyzer:
+  language:
+    # strict-casts: true
+    # strict-inference: true
+    strict-raw-types: true
+  errors:
+    unused_element_parameter: ignore
+
+formatter:
+  page_width: 80
+
+linter:
+  rules:
+    prefer_const_constructors: true
+    prefer_const_constructors_in_immutables: true
+    always_declare_return_types: true
+    omit_obvious_local_variable_types: true
+    omit_obvious_property_types: false
+    specify_nonobvious_local_variable_types: false
+    specify_nonobvious_property_types: true
+    type_annotate_public_apis: true
+    no_runtimeType_toString: true
+    always_specify_types: false
+    avoid_double_and_int_checks: true
+    prefer_int_literals: false
+    avoid_js_rounded_ints: true
+    avoid_return_types_on_setters: true
+    avoid_returning_null_for_void: true
+    implicit_call_tearoffs: true
+    avoid_single_cascade_in_expression_statements: true
+    avoid_type_to_string: true
+    avoid_slow_async_io: true
+    avoid_types_on_closure_parameters: true
+    avoid_void_async: false
+    cascade_invocations: true
+    avoid_final_parameters: true
+    prefer_final_locals: true
+    prefer_final_fields: true
+    prefer_final_in_for_each: true
+    prefer_function_declarations_over_variables: true
+    use_function_type_syntax_for_parameters: true
+    unnecessary_to_list_in_spreads: true
+    iterable_contains_unrelated_type: true
+    prefer_iterable_whereType: true
+    prefer_inlined_adds: true
+    super_goes_last: true
+    unnecessary_library_name: true
+    flutter_style_todos: true
+    annotate_redeclares: true
+    prefer_bool_in_asserts: true

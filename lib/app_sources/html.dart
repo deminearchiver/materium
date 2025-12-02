@@ -73,20 +73,21 @@ List<String> collectAllStringsFromJSONObject(dynamic obj) {
 }
 
 List<String> _splitAlphaNumeric(String s) {
-  List<String> parts = [];
-  StringBuffer sb = StringBuffer();
+  final parts = <String>[];
+  final sb = StringBuffer();
 
-  bool isNumeric = _isNumeric(s[0]);
+  var isNumeric = _isNumeric(s[0]);
   sb.write(s[0]);
 
-  for (int i = 1; i < s.length; i++) {
-    bool currentIsNumeric = _isNumeric(s[i]);
+  for (var i = 1; i < s.length; i++) {
+    final currentIsNumeric = _isNumeric(s[i]);
     if (currentIsNumeric == isNumeric) {
       sb.write(s[i]);
     } else {
       parts.add(sb.toString());
-      sb.clear();
-      sb.write(s[i]);
+      sb
+        ..clear()
+        ..write(s[i]);
       isNumeric = currentIsNumeric;
     }
   }

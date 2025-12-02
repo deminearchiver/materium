@@ -24,8 +24,8 @@ class GitHubStars implements MassAppUrlSource {
       headers: await GitHub().getRequestHeaders({}),
     );
     if (res.statusCode == 200) {
-      Map<String, List<String>> urlsWithDescriptions = {};
-      for (var e in (jsonDecode(res.body) as List<dynamic>)) {
+      final Map<String, List<String>> urlsWithDescriptions = {};
+      for (final e in (jsonDecode(res.body) as List<dynamic>)) {
         urlsWithDescriptions.addAll({
           e['html_url'] as String: [
             e['full_name'] as String,
@@ -37,8 +37,7 @@ class GitHubStars implements MassAppUrlSource {
       }
       return urlsWithDescriptions;
     } else {
-      var gh = GitHub();
-      gh.rateLimitErrorCheck(res);
+      final gh = GitHub()..rateLimitErrorCheck(res);
       throw getObtainiumHttpError(res);
     }
   }
