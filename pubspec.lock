@@ -1098,10 +1098,10 @@ packages:
     dependency: "direct main"
     description:
       name: material_symbols_icons
-      sha256: "9a7de58ffc299c8e362b4e860e36e1d198fa0981a894376fe1b6bfe52773e15b"
+      sha256: "02555a48e1ec02b16e532dfd4ef13c4f6bf7ec7c20230e58e56641a393433dc3"
       url: "https://pub.dev"
     source: hosted
-    version: "4.2874.0"
+    version: "4.2892.0"
   meta:
     dependency: "direct main"
     description:
@@ -1450,10 +1450,10 @@ packages:
     dependency: transitive
     description:
       name: shared_preferences_android
-      sha256: "46a46fd64659eff15f4638bbe19de43f9483f0e0bf024a9fb6b3582064bacc7b"
+      sha256: "83af5c682796c0f7719c2bbf74792d113e40ae97981b8f266fa84574573556bc"
       url: "https://pub.dev"
     source: hosted
-    version: "2.4.17"
+    version: "2.4.18"
   shared_preferences_foundation:
     dependency: transitive
     description:
@@ -1673,10 +1673,10 @@ packages:
     dependency: transitive
     description:
       name: sqlite3_flutter_libs
-      sha256: "69c80d812ef2500202ebd22002cbfc1b6565e9ff56b2f971e757fac5d42294df"
+      sha256: "1e800ebe7f85a80a66adacaa6febe4d5f4d8b75f244e9838a27cb2ffc7aec08d"
       url: "https://pub.dev"
     source: hosted
-    version: "0.5.40"
+    version: "0.5.41"
   sqlparser:
     dependency: transitive
     description:
@@ -1729,10 +1729,10 @@ packages:
     dependency: "direct main"
     description:
       name: super_editor
-      sha256: "5cc2e3eb208f2b385f1aa5f4e0cb910866bd0e4cbd6e7dbd832af4ce83a67525"
+      sha256: "8e6b43333b656a74645c6956ea4806ff77f4bc46d3cad51cbd4ba1a43c6b5282"
       url: "https://pub.dev"
     source: hosted
-    version: "0.3.0-dev.42"
+    version: "0.3.0-dev.43"
   super_keyboard:
     dependency: "direct main"
     description:
@@ -1785,34 +1785,34 @@ packages:
     dependency: transitive
     description:
       name: talker
-      sha256: "31b3081b6787c93b41bc14182229681a4a48b8b22f4b368f3493e7f41825a36d"
+      sha256: "5ab800e29d91ce7728fa218c8a7d46f6c228202ac89af650c3f82cb938a64ba6"
       url: "https://pub.dev"
     source: hosted
-    version: "5.1.1"
+    version: "5.1.3"
   talker_dio_logger:
     dependency: "direct main"
     description:
       name: talker_dio_logger
-      sha256: "5534edf33aa913bdc9b4c733baee4795a884e46e6e632b024762738b53622da5"
+      sha256: "214a31d2ecc488ae6abf623ca9dac3831d34e66195f633bd1909a9d0c282ab8c"
       url: "https://pub.dev"
     source: hosted
-    version: "5.1.1"
+    version: "5.1.3"
   talker_flutter:
     dependency: "direct main"
     description:
       name: talker_flutter
-      sha256: cd276e639841ddcd50effe86bc16e04ff9a58d1a06d470b0c3c7d62f13579ae8
+      sha256: "79158cf0fe3fd2bcdb1dc6f5a870cb623f18d0b59a4fd87414f53ce446d80a45"
       url: "https://pub.dev"
     source: hosted
-    version: "5.1.1"
+    version: "5.1.3"
   talker_logger:
     dependency: transitive
     description:
       name: talker_logger
-      sha256: "5e2cc1dd9cbb7811c44ed620b5365768e30b86b6a65e909a5c2324722517f077"
+      sha256: bc75612ace4dbb82fbad36181ff27e95b1ee152c719c2fea6b8ac59c4f091cd2
       url: "https://pub.dev"
     source: hosted
-    version: "5.1.1"
+    version: "5.1.3"
   term_glyph:
     dependency: transitive
     description:
@@ -2057,10 +2057,10 @@ packages:
     dependency: transitive
     description:
       name: webview_flutter_android
-      sha256: "3fcca88ee2ae568807ebd42deed235bb8dd8e62b3e4d5caff67daa6bce062cca"
+      sha256: "6ff028d8b8829b4e2482f7821dfb0b039f91c34a07075ed06f36172aa7afabda"
       url: "https://pub.dev"
     source: hosted
-    version: "4.10.9"
+    version: "4.10.10"
   webview_flutter_platform_interface:
     dependency: transitive
     description:

@@ -17,7 +17,7 @@ dependencies:
   shapes:
     path: ../shapes
   meta: ^1.17.0
-  material_symbols_icons: ^4.2874.0
+  material_symbols_icons: ^4.2892.0
   collection: ^1.19.1
   async: ^2.13.0
 
