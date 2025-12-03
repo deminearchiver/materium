@@ -6,26 +6,24 @@ extension SliverHitTestResultExtension on SliverHitTestResult {
     required double mainAxisPosition,
     required double crossAxisPosition,
   }) => switch (axisDirection) {
-    AxisDirection.up ||
-    AxisDirection.down => Offset(crossAxisPosition, mainAxisPosition),
-    AxisDirection.right ||
-    AxisDirection.left => Offset(mainAxisPosition, crossAxisPosition),
+    .up || .down => Offset(crossAxisPosition, mainAxisPosition),
+    .right || .left => Offset(mainAxisPosition, crossAxisPosition),
   };
 
   double _resolveMainAxisPosition({
     required AxisDirection axisDirection,
     required Offset position,
   }) => switch (axisDirection) {
-    AxisDirection.up || AxisDirection.down => position.dy,
-    AxisDirection.right || AxisDirection.left => position.dx,
+    .up || .down => position.dy,
+    .right || .left => position.dx,
   };
 
   double _resolveCrossAxisPosition({
     required AxisDirection axisDirection,
     required Offset position,
   }) => switch (axisDirection) {
-    AxisDirection.up || AxisDirection.down => position.dx,
-    AxisDirection.right || AxisDirection.left => position.dy,
+    .up || .down => position.dx,
+    .right || .left => position.dy,
   };
 
   bool addWithPaintTransform({
@@ -65,9 +63,7 @@ extension SliverHitTestResultExtension on SliverHitTestResult {
       mainAxisPosition: mainAxisPosition,
       crossAxisPosition: crossAxisPosition,
     );
-    final Offset transformedPosition = offset == null
-        ? position
-        : position - offset;
+    final transformedPosition = offset == null ? position : position - offset;
     final transformedMainAxisPosition = _resolveMainAxisPosition(
       axisDirection: axisDirection,
       position: transformedPosition,
@@ -80,7 +76,7 @@ extension SliverHitTestResultExtension on SliverHitTestResult {
       // ignore: invalid_use_of_protected_member
       pushOffset(-offset);
     }
-    final bool isHit = hitTest(
+    final isHit = hitTest(
       this,
       mainAxisPosition: transformedMainAxisPosition,
       crossAxisPosition: transformedCrossAxisPosition,
@@ -104,8 +100,7 @@ extension SliverHitTestResultExtension on SliverHitTestResult {
       mainAxisPosition: mainAxisPosition,
       crossAxisPosition: crossAxisPosition,
     );
-
-    final Offset transformedPosition = transform == null
+    final transformedPosition = transform == null
         ? position
         : MatrixUtils.transformPoint(transform, position);
     final transformedMainAxisPosition = _resolveMainAxisPosition(
@@ -120,7 +115,7 @@ extension SliverHitTestResultExtension on SliverHitTestResult {
       // ignore: invalid_use_of_protected_member
       pushTransform(transform);
     }
-    final bool isHit = hitTest(
+    final isHit = hitTest(
       this,
       mainAxisPosition: transformedMainAxisPosition,
       crossAxisPosition: transformedCrossAxisPosition,

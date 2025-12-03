@@ -48,7 +48,7 @@ class SliverTransform extends SingleChildRenderObjectWidget {
     super.key,
     required double angle,
     this.origin,
-    this.alignment = Alignment.center,
+    this.alignment = .center,
     this.transformHitTests = true,
     this.filterQuality,
     Widget? sliver,
@@ -80,7 +80,7 @@ class SliverTransform extends SingleChildRenderObjectWidget {
     this.transformHitTests = true,
     this.filterQuality,
     Widget? sliver,
-  }) : transform = Matrix4.translationValues(offset.dx, offset.dy, 0.0),
+  }) : transform = .translationValues(offset.dx, offset.dy, 0.0),
        origin = null,
        alignment = null,
        super(child: sliver);
@@ -129,7 +129,7 @@ class SliverTransform extends SingleChildRenderObjectWidget {
     double? scaleX,
     double? scaleY,
     this.origin,
-    this.alignment = Alignment.center,
+    this.alignment = .center,
     this.transformHitTests = true,
     this.filterQuality,
     Widget? sliver,
@@ -141,7 +141,7 @@ class SliverTransform extends SingleChildRenderObjectWidget {
          scale == null || (scaleX == null && scaleY == null),
          "If 'scale' is non-null then 'scaleX' and 'scaleY' must be left null",
        ),
-       transform = Matrix4.diagonal3Values(
+       transform = .diagonal3Values(
          scale ?? scaleX ?? 1.0,
          scale ?? scaleY ?? 1.0,
          1.0,
@@ -175,8 +175,8 @@ class SliverTransform extends SingleChildRenderObjectWidget {
     this.transformHitTests = true,
     this.filterQuality,
     Widget? sliver,
-  }) : alignment = Alignment.center,
-       transform = Matrix4.diagonal3Values(
+  }) : alignment = .center,
+       transform = .diagonal3Values(
          flipX ? -1.0 : 1.0,
          flipY ? -1.0 : 1.0,
          1.0,
@@ -191,9 +191,9 @@ class SliverTransform extends SingleChildRenderObjectWidget {
       'Cannot compute the rotation matrix for a non-finite angle: $radians',
     );
     if (radians == 0.0) {
-      return Matrix4.identity();
+      return .identity();
     }
-    final double sin = math.sin(radians);
+    final sin = math.sin(radians);
     if (sin == 1.0) {
       return _createZRotation(1.0, 0.0);
     }
@@ -208,7 +208,7 @@ class SliverTransform extends SingleChildRenderObjectWidget {
   }
 
   static Matrix4 _createZRotation(double sin, double cos) {
-    final Matrix4 result = Matrix4.zero();
+    final result = Matrix4.zero();
     result.storage[0] = cos;
     result.storage[1] = sin;
     result.storage[4] = -sin;
@@ -412,7 +412,7 @@ class RenderSliverTransform extends RenderProxySliver {
     if (_transform == value) {
       return;
     }
-    _transform = Matrix4.copy(value);
+    _transform = .copy(value);
     markNeedsPaint();
     markNeedsSemanticsUpdate();
   }
@@ -477,11 +477,11 @@ class RenderSliverTransform extends RenderProxySliver {
   }
 
   Matrix4? get _effectiveTransform {
-    final Alignment? resolvedAlignment = alignment?.resolve(textDirection);
+    final resolvedAlignment = alignment?.resolve(textDirection);
     if (_origin == null && resolvedAlignment == null) {
       return _transform;
     }
-    final Matrix4 result = Matrix4.identity();
+    final result = Matrix4.identity();
     if (_origin != null) {
       result.translateByDouble(_origin!.dx, _origin!.dy, 0.0, 1.0);
     }
@@ -506,13 +506,11 @@ class RenderSliverTransform extends RenderProxySliver {
     SliverHitTestResult result, {
     required double mainAxisPosition,
     required double crossAxisPosition,
-  }) {
-    return hitTestChildren(
-      result,
-      mainAxisPosition: mainAxisPosition,
-      crossAxisPosition: crossAxisPosition,
-    );
-  }
+  }) => hitTestChildren(
+    result,
+    mainAxisPosition: mainAxisPosition,
+    crossAxisPosition: crossAxisPosition,
+  );
 
   @override
   bool hitTestChildren(
@@ -542,13 +540,13 @@ class RenderSliverTransform extends RenderProxySliver {
   @override
   void paint(PaintingContext context, Offset offset) {
     if (child != null) {
-      final Matrix4 transform = _effectiveTransform!;
+      final transform = _effectiveTransform!;
       if (filterQuality == null) {
-        final Offset? childOffset = MatrixUtils.getAsTranslation(transform);
+        final childOffset = MatrixUtils.getAsTranslation(transform);
         if (childOffset == null) {
           // if the matrix is singular the children would be compressed to a line or
           // single point, instead short-circuit and paint nothing.
-          final double det = transform.determinant();
+          final det = transform.determinant();
           if (det == 0 || !det.isFinite) {
             layer = null;
             return;
@@ -565,11 +563,11 @@ class RenderSliverTransform extends RenderProxySliver {
           layer = null;
         }
       } else {
-        final Matrix4 effectiveTransform =
+        final effectiveTransform =
             Matrix4.translationValues(offset.dx, offset.dy, 0.0)
               ..multiply(transform)
               ..translateByDouble(-offset.dx, -offset.dy, 0.0, 1.0);
-        final ui.ImageFilter filter = ui.ImageFilter.matrix(
+        final filter = ui.ImageFilter.matrix(
           effectiveTransform.storage,
           filterQuality: filterQuality!,
         );

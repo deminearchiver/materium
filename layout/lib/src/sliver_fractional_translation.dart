@@ -38,12 +38,11 @@ class SliverFractionalTranslation extends SingleChildRenderObjectWidget {
   final bool transformHitTests;
 
   @override
-  RenderSliverFractionalTranslation createRenderObject(BuildContext context) {
-    return RenderSliverFractionalTranslation(
-      translation: translation,
-      transformHitTests: transformHitTests,
-    );
-  }
+  RenderSliverFractionalTranslation createRenderObject(BuildContext context) =>
+      RenderSliverFractionalTranslation(
+        translation: translation,
+        transformHitTests: transformHitTests,
+      );
 
   @override
   void updateRenderObject(
@@ -89,22 +88,20 @@ class RenderSliverFractionalTranslation extends RenderProxySliver {
     markNeedsSemanticsUpdate();
   }
 
+  // RenderFractionalTranslation objects don't check if they are
+  // themselves hit, because it's confusing to think about
+  // how the untransformed size and the child's transformed
+  // position interact.
   @override
   bool hitTest(
     SliverHitTestResult result, {
     required double mainAxisPosition,
     required double crossAxisPosition,
-  }) {
-    // RenderFractionalTranslation objects don't check if they are
-    // themselves hit, because it's confusing to think about
-    // how the untransformed size and the child's transformed
-    // position interact.
-    return hitTestChildren(
-      result,
-      mainAxisPosition: mainAxisPosition,
-      crossAxisPosition: crossAxisPosition,
-    );
-  }
+  }) => hitTestChildren(
+    result,
+    mainAxisPosition: mainAxisPosition,
+    crossAxisPosition: crossAxisPosition,
+  );
 
   /// When set to true, hit tests are performed based on the position of the
   /// child as it is painted. When set to false, hit tests are performed

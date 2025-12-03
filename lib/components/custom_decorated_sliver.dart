@@ -3,7 +3,7 @@ import 'package:materium/flutter.dart';
 class CustomDecoratedSliver extends SingleChildRenderObjectWidget {
   const CustomDecoratedSliver({
     super.key,
-    this.position = DecorationPosition.background,
+    this.position = .background,
     required this.decoration,
     required Widget sliver,
   }) : super(child: sliver);
@@ -13,13 +13,12 @@ class CustomDecoratedSliver extends SingleChildRenderObjectWidget {
   final Decoration decoration;
 
   @override
-  RenderCustomDecoratedSliver createRenderObject(BuildContext context) {
-    return RenderCustomDecoratedSliver(
-      decoration: decoration,
-      position: position,
-      configuration: createLocalImageConfiguration(context),
-    );
-  }
+  RenderCustomDecoratedSliver createRenderObject(BuildContext context) =>
+      RenderCustomDecoratedSliver(
+        decoration: decoration,
+        position: position,
+        configuration: createLocalImageConfiguration(context),
+      );
 
   @override
   void updateRenderObject(
@@ -35,9 +34,9 @@ class CustomDecoratedSliver extends SingleChildRenderObjectWidget {
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
-    final String label = switch (position) {
-      DecorationPosition.background => "bg",
-      DecorationPosition.foreground => "fg",
+    final label = switch (position) {
+      .background => "bg",
+      .foreground => "fg",
     };
     properties
       ..add(
@@ -54,8 +53,8 @@ class CustomDecoratedSliver extends SingleChildRenderObjectWidget {
 class RenderCustomDecoratedSliver extends RenderProxySliver {
   RenderCustomDecoratedSliver({
     required Decoration decoration,
-    DecorationPosition position = DecorationPosition.background,
-    ImageConfiguration configuration = ImageConfiguration.empty,
+    DecorationPosition position = .background,
+    ImageConfiguration configuration = .empty,
   }) : _decoration = decoration,
        _position = position,
        _configuration = configuration;
@@ -133,14 +132,14 @@ class RenderCustomDecoratedSliver extends RenderProxySliver {
 
     final nextSliverExtent =
         constraints.remainingPaintExtent - child!.geometry!.paintExtent;
-    final double cappedMainAxisExtent =
+    final cappedMainAxisExtent =
         geometry!.paintExtent - constraints.overlap + nextSliverExtent;
-    final (Size childSize, Offset scrollOffset) = switch (constraints.axis) {
-      Axis.horizontal => (
+    final (childSize, scrollOffset) = switch (constraints.axis) {
+      .horizontal => (
         Size(cappedMainAxisExtent, constraints.crossAxisExtent),
         Offset(constraints.overlap, 0.0),
       ),
-      Axis.vertical => (
+      .vertical => (
         Size(constraints.crossAxisExtent, cappedMainAxisExtent),
         Offset(0.0, constraints.overlap),
       ),
@@ -173,10 +172,10 @@ class RenderCustomDecoratedSliver extends RenderProxySliver {
       configuration.copyWith(size: childSize),
     );
     switch (position) {
-      case DecorationPosition.background:
+      case .background:
         paintDecoration();
         context.paintChild(child!, offset);
-      case DecorationPosition.foreground:
+      case .foreground:
         context.paintChild(child!, offset);
         paintDecoration();
     }

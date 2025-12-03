@@ -363,8 +363,8 @@ class _ObtainiumState extends State<Obtainium> {
       //     :final dynamicDarkColorScheme,
       //   ) =>
       //     switch (brightness) {
-      //       Brightness.light => dynamicLightColorScheme.toColorTheme(),
-      //       Brightness.dark => dynamicDarkColorScheme.toColorTheme(),
+      //       .light => dynamicLightColorScheme.toColorTheme(),
+      //       .dark => dynamicDarkColorScheme.toColorTheme(),
       //     },
       //   DynamicColorSchemeSource(
       //     brightness: final availableBrightness,
@@ -390,10 +390,10 @@ class _ObtainiumState extends State<Obtainium> {
 
   Widget _buildColorTheme(BuildContext context, Widget child) {
     final settingsProvider = context.watch<SettingsProvider>();
-    final brightness = switch (settingsProvider.theme) {
-      ThemeSettings.system => MediaQuery.platformBrightnessOf(context),
-      ThemeSettings.light => Brightness.light,
-      ThemeSettings.dark => Brightness.dark,
+    final Brightness brightness = switch (settingsProvider.theme) {
+      .system => MediaQuery.platformBrightnessOf(context),
+      .light => .light,
+      .dark => .dark,
     };
     final highContrast = MediaQuery.highContrastOf(context);
     return ColorTheme(
@@ -406,28 +406,22 @@ class _ObtainiumState extends State<Obtainium> {
     );
   }
 
-  Widget _buildTypographyTheme(BuildContext context, Widget child) {
-    return TypographyDefaults.googleMaterial3Expressive.build(context, child);
-  }
+  Widget _buildTypographyTheme(BuildContext context, Widget child) =>
+      TypographyDefaults.googleMaterial3Expressive.build(context, child);
 
-  Widget _buildSpringTheme(BuildContext context, Widget child) {
-    return SpringTheme(data: const SpringThemeData.expressive(), child: child);
-  }
+  Widget _buildSpringTheme(BuildContext context, Widget child) =>
+      SpringTheme(data: const SpringThemeData.expressive(), child: child);
 
   Widget _buildAppWrapper({
     Widget? child,
     required Widget Function(BuildContext context, Widget? child) builder,
-  }) {
-    return CombiningBuilder(
-      builders: [_buildColorTheme, _buildTypographyTheme, _buildSpringTheme],
-      child: Builder(builder: (context) => builder(context, child)),
-    );
-  }
+  }) => CombiningBuilder(
+    builders: [_buildColorTheme, _buildTypographyTheme, _buildSpringTheme],
+    child: Builder(builder: (context) => builder(context, child)),
+  );
 
-  Widget _buildHomeWrapper(BuildContext context, Widget? child) {
-    if (child == null) return const SizedBox.shrink();
-    return child;
-  }
+  Widget _buildHomeWrapper(BuildContext context, Widget? child) =>
+      child ?? const SizedBox.shrink();
 
   Widget _buildMaterialApp(BuildContext context) {
     final settingsProvider = context.watch<SettingsProvider>();
@@ -446,14 +440,14 @@ class _ObtainiumState extends State<Obtainium> {
 
       // Theming
       themeMode: switch (settingsProvider.theme) {
-        ThemeSettings.system => ThemeMode.system,
-        ThemeSettings.light => ThemeMode.light,
-        ThemeSettings.dark => ThemeMode.dark,
+        .system => .system,
+        .light => .light,
+        .dark => .dark,
       },
       theme: LegacyThemeFactory.create(
         colorTheme: _createColorTheme(
           settingsProvider: settingsProvider,
-          brightness: Brightness.light,
+          brightness: .light,
           highContrast: false,
         ),
         elevationTheme: elevationTheme,
@@ -464,7 +458,7 @@ class _ObtainiumState extends State<Obtainium> {
       darkTheme: LegacyThemeFactory.create(
         colorTheme: _createColorTheme(
           settingsProvider: settingsProvider,
-          brightness: Brightness.dark,
+          brightness: .dark,
           highContrast: false,
         ),
         elevationTheme: elevationTheme,
@@ -475,7 +469,7 @@ class _ObtainiumState extends State<Obtainium> {
       highContrastTheme: LegacyThemeFactory.create(
         colorTheme: _createColorTheme(
           settingsProvider: settingsProvider,
-          brightness: Brightness.light,
+          brightness: .light,
           highContrast: true,
         ),
         elevationTheme: elevationTheme,
@@ -486,7 +480,7 @@ class _ObtainiumState extends State<Obtainium> {
       highContrastDarkTheme: LegacyThemeFactory.create(
         colorTheme: _createColorTheme(
           settingsProvider: settingsProvider,
-          brightness: Brightness.dark,
+          brightness: .dark,
           highContrast: true,
         ),
         elevationTheme: elevationTheme,

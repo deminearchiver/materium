@@ -302,6 +302,7 @@ class _ClampedEdgeInsets implements EdgeInsetsGeometry {
     minVertical: minVertical,
     maxHorizontal: maxHorizontal,
     maxVertical: maxVertical,
+    transform: (value) => transform(_transform(value)),
   );
 
   @override
