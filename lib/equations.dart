@@ -38,16 +38,16 @@ class InterpolationNode {
   final double y;
 
   @override
-  String toString() => "_InterpolationNode(x: $x, y: $y)";
+  String toString() =>
+      "${objectRuntimeType(this, "InterpolationNode")}(x: $x, y: $y)";
 
   @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        runtimeType == other.runtimeType &&
-            other is InterpolationNode &&
-            x == other.x &&
-            y == other.y;
-  }
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      runtimeType == other.runtimeType &&
+          other is InterpolationNode &&
+          x == other.x &&
+          y == other.y;
 
   @override
   int get hashCode => Object.hash(runtimeType, x, y);
@@ -75,12 +75,11 @@ abstract class Interpolation {
   double compute(double x);
 
   @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        runtimeType == other.runtimeType &&
-            other is Interpolation &&
-            listEquals(nodes, other.nodes);
-  }
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      runtimeType == other.runtimeType &&
+          other is Interpolation &&
+          listEquals(nodes, other.nodes);
 
   @override
   int get hashCode => Object.hash(runtimeType, Object.hashAll(nodes));
@@ -97,6 +96,10 @@ class SplineInterpolation extends Interpolation {
   @override
   double compute(double x) =>
       SplineFunction.generate(nodes: nodes).interpolate(x);
+
+  @override
+  String toString() =>
+      "${objectRuntimeType(this, "SplineInterpolation")}(nodes: $nodes)";
 }
 
 /// A **spline** is a special function defined piecewise by polynomials.
@@ -130,12 +133,9 @@ sealed class SplineFunction {
         "The control points must all have increasing `x` values.",
       );
     }
-
-    if (_isMonotonic(nodes)) {
-      return MonotoneCubicSplineFunction(nodes: nodes);
-    } else {
-      return LinearSplineFunction(nodes: nodes);
-    }
+    return _isMonotonic(nodes)
+        ? MonotoneCubicSplineFunction(nodes: nodes)
+        : LinearSplineFunction(nodes: nodes);
   }
 
   /// Estimates the `y` value of the `y = f(x)` equation using a spline.
@@ -144,18 +144,14 @@ sealed class SplineFunction {
   double interpolate(double x);
 
   @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        runtimeType == other.runtimeType &&
-            other is SplineFunction &&
-            listEquals(nodes, other.nodes);
-  }
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      runtimeType == other.runtimeType &&
+          other is SplineFunction &&
+          listEquals(nodes, other.nodes);
 
   @override
   int get hashCode => Object.hash(runtimeType, Object.hashAll(nodes));
-
-  @override
-  String toString() => nodes.join(", ");
 
   /// Determines whether the `x` coordinates of the control points are
   /// increasing or not.
@@ -170,14 +166,9 @@ sealed class SplineFunction {
     // Making sure that all of the 'X' coordinates of the nodes are increasing.
     for (var i = 1; i < nodes.length; ++i) {
       final curr = nodes[i].x;
-
-      if (curr <= prev) {
-        return false;
-      }
-
+      if (curr <= prev) return false;
       prev = curr;
     }
-
     return true;
   }
 
@@ -189,11 +180,7 @@ sealed class SplineFunction {
     // Making sure that all of the 'y' coordinates of the nodes are increasing
     for (var i = 1; i < nodes.length; ++i) {
       final curr = nodes[i].y;
-
-      if (curr < prev) {
-        return false;
-      }
-
+      if (curr < prev) return false;
       prev = curr;
     }
 
@@ -217,17 +204,9 @@ class LinearSplineFunction extends SplineFunction {
     );
 
     // Interpolating
-    if (x.isNaN) {
-      return x;
-    }
-
-    if (x < nodes.first.x) {
-      return nodes.first.y;
-    }
-
-    if (x >= nodes.last.x) {
-      return nodes.last.y;
-    }
+    if (x.isNaN) return x;
+    if (x < nodes.first.x) return nodes.first.y;
+    if (x >= nodes.last.x) return nodes.last.y;
 
     // Finding the i-th element of the last point with smaller 'x'.
     // We are sure that this will be within the spline due to the previous
@@ -235,14 +214,14 @@ class LinearSplineFunction extends SplineFunction {
     var i = 0;
     while (x >= nodes[i + 1].x) {
       ++i;
-
-      if (x == nodes[i].x) {
-        return nodes[i].y;
-      }
+      if (x == nodes[i].x) return nodes[i].y;
     }
-
     return nodes[i].y + nodesM[i] * (x - nodes[i].x);
   }
+
+  @override
+  String toString() =>
+      "${objectRuntimeType(this, "LinearSplineFunction")}(nodes: $nodes)";
 }
 
 /// Represents a monotone cubic spline from a given set of control points.
@@ -340,4 +319,8 @@ class MonotoneCubicSplineFunction extends SplineFunction {
     return (nodes[i].y * (1 + t * 2) + h * nodesM[i] * t) * (1 - t) * (1 - t) +
         (nodes[i + 1].y * (3 - t * 2) + h * nodesM[i + 1] * (t - 1)) * t * t;
   }
+
+  @override
+  String toString() =>
+      "${objectRuntimeType(this, "MonotoneCubicSplineFunction")}(nodes: $nodes)";
 }

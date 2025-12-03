@@ -5,7 +5,6 @@ import 'package:android_package_installer/android_package_installer.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:materium/providers/logs_provider.dart';
 import 'package:materium/providers/source_provider.dart';
-import 'package:provider/provider.dart';
 
 class ObtainiumError {
   ObtainiumError(this.message, {this.unexpected = false});
@@ -85,11 +84,10 @@ class MultiAppMultiError extends ObtainiumError {
       error = error.message;
     }
     rawErrors[appId] = error;
-    var string = error.toString();
-    var tempIds = idsByErrorString.remove(string);
-    tempIds ??= [];
-    tempIds.add(appId);
-    idsByErrorString.putIfAbsent(string, () => tempIds!);
+    final string = error.toString();
+    // TODO: these braces can be safely removed
+    final tempIds = (idsByErrorString.remove(string) ?? <String>[])..add(appId);
+    idsByErrorString.putIfAbsent(string, () => tempIds);
     if (appName != null) {
       appIdNames[appId] = appName;
     }
@@ -159,7 +157,7 @@ void showError(Object? e, BuildContext context) {
 }
 
 String list2FriendlyString(List<String> list) {
-  var isUsingEnglish = isEnglish();
+  final isUsingEnglish = isEnglish();
   return list.length == 2
       ? "${list[0]} ${tr("and")} ${list[1]}"
       : list

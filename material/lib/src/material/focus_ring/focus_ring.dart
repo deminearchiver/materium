@@ -46,8 +46,12 @@ class _FocusRingState extends State<FocusRing>
 
   final Tween<double> _growValueTween = Tween<double>(begin: 0.0);
   final Tween<double> _shrinkValueTween = Tween<double>();
-  final CurveTween _growCurveTween = CurveTween(curve: Curves.linear);
-  final CurveTween _shrinkCurveTween = CurveTween(curve: Curves.linear);
+  final CurveTween _growCurveTween = CurveTween(
+    curve: const EasingThemeData.fallback().linear,
+  );
+  final CurveTween _shrinkCurveTween = CurveTween(
+    curve: const EasingThemeData.fallback().linear,
+  );
 
   late Animation<double> _widthAnimation;
 

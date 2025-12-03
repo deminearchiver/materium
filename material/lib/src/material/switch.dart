@@ -225,7 +225,7 @@ class _SwitchState extends State<Switch> with TickerProviderStateMixin {
     _colorController.animateTo(
       1.0,
       duration: const Duration(milliseconds: 67),
-      curve: Curves.linear,
+      curve: const EasingThemeData.fallback().linear,
     );
   }
 

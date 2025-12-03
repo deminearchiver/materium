@@ -71,26 +71,23 @@ class CustomAppBar extends StatefulWidget {
   @override
   State<CustomAppBar> createState() => _CustomAppBarState();
 
-  static _CustomAppBarState? _maybeStateOf(BuildContext context) {
-    return _CustomAppBarScope.maybeOf(context)?.state;
-  }
+  static _CustomAppBarState? _maybeStateOf(BuildContext context) =>
+      _CustomAppBarScope.maybeOf(context)?.state;
 
-  static _CustomAppBarState _stateOf(BuildContext context) {
-    return _CustomAppBarScope.of(context).state;
-  }
+  static _CustomAppBarState _stateOf(BuildContext context) =>
+      _CustomAppBarScope.of(context).state;
 
-  static Animation<double>? maybeAnimationOf(BuildContext context) {
-    return _maybeStateOf(context)?._animation;
-  }
+  static Animation<double>? maybeAnimationOf(BuildContext context) =>
+      _maybeStateOf(context)?._animation;
 
-  static Animation<double> animationOf(BuildContext context) {
-    return _stateOf(context)._animation;
-  }
+  static Animation<double> animationOf(BuildContext context) =>
+      _stateOf(context)._animation;
 
   static final Animatable<double> _expandedOpacityAnimatable = Tween<double>(
     begin: 1.0,
     end: 0.0,
   );
+
   static final Animatable<double> _collapsedOpacityAnimatable = Tween<double>(
     begin: 0.0,
     end: 1.0,
@@ -113,8 +110,7 @@ class _CustomAppBarState extends State<CustomAppBar> {
   late TypescaleThemeData _typescaleTheme;
   ScrollPosition? _position;
 
-  CustomAppBarBehavior get _behavior =>
-      widget.behavior ?? CustomAppBarBehavior.duplicate;
+  CustomAppBarBehavior get _behavior => widget.behavior ?? .duplicate;
 
   TypeStyle get _collapsedTitleTypeStyle =>
       _typescaleTheme.titleLargeEmphasized;
@@ -131,7 +127,7 @@ class _CustomAppBarState extends State<CustomAppBar> {
 
   EdgeInsetsGeometry get _collapsedPadding =>
       widget.collapsedPadding?.horizontalInsets() ??
-      const EdgeInsets.symmetric(horizontal: 16.0, vertical: 0.0);
+      const .symmetric(horizontal: 16.0, vertical: 0.0);
 
   double get _collapsedContentHeight =>
       _collapsedTitleTypeStyle.lineHeight +
@@ -146,36 +142,35 @@ class _CustomAppBarState extends State<CustomAppBar> {
       widget.collapsedContainerColor ?? _colorTheme.surfaceContainer;
 
   TypeStyle get _expandedTitleTypeStyle => switch (widget.type) {
-    CustomAppBarType.small => _collapsedTitleTypeStyle,
-    CustomAppBarType.mediumFlexible => _typescaleTheme.titleMediumEmphasized,
-    CustomAppBarType.largeFlexible => _typescaleTheme.displaySmallEmphasized,
+    .small => _collapsedTitleTypeStyle,
+    .mediumFlexible => _typescaleTheme.titleMediumEmphasized,
+    .largeFlexible => _typescaleTheme.displaySmallEmphasized,
   };
 
   TextStyle get _expandedTitleTextStyle =>
       _expandedTitleTypeStyle.toTextStyle(color: _colorTheme.onSurface);
 
   TypeStyle get _expandedSubtitleTypeStyle => switch (widget.type) {
-    CustomAppBarType.small => _collapsedSubtitleTypeStyle,
-    CustomAppBarType.mediumFlexible => _typescaleTheme.labelLarge,
-    CustomAppBarType.largeFlexible => _typescaleTheme.titleMedium,
+    .small => _collapsedSubtitleTypeStyle,
+    .mediumFlexible => _typescaleTheme.labelLarge,
+    .largeFlexible => _typescaleTheme.titleMedium,
   };
 
   TextStyle get _expandedSubtitleTextStyle => _expandedSubtitleTypeStyle
       .toTextStyle(color: _colorTheme.onSurfaceVariant);
 
   double get _expandedTitleSubtitleSpace => switch (widget.type) {
-    CustomAppBarType.small => _collapsedTitleSubtitleSpace,
-    CustomAppBarType.mediumFlexible => 4.0,
-    CustomAppBarType.largeFlexible => 8.0,
+    .small => _collapsedTitleSubtitleSpace,
+    .mediumFlexible => 4.0,
+    .largeFlexible => 8.0,
   };
 
-  EdgeInsetsGeometry get _expandedPadding =>
-      widget.type == CustomAppBarType.small
+  EdgeInsetsGeometry get _expandedPadding => widget.type == .small
       ? _collapsedPadding
       : widget.expandedPadding ??
-            const EdgeInsets.fromLTRB(16.0, 0.0, 16.0, _kExpandedBottomPadding);
+            const .fromLTRB(16.0, 0.0, 16.0, _kExpandedBottomPadding);
 
-  double get _expandedContentHeight => widget.type == CustomAppBarType.small
+  double get _expandedContentHeight => widget.type == .small
       ? _collapsedContentHeight
       : _expandedTitleTypeStyle.lineHeight +
             (widget.subtitle != null
@@ -183,7 +178,7 @@ class _CustomAppBarState extends State<CustomAppBar> {
                       _expandedSubtitleTypeStyle.lineHeight
                 : 0.0);
 
-  double get _expandedHeight => widget.type == CustomAppBarType.small
+  double get _expandedHeight => widget.type == .small
       ? _collapsedHeight
       : _collapsedHeight + _expandedContentHeight + _expandedPadding.vertical;
 
@@ -221,13 +216,14 @@ class _CustomAppBarState extends State<CustomAppBar> {
     );
 
     final oldStatus = _animation.status;
-    final newStatus = newValue == 0.0 || newValue == 1.0 || !isScrolling
-        ? oldStatus == AnimationStatus.dismissed
-              ? AnimationStatus.dismissed
-              : AnimationStatus.completed
+    final AnimationStatus newStatus =
+        newValue == 0.0 || newValue == 1.0 || !isScrolling
+        ? oldStatus == .dismissed
+              ? .dismissed
+              : .completed
         : newValue > oldValue
-        ? AnimationStatus.forward
-        : AnimationStatus.reverse;
+        ? .forward
+        : .reverse;
 
     if (oldValue == newValue && oldStatus == newStatus) return;
 
@@ -238,7 +234,7 @@ class _CustomAppBarState extends State<CustomAppBar> {
   @override
   void initState() {
     super.initState();
-    _animation = _RawAnimation(status: AnimationStatus.dismissed, value: 0.0);
+    _animation = _RawAnimation(status: .dismissed, value: 0.0);
     _containerColorFractionAnimation =
         CustomAppBar.containerColorFractionAnimation(_animation);
   }
@@ -252,7 +248,7 @@ class _CustomAppBarState extends State<CustomAppBar> {
     final oldPosition = _position;
     final newPosition =
         widget.scrollController?.positions.singleOrNull ??
-        Scrollable.of(context, axis: Axis.vertical).position;
+        Scrollable.of(context, axis: .vertical).position;
 
     if (oldPosition != newPosition) {
       oldPosition?.isScrollingNotifier.removeListener(_isScrollingListener);
@@ -277,32 +273,29 @@ class _CustomAppBarState extends State<CustomAppBar> {
     final topPadding = widget.primary
         ? MediaQuery.maybePaddingOf(context)?.top ?? 0.0
         : 0.0;
-
     final Widget flexibleSpace = Padding(
-      padding: EdgeInsets.only(top: topPadding),
+      padding: .only(top: topPadding),
       child: Stack(
-        fit: StackFit.expand,
+        fit: .expand,
         children: [
           if (widget.title != null || widget.subtitle != null)
-            _expandedHeight > _collapsedHeight
-                ? switch (_behavior) {
-                    CustomAppBarBehavior.duplicate =>
-                      _CustomAppBarDuplicatingFlexibleSpace(
-                        expandedTitle: widget.title,
-                        expandedSubtitle: widget.subtitle,
-                        collapsedTitle: widget.title,
-                        collapsedSubtitle: widget.subtitle,
-                      ),
-                    CustomAppBarBehavior.stretch =>
-                      _CustomAppBarStretchingFlexibleSpace(
-                        title: widget.title,
-                        subtitle: widget.subtitle,
-                      ),
-                  }
-                : _CustomAppBarAlwaysCollapsedFlexibleSpace(
-                    title: widget.title,
-                    subtitle: widget.subtitle,
-                  ),
+            switch (_behavior) {
+              _ when _expandedHeight <= _collapsedHeight =>
+                _CustomAppBarAlwaysCollapsedFlexibleSpace(
+                  title: widget.title,
+                  subtitle: widget.subtitle,
+                ),
+              .duplicate => _CustomAppBarDuplicatingFlexibleSpace(
+                expandedTitle: widget.title,
+                expandedSubtitle: widget.subtitle,
+                collapsedTitle: widget.title,
+                collapsedSubtitle: widget.subtitle,
+              ),
+              .stretch => _CustomAppBarStretchingFlexibleSpace(
+                title: widget.title,
+                subtitle: widget.subtitle,
+              ),
+            },
           Positioned(
             left: 0.0,
             top: 0.0,
@@ -339,10 +332,10 @@ class _CustomAppBarState extends State<CustomAppBar> {
           leading: null,
           title: null,
           actions: const [],
-          actionsPadding: EdgeInsets.zero,
+          actionsPadding: .zero,
           backgroundColor: _expandedColor == _collapsedColor
               ? _expandedColor
-              : Color.lerp(
+              : .lerp(
                   _expandedColor,
                   _collapsedColor,
                   _containerColorFractionAnimation.value,
@@ -406,15 +399,15 @@ class _CustomAppBarAlwaysCollapsedFlexibleSpace extends StatelessWidget {
       child: Padding(
         padding: state._collapsedPadding,
         child: Flex.vertical(
-          mainAxisSize: MainAxisSize.min,
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.stretch,
+          mainAxisSize: .min,
+          mainAxisAlignment: .center,
+          crossAxisAlignment: .stretch,
           children: [
             if (title case final title?)
               DefaultTextStyle(
                 maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                textAlign: TextAlign.start,
+                overflow: .ellipsis,
+                textAlign: .start,
                 style: state._collapsedTitleTextStyle,
                 child: title,
               ),
@@ -423,8 +416,8 @@ class _CustomAppBarAlwaysCollapsedFlexibleSpace extends StatelessWidget {
             if (subtitle case final subtitle?)
               DefaultTextStyle(
                 maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                textAlign: TextAlign.start,
+                overflow: .ellipsis,
+                textAlign: .start,
                 style: state._collapsedSubtitleTextStyle,
                 child: subtitle,
               ),
@@ -490,7 +483,7 @@ class _CustomAppBarDuplicatingFlexibleSpaceState
         final hideCollapsedSemantics = animation.value < 0.5;
         final hideExpandedSemantics = !hideCollapsedSemantics;
         return Flex.vertical(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
+          crossAxisAlignment: .stretch,
           children: [
             ExcludeSemantics(
               excluding: hideCollapsedSemantics,
@@ -501,15 +494,15 @@ class _CustomAppBarDuplicatingFlexibleSpaceState
                   child: Opacity(
                     opacity: _collapsedOpacityAnimation.value,
                     child: Flex.vertical(
-                      mainAxisSize: MainAxisSize.min,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      mainAxisSize: .min,
+                      mainAxisAlignment: .center,
+                      crossAxisAlignment: .stretch,
                       children: [
                         if (widget.collapsedTitle case final collapsedTitle?)
                           DefaultTextStyle(
                             maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                            textAlign: TextAlign.start,
+                            overflow: .ellipsis,
+                            textAlign: .start,
                             style: _state._collapsedTitleTextStyle,
                             child: collapsedTitle,
                           ),
@@ -520,8 +513,8 @@ class _CustomAppBarDuplicatingFlexibleSpaceState
                             case final collapsedSubtitle?)
                           DefaultTextStyle(
                             maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                            textAlign: TextAlign.start,
+                            overflow: .ellipsis,
+                            textAlign: .start,
                             style: _state._collapsedSubtitleTextStyle,
                             child: collapsedSubtitle,
                           ),
@@ -539,21 +532,21 @@ class _CustomAppBarDuplicatingFlexibleSpaceState
                   child: OverflowBox(
                     minHeight: 0.0,
                     maxHeight: hangingHeight,
-                    alignment: Alignment.bottomCenter,
+                    alignment: .bottomCenter,
                     child: Padding(
                       padding: _state._expandedPadding,
                       child: Opacity(
                         opacity: _expandedOpacityAnimation.value,
                         child: Flex.vertical(
-                          mainAxisSize: MainAxisSize.min,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          mainAxisSize: .min,
+                          mainAxisAlignment: .center,
+                          crossAxisAlignment: .stretch,
                           children: [
                             if (widget.expandedTitle case final expandedTitle?)
                               DefaultTextStyle(
                                 maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                                textAlign: TextAlign.start,
+                                overflow: .ellipsis,
+                                textAlign: .start,
                                 style: _state._expandedTitleTextStyle,
                                 child: expandedTitle,
                               ),
@@ -566,8 +559,8 @@ class _CustomAppBarDuplicatingFlexibleSpaceState
                                 case final expandedSubtitle?)
                               DefaultTextStyle(
                                 maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                                textAlign: TextAlign.start,
+                                overflow: .ellipsis,
+                                textAlign: .start,
                                 style: _state._expandedSubtitleTextStyle,
                                 child: expandedSubtitle,
                               ),
@@ -605,30 +598,30 @@ class _CustomAppBarStretchingFlexibleSpace extends StatelessWidget {
     return AnimatedBuilder(
       animation: animation,
       builder: (context, _) => Align(
-        alignment: Alignment.lerp(
+        alignment: .lerp(
           state._collapsedHeight == state._expandedHeight
-              ? Alignment.center
-              : Alignment.bottomCenter,
-          Alignment.center,
+              ? .center
+              : .bottomCenter,
+          .center,
           animation.value,
         )!,
         child: Padding(
-          padding: EdgeInsetsGeometry.lerp(
+          padding: .lerp(
             state._expandedPadding,
             state._collapsedPadding.horizontalInsets(),
             animation.value,
           )!,
           child: Flex.vertical(
-            mainAxisSize: MainAxisSize.min,
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
+            mainAxisSize: .min,
+            mainAxisAlignment: .center,
+            crossAxisAlignment: .stretch,
             children: [
               if (title case final title?)
                 DefaultTextStyle(
                   maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  textAlign: TextAlign.start,
-                  style: TextStyle.lerp(
+                  overflow: .ellipsis,
+                  textAlign: .start,
+                  style: .lerp(
                     state._expandedTitleTextStyle,
                     state._collapsedTitleTextStyle,
                     animation.value,
@@ -646,9 +639,9 @@ class _CustomAppBarStretchingFlexibleSpace extends StatelessWidget {
               if (subtitle case final subtitle?)
                 DefaultTextStyle(
                   maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  textAlign: TextAlign.start,
-                  style: TextStyle.lerp(
+                  overflow: .ellipsis,
+                  textAlign: .start,
+                  style: .lerp(
                     state._expandedSubtitleTextStyle,
                     state._collapsedSubtitleTextStyle,
                     animation.value,

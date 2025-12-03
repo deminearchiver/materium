@@ -18,7 +18,7 @@ abstract class CustomMarkdownWidget extends StatefulWidget {
     required this.nodes,
     this.selectable = false,
     this.styleSheet,
-    this.styleSheetTheme = MarkdownStyleSheetBaseTheme.material,
+    this.styleSheetTheme = .material,
     this.syntaxHighlighter,
     this.onSelectionChanged,
     this.onTapLink,
@@ -33,8 +33,7 @@ abstract class CustomMarkdownWidget extends StatefulWidget {
     this.builders = const <String, MarkdownElementBuilder>{},
     this.paddingBuilders = const <String, MarkdownPaddingBuilder>{},
     this.fitContent = false,
-    this.listItemCrossAxisAlignment =
-        MarkdownListItemCrossAxisAlignment.baseline,
+    this.listItemCrossAxisAlignment = .baseline,
     this.softLineBreak = false,
   });
 
@@ -180,9 +179,8 @@ abstract class CustomMarkdownWidget extends StatefulWidget {
       extensionSet: extensionSet ?? md.ExtensionSet.gitHubFlavored,
       encodeHtml: false,
     );
-
     // Parse the source Markdown data into nodes of an Abstract Syntax Tree.
-    final List<String> lines = const LineSplitter().convert(data);
+    final lines = const LineSplitter().convert(data);
     return document.parseLines(lines);
   }
 }
@@ -231,7 +229,6 @@ class _CustomMarkdownWidgetState extends State<CustomMarkdownWidget>
   GestureRecognizer createLink(String text, String? href, String title) {
     final recognizer = TapGestureRecognizer()
       ..onTap = () => widget.onTapLink?.call(text, href, title);
-
     _recognizers.add(recognizer);
     return recognizer;
   }

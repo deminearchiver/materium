@@ -128,7 +128,7 @@ class ListItemContainer extends StatelessWidget {
         DiagnosticsProperty<EdgeInsetsGeometry>(
           "opticalCenterMaxOffsets",
           opticalCenterMaxOffsets,
-          defaultValue: const EdgeInsets.all(.infinity),
+          defaultValue: const EdgeInsetsGeometry.all(.infinity),
         ),
       )
       ..add(
@@ -151,7 +151,7 @@ class ListItemContainer extends StatelessWidget {
     final edgeCorner = shapeTheme.corner.largeIncreased;
     final connectionCorner = shapeTheme.corner.extraSmall;
     return CornersBorder.rounded(
-      corners: Corners.vertical(
+      corners: .vertical(
         top: isFirst ? edgeCorner : connectionCorner,
         bottom: isLast ? edgeCorner : connectionCorner,
       ),
@@ -501,45 +501,42 @@ class _ListItemLayoutState extends State<ListItemLayout> {
 
     final minHeight = widget.minHeight ?? (isMultiline ? 72.0 : 56.0);
 
-    final maxHeight = widget.maxHeight ?? double.infinity;
+    final maxHeight = widget.maxHeight ?? .infinity;
 
     final constraints = BoxConstraints(
       minHeight: minHeight,
       maxHeight: maxHeight,
     );
 
-    final EdgeInsetsGeometry containerPadding =
+    final containerPadding =
         widget.padding?.horizontalInsets() ??
-        const EdgeInsets.symmetric(horizontal: 16.0);
+        const .symmetric(horizontal: 16.0);
 
-    final EdgeInsetsGeometry verticalContentPadding =
+    final verticalContentPadding =
         widget.padding?.verticalInsets() ??
         (isMultiline
-            ? const EdgeInsets.symmetric(vertical: 12.0)
-            : const EdgeInsets.symmetric(vertical: 8.0));
+            ? const .symmetric(vertical: 12.0)
+            : const .symmetric(vertical: 8.0));
 
-    final EdgeInsetsGeometry horizontalContentPadding =
-        EdgeInsetsDirectional.only(
-          start: widget.leading != null ? widget.leadingSpace ?? 12.0 : 0.0,
-          end: widget.trailing != null ? widget.trailingSpace ?? 12.0 : 0.0,
-        );
-
-    final EdgeInsetsGeometry contentPadding = verticalContentPadding.add(
-      horizontalContentPadding,
+    final horizontalContentPadding = EdgeInsetsGeometry.directional(
+      start: widget.leading != null ? widget.leadingSpace ?? 12.0 : 0.0,
+      end: widget.trailing != null ? widget.trailingSpace ?? 12.0 : 0.0,
     );
+
+    final contentPadding = verticalContentPadding.add(horizontalContentPadding);
 
     return ConstrainedBox(
       constraints: constraints,
       child: Padding(
         padding: containerPadding,
         child: Flex.horizontal(
-          mainAxisSize: MainAxisSize.max,
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisSize: .max,
+          mainAxisAlignment: .start,
+          crossAxisAlignment: .center,
           children: [
             if (widget.leading case final leading?)
               IconTheme.merge(
-                data: IconThemeDataPartial.from(
+                data: .from(
                   color: colorTheme.onSurfaceVariant,
                   size: 24.0,
                   opticalSize: 24.0,
@@ -550,18 +547,18 @@ class _ListItemLayoutState extends State<ListItemLayout> {
               child: Padding(
                 padding: contentPadding,
                 child: Flex.vertical(
-                  mainAxisSize: MainAxisSize.min,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  mainAxisSize: .min,
+                  mainAxisAlignment: .center,
+                  crossAxisAlignment: .stretch,
                   children: [
                     if (widget.overline case final overline?)
                       DefaultTextStyle(
                         style: typescaleTheme.labelMedium.toTextStyle(
                           color: colorTheme.onSurfaceVariant,
                         ),
-                        textAlign: TextAlign.start,
+                        textAlign: .start,
                         maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
+                        overflow: .ellipsis,
                         child: overline,
                       ),
                     if (widget.headline case final headline?)
@@ -569,9 +566,9 @@ class _ListItemLayoutState extends State<ListItemLayout> {
                         style: typescaleTheme.titleMediumEmphasized.toTextStyle(
                           color: colorTheme.onSurface,
                         ),
-                        textAlign: TextAlign.start,
+                        textAlign: .start,
                         maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
+                        overflow: .ellipsis,
                         child: headline,
                       ),
                     if (widget.supportingText case final supportingText?)
@@ -579,9 +576,9 @@ class _ListItemLayoutState extends State<ListItemLayout> {
                         style: typescaleTheme.bodyMedium.toTextStyle(
                           color: colorTheme.onSurfaceVariant,
                         ),
-                        textAlign: TextAlign.start,
+                        textAlign: .start,
                         maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
+                        overflow: .ellipsis,
                         child: supportingText,
                       ),
                   ],
@@ -593,9 +590,9 @@ class _ListItemLayoutState extends State<ListItemLayout> {
                 style: typescaleTheme.labelSmall.toTextStyle(
                   color: colorTheme.onSurfaceVariant,
                 ),
-                overflow: TextOverflow.ellipsis,
+                overflow: .ellipsis,
                 child: IconTheme.merge(
-                  data: IconThemeDataPartial.from(
+                  data: .from(
                     color: colorTheme.onSurfaceVariant,
                     size: 24.0,
                     opticalSize: 24.0,

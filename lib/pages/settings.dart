@@ -64,7 +64,7 @@ class _SettingsPageState extends State<SettingsPage> {
       };
 
   void initUpdateIntervalInterpolator() {
-    final List<InterpolationNode> nodes = <InterpolationNode>[
+    final nodes = <InterpolationNode>[
       for (var index = 0; index < updateIntervalNodes.length; index++)
         InterpolationNode(
           x: index.toDouble() + 1.0,
@@ -77,10 +77,10 @@ class _SettingsPageState extends State<SettingsPage> {
   void processIntervalSliderValue(double val) {
     if (val < 0.5) {
       updateInterval = 0;
-      updateIntervalLabel = tr('neverManualOnly');
+      updateIntervalLabel = tr("neverManualOnly");
       return;
     }
-    int valInterpolated = 0;
+    var valInterpolated = 0;
     if (val < 1) {
       valInterpolated = 15;
     } else {
@@ -88,25 +88,25 @@ class _SettingsPageState extends State<SettingsPage> {
     }
     if (valInterpolated < 60) {
       updateInterval = valInterpolated;
-      updateIntervalLabel = plural('minute', valInterpolated);
+      updateIntervalLabel = plural("minute", valInterpolated);
     } else if (valInterpolated < 8 * 60) {
-      int valRounded = (valInterpolated / 15).floor() * 15;
+      final valRounded = (valInterpolated / 15).floor() * 15;
       updateInterval = valRounded;
-      updateIntervalLabel = plural('hour', valRounded ~/ 60);
-      int mins = valRounded % 60;
-      if (mins != 0) updateIntervalLabel += " ${plural('minute', mins)}";
+      updateIntervalLabel = plural("hour", valRounded ~/ 60);
+      final mins = valRounded % 60;
+      if (mins != 0) updateIntervalLabel += " ${plural("minute", mins)}";
     } else if (valInterpolated < 24 * 60) {
-      int valRounded = (valInterpolated / 30).floor() * 30;
+      final valRounded = (valInterpolated / 30).floor() * 30;
       updateInterval = valRounded;
-      updateIntervalLabel = plural('hour', valRounded / 60);
+      updateIntervalLabel = plural("hour", valRounded / 60);
     } else if (valInterpolated < 7 * 24 * 60) {
-      int valRounded = (valInterpolated / (12 * 60)).floor() * 12 * 60;
+      final valRounded = (valInterpolated / (12 * 60)).floor() * 12 * 60;
       updateInterval = valRounded;
-      updateIntervalLabel = plural('day', valRounded / (24 * 60));
+      updateIntervalLabel = plural("day", valRounded / (24 * 60));
     } else {
-      int valRounded = (valInterpolated / (24 * 60)).floor() * 24 * 60;
+      final valRounded = (valInterpolated / (24 * 60)).floor() * 24 * 60;
       updateInterval = valRounded;
-      updateIntervalLabel = plural('day', valRounded ~/ (24 * 60));
+      updateIntervalLabel = plural("day", valRounded ~/ (24 * 60));
     }
   }
 
@@ -133,20 +133,20 @@ class _SettingsPageState extends State<SettingsPage> {
     void onUseShizukuChanged(bool useShizuku) {
       if (useShizuku) {
         ShizukuApkInstaller.checkPermission().then((resCode) {
-          settingsProvider.useShizuku = resCode!.startsWith('granted');
+          settingsProvider.useShizuku = resCode!.startsWith("granted");
           if (!context.mounted) return;
           switch (resCode) {
-            case 'binder_not_found':
-              showError(ObtainiumError(tr('shizukuBinderNotFound')), context);
-            case 'old_shizuku':
-              showError(ObtainiumError(tr('shizukuOld')), context);
-            case 'old_android_with_adb':
+            case "binder_not_found":
+              showError(ObtainiumError(tr("shizukuBinderNotFound")), context);
+            case "old_shizuku":
+              showError(ObtainiumError(tr("shizukuOld")), context);
+            case "old_android_with_adb":
               showError(
-                ObtainiumError(tr('shizukuOldAndroidWithADB')),
+                ObtainiumError(tr("shizukuOldAndroidWithADB")),
                 context,
               );
-            case 'denied':
-              showError(ObtainiumError(tr('cancelled')), context);
+            case "denied":
+              showError(ObtainiumError(tr("cancelled")), context);
           }
         });
       } else {
@@ -164,20 +164,17 @@ class _SettingsPageState extends State<SettingsPage> {
             closeButton: true,
             dialogActionButtons: false,
           ),
-          pickersEnabled: const <ColorPickerType, bool>{
-            ColorPickerType.both: false,
-            ColorPickerType.primary: false,
-            ColorPickerType.accent: false,
-            ColorPickerType.bw: false,
-            ColorPickerType.custom: true,
-            ColorPickerType.wheel: true,
+          pickersEnabled: const {
+            .both: false,
+            .primary: false,
+            .accent: false,
+            .bw: false,
+            .custom: true,
+            .wheel: true,
           },
-          pickerTypeLabels: <ColorPickerType, String>{
-            ColorPickerType.custom: tr('standard'),
-            ColorPickerType.wheel: tr('custom'),
-          },
+          pickerTypeLabels: {.custom: tr("standard"), .wheel: tr("custom")},
           title: Text(
-            tr('selectX', args: [tr('colour').toLowerCase()]),
+            tr("selectX", args: [tr("colour").toLowerCase()]),
             style: typescaleTheme.titleLarge.toTextStyle(
               color: colorTheme.onSurface,
             ),
@@ -206,9 +203,8 @@ class _SettingsPageState extends State<SettingsPage> {
           context,
           transitionDuration: const Duration(milliseconds: 500),
           transitionBuilder: (context, a1, a2, widget) {
-            final curvedValue = Curves.easeInOutCubicEmphasized.transform(
-              a1.value,
-            );
+            final curvedValue = const EasingThemeData.fallback().emphasized
+                .transform(a1.value);
             return Transform.scale(
               scale: curvedValue,
               alignment: Alignment.center,

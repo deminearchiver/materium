@@ -228,43 +228,31 @@ extension EdgeInsetsGeometryExtension on EdgeInsetsGeometry {
     maxVertical: double.infinity,
   );
 
-  EdgeInsetsGeometry horizontalInsets() {
-    // if (kDebugMode) {
-    //   return _ClampedEdgeInsets(
-    //     this,
-    //     minHorizontal: 0.0,
-    //     maxHorizotal: double.infinity,
-    //     minVertical: 0.0,
-    //     maxVertical: 0.0,
-    //   );
-    // }
-    if (this is EdgeInsets) {
-      return (this as EdgeInsets)._horizontalInsets();
-    }
-    if (this is EdgeInsetsDirectional) {
-      return (this as EdgeInsetsDirectional)._horizontalInsets();
-    }
-    return _horizontalInsetsMixed();
-  }
+  EdgeInsetsGeometry horizontalInsets() => switch (this) {
+    // final value when kDebugMode => _ClampedEdgeInsets(
+    //   value,
+    //   minHorizontal: 0.0,
+    //   maxHorizotal: double.infinity,
+    //   minVertical: 0.0,
+    //   maxVertical: 0.0,
+    // ),
+    final EdgeInsets value => value._horizontalInsets(),
+    final EdgeInsetsDirectional value => value._horizontalInsets(),
+    final value => value._horizontalInsetsMixed(),
+  };
 
-  EdgeInsetsGeometry verticalInsets() {
-    // if (kDebugMode) {
-    //   return _ClampedEdgeInsets(
-    //     this,
-    //     minHorizontal: 0.0,
-    //     maxHorizotal: 0.0,
-    //     minVertical: 0.0,
-    //     maxVertical: double.infinity,
-    //   );
-    // }
-    if (this is EdgeInsets) {
-      return (this as EdgeInsets)._verticalInsets();
-    }
-    if (this is EdgeInsetsDirectional) {
-      return (this as EdgeInsetsDirectional)._verticalInsets();
-    }
-    return _verticalInsetsMixed();
-  }
+  EdgeInsetsGeometry verticalInsets() => switch (this) {
+    // final value when kDebugMode => _ClampedEdgeInsets(
+    //   this,
+    //   minHorizontal: 0.0,
+    //   maxHorizotal: 0.0,
+    //   minVertical: 0.0,
+    //   maxVertical: double.infinity,
+    // ),
+    final EdgeInsets value => value._verticalInsets(),
+    final EdgeInsetsDirectional value => value._verticalInsets(),
+    final value => value._verticalInsetsMixed(),
+  };
 }
 
 extension EdgeInsetsExtension on EdgeInsets {
@@ -289,6 +277,125 @@ extension EdgeInsetsDirectionalExtension on EdgeInsetsDirectional {
   EdgeInsetsDirectional verticalInsets() => _verticalInsets();
 }
 
+class _ClampedEdgeInsets implements EdgeInsetsGeometry {
+  const _ClampedEdgeInsets(
+    this._parent, {
+    this.minHorizontal = 0.0,
+    this.minVertical = 0.0,
+    this.maxHorizontal = .infinity,
+    this.maxVertical = .infinity,
+    EdgeInsets Function(EdgeInsets value) transform = defaultTransform,
+  }) : _transform = transform;
+
+  final EdgeInsetsGeometry _parent;
+  final double minHorizontal;
+  final double minVertical;
+  final double maxHorizontal;
+  final double maxVertical;
+  final EdgeInsets Function(EdgeInsets value) _transform;
+
+  _ClampedEdgeInsets _transformed(
+    EdgeInsets Function(EdgeInsets value) transform,
+  ) => _ClampedEdgeInsets(
+    _parent,
+    minHorizontal: minHorizontal,
+    minVertical: minVertical,
+    maxHorizontal: maxHorizontal,
+    maxVertical: maxVertical,
+  );
+
+  @override
+  EdgeInsetsGeometry operator %(double other) {
+    // TODO: implement %
+    throw UnimplementedError();
+  }
+
+  @override
+  EdgeInsetsGeometry operator *(double other) =>
+      _transformed((value) => value * other);
+
+  @override
+  EdgeInsetsGeometry operator /(double other) {
+    // TODO: implement /
+    throw UnimplementedError();
+  }
+
+  @override
+  EdgeInsetsGeometry add(EdgeInsetsGeometry other) {
+    // TODO: implement add
+    throw UnimplementedError();
+  }
+
+  @override
+  double along(Axis axis) {
+    // TODO: implement along
+    throw UnimplementedError();
+  }
+
+  @override
+  EdgeInsetsGeometry clamp(EdgeInsetsGeometry min, EdgeInsetsGeometry max) {
+    // TODO: implement clamp
+    throw UnimplementedError();
+  }
+
+  @override
+  // TODO: implement collapsedSize
+  Size get collapsedSize => throw UnimplementedError();
+
+  @override
+  Size deflateSize(Size size) {
+    // TODO: implement deflateSize
+    throw UnimplementedError();
+  }
+
+  @override
+  // TODO: implement flipped
+  EdgeInsetsGeometry get flipped => throw UnimplementedError();
+
+  @override
+  // TODO: implement horizontal
+  double get horizontal => throw UnimplementedError();
+
+  @override
+  Size inflateSize(Size size) {
+    // TODO: implement inflateSize
+    throw UnimplementedError();
+  }
+
+  @override
+  // TODO: implement isNonNegative
+  bool get isNonNegative => throw UnimplementedError();
+
+  @override
+  EdgeInsets resolve(TextDirection? direction) {
+    // TODO: implement resolve
+    throw UnimplementedError();
+  }
+
+  @override
+  EdgeInsetsGeometry subtract(EdgeInsetsGeometry other) {
+    // TODO: implement subtract
+    throw UnimplementedError();
+  }
+
+  @override
+  EdgeInsetsGeometry operator -() {
+    // TODO: implement -
+    throw UnimplementedError();
+  }
+
+  @override
+  // TODO: implement vertical
+  double get vertical => throw UnimplementedError();
+
+  @override
+  EdgeInsetsGeometry operator ~/(double other) {
+    // TODO: implement ~/
+    throw UnimplementedError();
+  }
+
+  static EdgeInsets defaultTransform(EdgeInsets value) => value;
+}
 // class _ClampedEdgeInsets implements EdgeInsetsGeometry {
 //   const _ClampedEdgeInsets(
 //     this._parent, {

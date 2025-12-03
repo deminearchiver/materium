@@ -68,8 +68,8 @@ final globalNavigatorKey = GlobalKey<NavigatorState>();
 Future<void> loadTranslations() async {
   // See easy_localization/issues/210
   await EasyLocalizationController.initEasyLocation();
-  var s = await SettingsProvider.ensureInitialized();
-  var forceLocale = s.forcedLocale;
+  final s = await SettingsProvider.ensureInitialized();
+  final forceLocale = s.forcedLocale;
   final controller = EasyLocalizationController(
     saveLocale: true,
     forceLocale: forceLocale,
@@ -93,8 +93,8 @@ Future<void> loadTranslations() async {
 
 @pragma("vm:entry-point")
 void backgroundFetchHeadlessTask(HeadlessTask task) async {
-  String taskId = task.taskId;
-  bool isTimeout = task.timeout;
+  final taskId = task.taskId;
+  final isTimeout = task.timeout;
   if (isTimeout) {
     print("BG update task timed out.");
     BackgroundFetch.finish(taskId);
@@ -133,7 +133,7 @@ class MyTaskHandler extends TaskHandler {
 }
 
 Stream<LicenseEntry> _licenses() async* {
-  final List<String> assets = <String>[
+  final assets = <String>[
     materium_fonts.Assets.fonts.firacode.ofl,
     materium_fonts.Assets.fonts.googlesanscode.ofl,
     materium_fonts.Assets.fonts.googlesansflex.ofl,
@@ -151,7 +151,7 @@ void main() async {
   LicenseRegistry.addLicense(_licenses);
 
   try {
-    ByteData data = await rootBundle.load(Assets.ca.letsEncryptR3);
+    final data = await rootBundle.load(Assets.ca.letsEncryptR3);
     SecurityContext.defaultContext.setTrustedCertificatesBytes(
       data.buffer.asUint8List(),
     );
@@ -210,8 +210,6 @@ class Obtainium extends StatefulWidget {
 }
 
 class _ObtainiumState extends State<Obtainium> {
-  var existingUpdateInterval = -1;
-
   @override
   void initState() {
     super.initState();

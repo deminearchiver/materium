@@ -629,8 +629,8 @@ class _DeveloperMarkdown1PageState extends State<DeveloperMarkdown1Page> {
               child: IconButton.filledTonal(
                 onPressed: () => _scrollController.animateTo(
                   0.0,
-                  duration: Durations.extralong4,
-                  curve: Curves.easeInOutCubicEmphasized,
+                  duration: const DurationThemeData.fallback().extraLong4,
+                  curve: const EasingThemeData.fallback().emphasized,
                 ),
                 icon: Icon(
                   Symbols.arrow_upward_rounded,
@@ -1709,23 +1709,23 @@ class _SettingsAppBarRoute<T extends Object?> extends PopupRoute<T> {
 
   CurvedAnimation _linearExitAnimation = CurvedAnimation(
     parent: kAlwaysDismissedAnimation,
-    curve: Curves.linear,
+    curve: const EasingThemeData.fallback().linear,
   );
   CurvedAnimation _linearEnterAnimation = CurvedAnimation(
     parent: kAlwaysDismissedAnimation,
-    curve: Curves.linear,
+    curve: const EasingThemeData.fallback().linear,
   );
   CurvedAnimation _curvedExitAnimation = CurvedAnimation(
     parent: kAlwaysDismissedAnimation,
-    curve: Curves.linear,
+    curve: const EasingThemeData.fallback().linear,
   );
   CurvedAnimation _curvedEnterAnimation = CurvedAnimation(
     parent: kAlwaysDismissedAnimation,
-    curve: Curves.linear,
+    curve: const EasingThemeData.fallback().linear,
   );
   CurvedAnimation _curvedAnimation = CurvedAnimation(
     parent: kAlwaysDismissedAnimation,
-    curve: Curves.linear,
+    curve: const EasingThemeData.fallback().linear,
   );
 
   final Tween<Rect?> _containerRectTween = RectTween();
@@ -1819,12 +1819,14 @@ class _SettingsAppBarRoute<T extends Object?> extends PopupRoute<T> {
   String? get barrierLabel => null;
 
   @override
-  Duration get transitionDuration =>
-      kDebugMode ? Durations.extralong4 : Durations.long2;
+  Duration get transitionDuration => kDebugMode
+      ? const DurationThemeData.fallback().extraLong4
+      : const DurationThemeData.fallback().long2;
 
   @override
-  Duration get reverseTransitionDuration =>
-      kDebugMode ? Durations.extralong4 : Durations.medium2;
+  Duration get reverseTransitionDuration => kDebugMode
+      ? const DurationThemeData.fallback().extraLong4
+      : const DurationThemeData.fallback().medium2;
 
   @override
   void install() {
@@ -3912,14 +3914,14 @@ class _ShapeLibraryViewState extends State<_ShapeLibraryView> {
                       opacity: stateTheme.stateLayerOpacity,
                     ),
                     child: AnimatedAlign(
-                      duration: Durations.medium4,
-                      curve: Easing.standard,
+                      duration: const DurationThemeData.fallback().medium4,
+                      curve: const EasingThemeData.fallback().standard,
                       alignment: Alignment.center,
                       widthFactor: 1.0,
                       heightFactor: _filteredShapesEntries.isEmpty ? 1.0 : 0.0,
                       child: AnimatedOpacity(
-                        duration: Durations.medium4,
-                        curve: Easing.standard,
+                        duration: const DurationThemeData.fallback().medium4,
+                        curve: const EasingThemeData.fallback().standard,
                         opacity: _filteredShapesEntries.isEmpty ? 1.0 : 0.0,
                         child: Padding(
                           padding: const EdgeInsets.fromLTRB(
@@ -3969,8 +3971,8 @@ class _ShapeLibraryViewState extends State<_ShapeLibraryView> {
                 tween: Tween<double>(
                   end: _filteredShapesEntries.isNotEmpty ? 1.0 : 0.0,
                 ),
-                duration: Durations.medium4,
-                curve: Easing.standard,
+                duration: const DurationThemeData.fallback().medium4,
+                curve: const EasingThemeData.fallback().standard,
                 builder: (context, value, child) => SliverOpacity(
                   opacity: value,
                   sliver: SliverTransform.scale(
