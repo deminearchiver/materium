@@ -36,40 +36,31 @@ class TypographyDefaults with Diagnosticable {
   TypographyDefaults copyWith({
     covariant TypefaceThemeDataPartial? typeface,
     covariant TypescaleThemeDataPartial? typescale,
-  }) {
-    if (typeface == null && typescale == null) {
-      return this;
-    }
-    return TypographyDefaults.from(
-      typeface: typeface ?? this.typeface,
-      typescale: typescale ?? this.typescale,
-    );
-  }
+  }) => typeface != null || typescale != null
+      ? TypographyDefaults.from(
+          typeface: typeface ?? this.typeface,
+          typescale: typescale ?? this.typescale,
+        )
+      : this;
 
   TypographyDefaults mergeWith({
     TypefaceThemeDataPartial? typeface,
     TypescaleThemeDataPartial? typescale,
-  }) {
-    if (typeface == null && typescale == null) {
-      return this;
-    }
-    return TypographyDefaults.from(
-      typeface: this.typeface.merge(typeface),
-      typescale: this.typescale.merge(typescale),
-    );
-  }
+  }) => typeface != null || typescale != null
+      ? TypographyDefaults.from(
+          typeface: this.typeface.merge(typeface),
+          typescale: this.typescale.merge(typescale),
+        )
+      : this;
 
-  TypographyDefaults merge(TypographyDefaults? other) {
-    if (other == null) return this;
-    return mergeWith(typeface: other.typeface, typescale: other.typescale);
-  }
+  TypographyDefaults merge(TypographyDefaults? other) => other != null
+      ? mergeWith(typeface: other.typeface, typescale: other.typescale)
+      : this;
 
-  Widget build(BuildContext context, Widget child) {
-    return TypefaceTheme.merge(
-      data: typeface,
-      child: TypescaleTheme.merge(data: typescale, child: child),
-    );
-  }
+  Widget build(BuildContext context, Widget child) => TypefaceTheme.merge(
+    data: typeface,
+    child: TypescaleTheme.merge(data: typescale, child: child),
+  );
 
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
@@ -92,21 +83,20 @@ class TypographyDefaults with Diagnosticable {
   }
 
   @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        runtimeType == other.runtimeType &&
-            other is TypographyDefaults &&
-            typeface == other.typeface &&
-            typescale == other.typescale;
-  }
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      runtimeType == other.runtimeType &&
+          other is TypographyDefaults &&
+          typeface == other.typeface &&
+          typescale == other.typescale;
 
   @override
   int get hashCode => Object.hash(runtimeType, typeface, typescale);
 
   /// A Material 3 Baseline type scale which uses Roboto and doesn't support
   /// variable font features.
-  static const TypographyDefaults material3Baseline = TypographyDefaults.from(
-    typeface: TypefaceThemeDataPartial.from(
+  static const TypographyDefaults material3Baseline = .from(
+    typeface: .from(
       // Roboto was the default typeface for Material 3 Baseline
       brand: [_roboto],
       plain: [_roboto],
@@ -114,8 +104,8 @@ class TypographyDefaults with Diagnosticable {
   );
 
   /// A Material 3 Expressive type scale which uses Roboto Flex.
-  static const TypographyDefaults material3Expressive = TypographyDefaults.from(
-    typeface: TypefaceThemeDataPartial.from(
+  static const TypographyDefaults material3Expressive = .from(
+    typeface: .from(
       // Material 3 Expressive introduced variable font support
       brand: [_robotoFlex, _roboto],
       plain: [_robotoFlex, _roboto],
@@ -126,154 +116,145 @@ class TypographyDefaults with Diagnosticable {
   /// a previously restricted but freshly opened Google brand font.
   ///
   /// It falls back to using Roboto Flex, then Roboto.
-  static const TypographyDefaults googleMaterial3Expressive =
-      TypographyDefaults.from(
-        typeface: TypefaceThemeDataPartial.from(
-          // The ROND axis is currently only available for Google Sans Flex,
-          // making it a no-op for most of the other possibly installed fonts.
-          // This particular information was ripped from a file
-          // located at the path "/product/etc/fonts_customization.xml"
-          // on a Google Pixel with Android 16 QPR1 (Material 3 Expressive).
-          brand: [_googleSansFlex, _robotoFlex, _roboto],
-          plain: [_googleSansFlex, _robotoFlex, _roboto],
-        ),
-        typescale: TypescaleThemeDataPartial.from(
-          displayLarge: TypeStylePartial.from(rond: 0.0),
-          displayMedium: TypeStylePartial.from(rond: 0.0),
-          displaySmall: TypeStylePartial.from(rond: 0.0),
-          headlineLarge: TypeStylePartial.from(rond: 0.0),
-          headlineMedium: TypeStylePartial.from(rond: 0.0),
-          headlineSmall: TypeStylePartial.from(rond: 0.0),
-          titleLarge: TypeStylePartial.from(rond: 0.0),
-          titleMedium: TypeStylePartial.from(rond: 0.0),
-          titleSmall: TypeStylePartial.from(rond: 0.0),
-          bodyLarge: TypeStylePartial.from(rond: 0.0),
-          bodyMedium: TypeStylePartial.from(rond: 0.0),
-          bodySmall: TypeStylePartial.from(rond: 0.0),
-          labelLarge: TypeStylePartial.from(rond: 0.0),
-          labelMedium: TypeStylePartial.from(rond: 0.0),
-          labelSmall: TypeStylePartial.from(rond: 0.0),
-          displayLargeEmphasized: TypeStylePartial.from(rond: 100.0),
-          displayMediumEmphasized: TypeStylePartial.from(rond: 100.0),
-          displaySmallEmphasized: TypeStylePartial.from(rond: 100.0),
-          headlineLargeEmphasized: TypeStylePartial.from(rond: 100.0),
-          headlineMediumEmphasized: TypeStylePartial.from(rond: 100.0),
-          headlineSmallEmphasized: TypeStylePartial.from(rond: 100.0),
-          titleLargeEmphasized: TypeStylePartial.from(rond: 100.0),
-          titleMediumEmphasized: TypeStylePartial.from(rond: 100.0),
-          titleSmallEmphasized: TypeStylePartial.from(rond: 100.0),
-          bodyLargeEmphasized: TypeStylePartial.from(rond: 100.0),
-          bodyMediumEmphasized: TypeStylePartial.from(rond: 100.0),
-          bodySmallEmphasized: TypeStylePartial.from(rond: 100.0),
-          labelLargeEmphasized: TypeStylePartial.from(rond: 100.0),
-          labelMediumEmphasized: TypeStylePartial.from(rond: 100.0),
-          labelSmallEmphasized: TypeStylePartial.from(rond: 100.0),
-        ),
-      );
+  static const TypographyDefaults googleMaterial3Expressive = .from(
+    typeface: .from(
+      // The ROND axis is currently only available for Google Sans Flex,
+      // making it a no-op for most of the other possibly installed fonts.
+      // This particular information was ripped from a file
+      // located at the path "/product/etc/fonts_customization.xml"
+      // on a Google Pixel with Android 16 QPR1 (Material 3 Expressive).
+      brand: [_googleSansFlex, _robotoFlex, _roboto],
+      plain: [_googleSansFlex, _robotoFlex, _roboto],
+    ),
+    typescale: .from(
+      displayLarge: TypeStylePartial.from(rond: 0.0),
+      displayMedium: TypeStylePartial.from(rond: 0.0),
+      displaySmall: TypeStylePartial.from(rond: 0.0),
+      headlineLarge: TypeStylePartial.from(rond: 0.0),
+      headlineMedium: TypeStylePartial.from(rond: 0.0),
+      headlineSmall: TypeStylePartial.from(rond: 0.0),
+      titleLarge: TypeStylePartial.from(rond: 0.0),
+      titleMedium: TypeStylePartial.from(rond: 0.0),
+      titleSmall: TypeStylePartial.from(rond: 0.0),
+      bodyLarge: TypeStylePartial.from(rond: 0.0),
+      bodyMedium: TypeStylePartial.from(rond: 0.0),
+      bodySmall: TypeStylePartial.from(rond: 0.0),
+      labelLarge: TypeStylePartial.from(rond: 0.0),
+      labelMedium: TypeStylePartial.from(rond: 0.0),
+      labelSmall: TypeStylePartial.from(rond: 0.0),
+      displayLargeEmphasized: TypeStylePartial.from(rond: 100.0),
+      displayMediumEmphasized: TypeStylePartial.from(rond: 100.0),
+      displaySmallEmphasized: TypeStylePartial.from(rond: 100.0),
+      headlineLargeEmphasized: TypeStylePartial.from(rond: 100.0),
+      headlineMediumEmphasized: TypeStylePartial.from(rond: 100.0),
+      headlineSmallEmphasized: TypeStylePartial.from(rond: 100.0),
+      titleLargeEmphasized: TypeStylePartial.from(rond: 100.0),
+      titleMediumEmphasized: TypeStylePartial.from(rond: 100.0),
+      titleSmallEmphasized: TypeStylePartial.from(rond: 100.0),
+      bodyLargeEmphasized: TypeStylePartial.from(rond: 100.0),
+      bodyMediumEmphasized: TypeStylePartial.from(rond: 100.0),
+      bodySmallEmphasized: TypeStylePartial.from(rond: 100.0),
+      labelLargeEmphasized: TypeStylePartial.from(rond: 100.0),
+      labelMediumEmphasized: TypeStylePartial.from(rond: 100.0),
+      labelSmallEmphasized: TypeStylePartial.from(rond: 100.0),
+    ),
+  );
 
   // TODO: decide what to do with this
   @Deprecated("Use material3Baseline instead")
-  static const TypographyDefaults _googleMaterial3Baseline =
-      TypographyDefaults.from(
-        typeface: TypefaceThemeDataPartial.from(
-          // Google Sans (not "Flex") doesn't support ROND.
-          brand: [_googleSansDisplay, _roboto],
-          plain: [_googleSansText, _roboto],
-        ),
-        typescale: TypescaleThemeDataPartial.from(
-          // ROND wasn't used before the introduction of GM3 Expressive.
-          // We explicitly set this axis to 0 here to avoid confusion.
-          displayLarge: TypeStylePartial.from(rond: 0.0),
-          displayMedium: TypeStylePartial.from(rond: 0.0),
-          displaySmall: TypeStylePartial.from(rond: 0.0),
-          headlineLarge: TypeStylePartial.from(rond: 0.0),
-          headlineMedium: TypeStylePartial.from(rond: 0.0),
-          headlineSmall: TypeStylePartial.from(rond: 0.0),
-          titleLarge: TypeStylePartial.from(rond: 0.0),
-          titleMedium: TypeStylePartial.from(rond: 0.0),
-          titleSmall: TypeStylePartial.from(rond: 0.0),
-          bodyLarge: TypeStylePartial.from(rond: 0.0),
-          bodyMedium: TypeStylePartial.from(rond: 0.0),
-          bodySmall: TypeStylePartial.from(rond: 0.0),
-          labelLarge: TypeStylePartial.from(rond: 0.0),
-          labelMedium: TypeStylePartial.from(rond: 0.0),
-          labelSmall: TypeStylePartial.from(rond: 0.0),
-          displayLargeEmphasized: TypeStylePartial.from(rond: 0.0),
-          displayMediumEmphasized: TypeStylePartial.from(rond: 0.0),
-          displaySmallEmphasized: TypeStylePartial.from(rond: 0.0),
-          headlineLargeEmphasized: TypeStylePartial.from(rond: 0.0),
-          headlineMediumEmphasized: TypeStylePartial.from(rond: 0.0),
-          headlineSmallEmphasized: TypeStylePartial.from(rond: 0.0),
-          titleLargeEmphasized: TypeStylePartial.from(rond: 0.0),
-          titleMediumEmphasized: TypeStylePartial.from(rond: 0.0),
-          titleSmallEmphasized: TypeStylePartial.from(rond: 0.0),
-          bodyLargeEmphasized: TypeStylePartial.from(rond: 0.0),
-          bodyMediumEmphasized: TypeStylePartial.from(rond: 0.0),
-          bodySmallEmphasized: TypeStylePartial.from(rond: 0.0),
-          labelLargeEmphasized: TypeStylePartial.from(rond: 0.0),
-          labelMediumEmphasized: TypeStylePartial.from(rond: 0.0),
-          labelSmallEmphasized: TypeStylePartial.from(rond: 0.0),
-        ),
-      );
+  static const TypographyDefaults _googleMaterial3Baseline = .from(
+    typeface: .from(
+      // Google Sans (not "Flex") doesn't support ROND.
+      brand: [_googleSansDisplay, _roboto],
+      plain: [_googleSansText, _roboto],
+    ),
+    typescale: .from(
+      // ROND wasn't used before the introduction of GM3 Expressive.
+      // We explicitly set this axis to 0 here to avoid confusion.
+      displayLarge: TypeStylePartial.from(rond: 0.0),
+      displayMedium: TypeStylePartial.from(rond: 0.0),
+      displaySmall: TypeStylePartial.from(rond: 0.0),
+      headlineLarge: TypeStylePartial.from(rond: 0.0),
+      headlineMedium: TypeStylePartial.from(rond: 0.0),
+      headlineSmall: TypeStylePartial.from(rond: 0.0),
+      titleLarge: TypeStylePartial.from(rond: 0.0),
+      titleMedium: TypeStylePartial.from(rond: 0.0),
+      titleSmall: TypeStylePartial.from(rond: 0.0),
+      bodyLarge: TypeStylePartial.from(rond: 0.0),
+      bodyMedium: TypeStylePartial.from(rond: 0.0),
+      bodySmall: TypeStylePartial.from(rond: 0.0),
+      labelLarge: TypeStylePartial.from(rond: 0.0),
+      labelMedium: TypeStylePartial.from(rond: 0.0),
+      labelSmall: TypeStylePartial.from(rond: 0.0),
+      displayLargeEmphasized: TypeStylePartial.from(rond: 0.0),
+      displayMediumEmphasized: TypeStylePartial.from(rond: 0.0),
+      displaySmallEmphasized: TypeStylePartial.from(rond: 0.0),
+      headlineLargeEmphasized: TypeStylePartial.from(rond: 0.0),
+      headlineMediumEmphasized: TypeStylePartial.from(rond: 0.0),
+      headlineSmallEmphasized: TypeStylePartial.from(rond: 0.0),
+      titleLargeEmphasized: TypeStylePartial.from(rond: 0.0),
+      titleMediumEmphasized: TypeStylePartial.from(rond: 0.0),
+      titleSmallEmphasized: TypeStylePartial.from(rond: 0.0),
+      bodyLargeEmphasized: TypeStylePartial.from(rond: 0.0),
+      bodyMediumEmphasized: TypeStylePartial.from(rond: 0.0),
+      bodySmallEmphasized: TypeStylePartial.from(rond: 0.0),
+      labelLargeEmphasized: TypeStylePartial.from(rond: 0.0),
+      labelMediumEmphasized: TypeStylePartial.from(rond: 0.0),
+      labelSmallEmphasized: TypeStylePartial.from(rond: 0.0),
+    ),
+  );
 
   // TODO: decide what to do with this
   @Deprecated("Use googleMaterial3Expressive instead")
-  static const TypographyDefaults _googleMaterial3Expressive1P =
-      TypographyDefaults.from(
-        typeface: TypefaceThemeDataPartial.from(
-          // The ROND axis is currently only available for Google Sans Flex,
-          // making it a no-op for most of the other possibly installed fonts.
-          // This particular information was ripped from a file
-          // located at the path "/product/etc/fonts_customization.xml"
-          // on a Google Pixel with Android 16 QPR1 (Material 3 Expressive).
-          brand: [_googleSansFlex, _robotoFlex, _googleSans, _roboto],
-          plain: [_googleSansFlex, _robotoFlex, _googleSans, _roboto],
-        ),
-        typescale: TypescaleThemeDataPartial.from(
-          displayLarge: TypeStylePartial.from(rond: 0.0),
-          displayMedium: TypeStylePartial.from(rond: 0.0),
-          displaySmall: TypeStylePartial.from(rond: 0.0),
-          headlineLarge: TypeStylePartial.from(rond: 0.0),
-          headlineMedium: TypeStylePartial.from(rond: 0.0),
-          headlineSmall: TypeStylePartial.from(rond: 0.0),
-          titleLarge: TypeStylePartial.from(rond: 0.0),
-          titleMedium: TypeStylePartial.from(rond: 0.0),
-          titleSmall: TypeStylePartial.from(rond: 0.0),
-          bodyLarge: TypeStylePartial.from(rond: 0.0),
-          bodyMedium: TypeStylePartial.from(rond: 0.0),
-          bodySmall: TypeStylePartial.from(rond: 0.0),
-          labelLarge: TypeStylePartial.from(rond: 0.0),
-          labelMedium: TypeStylePartial.from(rond: 0.0),
-          labelSmall: TypeStylePartial.from(rond: 0.0),
-          displayLargeEmphasized: TypeStylePartial.from(rond: 100.0),
-          displayMediumEmphasized: TypeStylePartial.from(rond: 100.0),
-          displaySmallEmphasized: TypeStylePartial.from(rond: 100.0),
-          headlineLargeEmphasized: TypeStylePartial.from(rond: 100.0),
-          headlineMediumEmphasized: TypeStylePartial.from(rond: 100.0),
-          headlineSmallEmphasized: TypeStylePartial.from(rond: 100.0),
-          titleLargeEmphasized: TypeStylePartial.from(rond: 100.0),
-          titleMediumEmphasized: TypeStylePartial.from(rond: 100.0),
-          titleSmallEmphasized: TypeStylePartial.from(rond: 100.0),
-          bodyLargeEmphasized: TypeStylePartial.from(rond: 100.0),
-          bodyMediumEmphasized: TypeStylePartial.from(rond: 100.0),
-          bodySmallEmphasized: TypeStylePartial.from(rond: 100.0),
-          labelLargeEmphasized: TypeStylePartial.from(rond: 100.0),
-          labelMediumEmphasized: TypeStylePartial.from(rond: 100.0),
-          labelSmallEmphasized: TypeStylePartial.from(rond: 100.0),
-        ),
-      );
-
-  // TODO: decide what to do with this
-  @Deprecated("Use googleMaterial3Expressive instead")
-  static const TypographyDefaults _googleMaterial3Expressive3P =
-      googleMaterial3Expressive;
+  static const TypographyDefaults _googleMaterial3Expressive1P = .from(
+    typeface: .from(
+      // The ROND axis is currently only available for Google Sans Flex,
+      // making it a no-op for most of the other possibly installed fonts.
+      // This particular information was ripped from a file
+      // located at the path "/product/etc/fonts_customization.xml"
+      // on a Google Pixel with Android 16 QPR1 (Material 3 Expressive).
+      brand: [_googleSansFlex, _robotoFlex, _googleSans, _roboto],
+      plain: [_googleSansFlex, _robotoFlex, _googleSans, _roboto],
+    ),
+    typescale: .from(
+      displayLarge: .from(rond: 0.0),
+      displayMedium: .from(rond: 0.0),
+      displaySmall: .from(rond: 0.0),
+      headlineLarge: .from(rond: 0.0),
+      headlineMedium: .from(rond: 0.0),
+      headlineSmall: .from(rond: 0.0),
+      titleLarge: .from(rond: 0.0),
+      titleMedium: .from(rond: 0.0),
+      titleSmall: .from(rond: 0.0),
+      bodyLarge: .from(rond: 0.0),
+      bodyMedium: .from(rond: 0.0),
+      bodySmall: .from(rond: 0.0),
+      labelLarge: .from(rond: 0.0),
+      labelMedium: .from(rond: 0.0),
+      labelSmall: .from(rond: 0.0),
+      displayLargeEmphasized: .from(rond: 100.0),
+      displayMediumEmphasized: .from(rond: 100.0),
+      displaySmallEmphasized: .from(rond: 100.0),
+      headlineLargeEmphasized: .from(rond: 100.0),
+      headlineMediumEmphasized: .from(rond: 100.0),
+      headlineSmallEmphasized: .from(rond: 100.0),
+      titleLargeEmphasized: .from(rond: 100.0),
+      titleMediumEmphasized: .from(rond: 100.0),
+      titleSmallEmphasized: .from(rond: 100.0),
+      bodyLargeEmphasized: .from(rond: 100.0),
+      bodyMediumEmphasized: .from(rond: 100.0),
+      bodySmallEmphasized: .from(rond: 100.0),
+      labelLargeEmphasized: .from(rond: 100.0),
+      labelMediumEmphasized: .from(rond: 100.0),
+      labelSmallEmphasized: .from(rond: 100.0),
+    ),
+  );
 }
 
 abstract final class MarkdownThemeFactory {
   static MarkdownStyleSheet defaultStylesheetOf(BuildContext context) {
     final colorTheme = ColorTheme.of(context);
     final typescaleTheme = TypescaleTheme.of(context);
-
     return MarkdownStyleSheet(
       p: typescaleTheme.bodyMedium.toTextStyle(color: colorTheme.onSurface),
       a: TextStyle(color: colorTheme.primary),
@@ -287,22 +268,22 @@ abstract final class MarkdownThemeFactory {
 
 extension on DynamicSchemeVariant {
   Variant _toVariant() => switch (this) {
-    DynamicSchemeVariant.monochrome => Variant.monochrome,
-    DynamicSchemeVariant.neutral => Variant.neutral,
-    DynamicSchemeVariant.tonalSpot => Variant.tonalSpot,
-    DynamicSchemeVariant.vibrant => Variant.vibrant,
-    DynamicSchemeVariant.expressive => Variant.expressive,
-    DynamicSchemeVariant.fidelity => Variant.fidelity,
-    DynamicSchemeVariant.content => Variant.content,
-    DynamicSchemeVariant.rainbow => Variant.rainbow,
-    DynamicSchemeVariant.fruitSalad => Variant.fruitSalad,
+    .monochrome => .monochrome,
+    .neutral => .neutral,
+    .tonalSpot => .tonalSpot,
+    .vibrant => .vibrant,
+    .expressive => .expressive,
+    .fidelity => .fidelity,
+    .content => .content,
+    .rainbow => .rainbow,
+    .fruitSalad => .fruitSalad,
   };
 }
 
-Color _harmonizeColor(Color designColor, Color sourceColor) {
-  if (designColor == sourceColor) return designColor;
-  return Color(Blend.harmonize(designColor.toARGB32(), sourceColor.toARGB32()));
-}
+Color _harmonizeColor(Color designColor, Color sourceColor) =>
+    designColor != sourceColor
+    ? Color(Blend.harmonize(designColor.toARGB32(), sourceColor.toARGB32()))
+    : designColor;
 
 extension on Color {
   Hct _toHct() => Hct.fromInt(toARGB32());
@@ -337,9 +318,9 @@ abstract class ExtendedColor with Diagnosticable {
 
   factory ExtendedColor.fromDynamicScheme(
     DynamicScheme scheme, {
-    ExtendedColorPalette palette = ExtendedColorPalette.primary,
+    ExtendedColorPalette palette = .primary,
   }) => switch (palette) {
-    ExtendedColorPalette.primary => ExtendedColor.from(
+    .primary => .from(
       color: Color(scheme.primary),
       onColor: Color(scheme.onPrimary),
       colorContainer: Color(scheme.primaryContainer),
@@ -349,7 +330,7 @@ abstract class ExtendedColor with Diagnosticable {
       onColorFixed: Color(scheme.onPrimaryFixed),
       onColorFixedVariant: Color(scheme.onPrimaryFixedVariant),
     ),
-    ExtendedColorPalette.secondary => ExtendedColor.from(
+    .secondary => .from(
       color: Color(scheme.secondary),
       onColor: Color(scheme.onSecondary),
       colorContainer: Color(scheme.secondaryContainer),
@@ -359,7 +340,7 @@ abstract class ExtendedColor with Diagnosticable {
       onColorFixed: Color(scheme.onSecondaryFixed),
       onColorFixedVariant: Color(scheme.onSecondaryFixedVariant),
     ),
-    ExtendedColorPalette.tertiary => ExtendedColor.from(
+    .tertiary => .from(
       color: Color(scheme.tertiary),
       onColor: Color(scheme.onTertiary),
       colorContainer: Color(scheme.tertiaryContainer),
@@ -373,7 +354,7 @@ abstract class ExtendedColor with Diagnosticable {
 
   factory ExtendedColor.fromSeed({
     required Color sourceColor,
-    DynamicSchemeVariant variant = DynamicSchemeVariant.tonalSpot,
+    DynamicSchemeVariant variant = .tonalSpot,
     required Brightness brightness,
     DynamicSchemePlatform platform = DynamicScheme.defaultPlatform,
     double contrastLevel = 0.0,
@@ -384,12 +365,12 @@ abstract class ExtendedColor with Diagnosticable {
     Color? neutralPaletteKeyColor,
     Color? neutralVariantPaletteKeyColor,
     Color? errorPaletteKeyColor,
-    ExtendedColorPalette palette = ExtendedColorPalette.primary,
-  }) => ExtendedColor.fromDynamicScheme(
-    DynamicScheme.fromPalettesOrKeyColors(
+    ExtendedColorPalette palette = .primary,
+  }) => .fromDynamicScheme(
+    .fromPalettesOrKeyColors(
       sourceColorHct: sourceColor._toHct(),
       variant: variant._toVariant(),
-      isDark: brightness == Brightness.dark, // Always exhaustive
+      isDark: brightness == .dark, // Always exhaustive
       platform: platform,
       contrastLevel: contrastLevel,
       specVersion: specVersion,
@@ -405,9 +386,9 @@ abstract class ExtendedColor with Diagnosticable {
 
   factory ExtendedColor.fromColorTheme(
     ColorThemeData colorTheme, {
-    ExtendedColorPalette palette = ExtendedColorPalette.primary,
+    ExtendedColorPalette palette = .primary,
   }) => switch (palette) {
-    ExtendedColorPalette.primary => ExtendedColor.from(
+    .primary => .from(
       color: colorTheme.primary,
       onColor: colorTheme.onPrimary,
       colorContainer: colorTheme.primaryContainer,
@@ -417,7 +398,7 @@ abstract class ExtendedColor with Diagnosticable {
       onColorFixed: colorTheme.onPrimaryFixed,
       onColorFixedVariant: colorTheme.onPrimaryFixedVariant,
     ),
-    ExtendedColorPalette.secondary => ExtendedColor.from(
+    .secondary => .from(
       color: colorTheme.secondary,
       onColor: colorTheme.onSecondary,
       colorContainer: colorTheme.secondaryContainer,
@@ -427,7 +408,7 @@ abstract class ExtendedColor with Diagnosticable {
       onColorFixed: colorTheme.onSecondaryFixed,
       onColorFixedVariant: colorTheme.onSecondaryFixedVariant,
     ),
-    ExtendedColorPalette.tertiary => ExtendedColor.from(
+    .tertiary => .from(
       color: colorTheme.tertiary,
       onColor: colorTheme.onTertiary,
       colorContainer: colorTheme.tertiaryContainer,
@@ -457,28 +438,26 @@ abstract class ExtendedColor with Diagnosticable {
     Color? colorFixedDim,
     Color? onColorFixed,
     Color? onColorFixedVariant,
-  }) {
-    if (color == null &&
-        onColor == null &&
-        colorContainer == null &&
-        onColorContainer == null &&
-        colorFixed == null &&
-        colorFixedDim == null &&
-        onColorFixed == null &&
-        onColorFixedVariant == null) {
-      return this;
-    }
-    return ExtendedColor.from(
-      color: color ?? this.color,
-      onColor: onColor ?? this.onColor,
-      colorContainer: colorContainer ?? this.colorContainer,
-      onColorContainer: onColorContainer ?? this.onColorContainer,
-      colorFixed: colorFixed ?? this.colorFixed,
-      colorFixedDim: colorFixedDim ?? this.colorFixedDim,
-      onColorFixed: onColorFixed ?? this.onColorFixed,
-      onColorFixedVariant: onColorFixedVariant ?? this.onColorFixedVariant,
-    );
-  }
+  }) =>
+      color != null ||
+          onColor != null ||
+          colorContainer != null ||
+          onColorContainer != null ||
+          colorFixed != null ||
+          colorFixedDim != null ||
+          onColorFixed != null ||
+          onColorFixedVariant != null
+      ? .from(
+          color: color ?? this.color,
+          onColor: onColor ?? this.onColor,
+          colorContainer: colorContainer ?? this.colorContainer,
+          onColorContainer: onColorContainer ?? this.onColorContainer,
+          colorFixed: colorFixed ?? this.colorFixed,
+          colorFixedDim: colorFixedDim ?? this.colorFixedDim,
+          onColorFixed: onColorFixed ?? this.onColorFixed,
+          onColorFixedVariant: onColorFixedVariant ?? this.onColorFixedVariant,
+        )
+      : this;
 
   ExtendedColor harmonizeWith(Color sourceColor) => copyWith(
     color: color._harmonizeWith(sourceColor),
@@ -493,19 +472,18 @@ abstract class ExtendedColor with Diagnosticable {
   }
 
   @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        runtimeType == other.runtimeType &&
-            other is ExtendedColor &&
-            color == other.color &&
-            onColor == other.onColor &&
-            colorContainer == other.colorContainer &&
-            onColorContainer == other.onColorContainer &&
-            colorFixed == other.colorFixed &&
-            colorFixedDim == other.colorFixedDim &&
-            onColorFixed == other.onColorFixed &&
-            onColorFixedVariant == other.onColorFixedVariant;
-  }
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      runtimeType == other.runtimeType &&
+          other is ExtendedColor &&
+          color == other.color &&
+          onColor == other.onColor &&
+          colorContainer == other.colorContainer &&
+          onColorContainer == other.onColorContainer &&
+          colorFixed == other.colorFixed &&
+          colorFixedDim == other.colorFixedDim &&
+          onColorFixed == other.onColorFixed &&
+          onColorFixedVariant == other.onColorFixedVariant;
 
   @override
   int get hashCode => Object.hash(
@@ -567,29 +545,29 @@ abstract class SemanticColorsData with Diagnosticable {
   }) = _SemanticColorsData;
 
   factory SemanticColorsData.fallback({
-    DynamicSchemeVariant variant = DynamicSchemeVariant.tonalSpot,
+    DynamicSchemeVariant variant = .tonalSpot,
     required Brightness brightness,
     DynamicSchemePlatform platform = DynamicScheme.defaultPlatform,
     double contrastLevel = 0.0,
     DynamicSchemeSpecVersion? specVersion = DynamicScheme.defaultSpecVersion,
   }) => SemanticColorsData.from(
-    success: ExtendedColor.fromSeed(
+    success: .fromSeed(
       sourceColor: const Color(0xFF4E7D4D),
       variant: variant,
       brightness: brightness,
       platform: platform,
       contrastLevel: contrastLevel,
       specVersion: specVersion,
-      palette: ExtendedColorPalette.primary,
+      palette: .primary,
     ),
-    warning: ExtendedColor.fromSeed(
+    warning: .fromSeed(
       sourceColor: const Color(0xFFFFC107),
       variant: variant,
       brightness: brightness,
       platform: platform,
       contrastLevel: contrastLevel,
       specVersion: specVersion,
-      palette: ExtendedColorPalette.primary,
+      palette: .primary,
     ),
   );
 
@@ -599,21 +577,17 @@ abstract class SemanticColorsData with Diagnosticable {
   SemanticColorsData copyWith({
     ExtendedColor? success,
     ExtendedColor? warning,
-  }) {
-    if (success == null && warning == null) {
-      return this;
-    }
-    return SemanticColorsData.from(
-      success: success ?? this.success,
-      warning: warning ?? this.warning,
-    );
-  }
+  }) => success != null || warning != null
+      ? .from(
+          success: success ?? this.success,
+          warning: warning ?? this.warning,
+        )
+      : this;
 
-  SemanticColorsData harmonizeWith(Color sourceColor) =>
-      SemanticColorsData.from(
-        success: success.harmonizeWith(sourceColor),
-        warning: warning.harmonizeWith(sourceColor),
-      );
+  SemanticColorsData harmonizeWith(Color sourceColor) => .from(
+    success: success.harmonizeWith(sourceColor),
+    warning: warning.harmonizeWith(sourceColor),
+  );
 
   SemanticColorsData harmonizeWithPrimary(ColorThemeDataPartial colorTheme) {
     final sourceColor = colorTheme.primary;
@@ -621,13 +595,12 @@ abstract class SemanticColorsData with Diagnosticable {
   }
 
   @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        runtimeType == other.runtimeType &&
-            other is SemanticColorsData &&
-            success == other.success &&
-            warning == other.warning;
-  }
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      runtimeType == other.runtimeType &&
+          other is SemanticColorsData &&
+          success == other.success &&
+          warning == other.warning;
 
   @override
   int get hashCode => Object.hash(runtimeType, success, warning);
@@ -658,85 +631,85 @@ abstract class StaticColorsData with Diagnosticable {
   }) = _StaticColorsData.from;
 
   factory StaticColorsData.fallback({
-    DynamicSchemeVariant variant = DynamicSchemeVariant.tonalSpot,
+    DynamicSchemeVariant variant = .tonalSpot,
     required Brightness brightness,
     DynamicSchemePlatform platform = DynamicScheme.defaultPlatform,
     double contrastLevel = 0.0,
     DynamicSchemeSpecVersion? specVersion = DynamicScheme.defaultSpecVersion,
   }) {
     const palette = StaticPaletteThemeData.fallback();
-    return StaticColorsData.from(
-      blue: ExtendedColor.fromSeed(
+    return .from(
+      blue: .fromSeed(
         sourceColor: palette.blue50,
         variant: variant,
         brightness: brightness,
         platform: platform,
         contrastLevel: contrastLevel,
         specVersion: specVersion,
-        palette: ExtendedColorPalette.primary,
+        palette: .primary,
       ),
-      yellow: ExtendedColor.fromSeed(
+      yellow: .fromSeed(
         sourceColor: palette.yellow50,
         variant: variant,
         brightness: brightness,
         platform: platform,
         contrastLevel: contrastLevel,
         specVersion: specVersion,
-        palette: ExtendedColorPalette.primary,
+        palette: .primary,
       ),
-      red: ExtendedColor.fromSeed(
+      red: .fromSeed(
         sourceColor: palette.red50,
         variant: variant,
         brightness: brightness,
         platform: platform,
         contrastLevel: contrastLevel,
         specVersion: specVersion,
-        palette: ExtendedColorPalette.primary,
+        palette: .primary,
       ),
-      purple: ExtendedColor.fromSeed(
+      purple: .fromSeed(
         sourceColor: palette.purple50,
         variant: variant,
         brightness: brightness,
         platform: platform,
         contrastLevel: contrastLevel,
         specVersion: specVersion,
-        palette: ExtendedColorPalette.primary,
+        palette: .primary,
       ),
-      cyan: ExtendedColor.fromSeed(
+      cyan: .fromSeed(
         sourceColor: palette.cyan50,
         variant: variant,
         brightness: brightness,
         platform: platform,
         contrastLevel: contrastLevel,
         specVersion: specVersion,
-        palette: ExtendedColorPalette.primary,
+        palette: .primary,
       ),
-      green: ExtendedColor.fromSeed(
+      green: .fromSeed(
         sourceColor: palette.green50,
         variant: variant,
         brightness: brightness,
         platform: platform,
         contrastLevel: contrastLevel,
         specVersion: specVersion,
-        palette: ExtendedColorPalette.primary,
+        palette: .primary,
       ),
-      orange: ExtendedColor.fromSeed(
+      orange: .fromSeed(
         sourceColor: palette.orange50,
         variant: variant,
         brightness: brightness,
         platform: platform,
         contrastLevel: contrastLevel,
         specVersion: specVersion,
-        palette: ExtendedColorPalette.primary,
+        palette: .primary,
       ),
-      pink: ExtendedColor.fromSeed(
+      pink: .fromSeed(
         sourceColor: palette.pink50,
         variant: variant,
         brightness: brightness,
         platform: platform,
         contrastLevel: contrastLevel,
         specVersion: specVersion,
-        palette: ExtendedColorPalette.primary,
+        palette: .primary,
       ),
     );
   }
@@ -759,30 +732,28 @@ abstract class StaticColorsData with Diagnosticable {
     ExtendedColor? green,
     ExtendedColor? orange,
     ExtendedColor? pink,
-  }) {
-    if (blue == null &&
-        yellow == null &&
-        red == null &&
-        purple == null &&
-        cyan == null &&
-        green == null &&
-        orange == null &&
-        pink == null) {
-      return this;
-    }
-    return StaticColorsData.from(
-      blue: blue ?? this.blue,
-      yellow: yellow ?? this.yellow,
-      red: red ?? this.red,
-      purple: purple ?? this.purple,
-      cyan: cyan ?? this.cyan,
-      green: green ?? this.green,
-      orange: orange ?? this.orange,
-      pink: pink ?? this.pink,
-    );
-  }
+  }) =>
+      blue != null ||
+          yellow != null ||
+          red != null ||
+          purple != null ||
+          cyan != null ||
+          green != null ||
+          orange != null ||
+          pink != null
+      ? .from(
+          blue: blue ?? this.blue,
+          yellow: yellow ?? this.yellow,
+          red: red ?? this.red,
+          purple: purple ?? this.purple,
+          cyan: cyan ?? this.cyan,
+          green: green ?? this.green,
+          orange: orange ?? this.orange,
+          pink: pink ?? this.pink,
+        )
+      : this;
 
-  StaticColorsData harmonizeWith(Color sourceColor) => StaticColorsData.from(
+  StaticColorsData harmonizeWith(Color sourceColor) => .from(
     blue: blue.harmonizeWith(sourceColor),
     yellow: yellow.harmonizeWith(sourceColor),
     red: red.harmonizeWith(sourceColor),
@@ -805,19 +776,18 @@ abstract class StaticColorsData with Diagnosticable {
   }
 
   @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        runtimeType == other.runtimeType &&
-            other is StaticColorsData &&
-            blue == other.blue &&
-            yellow == other.yellow &&
-            red == other.red &&
-            purple == other.purple &&
-            cyan == other.cyan &&
-            green == other.green &&
-            orange == other.orange &&
-            pink == other.pink;
-  }
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      runtimeType == other.runtimeType &&
+          other is StaticColorsData &&
+          blue == other.blue &&
+          yellow == other.yellow &&
+          red == other.red &&
+          purple == other.purple &&
+          cyan == other.cyan &&
+          green == other.green &&
+          orange == other.orange &&
+          pink == other.pink;
 
   @override
   int get hashCode => Object.hash(

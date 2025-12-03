@@ -648,7 +648,6 @@ class CustomRefreshIndicatorState extends State<CustomRefreshIndicator>
         child: positionTransition,
       );
     }
-
     return Stack(children: [child, ?layer]);
   }
 }
