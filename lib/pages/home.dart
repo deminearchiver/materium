@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:android_intent_plus/android_intent.dart';
 import 'package:app_links/app_links.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:materium/flutter.dart';
@@ -91,13 +90,13 @@ class _HomePageState extends State<HomePage> {
 
     Future<void> interpretLink(Uri uri) async {
       _isLinkActivity = true;
-      var action = uri.host;
-      var data = uri.path.length > 1 ? uri.path.substring(1) : "";
+      final action = uri.host;
+      final data = uri.path.length > 1 ? uri.path.substring(1) : "";
       try {
         if (action == 'add') {
           await goToAddApp(data);
         } else if (action == 'app' || action == 'apps') {
-          var dataStr = Uri.decodeComponent(data);
+          final dataStr = Uri.decodeComponent(data);
           if (await showDialog(
                 context: context,
                 builder: (ctx) {
@@ -126,8 +125,8 @@ class _HomePageState extends State<HomePage> {
               ) !=
               null) {
             if (!mounted) return;
-            var appsProvider = context.read<AppsProvider>();
-            var result = await appsProvider.import(
+            final appsProvider = context.read<AppsProvider>();
+            final result = await appsProvider.import(
               action == 'app'
                   ? '{ "apps": [$dataStr] }'
                   : '{ "apps": $dataStr }',
@@ -182,7 +181,7 @@ class _HomePageState extends State<HomePage> {
         (_selectedIndexHistory.isNotEmpty &&
             _selectedIndexHistory.last != index)) {
       setState(() {
-        int existingInd = _selectedIndexHistory.indexOf(index);
+        final existingInd = _selectedIndexHistory.indexOf(index);
         if (existingInd >= 0) {
           _selectedIndexHistory.removeAt(existingInd);
         }
@@ -227,7 +226,7 @@ class _HomePageState extends State<HomePage> {
     _initDeepLinks();
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       if (!mounted) return;
-      var sp = context.read<SettingsProvider>();
+      final sp = context.read<SettingsProvider>();
       if (!sp.welcomeShown) {
         await showDialog(
           context: context,
@@ -259,29 +258,6 @@ class _HomePageState extends State<HomePage> {
                       ),
                     ),
                   ),
-                  Flex.vertical(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(tr('batteryOptimizationNote')),
-                      GestureDetector(
-                        onTap: () {
-                          const AndroidIntent(
-                            action:
-                                'android.settings.IGNORE_BATTERY_OPTIMIZATION_SETTINGS',
-                            package:
-                                obtainiumId, // Replace with your app's package name
-                          ).launch();
-                        },
-                        child: Text(
-                          tr('settings'),
-                          style: const TextStyle(
-                            decoration: TextDecoration.underline,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
                 ],
               ),
               actions: [
@@ -298,7 +274,68 @@ class _HomePageState extends State<HomePage> {
                   ),
                   onPressed: () {
                     sp.welcomeShown = true;
-                    Navigator.of(context).pop();
+                    Navigator.of(context).pop(null);
+                  },
+                  child: Text(tr('ok')),
+                ),
+              ],
+            );
+          },
+        );
+      }
+      if (!sp.googleVerificationWarningShown &&
+          DateTime.now().year >=
+              2026 /* Gives some time to translators between now and Jan */ ) {
+        if (!mounted) return;
+        await showDialog(
+          context: context,
+          builder: (ctx) {
+            final colorTheme = ColorTheme.of(ctx);
+            final elevationTheme = ElevationTheme.of(ctx);
+            final shapeTheme = ShapeTheme.of(ctx);
+            final stateTheme = StateTheme.of(ctx);
+            final typescaleTheme = TypescaleTheme.of(ctx);
+            return AlertDialog(
+              title: Text(tr('note')),
+              scrollable: true,
+              content: Flex.vertical(
+                mainAxisSize: MainAxisSize.min,
+                spacing: 20,
+                children: [
+                  Text(tr('googleVerificationWarningP1')),
+                  GestureDetector(
+                    onTap: () {
+                      launchUrlString(
+                        'https://keepandroidopen.org/',
+                        mode: LaunchMode.externalApplication,
+                      );
+                    },
+                    child: Text(
+                      tr('googleVerificationWarningP2'),
+                      style: const TextStyle(
+                        decoration: TextDecoration.underline,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                  Text(tr('googleVerificationWarningP3')),
+                ],
+              ),
+              actions: [
+                TextButton(
+                  style: LegacyThemeFactory.createButtonStyle(
+                    colorTheme: colorTheme,
+                    elevationTheme: elevationTheme,
+                    shapeTheme: shapeTheme,
+                    stateTheme: stateTheme,
+                    typescaleTheme: typescaleTheme,
+                    size: .small,
+                    shape: .round,
+                    color: .text,
+                  ),
+                  onPressed: () {
+                    sp.googleVerificationWarningShown = true;
+                    Navigator.of(context).pop(null);
                   },
                   child: Text(tr('ok')),
                 ),

@@ -49,7 +49,7 @@ class GitHub extends AppSource {
       GeneratedFormTextField(
         'GHReqPrefix',
         label: tr('GHReqPrefix'),
-        hint: 'gh-proxy.com',
+        hint: 'gh-proxy.org',
         required: false,
         additionalValidators: [
           (value) {
@@ -264,7 +264,8 @@ class GitHub extends AppSource {
 
   @override
   Future<Map<String, String>?> getRequestHeaders(
-    Map<String, dynamic> additionalSettings, {
+    Map<String, dynamic> additionalSettings,
+    String url, {
     bool forAPKDownload = false,
   }) async {
     var token = await getTokenIfAny(additionalSettings);

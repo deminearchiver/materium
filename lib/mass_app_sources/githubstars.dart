@@ -17,11 +17,11 @@ class GitHubStars implements MassAppUrlSource {
     String username,
     int page,
   ) async {
+    final resUrl =
+        "https://api.github.com/users/$username/starred?per_page=100&page=$page";
     final res = await http.get(
-      Uri.parse(
-        'https://api.github.com/users/$username/starred?per_page=100&page=$page',
-      ),
-      headers: await GitHub().getRequestHeaders({}),
+      Uri.parse(resUrl),
+      headers: await GitHub().getRequestHeaders({}, resUrl),
     );
     if (res.statusCode == 200) {
       final Map<String, List<String>> urlsWithDescriptions = {};
