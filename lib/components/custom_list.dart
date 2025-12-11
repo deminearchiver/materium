@@ -57,7 +57,7 @@ class ListItemContainer extends StatelessWidget {
     super.key,
     this.isFirst = false,
     this.isLast = false,
-    this.opticalCenterEnabled = true,
+    this.opticalCenterEnabled = false,
     this.opticalCenterMaxOffsets = const .all(.infinity),
     this.containerShape,
     this.containerColor,
@@ -68,24 +68,27 @@ class ListItemContainer extends StatelessWidget {
   final bool isLast;
   final bool opticalCenterEnabled;
   final EdgeInsetsGeometry opticalCenterMaxOffsets;
-  final ShapeBorder? containerShape;
-  final Color? containerColor;
+  final ListItemStateProperty<ShapeBorder?>? containerShape;
+  final ListItemStateProperty<Color?>? containerColor;
   final Widget child;
 
   @override
   Widget build(BuildContext context) {
-    final colorTheme = ColorTheme.of(context);
-    final shapeTheme = ShapeTheme.of(context);
+    final listItemTheme = ListItemTheme.of(context);
+
+    final states = _ListItemStates(isFirst: isFirst, isLast: isLast);
 
     final resolvedShape =
-        containerShape ??
-        _defaultShape(shapeTheme: shapeTheme, isFirst: isFirst, isLast: isLast);
+        containerShape?.resolve(states) ??
+        listItemTheme.containerShape.resolve(states);
 
     final corners = opticalCenterEnabled
         ? _cornersFromShape(resolvedShape)
         : null;
 
-    final resolvedContainerColor = containerColor ?? colorTheme.surfaceBright;
+    final resolvedContainerColor =
+        containerColor?.resolve(states) ??
+        listItemTheme.containerColor.resolve(states);
 
     return Material(
       animationDuration: .zero,
@@ -132,30 +135,19 @@ class ListItemContainer extends StatelessWidget {
         ),
       )
       ..add(
-        DiagnosticsProperty<ShapeBorder>(
+        DiagnosticsProperty<ListItemStateProperty<ShapeBorder?>>(
           "containerShape",
           containerShape,
           defaultValue: null,
         ),
       )
       ..add(
-        ColorProperty("containerColor", containerColor, defaultValue: null),
+        DiagnosticsProperty<ListItemStateProperty<Color?>>(
+          "containerColor",
+          containerColor,
+          defaultValue: null,
+        ),
       );
-  }
-
-  static ShapeBorder _defaultShape({
-    required ShapeThemeData shapeTheme,
-    required bool isFirst,
-    required bool isLast,
-  }) {
-    final edgeCorner = shapeTheme.corner.largeIncreased;
-    final connectionCorner = shapeTheme.corner.extraSmall;
-    return CornersBorder.rounded(
-      corners: .vertical(
-        top: isFirst ? edgeCorner : connectionCorner,
-        bottom: isLast ? edgeCorner : connectionCorner,
-      ),
-    );
   }
 
   static CornersGeometry? _cornersFromShape(ShapeBorder shape) =>
@@ -246,8 +238,8 @@ class ListItemInteraction extends StatefulWidget {
   });
 
   final WidgetStatesController? statesController;
-  final WidgetStateProperty<Color>? stateLayerColor;
-  final WidgetStateProperty<double>? stateLayerOpacity;
+  final ListItemStateProperty<Color?>? stateLayerColor;
+  final ListItemStateProperty<double?>? stateLayerOpacity;
 
   final FocusNode? focusNode;
   final bool canRequestFocus;
@@ -264,9 +256,7 @@ class ListItemInteraction extends StatefulWidget {
 }
 
 class _ListItemInteractionState extends State<ListItemInteraction> {
-  late ColorThemeData _colorTheme;
   late ShapeThemeData _shapeTheme;
-  late StateThemeData _stateTheme;
 
   WidgetStatesController? _internalStatesController;
 
@@ -278,25 +268,25 @@ class _ListItemInteractionState extends State<ListItemInteraction> {
     return _internalStatesController!;
   }
 
-  WidgetStateProperty<Color> get _stateLayerColor =>
-      WidgetStatePropertyAll(_colorTheme.onSurface);
+  // WidgetStateProperty<Color> get _stateLayerColor =>
+  //     WidgetStatePropertyAll(_colorTheme.onSurface);
 
-  WidgetStateProperty<double> get _stateLayerOpacity =>
-      WidgetStateProperty.resolveWith((states) {
-        if (states.contains(WidgetState.disabled)) {
-          return 0.0;
-        }
-        if (states.contains(WidgetState.pressed)) {
-          return _stateTheme.pressedStateLayerOpacity;
-        }
-        if (states.contains(WidgetState.hovered)) {
-          return _stateTheme.hoverStateLayerOpacity;
-        }
-        if (states.contains(WidgetState.focused)) {
-          return 0.0;
-        }
-        return 0.0;
-      });
+  // WidgetStateProperty<double> get _stateLayerOpacity =>
+  //     WidgetStateProperty.resolveWith((states) {
+  //       if (states.contains(WidgetState.disabled)) {
+  //         return 0.0;
+  //       }
+  //       if (states.contains(WidgetState.pressed)) {
+  //         return _stateTheme.pressedStateLayerOpacity;
+  //       }
+  //       if (states.contains(WidgetState.hovered)) {
+  //         return _stateTheme.hoverStateLayerOpacity;
+  //       }
+  //       if (states.contains(WidgetState.focused)) {
+  //         return 0.0;
+  //       }
+  //       return 0.0;
+  //     });
 
   void _statesListener() {
     setState(() {});
@@ -305,27 +295,89 @@ class _ListItemInteractionState extends State<ListItemInteraction> {
   bool _pressed = false;
   bool _focused = false;
 
-  WidgetStates _resolveStates() {
+  _InteractiveListItemStates _resolveStates() {
     final states = _statesController.value;
 
-    final isDisabled = widget.onTap == null && widget.onLongPress == null;
-
-    if (isDisabled) {
+    final _InteractiveListItemStates result =
+        widget.onTap == null && widget.onLongPress == null
+        ? const .disabled(isFirst: false, isLast: false)
+        : .enabled(
+            isFirst: false,
+            isLast: false,
+            isHovered: states.contains(WidgetState.hovered),
+            isPressed: _pressed,
+            isFocused: _focused && !_pressed,
+          );
+    if (result.isDisabled) {
       states.add(WidgetState.disabled);
     } else {
       states.remove(WidgetState.disabled);
     }
-    if (!isDisabled && _pressed) {
+    if (result.isHovered) {
       states.add(WidgetState.pressed);
     } else {
       states.remove(WidgetState.pressed);
     }
-    if (!isDisabled && (_focused && !_pressed)) {
+    if (result.isFocused) {
       states.add(WidgetState.focused);
     } else {
       states.remove(WidgetState.focused);
     }
-    return Set.of(states);
+    return result;
+  }
+
+  void _onPointerDown(PointerDownEvent _) {
+    if (!mounted) return;
+    setState(() {
+      _focused = false;
+      _pressed = true;
+    });
+  }
+
+  void _onPointerUp(PointerUpEvent _) {
+    if (!mounted) return;
+    setState(() {
+      _focused = false;
+      _pressed = false;
+    });
+  }
+
+  void _onPointerCancel(PointerCancelEvent _) {
+    if (!mounted) return;
+    setState(() {
+      _focused = false;
+      _pressed = false;
+    });
+  }
+
+  void _onTapDown(TapDownDetails _) {
+    if (!mounted) return;
+    setState(() {
+      _focused = false;
+      _pressed = true;
+    });
+  }
+
+  void _onTapUp(TapUpDetails _) {
+    if (!mounted) return;
+    setState(() {
+      _focused = false;
+      _pressed = false;
+    });
+  }
+
+  void _onTapCancel() {
+    if (!mounted) return;
+    setState(() {
+      _focused = false;
+      _pressed = false;
+    });
+  }
+
+  void _onFocusChange(bool value) {
+    if (!mounted) return;
+    setState(() => _focused = value);
+    widget.onFocusChange?.call(value);
   }
 
   @override
@@ -340,9 +392,7 @@ class _ListItemInteractionState extends State<ListItemInteraction> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    _colorTheme = ColorTheme.of(context);
     _shapeTheme = ShapeTheme.of(context);
-    _stateTheme = StateTheme.of(context);
   }
 
   @override
@@ -369,9 +419,34 @@ class _ListItemInteractionState extends State<ListItemInteraction> {
 
   @override
   Widget build(BuildContext context) {
-    final states = _resolveStates();
-    final isDisabled = states.contains(WidgetState.disabled);
+    final listItemTheme = ListItemTheme.of(context);
     final listItemContainerScope = _ListItemContainerScope.maybeOf(context);
+
+    final states = _resolveStates();
+
+    final stateLayerColor =
+        widget.stateLayerColor?.orElse(
+          (states) => listItemTheme.stateLayerColor.resolve(states),
+        ) ??
+        listItemTheme.stateLayerColor;
+
+    final stateLayerOpacity =
+        widget.stateLayerOpacity?.orElse(
+          (states) => listItemTheme.stateLayerOpacity.resolve(states),
+        ) ??
+        listItemTheme.stateLayerOpacity;
+
+    final overlayColor = WidgetStateProperty.resolveWith((widgetStates) {
+      final resolvedStates = _InteractiveListItemStates.fromWidgetStates(
+        widgetStates,
+        isFirst: states.isFirst,
+        isLast: states.isLast,
+      );
+      final resolvedColor = stateLayerColor.resolve(resolvedStates);
+      final resolvedOpacity = stateLayerOpacity.resolve(resolvedStates);
+      return resolvedColor.withValues(alpha: resolvedColor.a * resolvedOpacity);
+    });
+
     return listItemContainerScope.buildCenterOptically(
       inverse: true,
       child: FocusRingTheme.merge(
@@ -379,70 +454,26 @@ class _ListItemInteractionState extends State<ListItemInteraction> {
           shape: Corners.all(_shapeTheme.corner.large),
         ),
         child: FocusRing(
-          visible: states.contains(WidgetState.focused),
+          visible: states.isFocused,
           placement: FocusRingPlacement.inward,
           layoutBuilder: (context, info, child) => child,
           child: Listener(
             behavior: HitTestBehavior.deferToChild,
-            onPointerDown: !isDisabled
-                ? (_) {
-                    setState(() {
-                      _focused = false;
-                      _pressed = true;
-                    });
-                  }
-                : null,
-            onPointerUp: !isDisabled
-                ? (_) {
-                    setState(() {
-                      _focused = false;
-                      _pressed = false;
-                    });
-                  }
-                : null,
-            onPointerCancel: !isDisabled
-                ? (_) {
-                    setState(() {
-                      _focused = false;
-                      _pressed = false;
-                    });
-                  }
-                : null,
+            onPointerDown: !states.isDisabled ? _onPointerDown : null,
+            onPointerUp: !states.isDisabled ? _onPointerUp : null,
+            onPointerCancel: !states.isDisabled ? _onPointerCancel : null,
             child: InkWell(
               statesController: widget.statesController,
               focusNode: widget.focusNode,
               canRequestFocus: widget.canRequestFocus,
               autofocus: widget.autofocus,
-              overlayColor: WidgetStateLayerColor(
-                color: widget.stateLayerColor ?? _stateLayerColor,
-                opacity: widget.stateLayerOpacity ?? _stateLayerOpacity,
-              ),
-              onTap: !isDisabled ? widget.onTap : null,
-              onLongPress: !isDisabled ? widget.onLongPress : null,
-              onTapDown: !isDisabled
-                  ? (_) => setState(() {
-                      _focused = false;
-                      _pressed = true;
-                    })
-                  : null,
-              onTapUp: !isDisabled
-                  ? (_) => setState(() {
-                      _focused = false;
-                      _pressed = false;
-                    })
-                  : null,
-              onTapCancel: !isDisabled
-                  ? () => setState(() {
-                      _focused = false;
-                      _pressed = false;
-                    })
-                  : null,
-              onFocusChange: !isDisabled
-                  ? (value) {
-                      setState(() => _focused = value);
-                      widget.onFocusChange?.call(value);
-                    }
-                  : null,
+              overlayColor: overlayColor,
+              onTap: !states.isDisabled ? widget.onTap : null,
+              onLongPress: !states.isDisabled ? widget.onLongPress : null,
+              onTapDown: !states.isDisabled ? _onTapDown : null,
+              onTapUp: !states.isDisabled ? _onTapUp : null,
+              onTapCancel: !states.isDisabled ? _onTapCancel : null,
+              onFocusChange: !states.isDisabled ? _onFocusChange : null,
               child: listItemContainerScope.buildCenterOptically(
                 inverse: false,
                 child: widget.child,
@@ -458,10 +489,13 @@ class _ListItemInteractionState extends State<ListItemInteraction> {
 class ListItemLayout extends StatefulWidget {
   const ListItemLayout({
     super.key,
-    this.isMultiline,
+    this.textDirection,
     this.minHeight,
     this.maxHeight,
     this.padding,
+    this.leadingPadding,
+    this.contentPadding,
+    this.trailingPadding,
     this.leadingSpace,
     this.trailingSpace,
     this.leading,
@@ -469,12 +503,15 @@ class ListItemLayout extends StatefulWidget {
     this.headline,
     this.supportingText,
     this.trailing,
-  }) : assert(headline != null || supportingText != null);
+  }) : assert(overline != null || headline != null || supportingText != null);
 
-  final bool? isMultiline;
+  final TextDirection? textDirection;
   final double? minHeight;
   final double? maxHeight;
   final EdgeInsetsGeometry? padding;
+  final EdgeInsetsGeometry? leadingPadding;
+  final EdgeInsetsGeometry? contentPadding;
+  final EdgeInsetsGeometry? trailingPadding;
   final double? leadingSpace;
   final double? trailingSpace;
 
@@ -491,15 +528,15 @@ class ListItemLayout extends StatefulWidget {
 class _ListItemLayoutState extends State<ListItemLayout> {
   @override
   Widget build(BuildContext context) {
-    final colorTheme = ColorTheme.of(context);
-    final typescaleTheme = TypescaleTheme.of(context);
+    final defaultTextDirection = Directionality.maybeOf(context);
+    final listItemTheme = ListItemTheme.of(context);
 
-    final isMultiline =
-        widget.isMultiline ??
-        // TODO: add logic for determining isMultiline when overline is set
-        (widget.headline != null && widget.supportingText != null);
+    final resolvedTextDirection = widget.textDirection ?? defaultTextDirection;
 
-    final minHeight = widget.minHeight ?? (isMultiline ? 72.0 : 56.0);
+    final leading = widget.leading;
+    final trailing = widget.trailing;
+
+    final minHeight = widget.minHeight ?? 48.0;
 
     final maxHeight = widget.maxHeight ?? .infinity;
 
@@ -508,24 +545,56 @@ class _ListItemLayoutState extends State<ListItemLayout> {
       maxHeight: maxHeight,
     );
 
-    final containerPadding =
-        widget.padding?.horizontalInsets() ??
+    final resolvedPadding =
+        widget.padding?.resolve(resolvedTextDirection) ??
         const .symmetric(horizontal: 16.0);
 
-    final verticalContentPadding =
-        widget.padding?.verticalInsets() ??
-        (isMultiline
-            ? const .symmetric(vertical: 12.0)
-            : const .symmetric(vertical: 8.0));
+    final resolvedLeadingPadding =
+        widget.leadingPadding?.resolve(resolvedTextDirection) ??
+        const .symmetric(vertical: 10.0);
 
-    final horizontalContentPadding = EdgeInsetsGeometry.directional(
-      start: widget.leading != null ? widget.leadingSpace ?? 12.0 : 0.0,
-      end: widget.trailing != null ? widget.trailingSpace ?? 12.0 : 0.0,
+    final resolvedContentPadding =
+        widget.contentPadding?.resolve(resolvedTextDirection) ??
+        const .symmetric(vertical: 10.0);
+
+    final resolvedTrailingPadding =
+        widget.trailingPadding?.resolve(resolvedTextDirection) ??
+        const .symmetric(vertical: 10.0);
+
+    final resolvedLeadingSpace = widget.leadingSpace ?? 12.0;
+
+    final resolvedTrailingSpace = widget.trailingSpace ?? 12.0;
+
+    final containerPadding = EdgeInsets.fromLTRB(
+      resolvedPadding.left,
+      resolvedPadding.top,
+      resolvedPadding.right,
+      resolvedPadding.bottom,
     );
 
-    final contentPadding = verticalContentPadding.add(horizontalContentPadding);
+    final leadingPadding = EdgeInsets.fromLTRB(
+      resolvedLeadingPadding.left,
+      resolvedLeadingPadding.top,
+      resolvedLeadingPadding.right + resolvedLeadingSpace,
+      resolvedLeadingPadding.bottom,
+    );
+    final trailingPadding = EdgeInsets.fromLTRB(
+      resolvedTrailingSpace + resolvedTrailingPadding.left,
+      resolvedTrailingPadding.top,
+      resolvedTrailingPadding.right,
+      resolvedTrailingPadding.bottom,
+    );
 
-    return ConstrainedBox(
+    final contentPadding = EdgeInsets.fromLTRB(
+      resolvedContentPadding.left,
+      resolvedContentPadding.top,
+      resolvedContentPadding.right,
+      resolvedContentPadding.bottom,
+    );
+
+    final states = const _ListItemStates(isFirst: false, isLast: false);
+
+    final result = ConstrainedBox(
       constraints: constraints,
       child: Padding(
         padding: containerPadding,
@@ -534,14 +603,13 @@ class _ListItemLayoutState extends State<ListItemLayout> {
           mainAxisAlignment: .start,
           crossAxisAlignment: .center,
           children: [
-            if (widget.leading case final leading?)
-              IconTheme.merge(
-                data: .from(
-                  color: colorTheme.onSurfaceVariant,
-                  size: 24.0,
-                  opticalSize: 24.0,
+            if (leading != null)
+              Padding(
+                padding: leadingPadding,
+                child: IconTheme.merge(
+                  data: listItemTheme.leadingIconTheme.resolve(states),
+                  child: leading,
                 ),
-                child: leading,
               ),
             Flexible.tight(
               child: Padding(
@@ -552,29 +620,25 @@ class _ListItemLayoutState extends State<ListItemLayout> {
                   crossAxisAlignment: .stretch,
                   children: [
                     if (widget.overline case final overline?)
-                      DefaultTextStyle(
-                        style: typescaleTheme.labelMedium.toTextStyle(
-                          color: colorTheme.onSurfaceVariant,
-                        ),
+                      DefaultTextStyle.merge(
+                        style: listItemTheme.overlineTextStyle.resolve(states),
                         textAlign: .start,
                         maxLines: 1,
                         overflow: .ellipsis,
                         child: overline,
                       ),
                     if (widget.headline case final headline?)
-                      DefaultTextStyle(
-                        style: typescaleTheme.titleMediumEmphasized.toTextStyle(
-                          color: colorTheme.onSurface,
-                        ),
+                      DefaultTextStyle.merge(
+                        style: listItemTheme.headlineTextStyle.resolve(states),
                         textAlign: .start,
                         maxLines: 1,
                         overflow: .ellipsis,
                         child: headline,
                       ),
                     if (widget.supportingText case final supportingText?)
-                      DefaultTextStyle(
-                        style: typescaleTheme.bodyMedium.toTextStyle(
-                          color: colorTheme.onSurfaceVariant,
+                      DefaultTextStyle.merge(
+                        style: listItemTheme.supportingTextStyle.resolve(
+                          states,
                         ),
                         textAlign: .start,
                         maxLines: 2,
@@ -585,24 +649,154 @@ class _ListItemLayoutState extends State<ListItemLayout> {
                 ),
               ),
             ),
-            if (widget.trailing case final trailing?)
-              DefaultTextStyle(
-                style: typescaleTheme.labelSmall.toTextStyle(
-                  color: colorTheme.onSurfaceVariant,
-                ),
-                overflow: .ellipsis,
-                child: IconTheme.merge(
-                  data: .from(
-                    color: colorTheme.onSurfaceVariant,
-                    size: 24.0,
-                    opticalSize: 24.0,
+            if (trailing != null)
+              Padding(
+                padding: trailingPadding,
+                child: DefaultTextStyle.merge(
+                  style: listItemTheme.trailingTextStyle.resolve(states),
+                  overflow: .ellipsis,
+                  child: IconTheme.merge(
+                    data: listItemTheme.trailingIconTheme.resolve(states),
+                    child: trailing,
                   ),
-                  child: trailing,
                 ),
               ),
           ],
         ),
       ),
     );
+    return resolvedTextDirection != null &&
+            resolvedTextDirection != defaultTextDirection
+        ? Directionality(textDirection: resolvedTextDirection, child: result)
+        : result;
   }
+}
+
+class _ListItemStates implements SegmentedListItemStates {
+  const _ListItemStates({required this.isFirst, required this.isLast});
+
+  @override
+  final bool isFirst;
+
+  @override
+  final bool isLast;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      runtimeType == other.runtimeType &&
+          other is _ListItemStates &&
+          isFirst == other.isFirst &&
+          isLast == other.isLast;
+
+  @override
+  int get hashCode => Object.hash(runtimeType, isFirst, isLast);
+}
+
+sealed class _InteractiveListItemStates extends _ListItemStates {
+  const _InteractiveListItemStates({
+    required super.isFirst,
+    required super.isLast,
+  });
+
+  const factory _InteractiveListItemStates.enabled({
+    required bool isFirst,
+    required bool isLast,
+    bool isHovered,
+    bool isFocused,
+    bool isPressed,
+  }) = _InteractiveListItemEnabledStates;
+
+  const factory _InteractiveListItemStates.disabled({
+    required bool isFirst,
+    required bool isLast,
+  }) = _InteractiveListItemDisabledStates;
+
+  factory _InteractiveListItemStates.fromWidgetStates(
+    WidgetStates states, {
+    required bool isFirst,
+    required bool isLast,
+  }) => states.contains(WidgetState.disabled)
+      ? .disabled(isFirst: isFirst, isLast: isLast)
+      : .enabled(
+          isFirst: isFirst,
+          isLast: isLast,
+          isHovered: states.contains(WidgetState.hovered),
+          isFocused: states.contains(WidgetState.focused),
+          isPressed: states.contains(WidgetState.pressed),
+        );
+
+  bool get isDisabled;
+
+  bool get isHovered;
+
+  bool get isFocused;
+
+  bool get isPressed;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      runtimeType == other.runtimeType &&
+          other is _InteractiveListItemStates &&
+          isFirst == other.isFirst &&
+          isLast == other.isLast &&
+          isHovered == other.isHovered &&
+          isFocused == other.isFocused &&
+          isPressed == other.isPressed &&
+          isDisabled == other.isDisabled;
+
+  @override
+  int get hashCode => Object.hash(
+    runtimeType,
+    isFirst,
+    isLast,
+    isHovered,
+    isFocused,
+    isPressed,
+    isDisabled,
+  );
+}
+
+class _InteractiveListItemDisabledStates extends _InteractiveListItemStates
+    implements InteractiveListItemDisabledStates {
+  const _InteractiveListItemDisabledStates({
+    required super.isFirst,
+    required super.isLast,
+  });
+
+  @override
+  bool get isDisabled => true;
+
+  @override
+  bool get isHovered => false;
+
+  @override
+  bool get isFocused => false;
+
+  @override
+  bool get isPressed => false;
+}
+
+class _InteractiveListItemEnabledStates extends _InteractiveListItemStates
+    implements InteractiveListItemEnabledStates {
+  const _InteractiveListItemEnabledStates({
+    required super.isFirst,
+    required super.isLast,
+    this.isHovered = false,
+    this.isFocused = false,
+    this.isPressed = false,
+  });
+
+  @override
+  bool get isDisabled => false;
+
+  @override
+  final bool isHovered;
+
+  @override
+  final bool isFocused;
+
+  @override
+  final bool isPressed;
 }

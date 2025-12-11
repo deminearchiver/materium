@@ -170,7 +170,7 @@ class _DeveloperPageState extends State<DeveloperPage> {
                   children: [
                     ListItemContainer(
                       isFirst: true,
-                      containerColor: colorTheme.surfaceBright,
+                      containerColor: .all(colorTheme.surfaceBright),
                       child: MergeSemantics(
                         child: ListItemInteraction(
                           onTap: () => Navigator.of(context).push(
@@ -180,7 +180,6 @@ class _DeveloperPageState extends State<DeveloperPage> {
                             ),
                           ),
                           child: ListItemLayout(
-                            isMultiline: true,
                             leading: SizedBox.square(
                               dimension: 40.0,
                               child: Material(
@@ -211,7 +210,7 @@ class _DeveloperPageState extends State<DeveloperPage> {
                       ),
                     ),
                     ListItemContainer(
-                      containerColor: colorTheme.surfaceBright,
+                      containerColor: .all(colorTheme.surfaceBright),
                       child: MergeSemantics(
                         child: ListItemInteraction(
                           onTap: () => Navigator.of(context).push(
@@ -221,7 +220,6 @@ class _DeveloperPageState extends State<DeveloperPage> {
                             ),
                           ),
                           child: ListItemLayout(
-                            isMultiline: true,
                             leading: SizedBox.square(
                               dimension: 40.0,
                               child: Material(
@@ -250,7 +248,7 @@ class _DeveloperPageState extends State<DeveloperPage> {
                       ),
                     ),
                     ListItemContainer(
-                      containerColor: colorTheme.surfaceBright,
+                      containerColor: .all(colorTheme.surfaceBright),
                       child: MergeSemantics(
                         child: ListItemInteraction(
                           onTap: () => Navigator.of(context).push(
@@ -259,7 +257,6 @@ class _DeveloperPageState extends State<DeveloperPage> {
                             ),
                           ),
                           child: ListItemLayout(
-                            isMultiline: true,
                             leading: SizedBox.square(
                               dimension: 40.0,
                               child: Material(
@@ -290,7 +287,7 @@ class _DeveloperPageState extends State<DeveloperPage> {
                       ),
                     ),
                     ListItemContainer(
-                      containerColor: colorTheme.surfaceBright,
+                      containerColor: .all(colorTheme.surfaceBright),
                       child: MergeSemantics(
                         child: ListItemInteraction(
                           onTap: () => Navigator.of(context).push(
@@ -299,7 +296,6 @@ class _DeveloperPageState extends State<DeveloperPage> {
                             ),
                           ),
                           child: ListItemLayout(
-                            isMultiline: true,
                             leading: SizedBox.square(
                               dimension: 40.0,
                               child: Material(
@@ -331,7 +327,7 @@ class _DeveloperPageState extends State<DeveloperPage> {
                     ),
                     ListItemContainer(
                       isLast: true,
-                      containerColor: colorTheme.surfaceBright,
+                      containerColor: .all(colorTheme.surfaceBright),
                       child: MergeSemantics(
                         child: ListItemInteraction(
                           onTap: () => Navigator.of(context).push(
@@ -341,7 +337,6 @@ class _DeveloperPageState extends State<DeveloperPage> {
                             ),
                           ),
                           child: ListItemLayout(
-                            isMultiline: true,
                             leading: SizedBox.square(
                               dimension: 40.0,
                               child: Material(
@@ -2201,13 +2196,13 @@ class _SettingsAppBarRoute<T extends Object?> extends PopupRoute<T> {
                                           ListItemContainer(
                                             isFirst: index == 0,
                                             opticalCenterEnabled: false,
-                                            containerColor:
-                                                colorTheme.surfaceContainerLow,
+                                            containerColor: .all(
+                                              colorTheme.surfaceContainerLow,
+                                            ),
                                             child: ListItemInteraction(
                                               onTap: () => navigator?.pop(),
 
                                               child: ListItemLayout(
-                                                isMultiline: false,
                                                 leading: const Icon(
                                                   Symbols.search_rounded,
                                                 ),
@@ -2344,11 +2339,10 @@ class _Settings2ViewState extends State<Settings2View> {
                 padding: const EdgeInsets.symmetric(horizontal: 16.0),
                 child: ListItemContainer(
                   isFirst: true,
-                  containerColor: colorTheme.surfaceBright,
+                  containerColor: .all(colorTheme.surfaceBright),
                   child: ListItemInteraction(
                     onTap: () {},
                     child: ListItemLayout(
-                      isMultiline: true,
                       leading: SizedBox.square(
                         dimension: 40.0,
                         child: Material(
@@ -2381,11 +2375,10 @@ class _Settings2ViewState extends State<Settings2View> {
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16.0),
                 child: ListItemContainer(
-                  containerColor: colorTheme.surfaceBright,
+                  containerColor: .all(colorTheme.surfaceBright),
                   child: ListItemInteraction(
                     onTap: () {},
                     child: ListItemLayout(
-                      isMultiline: true,
                       leading: SizedBox.square(
                         dimension: 40.0,
                         child: Material(
@@ -2419,7 +2412,7 @@ class _Settings2ViewState extends State<Settings2View> {
                 padding: const EdgeInsets.symmetric(horizontal: 16.0),
                 child: ListItemContainer(
                   isLast: true,
-                  containerColor: colorTheme.surfaceBright,
+                  containerColor: .all(colorTheme.surfaceBright),
                   child: MergeSemantics(
                     child: ListItemInteraction(
                       onTap: () => Navigator.of(context).push(
@@ -2428,7 +2421,6 @@ class _Settings2ViewState extends State<Settings2View> {
                         ),
                       ),
                       child: ListItemLayout(
-                        isMultiline: true,
                         leading: SizedBox.square(
                           dimension: 40.0,
                           child: Material(
@@ -2590,10 +2582,7 @@ class _AboutPageState extends State<AboutPage> with TickerProviderStateMixin {
                     ListItemContainer(
                       isFirst: true,
                       child: ListItemInteraction(
-                        child: ListItemLayout(
-                          isMultiline: true,
-                          headline: Text("Contributors"),
-                        ),
+                        child: ListItemLayout(headline: Text("Contributors")),
                       ),
                     ),
                   ],
@@ -2733,7 +2722,6 @@ class _MaterialDemoViewState extends State<_MaterialDemoView> {
                           );
                         },
                         child: ListItemLayout(
-                          isMultiline: true,
                           leading: SizedBox.square(
                             dimension: 40.0,
                             child: Material(
@@ -2782,7 +2770,6 @@ class _MaterialDemoViewState extends State<_MaterialDemoView> {
                           );
                         },
                         child: ListItemLayout(
-                          isMultiline: true,
                           leading: SizedBox.square(
                             dimension: 40.0,
                             child: Material(
@@ -2840,7 +2827,6 @@ class _MaterialDemoViewState extends State<_MaterialDemoView> {
                                   }
                                 : null,
                             child: ListItemLayout(
-                              isMultiline: true,
                               leading: SizedBox.square(
                                 dimension: 40.0,
                                 child: Material(
@@ -2911,7 +2897,6 @@ class _MaterialDemoViewState extends State<_MaterialDemoView> {
                         child: ListItemInteraction(
                           onTap: () => setState(() => _enabled = !_enabled),
                           child: ListItemLayout(
-                            isMultiline: true,
                             padding: const EdgeInsets.fromLTRB(
                               16.0,
                               12.0,
@@ -2960,7 +2945,6 @@ class _MaterialDemoViewState extends State<_MaterialDemoView> {
                         crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: [
                           ListItemLayout(
-                            isMultiline: true,
                             leading: SizedBox.square(
                               dimension: 40.0,
                               child: Material(
@@ -3084,7 +3068,6 @@ class _MaterialDemoViewState extends State<_MaterialDemoView> {
                               );
                             },
                             child: ListItemLayout(
-                              isMultiline: true,
                               leading: SizedBox.square(
                                 dimension: 40.0,
                                 child: Material(
@@ -3174,7 +3157,6 @@ class _MaterialDemoViewState extends State<_MaterialDemoView> {
                               );
                             },
                             child: ListItemLayout(
-                              isMultiline: true,
                               leading: SizedBox.square(
                                 dimension: 40.0,
                                 child: Material(
@@ -3264,7 +3246,6 @@ class _MaterialDemoViewState extends State<_MaterialDemoView> {
                               );
                             },
                             child: ListItemLayout(
-                              isMultiline: true,
                               leading: SizedBox.square(
                                 dimension: 40.0,
                                 child: Material(
@@ -3323,7 +3304,6 @@ class _MaterialDemoViewState extends State<_MaterialDemoView> {
                               );
                             },
                             child: ListItemLayout(
-                              isMultiline: true,
                               leading: SizedBox.square(
                                 dimension: 40.0,
                                 child: Material(
@@ -3423,7 +3403,6 @@ class _MaterialDemoViewState extends State<_MaterialDemoView> {
                               );
                             },
                             child: ListItemLayout(
-                              isMultiline: true,
                               leading: SizedBox.square(
                                 dimension: 40.0,
                                 child: Material(
@@ -3521,16 +3500,17 @@ class _MaterialDemoViewState extends State<_MaterialDemoView> {
                     child: ListItemContainer(
                       isFirst: true,
                       isLast: true,
-                      containerShape: const StadiumBorder(),
-                      containerColor: colorTheme.primaryContainer,
+                      containerShape: .all(
+                        CornersBorder.rounded(
+                          corners: .all(shapeTheme.corner.full),
+                        ),
+                      ),
+                      containerColor: .all(colorTheme.primaryContainer),
                       child: MergeSemantics(
                         child: ListItemInteraction(
                           onTap: () => setState(() => _selected = !_selected),
-                          stateLayerColor: WidgetStatePropertyAll(
-                            colorTheme.onPrimaryContainer,
-                          ),
+                          stateLayerColor: .all(colorTheme.onPrimaryContainer),
                           child: ListItemLayout(
-                            isMultiline: true,
                             minHeight: 72.0,
                             maxHeight: 72.0,
                             padding: const EdgeInsets.fromLTRB(

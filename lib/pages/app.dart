@@ -423,7 +423,6 @@ class _AppPageState extends State<AppPage> {
                   );
                 },
                 child: ListItemLayout(
-                  isMultiline: true,
                   leading: SizedBox.square(
                     dimension: 40.0,
                     child: Material(
@@ -450,7 +449,6 @@ class _AppPageState extends State<AppPage> {
             padding: const EdgeInsets.symmetric(horizontal: 16.0),
             child: ListItemContainer(
               child: ListItemLayout(
-                isMultiline: true,
                 leading: SizedBox.square(
                   dimension: 40.0,
                   child: Material(

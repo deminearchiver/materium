@@ -1005,11 +1005,10 @@ class AppsPageState extends State<AppsPage> with TickerProviderStateMixin {
                     children: [
                       ListItemContainer(
                         isFirst: true,
-                        containerColor: listItemContainerColor,
+                        containerColor: .all(listItemContainerColor),
                         child: ListItemInteraction(
                           onTap: pinSelectedApps,
                           child: ListItemLayout(
-                            isMultiline: true,
                             leading: SizedBox.square(
                               dimension: 40.0,
                               child: Material(
@@ -1048,7 +1047,7 @@ class AppsPageState extends State<AppsPage> with TickerProviderStateMixin {
                       ),
                       const SizedBox(height: 2.0),
                       ListItemContainer(
-                        containerColor: listItemContainerColor,
+                        containerColor: .all(listItemContainerColor),
                         child: ListItemInteraction(
                           onTap: () {
                             String urls = "";
@@ -1065,7 +1064,6 @@ class AppsPageState extends State<AppsPage> with TickerProviderStateMixin {
                             Navigator.of(context).pop();
                           },
                           child: ListItemLayout(
-                            isMultiline: true,
                             leading: SizedBox.square(
                               dimension: 40.0,
                               child: Material(
@@ -1090,7 +1088,7 @@ class AppsPageState extends State<AppsPage> with TickerProviderStateMixin {
                       if (selectedApps.isNotEmpty) ...[
                         const SizedBox(height: 2.0),
                         ListItemContainer(
-                          containerColor: listItemContainerColor,
+                          containerColor: .all(listItemContainerColor),
                           child: ListItemInteraction(
                             onTap: () {
                               String urls = "";
@@ -1106,7 +1104,6 @@ class AppsPageState extends State<AppsPage> with TickerProviderStateMixin {
                               );
                             },
                             child: ListItemLayout(
-                              isMultiline: true,
                               leading: SizedBox.square(
                                 dimension: 40.0,
                                 child: Material(
@@ -1130,7 +1127,7 @@ class AppsPageState extends State<AppsPage> with TickerProviderStateMixin {
                         ),
                         const SizedBox(height: 2.0),
                         ListItemContainer(
-                          containerColor: listItemContainerColor,
+                          containerColor: .all(listItemContainerColor),
                           child: ListItemInteraction(
                             onTap: () {
                               var encoder = const JsonEncoder.withIndent(
@@ -1159,7 +1156,6 @@ class AppsPageState extends State<AppsPage> with TickerProviderStateMixin {
                               );
                             },
                             child: ListItemLayout(
-                              isMultiline: true,
                               leading: SizedBox.square(
                                 dimension: 40.0,
                                 child: Material(
@@ -1186,7 +1182,7 @@ class AppsPageState extends State<AppsPage> with TickerProviderStateMixin {
                       ],
                       const SizedBox(height: 2.0),
                       ListItemContainer(
-                        containerColor: listItemContainerColor,
+                        containerColor: .all(listItemContainerColor),
                         child: ListItemInteraction(
                           onTap: () {
                             appsProvider
@@ -1205,7 +1201,6 @@ class AppsPageState extends State<AppsPage> with TickerProviderStateMixin {
                             Navigator.of(context).pop();
                           },
                           child: ListItemLayout(
-                            isMultiline: true,
                             leading: SizedBox.square(
                               dimension: 40.0,
                               child: Material(
@@ -1235,7 +1230,7 @@ class AppsPageState extends State<AppsPage> with TickerProviderStateMixin {
                       const SizedBox(height: 2.0),
                       ListItemContainer(
                         isLast: true,
-                        containerColor: listItemContainerColor,
+                        containerColor: .all(listItemContainerColor),
                         child: ListItemInteraction(
                           onTap: () {
                             if (!appsProvider.areDownloadsRunning()) {
@@ -1243,7 +1238,6 @@ class AppsPageState extends State<AppsPage> with TickerProviderStateMixin {
                             }
                           },
                           child: ListItemLayout(
-                            isMultiline: true,
                             leading: SizedBox.square(
                               dimension: 40.0,
                               child: Material(
@@ -1390,18 +1384,22 @@ class AppsPageState extends State<AppsPage> with TickerProviderStateMixin {
                 child: ListItemContainer(
                   isFirst: index == 0,
                   isLast: index == pinnedApps.length - 1,
-                  containerShape: isSelected
-                      ? CornersBorder.rounded(
-                          corners: Corners.all(
-                            shapeTheme.corner.largeIncreased,
-                          ),
-                        )
-                      : null,
-                  containerColor: isSelected
-                      ? colorTheme.secondaryContainer
-                      : colorTheme.surfaceBright,
+                  containerShape: .all(
+                    isSelected
+                        ? CornersBorder.rounded(
+                            corners: Corners.all(
+                              shapeTheme.corner.largeIncreased,
+                            ),
+                          )
+                        : null,
+                  ),
+                  containerColor: .all(
+                    isSelected
+                        ? colorTheme.secondaryContainer
+                        : colorTheme.surfaceBright,
+                  ),
                   child: ListItemInteraction(
-                    stateLayerColor: WidgetStatePropertyAll(
+                    stateLayerColor: .all(
                       isSelected
                           ? colorTheme.onSecondaryContainer
                           : colorTheme.onSurface,
@@ -1419,7 +1417,6 @@ class AppsPageState extends State<AppsPage> with TickerProviderStateMixin {
                     },
                     onLongPress: () => toggleAppSelected(e.app),
                     child: ListItemLayout(
-                      isMultiline: true,
                       padding: const EdgeInsets.fromLTRB(
                         16.0,
                         12.0,

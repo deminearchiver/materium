@@ -364,7 +364,6 @@ class _SettingsPageState extends State<SettingsPage> {
                           ),
                         ),
                         child: ListItemLayout(
-                          isMultiline: true,
                           leading: SizedBox.square(
                             dimension: 40.0,
                             child: Material(
@@ -445,7 +444,6 @@ class _SettingsPageState extends State<SettingsPage> {
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
                       ListItemLayout(
-                        isMultiline: true,
                         headline: Text(tr("bgUpdateCheckInterval")),
                         supportingText: Visibility.maintain(
                           visible: showIntervalLabel,
@@ -494,7 +492,6 @@ class _SettingsPageState extends State<SettingsPage> {
                             onTap: () => settingsProvider.useFGService =
                                 !settingsProvider.useFGService,
                             child: ListItemLayout(
-                              isMultiline: true,
                               padding: const EdgeInsets.fromLTRB(
                                 16.0,
                                 12.0,
@@ -529,7 +526,6 @@ class _SettingsPageState extends State<SettingsPage> {
                                         !settingsProvider
                                             .enableBackgroundUpdates,
                                 child: ListItemLayout(
-                                  isMultiline: false,
                                   padding: const EdgeInsets.fromLTRB(
                                     16.0,
                                     8.0,
@@ -589,7 +585,6 @@ class _SettingsPageState extends State<SettingsPage> {
                                       settingsProvider.bgUpdatesOnWiFiOnly =
                                           !settingsProvider.bgUpdatesOnWiFiOnly,
                                   child: ListItemLayout(
-                                    isMultiline: true,
                                     padding: const EdgeInsets.fromLTRB(
                                       16.0,
                                       12.0,
@@ -625,7 +620,6 @@ class _SettingsPageState extends State<SettingsPage> {
                                           !settingsProvider
                                               .bgUpdatesWhileChargingOnly,
                                   child: ListItemLayout(
-                                    isMultiline: true,
                                     padding: const EdgeInsets.fromLTRB(
                                       16.0,
                                       12.0,
@@ -662,7 +656,6 @@ class _SettingsPageState extends State<SettingsPage> {
                       onTap: () => settingsProvider.checkOnStart =
                           !settingsProvider.checkOnStart,
                       child: ListItemLayout(
-                        isMultiline: true,
                         padding: const EdgeInsets.fromLTRB(
                           16.0,
                           12.0,
@@ -689,7 +682,6 @@ class _SettingsPageState extends State<SettingsPage> {
                       onTap: () => settingsProvider.checkUpdateOnDetailPage =
                           !settingsProvider.checkUpdateOnDetailPage,
                       child: ListItemLayout(
-                        isMultiline: true,
                         padding: const EdgeInsets.fromLTRB(
                           16.0,
                           12.0,
@@ -722,7 +714,6 @@ class _SettingsPageState extends State<SettingsPage> {
                               !settingsProvider
                                   .onlyCheckInstalledOrTrackOnlyApps,
                       child: ListItemLayout(
-                        isMultiline: true,
                         padding: const EdgeInsets.fromLTRB(
                           16.0,
                           12.0,
@@ -754,7 +745,6 @@ class _SettingsPageState extends State<SettingsPage> {
                     onTap: () => settingsProvider.removeOnExternalUninstall =
                         !settingsProvider.removeOnExternalUninstall,
                     child: ListItemLayout(
-                      isMultiline: true,
                       padding: const EdgeInsets.fromLTRB(
                         16.0,
                         12.0,
@@ -784,7 +774,6 @@ class _SettingsPageState extends State<SettingsPage> {
                       onTap: () => settingsProvider.parallelDownloads =
                           !settingsProvider.parallelDownloads,
                       child: ListItemLayout(
-                        isMultiline: true,
                         padding: const EdgeInsets.fromLTRB(
                           16.0,
                           12.0,
@@ -817,7 +806,6 @@ class _SettingsPageState extends State<SettingsPage> {
                                   !settingsProvider
                                       .beforeNewInstallsShareToAppVerifier,
                           child: ListItemLayout(
-                            isMultiline: true,
                             padding: const EdgeInsets.fromLTRB(
                               16.0,
                               12.0,
@@ -862,7 +850,6 @@ class _SettingsPageState extends State<SettingsPage> {
                       onTap: () =>
                           onUseShizukuChanged(!settingsProvider.useShizuku),
                       child: ListItemLayout(
-                        isMultiline: true,
                         padding: const EdgeInsets.fromLTRB(
                           16.0,
                           12.0,
@@ -890,7 +877,6 @@ class _SettingsPageState extends State<SettingsPage> {
                           settingsProvider.shizukuPretendToBeGooglePlay =
                               !settingsProvider.shizukuPretendToBeGooglePlay,
                       child: ListItemLayout(
-                        isMultiline: true,
                         padding: const EdgeInsets.fromLTRB(
                           16.0,
                           12.0,
@@ -947,7 +933,6 @@ class _SettingsPageState extends State<SettingsPage> {
                         onTap: () => settingsProvider.useMaterialYou =
                             !settingsProvider.useMaterialYou,
                         child: ListItemLayout(
-                          isMultiline: true,
                           padding: const EdgeInsets.fromLTRB(
                             16.0,
                             12.0,
@@ -974,7 +959,6 @@ class _SettingsPageState extends State<SettingsPage> {
                     child: ListItemInteraction(
                       onTap: selectColor,
                       child: ListItemLayout(
-                        isMultiline: true,
                         padding: const EdgeInsets.fromLTRB(
                           16.0,
                           12.0,
@@ -1149,7 +1133,6 @@ class _SettingsPageState extends State<SettingsPage> {
                       onTap: () => settingsProvider.showAppWebpage =
                           !settingsProvider.showAppWebpage,
                       child: ListItemLayout(
-                        isMultiline: true,
                         padding: const EdgeInsets.fromLTRB(
                           16.0,
                           12.0,
@@ -1176,7 +1159,6 @@ class _SettingsPageState extends State<SettingsPage> {
                       onTap: () => settingsProvider.pinUpdates =
                           !settingsProvider.pinUpdates,
                       child: ListItemLayout(
-                        isMultiline: true,
                         padding: const EdgeInsets.fromLTRB(
                           16.0,
                           12.0,
@@ -1203,7 +1185,6 @@ class _SettingsPageState extends State<SettingsPage> {
                       onTap: () => settingsProvider.buryNonInstalled =
                           !settingsProvider.buryNonInstalled,
                       child: ListItemLayout(
-                        isMultiline: true,
                         padding: const EdgeInsets.fromLTRB(
                           16.0,
                           12.0,
@@ -1233,7 +1214,6 @@ class _SettingsPageState extends State<SettingsPage> {
                       onTap: () => settingsProvider.groupByCategory =
                           !settingsProvider.groupByCategory,
                       child: ListItemLayout(
-                        isMultiline: true,
                         padding: const EdgeInsets.fromLTRB(
                           16.0,
                           12.0,
@@ -1260,7 +1240,6 @@ class _SettingsPageState extends State<SettingsPage> {
                       onTap: () => settingsProvider.hideTrackOnlyWarning =
                           !settingsProvider.hideTrackOnlyWarning,
                       child: ListItemLayout(
-                        isMultiline: true,
                         padding: const EdgeInsets.fromLTRB(
                           16.0,
                           12.0,
@@ -1290,7 +1269,6 @@ class _SettingsPageState extends State<SettingsPage> {
                       onTap: () => settingsProvider.hideAPKOriginWarning =
                           !settingsProvider.hideAPKOriginWarning,
                       child: ListItemLayout(
-                        isMultiline: true,
                         padding: const EdgeInsets.fromLTRB(
                           16.0,
                           12.0,
@@ -1321,7 +1299,6 @@ class _SettingsPageState extends State<SettingsPage> {
                       onTap: () => settingsProvider.developerModeV1 =
                           !settingsProvider.developerModeV1,
                       child: ListItemLayout(
-                        isMultiline: true,
                         padding: const EdgeInsets.fromLTRB(
                           16.0,
                           12.0,
@@ -1348,7 +1325,6 @@ class _SettingsPageState extends State<SettingsPage> {
                 //       onTap: () => settingsProvider.highlightTouchTargets =
                 //           !settingsProvider.highlightTouchTargets,
                 //       child: ListItemLayout(
-                //         isMultiline: true,
                 //         padding: const EdgeInsets.fromLTRB(
                 //           16.0,
                 //           12.0,
@@ -1401,7 +1377,6 @@ class _SettingsPageState extends State<SettingsPage> {
                       mode: LaunchMode.externalApplication,
                     ),
                     child: ListItemLayout(
-                      isMultiline: true,
                       leading: const Icon(Symbols.code_rounded),
                       headline: Text(tr("appSource"), maxLines: 3),
                     ),
@@ -1415,7 +1390,6 @@ class _SettingsPageState extends State<SettingsPage> {
                       mode: LaunchMode.externalApplication,
                     ),
                     child: ListItemLayout(
-                      isMultiline: true,
                       leading: const Icon(Symbols.help_rounded, fill: 1.0),
                       headline: Text(tr("wiki"), maxLines: 3),
                     ),
@@ -1429,7 +1403,6 @@ class _SettingsPageState extends State<SettingsPage> {
                       mode: LaunchMode.externalApplication,
                     ),
                     child: ListItemLayout(
-                      isMultiline: true,
                       leading: const Icon(Symbols.apps_rounded),
                       headline: Text(
                         tr("crowdsourcedConfigsLabel"),
@@ -1457,7 +1430,6 @@ class _SettingsPageState extends State<SettingsPage> {
                           }
                         }),
                     child: ListItemLayout(
-                      isMultiline: true,
                       leading: const Icon(
                         Symbols.bug_report_rounded,
                         fill: 1.0,
@@ -1878,7 +1850,6 @@ class _LogsPageState extends State<_LogsPage> {
                                           );
                                         },
                                         child: ListItemLayout(
-                                          isMultiline: true,
                                           leading: SizedBox.square(
                                             dimension: 40.0,
                                             child: Material(

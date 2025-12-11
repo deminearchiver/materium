@@ -8,10 +8,14 @@ enum LegacyButtonShape { round, square }
 
 enum LegacyButtonColor { elevated, filled, tonal, outlined, text }
 
-enum MenuVariant { standard, vibrant }
+enum LegacyMenuVariant { standard, vibrant }
+
+enum LegacyIconButtonWidth { narrow, normal, wide }
+
+enum LegacyIconButtonColor { filled, tonal, outlined, standard }
 
 abstract final class LegacyThemeFactory {
-  static ThemeData create({
+  static ThemeData createTheme({
     required ColorThemeData colorTheme,
     required ElevationThemeData elevationTheme,
     required ShapeThemeData shapeTheme,
@@ -21,7 +25,7 @@ abstract final class LegacyThemeFactory {
     final modalBarrierColor = colorTheme.scrim.withValues(alpha: 0.32);
     return ThemeData(
       colorScheme: colorTheme.toLegacy(),
-      visualDensity: VisualDensity.standard,
+      visualDensity: .standard,
       splashFactory: InkSparkle.splashFactory,
       textTheme: typescaleTheme.toBaselineTextTheme(),
       textSelectionTheme: TextSelectionThemeData(
@@ -29,10 +33,9 @@ abstract final class LegacyThemeFactory {
         cursorColor: colorTheme.primary,
         selectionHandleColor: colorTheme.primary,
       ),
-      // TODO: remove this after migration to CustomScrollbar
       scrollbarTheme: ScrollbarThemeData(
         thickness: const WidgetStatePropertyAll(4.0),
-        radius: const Radius.circular(2.0),
+        radius: const .circular(2.0),
         minThumbLength: 48.0,
         crossAxisMargin: 4.0,
         thumbColor: WidgetStateProperty.resolveWith((states) {
@@ -80,44 +83,42 @@ abstract final class LegacyThemeFactory {
           );
         }),
       ),
-      progressIndicatorTheme: const ProgressIndicatorThemeData(
-        // ignore: deprecated_member_use
-        year2023: false,
-      ),
+      // ignore: deprecated_member_use
+      progressIndicatorTheme: const ProgressIndicatorThemeData(year2023: false),
       tooltipTheme: TooltipThemeData(
         waitDuration: const Duration(milliseconds: 500),
         constraints: const BoxConstraints(minHeight: 24.0),
-        padding: const EdgeInsets.symmetric(horizontal: 8.0),
+        padding: const .symmetric(horizontal: 8.0),
         decoration: ShapeDecoration(
           shape: CornersBorder.rounded(
-            corners: Corners.all(shapeTheme.corner.extraSmall),
+            corners: .all(shapeTheme.corner.extraSmall),
           ),
           color: colorTheme.inverseSurface,
         ),
-        textAlign: TextAlign.start,
+        textAlign: .start,
         textStyle: typescaleTheme.bodySmall.toTextStyle(
           color: colorTheme.inverseOnSurface,
         ),
       ),
       dialogTheme: DialogThemeData(
         backgroundColor: colorTheme.surfaceContainerHigh,
-        clipBehavior: Clip.antiAlias,
+        clipBehavior: .antiAlias,
         elevation: elevationTheme.level0,
         surfaceTintColor: Colors.transparent,
         shadowColor: Colors.transparent,
         shape: CornersBorder.rounded(
-          corners: Corners.all(shapeTheme.corner.extraLarge),
+          corners: .all(shapeTheme.corner.extraLarge),
         ),
         titleTextStyle: typescaleTheme.headlineSmall.toTextStyle(
           color: colorTheme.onSurface,
         ),
         constraints: const BoxConstraints(minWidth: 280.0, maxWidth: 560.0),
-        insetPadding: const EdgeInsets.all(56.0),
+        insetPadding: const .all(56.0),
         barrierColor: modalBarrierColor,
       ),
       bottomSheetTheme: BottomSheetThemeData(
         showDragHandle: true,
-        clipBehavior: Clip.antiAlias,
+        clipBehavior: .antiAlias,
         shape: CornersBorder.rounded(corners: shapeTheme.corner.extraLargeTop),
         surfaceTintColor: Colors.transparent,
         shadowColor: colorTheme.shadow,
@@ -133,13 +134,13 @@ abstract final class LegacyThemeFactory {
       dividerTheme: DividerThemeData(
         color: colorTheme.outlineVariant,
         thickness: 1.0,
-        radius: BorderRadius.zero,
+        radius: .zero,
       ),
       sliderTheme: SliderThemeData(
         // ignore: deprecated_member_use
         year2023: false,
         overlayColor: Colors.transparent,
-        padding: EdgeInsets.zero,
+        padding: .zero,
         showValueIndicator: ShowValueIndicator.onDrag,
         valueIndicatorShape: const _SliderValueIndicatorShapeYear2024(),
         valueIndicatorColor: colorTheme.inverseSurface,
@@ -150,14 +151,14 @@ abstract final class LegacyThemeFactory {
       snackBarTheme: SnackBarThemeData(
         behavior: SnackBarBehavior.floating,
         shape: CornersBorder.rounded(
-          corners: Corners.all(shapeTheme.corner.extraSmall),
+          corners: .all(shapeTheme.corner.extraSmall),
         ),
       ),
       menuTheme: createMenuTheme(
         colorTheme: colorTheme,
         elevationTheme: elevationTheme,
         shapeTheme: shapeTheme,
-        variant: MenuVariant.standard,
+        variant: .standard,
       ),
       menuButtonTheme: createMenuButtonTheme(
         colorTheme: colorTheme,
@@ -165,7 +166,7 @@ abstract final class LegacyThemeFactory {
         shapeTheme: shapeTheme,
         stateTheme: stateTheme,
         typescaleTheme: typescaleTheme,
-        variant: MenuVariant.standard,
+        variant: .standard,
       ),
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: createButtonStyle(
@@ -217,8 +218,19 @@ abstract final class LegacyThemeFactory {
       ),
       pageTransitionsTheme: PageTransitionsTheme(
         builders: {
-          // TODO: replace with  a custom transition system and add support for background color
           TargetPlatform.android: FadeForwardsPageTransitionsBuilder(
+            backgroundColor: colorTheme.surfaceContainer,
+          ),
+          TargetPlatform.iOS: FadeForwardsPageTransitionsBuilder(
+            backgroundColor: colorTheme.surfaceContainer,
+          ),
+          TargetPlatform.macOS: FadeForwardsPageTransitionsBuilder(
+            backgroundColor: colorTheme.surfaceContainer,
+          ),
+          TargetPlatform.linux: FadeForwardsPageTransitionsBuilder(
+            backgroundColor: colorTheme.surfaceContainer,
+          ),
+          TargetPlatform.windows: FadeForwardsPageTransitionsBuilder(
             backgroundColor: colorTheme.surfaceContainer,
           ),
         },
@@ -242,6 +254,9 @@ abstract final class LegacyThemeFactory {
     Color? containerColor,
     Color? unselectedContainerColor,
     Color? selectedContainerColor,
+    Color? contentColor,
+    Color? unselectedContentColor,
+    Color? selectedContentColor,
   }) {
     final isUnselectedNotDefault = isSelected == false;
     final isUnselectedDefault = isSelected != true;
@@ -257,18 +272,12 @@ abstract final class LegacyThemeFactory {
       .extraLarge => 136.0,
     };
 
-    final padding = switch (size) {
-      .extraSmall => const EdgeInsets.symmetric(
-        horizontal: 12.0,
-        vertical: 6.0,
-      ),
-      .small => const EdgeInsets.symmetric(horizontal: 16.0, vertical: 10.0),
-      .medium => const EdgeInsets.symmetric(horizontal: 24.0, vertical: 16.0),
-      .large => const EdgeInsets.symmetric(horizontal: 48.0, vertical: 32.0),
-      .extraLarge => const EdgeInsets.symmetric(
-        horizontal: 64.0,
-        vertical: 48.0,
-      ),
+    final EdgeInsetsGeometry padding = switch (size) {
+      .extraSmall => const .symmetric(horizontal: 12.0, vertical: 6.0),
+      .small => const .symmetric(horizontal: 16.0, vertical: 10.0),
+      .medium => const .symmetric(horizontal: 24.0, vertical: 16.0),
+      .large => const .symmetric(horizontal: 48.0, vertical: 32.0),
+      .extraLarge => const .symmetric(horizontal: 64.0, vertical: 48.0),
     };
 
     final cornerRound = shapeTheme.corner.full;
@@ -338,21 +347,29 @@ abstract final class LegacyThemeFactory {
                 : Colors.transparent,
           .text => Colors.transparent,
         };
-    final foregroundColor = switch (color) {
-      .elevated =>
-        isSelectedNotDefault ? colorTheme.onPrimary : colorTheme.primary,
-      .filled =>
-        isSelectedDefault ? colorTheme.onPrimary : colorTheme.onSurfaceVariant,
-      .tonal =>
-        isSelectedNotDefault
-            ? colorTheme.onSecondary
-            : colorTheme.onSecondaryContainer,
-      .outlined =>
-        isSelectedNotDefault
-            ? colorTheme.inverseOnSurface
-            : colorTheme.onSurfaceVariant,
-      .text => colorTheme.primary,
-    };
+    final foregroundColor =
+        switch (isSelected) {
+          null => contentColor,
+          false => unselectedContentColor,
+          true => selectedContentColor,
+        } ??
+        switch (color) {
+          .elevated =>
+            isSelectedNotDefault ? colorTheme.onPrimary : colorTheme.primary,
+          .filled =>
+            isSelectedDefault
+                ? colorTheme.onPrimary
+                : colorTheme.onSurfaceVariant,
+          .tonal =>
+            isSelectedNotDefault
+                ? colorTheme.onSecondary
+                : colorTheme.onSecondaryContainer,
+          .outlined =>
+            isSelectedNotDefault
+                ? colorTheme.inverseOnSurface
+                : colorTheme.onSurfaceVariant,
+          .text => colorTheme.primary,
+        };
     final disabledBackgroundColor = colorTheme.onSurface.withValues(
       alpha: 0.10,
     );
@@ -395,7 +412,7 @@ abstract final class LegacyThemeFactory {
       padding: WidgetStatePropertyAll(padding),
       iconSize: WidgetStatePropertyAll(iconSize),
       shape: WidgetStatePropertyAll(
-        CornersBorder.rounded(corners: Corners.all(corner)),
+        CornersBorder.rounded(corners: .all(corner)),
       ),
       side: WidgetStatePropertyAll(side),
       overlayColor: WidgetStateLayerColor(
@@ -416,24 +433,212 @@ abstract final class LegacyThemeFactory {
     );
   }
 
+  static ButtonStyle createIconButtonStyle({
+    required ColorThemeData colorTheme,
+    required ElevationThemeData elevationTheme,
+    required ShapeThemeData shapeTheme,
+    required StateThemeData stateTheme,
+    required TypescaleThemeData typescaleTheme,
+    LegacyButtonSize size = .small,
+    LegacyButtonShape shape = .round,
+    LegacyIconButtonWidth width = .normal,
+    LegacyIconButtonColor color = .filled,
+    bool? isSelected,
+    TextStyle? textStyle,
+    TextStyle? unselectedTextStyle,
+    TextStyle? selectedTextStyle,
+    Color? containerColor,
+    Color? unselectedContainerColor,
+    Color? selectedContainerColor,
+    Color? iconColor,
+    Color? unselectedIconColor,
+    Color? selectedIconColor,
+  }) {
+    final isUnselectedNotDefault = isSelected == false;
+    final isUnselectedDefault = isSelected != true;
+    final isSelectedNotDefault = isSelected == true;
+    final isSelectedDefault = isSelected != false;
+
+    final resolvedHeight = switch (size) {
+      .extraSmall => 32.0,
+      .small => 40.0,
+      .medium => 56.0,
+      .large => 96.0,
+      .extraLarge => 136.0,
+    };
+
+    final resolvedIconSize = switch (size) {
+      .extraSmall => 20.0,
+      .small => 24.0,
+      .medium => 24.0,
+      .large => 32.0,
+      .extraLarge => 40.0,
+    };
+
+    final resolvedWidth = switch ((size, width)) {
+      (_, .normal) => resolvedHeight,
+      (.extraSmall, .narrow) => 28.0,
+      (.extraSmall, .wide) => 40.0,
+      (.small, .narrow) => 32.0,
+      (.small, .wide) => 52.0,
+      (.medium, .narrow) => 48.0,
+      (.medium, .wide) => 72.0,
+      (.large, .narrow) => 64.0,
+      (.large, .wide) => 128.0,
+      (.extraLarge, .narrow) => 104.0,
+      (.extraLarge, .wide) => 184.0,
+    };
+
+    final resolvedPadding = EdgeInsetsGeometry.symmetric(
+      horizontal: (resolvedWidth - resolvedIconSize) / 2.0,
+      vertical: (resolvedHeight - resolvedIconSize) / 2.0,
+    );
+
+    final cornerRound = shapeTheme.corner.full;
+    final cornerSquare = switch (size) {
+      .extraSmall => shapeTheme.corner.medium,
+      .small => shapeTheme.corner.medium,
+      .medium => shapeTheme.corner.large,
+      .large => shapeTheme.corner.extraLarge,
+      .extraLarge => shapeTheme.corner.extraLarge,
+    };
+
+    final corner = isSelectedNotDefault
+        ? switch (shape) {
+            .round => cornerSquare,
+            .square => cornerRound,
+          }
+        : switch (shape) {
+            .round => cornerRound,
+            .square => cornerSquare,
+          };
+
+    final resolvedDisabledBackgroundColor = colorTheme.onSurface.withValues(
+      alpha: 0.10,
+    );
+    final resolvedBackgroundColor =
+        switch (isSelected) {
+          null => containerColor,
+          false => unselectedContainerColor,
+          true => selectedContainerColor,
+        } ??
+        switch (color) {
+          .filled =>
+            isSelectedDefault
+                ? colorTheme.primary
+                : colorTheme.surfaceContainer,
+          .tonal =>
+            isSelectedNotDefault
+                ? colorTheme.secondary
+                : colorTheme.secondaryContainer,
+          .outlined =>
+            isSelectedNotDefault
+                ? colorTheme.inverseSurface
+                : Colors.transparent,
+          .standard => Colors.transparent,
+        };
+
+    final resolvedDisabledIconColor = colorTheme.onSurface.withValues(
+      alpha: 0.38,
+    );
+
+    final resolvedIconColor =
+        switch (isSelected) {
+          null => iconColor,
+          false => unselectedIconColor,
+          true => selectedIconColor,
+        } ??
+        switch (color) {
+          .filled =>
+            isSelectedDefault
+                ? colorTheme.onPrimary
+                : colorTheme.onSurfaceVariant,
+          .tonal =>
+            isSelectedNotDefault
+                ? colorTheme.onSecondary
+                : colorTheme.onSecondaryContainer,
+          .outlined =>
+            isSelectedNotDefault
+                ? colorTheme.inverseOnSurface
+                : colorTheme.onSurfaceVariant,
+          .standard =>
+            isSelectedNotDefault
+                ? colorTheme.primary
+                : colorTheme.onSurfaceVariant,
+        };
+
+    final outlineWidth = switch (size) {
+      .extraSmall => 1.0,
+      .small => 1.0,
+      .medium => 1.0,
+      .large => 2.0,
+      .extraLarge => 3.0,
+    };
+    final side = switch (color) {
+      .outlined when isUnselectedDefault => BorderSide(
+        style: BorderStyle.solid,
+        color: colorTheme.outlineVariant,
+        width: outlineWidth,
+        strokeAlign: BorderSide.strokeAlignInside,
+      ),
+      _ => BorderSide(
+        style: BorderStyle.none,
+        color: colorTheme.background,
+        width: 0.0,
+        strokeAlign: BorderSide.strokeAlignInside,
+      ),
+    };
+    return ButtonStyle(
+      animationDuration: Duration.zero,
+      alignment: Alignment.center,
+      enableFeedback: true,
+      iconAlignment: IconAlignment.start,
+      mouseCursor: WidgetStateMouseCursor.clickable,
+      tapTargetSize: MaterialTapTargetSize.padded,
+      elevation: const WidgetStatePropertyAll(0.0),
+      shadowColor: WidgetStateColor.transparent,
+      minimumSize: const WidgetStatePropertyAll(.zero),
+      fixedSize: WidgetStatePropertyAll(Size(resolvedWidth, resolvedHeight)),
+      maximumSize: const WidgetStatePropertyAll(.infinite),
+      padding: const WidgetStatePropertyAll(.zero),
+      iconSize: WidgetStatePropertyAll(resolvedIconSize),
+      shape: WidgetStatePropertyAll(
+        CornersBorder.rounded(corners: .all(corner)),
+      ),
+      side: WidgetStatePropertyAll(side),
+      overlayColor: WidgetStateLayerColor(
+        color: WidgetStatePropertyAll(resolvedIconColor),
+        opacity: stateTheme.stateLayerOpacity,
+      ),
+      backgroundColor: WidgetStateProperty.resolveWith(
+        (states) => states.contains(WidgetState.disabled)
+            ? resolvedDisabledBackgroundColor
+            : resolvedBackgroundColor,
+      ),
+      iconColor: WidgetStateProperty.resolveWith(
+        (states) => states.contains(WidgetState.disabled)
+            ? resolvedDisabledIconColor
+            : resolvedIconColor,
+      ),
+    );
+  }
+
   static MenuThemeData createMenuTheme({
     required ColorThemeData colorTheme,
     required ElevationThemeData elevationTheme,
     required ShapeThemeData shapeTheme,
-    MenuVariant variant = MenuVariant.standard,
+    LegacyMenuVariant variant = LegacyMenuVariant.standard,
   }) {
     return MenuThemeData(
       style: MenuStyle(
         visualDensity: VisualDensity.standard,
-        padding: const WidgetStatePropertyAll(
-          EdgeInsets.fromLTRB(4.0, 2.0, 4.0, 2.0),
-        ),
+        padding: const WidgetStatePropertyAll(.fromLTRB(4.0, 2.0, 4.0, 2.0)),
         shape: WidgetStatePropertyAll(
-          CornersBorder.rounded(corners: Corners.all(shapeTheme.corner.large)),
+          CornersBorder.rounded(corners: .all(shapeTheme.corner.large)),
         ),
         backgroundColor: WidgetStatePropertyAll(switch (variant) {
-          MenuVariant.standard => colorTheme.surfaceContainerLow,
-          MenuVariant.vibrant => colorTheme.tertiaryContainer,
+          LegacyMenuVariant.standard => colorTheme.surfaceContainerLow,
+          LegacyMenuVariant.vibrant => colorTheme.tertiaryContainer,
         }),
         elevation: WidgetStatePropertyAll(elevationTheme.level2),
         shadowColor: WidgetStatePropertyAll(colorTheme.shadow),
@@ -448,30 +653,30 @@ abstract final class LegacyThemeFactory {
     required ShapeThemeData shapeTheme,
     required StateThemeData stateTheme,
     required TypescaleThemeData typescaleTheme,
-    MenuVariant variant = MenuVariant.standard,
+    LegacyMenuVariant variant = LegacyMenuVariant.standard,
   }) {
     final containerShape = WidgetStatePropertyAll(
-      CornersBorder.rounded(corners: Corners.all(shapeTheme.corner.medium)),
+      CornersBorder.rounded(corners: .all(shapeTheme.corner.medium)),
     );
     final containerColor = WidgetStateProperty.resolveWith((states) {
       final isFocused = states.contains(WidgetState.focused);
       return switch (variant) {
-        MenuVariant.standard =>
+        LegacyMenuVariant.standard =>
           isFocused
               ? colorTheme.tertiaryContainer
               : colorTheme.surfaceContainerLow,
-        MenuVariant.vibrant =>
+        LegacyMenuVariant.vibrant =>
           isFocused ? colorTheme.tertiary : colorTheme.tertiaryContainer,
       };
     });
     final iconColor = WidgetStateProperty.resolveWith((states) {
       final isFocused = states.contains(WidgetState.focused);
       return switch (variant) {
-        MenuVariant.standard =>
+        LegacyMenuVariant.standard =>
           isFocused
               ? colorTheme.onTertiaryContainer
               : colorTheme.onSurfaceVariant,
-        MenuVariant.vibrant =>
+        LegacyMenuVariant.vibrant =>
           isFocused ? colorTheme.onTertiary : colorTheme.onTertiaryContainer,
       };
     });
@@ -485,9 +690,9 @@ abstract final class LegacyThemeFactory {
     final labelTextColor = WidgetStateProperty.resolveWith((states) {
       final isFocused = states.contains(WidgetState.focused);
       return switch (variant) {
-        MenuVariant.standard =>
+        LegacyMenuVariant.standard =>
           isFocused ? colorTheme.onTertiaryContainer : colorTheme.onSurface,
-        MenuVariant.vibrant =>
+        LegacyMenuVariant.vibrant =>
           isFocused ? colorTheme.onTertiary : colorTheme.onTertiaryContainer,
       };
     });
@@ -495,9 +700,9 @@ abstract final class LegacyThemeFactory {
       color: WidgetStateProperty.resolveWith((states) {
         final isFocused = states.contains(WidgetState.focused);
         return switch (variant) {
-          MenuVariant.standard =>
+          LegacyMenuVariant.standard =>
             isFocused ? colorTheme.onTertiaryContainer : colorTheme.onSurface,
-          MenuVariant.vibrant =>
+          LegacyMenuVariant.vibrant =>
             isFocused ? colorTheme.onTertiary : colorTheme.onTertiaryContainer,
         };
       }),
@@ -519,9 +724,7 @@ abstract final class LegacyThemeFactory {
         animationDuration: Duration.zero,
         minimumSize: const WidgetStatePropertyAll(Size(0.0, 44.0)),
         maximumSize: const WidgetStatePropertyAll(Size(double.infinity, 44.0)),
-        padding: const WidgetStatePropertyAll(
-          EdgeInsets.fromLTRB(12.0, 0.0, 12.0, 0.0),
-        ),
+        padding: const WidgetStatePropertyAll(.fromLTRB(12.0, 0.0, 12.0, 0.0)),
         tapTargetSize: MaterialTapTargetSize.padded,
         mouseCursor: WidgetStateMouseCursor.clickable,
         shape: containerShape,
@@ -588,21 +791,19 @@ class _SliderValueIndicatorShapeYear2024 extends SliderComponentShape {
 class _SliderValueIndicatorPathPainterYear2024 {
   const _SliderValueIndicatorPathPainterYear2024();
 
-  static const EdgeInsets _labelPadding = EdgeInsets.symmetric(
+  static const EdgeInsets _labelPadding = .symmetric(
     horizontal: 16.0,
     vertical: 12.0,
   );
   static const _minLabelWidth = 16.0;
   static const _rectYOffset = 12.0;
 
-  Size getPreferredSize(TextPainter labelPainter, double textScaleFactor) {
-    final width =
+  Size getPreferredSize(TextPainter labelPainter, double textScaleFactor) =>
+      Size(
         math.max(_minLabelWidth, labelPainter.width) +
-        _labelPadding.horizontal * textScaleFactor;
-    final height =
-        (labelPainter.height + _labelPadding.vertical) * textScaleFactor;
-    return Size(width, height);
-  }
+            _labelPadding.horizontal * textScaleFactor,
+        (labelPainter.height + _labelPadding.vertical) * textScaleFactor,
+      );
 
   double getHorizontalShift({
     required RenderBox parentBox,
@@ -629,7 +830,7 @@ class _SliderValueIndicatorPathPainterYear2024 {
       0.0,
       rectangleWidth / 2.0 - globalCenter.dx + edgePadding,
     );
-    final double overflowRight = math.max(
+    final overflowRight = math.max(
       0.0,
       rectangleWidth / 2.0 -
           (sizeWithOverflow.width - globalCenter.dx - edgePadding),
@@ -645,7 +846,7 @@ class _SliderValueIndicatorPathPainterYear2024 {
   }
 
   double _upperRectangleWidth(TextPainter labelPainter, double scale) {
-    final double unscaledWidth =
+    final unscaledWidth =
         math.max(_minLabelWidth, labelPainter.width) + _labelPadding.horizontal;
     return unscaledWidth * scale;
   }
@@ -702,7 +903,7 @@ class _SliderValueIndicatorPathPainterYear2024 {
 
     final rrect = RRect.fromRectAndRadius(
       upperRect,
-      Radius.circular(upperRect.height / 2),
+      .circular(upperRect.height / 2),
     );
     if (strokePaintColor != null) {
       final strokePaint = Paint()

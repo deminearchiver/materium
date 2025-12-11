@@ -6,18 +6,17 @@ import 'package:materium/flutter.dart';
 import 'package:materium_fonts/src/assets/fonts.gen.dart';
 
 // Open fonts (bundled as assets or available as system fonts)
-const String _roboto = "Roboto";
-const String _firaCode = Fonts.firaCode;
-const String _googleSansCode = Fonts.googleSansCode;
-const String _googleSansFlex = Fonts.googleSansFlex;
-const String _robotoFlex = Fonts.robotoFlex;
+const _roboto = "Roboto";
+const _firaCode = Fonts.firaCode;
+const _googleSans = Fonts.googleSans;
+const _googleSansCode = Fonts.googleSansCode;
+const _googleSansFlex = Fonts.googleSansFlex;
+const _robotoFlex = "Roboto Flex";
 
 // Google brand fonts (cannot be bundled)
-const String _googleSans = "Google Sans";
-const String _googleSansDisplay = "Google Sans Display";
-const String _googleSansText = "Google Sans Text";
+const _googleSansDisplay = "Google Sans Display";
+const _googleSansText = "Google Sans Text";
 
-@immutable
 class TypographyDefaults with Diagnosticable {
   const TypographyDefaults.from({
     this.typeface = const TypefaceThemeDataPartial.from(),
@@ -123,8 +122,8 @@ class TypographyDefaults with Diagnosticable {
       // This particular information was ripped from a file
       // located at the path "/product/etc/fonts_customization.xml"
       // on a Google Pixel with Android 16 QPR1 (Material 3 Expressive).
-      brand: [_googleSansFlex, _robotoFlex, _roboto],
-      plain: [_googleSansFlex, _robotoFlex, _roboto],
+      brand: [_googleSansFlex, _googleSans, _robotoFlex, _roboto],
+      plain: [_googleSansFlex, _googleSans, _robotoFlex, _roboto],
     ),
     typescale: .from(
       displayLarge: TypeStylePartial.from(rond: 0.0),
@@ -165,8 +164,8 @@ class TypographyDefaults with Diagnosticable {
   static const TypographyDefaults _googleMaterial3Baseline = .from(
     typeface: .from(
       // Google Sans (not "Flex") doesn't support ROND.
-      brand: [_googleSansDisplay, _roboto],
-      plain: [_googleSansText, _roboto],
+      brand: [_googleSans, _roboto],
+      plain: [_googleSans, _roboto],
     ),
     typescale: .from(
       // ROND wasn't used before the introduction of GM3 Expressive.
@@ -201,52 +200,6 @@ class TypographyDefaults with Diagnosticable {
       labelLargeEmphasized: TypeStylePartial.from(rond: 0.0),
       labelMediumEmphasized: TypeStylePartial.from(rond: 0.0),
       labelSmallEmphasized: TypeStylePartial.from(rond: 0.0),
-    ),
-  );
-
-  // TODO: decide what to do with this
-  @Deprecated("Use googleMaterial3Expressive instead")
-  static const TypographyDefaults _googleMaterial3Expressive1P = .from(
-    typeface: .from(
-      // The ROND axis is currently only available for Google Sans Flex,
-      // making it a no-op for most of the other possibly installed fonts.
-      // This particular information was ripped from a file
-      // located at the path "/product/etc/fonts_customization.xml"
-      // on a Google Pixel with Android 16 QPR1 (Material 3 Expressive).
-      brand: [_googleSansFlex, _robotoFlex, _googleSans, _roboto],
-      plain: [_googleSansFlex, _robotoFlex, _googleSans, _roboto],
-    ),
-    typescale: .from(
-      displayLarge: .from(rond: 0.0),
-      displayMedium: .from(rond: 0.0),
-      displaySmall: .from(rond: 0.0),
-      headlineLarge: .from(rond: 0.0),
-      headlineMedium: .from(rond: 0.0),
-      headlineSmall: .from(rond: 0.0),
-      titleLarge: .from(rond: 0.0),
-      titleMedium: .from(rond: 0.0),
-      titleSmall: .from(rond: 0.0),
-      bodyLarge: .from(rond: 0.0),
-      bodyMedium: .from(rond: 0.0),
-      bodySmall: .from(rond: 0.0),
-      labelLarge: .from(rond: 0.0),
-      labelMedium: .from(rond: 0.0),
-      labelSmall: .from(rond: 0.0),
-      displayLargeEmphasized: .from(rond: 100.0),
-      displayMediumEmphasized: .from(rond: 100.0),
-      displaySmallEmphasized: .from(rond: 100.0),
-      headlineLargeEmphasized: .from(rond: 100.0),
-      headlineMediumEmphasized: .from(rond: 100.0),
-      headlineSmallEmphasized: .from(rond: 100.0),
-      titleLargeEmphasized: .from(rond: 100.0),
-      titleMediumEmphasized: .from(rond: 100.0),
-      titleSmallEmphasized: .from(rond: 100.0),
-      bodyLargeEmphasized: .from(rond: 100.0),
-      bodyMediumEmphasized: .from(rond: 100.0),
-      bodySmallEmphasized: .from(rond: 100.0),
-      labelLargeEmphasized: .from(rond: 100.0),
-      labelMediumEmphasized: .from(rond: 100.0),
-      labelSmallEmphasized: .from(rond: 100.0),
     ),
   );
 }

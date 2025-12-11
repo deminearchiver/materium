@@ -24,6 +24,7 @@ dev_dependencies:
 flutter:
   assets:
     - assets/fonts/firacode/OFL.txt
+    - assets/fonts/googlesans/OFL.txt
     - assets/fonts/googlesanscode/OFL.txt
     - assets/fonts/googlesansflex/OFL.txt
     - assets/fonts/robotoflex/OFL.txt
@@ -32,6 +33,12 @@ flutter:
       fonts:
         - asset: assets/fonts/firacode/FiraCode-VariableFont_wght.ttf
           style: normal
+    - family: Google Sans
+      fonts:
+        - asset: assets/fonts/googlesans/GoogleSans-VariableFont_GRAD,opsz,wght.ttf
+          style: normal
+        - asset: assets/fonts/googlesans/GoogleSans-Italic-VariableFont_GRAD,opsz,wght.ttf
+          style: italic
     - family: Google Sans Code
       fonts:
         - asset: assets/fonts/googlesanscode/GoogleSansCode-VariableFont_wght.ttf

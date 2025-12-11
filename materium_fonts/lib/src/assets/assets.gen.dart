@@ -15,6 +15,9 @@ class $AssetsFontsGen {
   /// Directory path: assets/fonts/firacode
   $AssetsFontsFiracodeGen get firacode => const $AssetsFontsFiracodeGen();
 
+  /// Directory path: assets/fonts/googlesans
+  $AssetsFontsGooglesansGen get googlesans => const $AssetsFontsGooglesansGen();
+
   /// Directory path: assets/fonts/googlesanscode
   $AssetsFontsGooglesanscodeGen get googlesanscode =>
       const $AssetsFontsGooglesanscodeGen();
@@ -38,6 +41,19 @@ class $AssetsFontsFiracodeGen {
 
   /// Directory path: packages/materium_fonts/assets/fonts/firacode
   String get path => 'packages/materium_fonts/assets/fonts/firacode';
+
+  /// List of all assets
+  List<String> get values => [ofl];
+}
+
+class $AssetsFontsGooglesansGen {
+  const $AssetsFontsGooglesansGen();
+
+  /// File path: assets/fonts/googlesans/OFL.txt
+  String get ofl => 'packages/materium_fonts/assets/fonts/googlesans/OFL.txt';
+
+  /// Directory path: packages/materium_fonts/assets/fonts/googlesans
+  String get path => 'packages/materium_fonts/assets/fonts/googlesans';
 
   /// List of all assets
   List<String> get values => [ofl];

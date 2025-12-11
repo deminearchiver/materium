@@ -112,16 +112,17 @@ class _CustomAppBarState extends State<CustomAppBar> {
 
   CustomAppBarBehavior get _behavior => widget.behavior ?? .duplicate;
 
-  TypeStyle get _collapsedTitleTypeStyle =>
-      _typescaleTheme.titleLargeEmphasized;
+  TypeStyle get _collapsedTitleTypeStyle => _typescaleTheme.titleLarge;
 
-  TextStyle get _collapsedTitleTextStyle =>
-      _collapsedTitleTypeStyle.toTextStyle(color: _colorTheme.onSurface);
+  TextStyle get _collapsedTitleTextStyle => _collapsedTitleTypeStyle
+      .toTextStyle(color: _colorTheme.onSurface)
+      .merge(widget.collapsedTitleTextStyle);
 
   TypeStyle get _collapsedSubtitleTypeStyle => _typescaleTheme.labelMedium;
 
   TextStyle get _collapsedSubtitleTextStyle => _collapsedSubtitleTypeStyle
-      .toTextStyle(color: _colorTheme.onSurfaceVariant);
+      .toTextStyle(color: _colorTheme.onSurfaceVariant)
+      .merge(widget.collapsedSubtitleTextStyle);
 
   double get _collapsedTitleSubtitleSpace => 0.0;
 
@@ -143,12 +144,13 @@ class _CustomAppBarState extends State<CustomAppBar> {
 
   TypeStyle get _expandedTitleTypeStyle => switch (widget.type) {
     .small => _collapsedTitleTypeStyle,
-    .mediumFlexible => _typescaleTheme.titleMediumEmphasized,
-    .largeFlexible => _typescaleTheme.displaySmallEmphasized,
+    .mediumFlexible => _typescaleTheme.titleMedium,
+    .largeFlexible => _typescaleTheme.displaySmall,
   };
 
-  TextStyle get _expandedTitleTextStyle =>
-      _expandedTitleTypeStyle.toTextStyle(color: _colorTheme.onSurface);
+  TextStyle get _expandedTitleTextStyle => _expandedTitleTypeStyle
+      .toTextStyle(color: _colorTheme.onSurface)
+      .merge(widget.expandedTitleTextStyle);
 
   TypeStyle get _expandedSubtitleTypeStyle => switch (widget.type) {
     .small => _collapsedSubtitleTypeStyle,
@@ -157,7 +159,8 @@ class _CustomAppBarState extends State<CustomAppBar> {
   };
 
   TextStyle get _expandedSubtitleTextStyle => _expandedSubtitleTypeStyle
-      .toTextStyle(color: _colorTheme.onSurfaceVariant);
+      .toTextStyle(color: _colorTheme.onSurfaceVariant)
+      .merge(widget.expandedSubtitleTextStyle);
 
   double get _expandedTitleSubtitleSpace => switch (widget.type) {
     .small => _collapsedTitleSubtitleSpace,
@@ -404,7 +407,7 @@ class _CustomAppBarAlwaysCollapsedFlexibleSpace extends StatelessWidget {
           crossAxisAlignment: .stretch,
           children: [
             if (title case final title?)
-              DefaultTextStyle(
+              DefaultTextStyle.merge(
                 maxLines: 1,
                 overflow: .ellipsis,
                 textAlign: .start,
@@ -414,7 +417,7 @@ class _CustomAppBarAlwaysCollapsedFlexibleSpace extends StatelessWidget {
             if (title != null && subtitle != null)
               SizedBox(height: state._collapsedTitleSubtitleSpace),
             if (subtitle case final subtitle?)
-              DefaultTextStyle(
+              DefaultTextStyle.merge(
                 maxLines: 1,
                 overflow: .ellipsis,
                 textAlign: .start,
@@ -499,7 +502,7 @@ class _CustomAppBarDuplicatingFlexibleSpaceState
                       crossAxisAlignment: .stretch,
                       children: [
                         if (widget.collapsedTitle case final collapsedTitle?)
-                          DefaultTextStyle(
+                          DefaultTextStyle.merge(
                             maxLines: 1,
                             overflow: .ellipsis,
                             textAlign: .start,
@@ -511,7 +514,7 @@ class _CustomAppBarDuplicatingFlexibleSpaceState
                           SizedBox(height: _state._collapsedTitleSubtitleSpace),
                         if (widget.collapsedSubtitle
                             case final collapsedSubtitle?)
-                          DefaultTextStyle(
+                          DefaultTextStyle.merge(
                             maxLines: 1,
                             overflow: .ellipsis,
                             textAlign: .start,
@@ -543,7 +546,7 @@ class _CustomAppBarDuplicatingFlexibleSpaceState
                           crossAxisAlignment: .stretch,
                           children: [
                             if (widget.expandedTitle case final expandedTitle?)
-                              DefaultTextStyle(
+                              DefaultTextStyle.merge(
                                 maxLines: 1,
                                 overflow: .ellipsis,
                                 textAlign: .start,
@@ -557,7 +560,7 @@ class _CustomAppBarDuplicatingFlexibleSpaceState
                               ),
                             if (widget.expandedSubtitle
                                 case final expandedSubtitle?)
-                              DefaultTextStyle(
+                              DefaultTextStyle.merge(
                                 maxLines: 1,
                                 overflow: .ellipsis,
                                 textAlign: .start,
@@ -617,7 +620,7 @@ class _CustomAppBarStretchingFlexibleSpace extends StatelessWidget {
             crossAxisAlignment: .stretch,
             children: [
               if (title case final title?)
-                DefaultTextStyle(
+                DefaultTextStyle.merge(
                   maxLines: 1,
                   overflow: .ellipsis,
                   textAlign: .start,
@@ -637,7 +640,7 @@ class _CustomAppBarStretchingFlexibleSpace extends StatelessWidget {
                   )!,
                 ),
               if (subtitle case final subtitle?)
-                DefaultTextStyle(
+                DefaultTextStyle.merge(
                   maxLines: 1,
                   overflow: .ellipsis,
                   textAlign: .start,

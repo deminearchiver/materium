@@ -444,7 +444,7 @@ class _ObtainiumState extends State<Obtainium> {
         .light => .light,
         .dark => .dark,
       },
-      theme: LegacyThemeFactory.create(
+      theme: LegacyThemeFactory.createTheme(
         colorTheme: _createColorTheme(
           settingsProvider: settingsProvider,
           brightness: .light,
@@ -455,7 +455,7 @@ class _ObtainiumState extends State<Obtainium> {
         stateTheme: stateTheme,
         typescaleTheme: typescaleTheme,
       ),
-      darkTheme: LegacyThemeFactory.create(
+      darkTheme: LegacyThemeFactory.createTheme(
         colorTheme: _createColorTheme(
           settingsProvider: settingsProvider,
           brightness: .dark,
@@ -466,7 +466,7 @@ class _ObtainiumState extends State<Obtainium> {
         stateTheme: stateTheme,
         typescaleTheme: typescaleTheme,
       ),
-      highContrastTheme: LegacyThemeFactory.create(
+      highContrastTheme: LegacyThemeFactory.createTheme(
         colorTheme: _createColorTheme(
           settingsProvider: settingsProvider,
           brightness: .light,
@@ -477,7 +477,7 @@ class _ObtainiumState extends State<Obtainium> {
         stateTheme: stateTheme,
         typescaleTheme: typescaleTheme,
       ),
-      highContrastDarkTheme: LegacyThemeFactory.create(
+      highContrastDarkTheme: LegacyThemeFactory.createTheme(
         colorTheme: _createColorTheme(
           settingsProvider: settingsProvider,
           brightness: .dark,
