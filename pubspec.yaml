@@ -52,7 +52,7 @@ dependencies:
   http: ^1.6.0
   webview_flutter: ^4.13.0
   html: ^0.15.6
-  shared_preferences: ^2.5.3
+  shared_preferences: ^2.5.4
   url_launcher: ^6.3.2
   permission_handler: ^12.0.1
   fluttertoast: ^9.0.0
@@ -94,7 +94,7 @@ dependencies:
   flutter_markdown_plus: ^1.0.5
   skeletonizer: ^2.1.1
   super_keyboard: ^0.3.0
-  super_editor: ^0.3.0-dev.43
+  super_editor: ^0.3.0-dev.45
   freezed_annotation: ^3.1.0
   json_annotation: ^4.9.0
   flutter_svg: ^2.2.3
@@ -104,8 +104,8 @@ dependencies:
   drift: ^2.30.0
   drift_flutter: ^0.2.8
   drift_sqflite: ^2.0.1
-  talker_flutter: ^5.1.5
-  talker_dio_logger: ^5.1.5
+  talker_flutter: ^5.1.6
+  talker_dio_logger: ^5.1.6
   dio: ^5.9.0
   retrofit: ^4.9.1
   cronet_http: ^1.7.0
