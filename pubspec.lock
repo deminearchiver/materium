@@ -395,6 +395,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.7.11"
+  deminearchiver_lints:
+    dependency: "direct dev"
+    description:
+      name: deminearchiver_lints
+      sha256: "93f1201bf6c3903b33f9344852159a402360aa314e28692ace2e16e5214fd1fc"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.1.0"
   device_info_plus:
     dependency: "direct overridden"
     description:

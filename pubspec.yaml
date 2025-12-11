@@ -15,7 +15,6 @@ workspace:
   - material
   - materium_fonts
   - materium_i18n
-  - materium_lints
   - materium_tools
   - screen_corners_ffi
   - screen_corners_ffi/example
@@ -112,8 +111,7 @@ dependencies:
 
 dev_dependencies:
   flutter_lints: ^6.0.0
-  materium_lints:
-    path: materium_lints
+  deminearchiver_lints: ^1.1.0
   build_runner: ^2.10.4
   json_serializable: ^6.11.2
   freezed: ^3.2.3
