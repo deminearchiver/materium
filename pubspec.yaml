@@ -107,7 +107,6 @@ dependencies:
   device_info_ffi: ^1.0.1
 
 dev_dependencies:
-  flutter_lints: ^6.0.0
   deminearchiver_lints: ^1.1.0
   build_runner: ^2.10.4
   json_serializable: ^6.11.2

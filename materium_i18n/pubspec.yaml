@@ -23,6 +23,3 @@ dev_dependencies:
   deminearchiver_lints: ^1.1.0
   build_runner: ^2.10.4
   slang_build_runner: ^4.11.0
-
-flutter:
-

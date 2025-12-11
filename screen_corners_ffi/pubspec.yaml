@@ -20,7 +20,6 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   deminearchiver_lints: ^1.1.0
-  flutter_lints: ^6.0.0
   jnigen: ^0.15.0
 
 flutter:
