@@ -22,7 +22,7 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  deminearchiver_lints: ^1.1.0
+  deminearchiver_lints: ^1.1.1
   build_runner: ^2.10.4
   json_serializable: ^6.11.2
   freezed: ^3.2.3

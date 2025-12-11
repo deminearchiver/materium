@@ -399,18 +399,18 @@ packages:
     dependency: "direct dev"
     description:
       name: deminearchiver_lints
-      sha256: "93f1201bf6c3903b33f9344852159a402360aa314e28692ace2e16e5214fd1fc"
+      sha256: "7017eccda5893acb02bc26f401d57ce290255eb8211be764db1aa40f7a558697"
       url: "https://pub.dev"
     source: hosted
-    version: "1.1.0"
+    version: "1.1.1"
   device_info_ffi:
     dependency: "direct main"
     description:
       name: device_info_ffi
-      sha256: "03e4d584be6947c606ef642aad00de285999b6b2ce7401437d1cbc34fd6468b4"
+      sha256: a92677cfa395bd2ac50afb39b6b06c50ff22424fe3e685d111e1b028fb70632a
       url: "https://pub.dev"
     source: hosted
-    version: "1.0.1"
+    version: "1.0.2"
   device_info_plus:
     dependency: "direct overridden"
     description:
@@ -487,10 +487,10 @@ packages:
     dependency: "direct main"
     description:
       name: dynamic_color_ffi
-      sha256: ffda2889427d4e10b4070fbd1210775539a217fe108596af6ace63da84e527c7
+      sha256: "1ca621824b654760fca7c141cd8c51da364e47656b723e2f4b575bbdf930bd80"
       url: "https://pub.dev"
     source: hosted
-    version: "1.0.0"
+    version: "1.0.1"
   easy_localization:
     dependency: "direct main"
     description:
@@ -1458,10 +1458,10 @@ packages:
     dependency: "direct main"
     description:
       name: screen_corners_ffi
-      sha256: de3028627afd99f4bb1b7aa89c5151082a68a67decd811478ed0b53d19c298e3
+      sha256: e82e2bdafbb9733238ca0726180792e51faf7df5bf75e353a10c95768f28cd87
       url: "https://pub.dev"
     source: hosted
-    version: "1.0.0"
+    version: "1.0.1"
   share_plus:
     dependency: "direct main"
     description:
