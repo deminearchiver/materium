@@ -1014,14 +1014,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.15.2"
-  jnigen:
-    dependency: transitive
-    description:
-      name: jnigen
-      sha256: dcb5927c2b15ddd3bfcd1b13a13c063828ac4e495f9f87dd11e7968f68114ac7
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.15.0"
   js:
     dependency: transitive
     description:
@@ -1462,6 +1454,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "10.2.0"
+  screen_corners_ffi:
+    dependency: "direct main"
+    description:
+      name: screen_corners_ffi
+      sha256: de3028627afd99f4bb1b7aa89c5151082a68a67decd811478ed0b53d19c298e3
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.0"
   share_plus:
     dependency: "direct main"
     description:
