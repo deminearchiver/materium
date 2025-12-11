@@ -14,8 +14,7 @@ dependencies:
     sdk: flutter
   layout:
     path: ../layout
-  shapes:
-    path: ../shapes
+  androidx_graphics_shapes: ^1.0.0
   meta: ^1.17.0
   material_symbols_icons: ^4.2892.0
   collection: ^1.19.1

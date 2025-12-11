@@ -12,7 +12,6 @@ workspace:
   - materium_fonts
   - materium_i18n
   - materium_tools
-  - shapes
 
 environment:
   sdk: ^3.10.0
