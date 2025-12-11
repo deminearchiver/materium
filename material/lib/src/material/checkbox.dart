@@ -276,9 +276,7 @@ class _CheckboxState extends State<Checkbox> with TickerProviderStateMixin {
           : _checkFractionController.value;
       final newCheckFraction = _checkedFraction;
       const springTheme = SpringThemeData.expressive();
-      final spring =
-          (kDebugMode ? springTheme.defaultSpatial : springTheme.defaultSpatial)
-              .toSpringDescription();
+      final spring = springTheme.defaultSpatial.toSpringDescription();
       final checkFractionSimulation = SpringSimulation(
         spring,
         oldCheckFraction,

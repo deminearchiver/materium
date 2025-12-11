@@ -40,6 +40,8 @@ export 'src/material/animation_extensions.dart';
 
 export 'src/material/center_optically.dart';
 
+export 'src/material/list/list_theme.dart';
+
 // TODO: review after LoadingIndicator gets a custom implementation
 export 'src/material/loading_indicator/loading_indicator.dart';
 export 'src/material/loading_indicator/loading_indicator_theme.dart';

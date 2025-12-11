@@ -237,8 +237,9 @@ class _StatePropertyAll<T extends Object?, S extends Object?>
 
 extension StatePropertyExtension1<T extends Object?, S extends Object?>
     on StateProperty<T, S> {
-  StateProperty<U, S> mapValue<U>(U Function(S states, T value) callback) =>
-      _MapValueWithStatesAndValue(this, callback);
+  StateProperty<U, S> mapValue<U extends Object?>(
+    U Function(S states, T value) callback,
+  ) => _MapValueWithStatesAndValue(this, callback);
 
   StateProperty<T, S> mapStates(S Function(S states) callback) =>
       _MapStatesWithStates(this, callback);
@@ -255,6 +256,11 @@ extension StatePropertyExtension2<T extends Object, S extends Object?>
   StateProperty<T, S> orElse(PropertyResolver<T, S> callback) =>
       mapValue((states, value) => value ?? callback(states));
 
+  StateProperty<T?, S> orElseMaybe(PropertyResolver<T?, S>? callback) =>
+      callback != null
+      ? mapValue((states, value) => value ?? callback(states))
+      : this;
+
   StateProperty<T, S> orWith(StateProperty<T, S> property) =>
       mapValue((states, value) => value ?? property.resolve(states));
 }
@@ -264,7 +270,12 @@ extension StatePropertyExtenion3<T extends Object?>
   flutter.WidgetStateProperty<T> get asLegacy => _Legacy(this);
 }
 
-class _MapValueWithStatesAndValue<T, S, U> implements StateProperty<U, S> {
+class _MapValueWithStatesAndValue<
+  T extends Object?,
+  S extends Object?,
+  U extends Object?
+>
+    implements StateProperty<U, S> {
   const _MapValueWithStatesAndValue(this._parent, this._callback);
 
   final StateProperty<T, S> _parent;
