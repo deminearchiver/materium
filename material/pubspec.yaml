@@ -1,7 +1,9 @@
 name: material
 description: "A new Flutter package project."
-version: 0.0.1
-homepage:
+version: 1.0.0
+homepage: https://github.com/deminearchiver/dart-flutter-packages
+repository: https://github.com/deminearchiver/dart-flutter-packages/tree/main/packages/material
+issue_tracker: https://github.com/deminearchiver/dart-flutter-packages/issues
 publish_to: none
 resolution: workspace
 
@@ -14,11 +16,10 @@ dependencies:
     sdk: flutter
   layout:
     path: ../layout
-  androidx_graphics_shapes: ^1.0.0
-  meta: ^1.17.0
-  material_symbols_icons: ^4.2892.0
+  androidx_graphics_shapes: ^1.1.1
   collection: ^1.19.1
-  async: ^2.13.0
+  material_symbols_icons: ^4.2892.0
+  meta: ^1.17.0
 
 dev_dependencies:
   flutter_test:

@@ -3,24 +3,23 @@ import 'dart:math' as math;
 import 'package:material/src/material_shapes/material_shapes.dart';
 import 'package:material/src/material/flutter.dart';
 
-const double _kContainerWidth = 48.0;
-const double _kContainerHeight = 48.0;
-const double _kIndicatorSize = 38.0;
-final double _kActiveIndicatorScale =
+const _kContainerWidth = 48.0;
+const _kContainerHeight = 48.0;
+const _kIndicatorSize = 38.0;
+final _kActiveIndicatorScale =
     _kIndicatorSize / math.min(_kContainerWidth, _kContainerHeight);
 
-const double _kFullRotationAngle = math.pi * 2;
-const double _kSingleRotationAngle = math.pi * 3 / 4;
-const double _kLinearRotationAngle = math.pi / 4;
-const double _kMorphRotationAngle =
-    _kSingleRotationAngle - _kLinearRotationAngle;
+const _kFullRotationAngle = math.pi * 2.0;
+const _kSingleRotationAngle = math.pi * 3.0 / 4.0;
+const _kLinearRotationAngle = math.pi / 4.0;
+const _kMorphRotationAngle = _kSingleRotationAngle - _kLinearRotationAngle;
 
-const int _kGlobalRotationDurationMs = 4666;
-const int _kMorphIntervalMs = 650;
-const double _kFullRotation = 2.0 * math.pi;
-const double _kQuarterRotation = _kFullRotation / 4.0;
+const _kGlobalRotationDurationMs = 4666;
+const _kMorphIntervalMs = 650;
+const _kFullRotation = 2.0 * math.pi;
+const _kQuarterRotation = _kFullRotation / 4.0;
 
-final List<RoundedPolygon> _indeterminateIndicatorPolygons = <RoundedPolygon>[
+final _indeterminateIndicatorPolygons = <RoundedPolygon>[
   MaterialShapes.softBurst,
   MaterialShapes.cookie9Sided,
   MaterialShapes.pentagon,
@@ -30,7 +29,7 @@ final List<RoundedPolygon> _indeterminateIndicatorPolygons = <RoundedPolygon>[
   MaterialShapes.oval,
 ];
 
-final List<RoundedPolygon> _determinateIndicatorPolygons = <RoundedPolygon>[
+final _determinateIndicatorPolygons = <RoundedPolygon>[
   // ignore: invalid_use_of_internal_member
   MaterialShapes.circle.transformedWithMatrix(
     Matrix4.rotationZ(2.0 * math.pi / 20.0),
@@ -223,7 +222,7 @@ class _DeterminateLoadingIndicatorPainter extends CustomPainter {
 
     final morphPath = currentMorph.toPath(
       progress: adjustedProgressValue,
-      startAngle: 0,
+      startAngle: 0.0,
     );
 
     final processedPath = _processPath(
