@@ -903,27 +903,34 @@ class _RawRadioState<T extends Object?> extends State<_RawRadio<T>>
 
   @override
   Widget build(BuildContext context) {
+    // TODO: consider this refactor
+    // final (
+    //   bool? accessibilitySelected,
+    //   String? semanticsHint,
+    // ) = switch (defaultTargetPlatform) {
+    //   .android || .fuchsia || .linux || .windows => (null, null),
+    //   .iOS || .macOS => (
+    //     value,
+    //     !value
+    //         ? WidgetsLocalizations.of(context)._radioButtonUnselectedLabel
+    //         : null,
+    //   ),
+    // };
+
     final bool? accessibilitySelected;
-    String? semanticsHint;
-
+    final String? semanticsHint;
     switch (defaultTargetPlatform) {
-      case TargetPlatform.android:
-      case TargetPlatform.fuchsia:
-      case TargetPlatform.linux:
-      case TargetPlatform.windows:
+      case .android || .fuchsia || .linux || .windows:
         accessibilitySelected = null;
-
-      case TargetPlatform.iOS:
-      case TargetPlatform.macOS:
+        semanticsHint = null;
+      case .iOS || .macOS:
         accessibilitySelected = value;
-
         // Only provide hint for unselected radio buttons to avoid duplication
         // of the selected state announcement.
         // Selected state is already announced by iOS via the 'selected' property.
-        if (!value) {
-          final localizations = WidgetsLocalizations.of(context);
-          semanticsHint = localizations._radioButtonUnselectedLabel;
-        }
+        semanticsHint = !value
+            ? WidgetsLocalizations.of(context)._radioButtonUnselectedLabel
+            : null;
     }
     return Semantics(
       inMutuallyExclusiveGroup: true,
