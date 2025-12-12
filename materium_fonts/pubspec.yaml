@@ -1,7 +1,9 @@
 name: materium_fonts
-description: "A new Flutter package project."
-version: 0.0.1
-homepage:
+description: A new Flutter package project.
+version: 1.0.0
+homepage: https://github.com/deminearchiver/materium
+repository: https://github.com/deminearchiver/materium/tree/main/materium_fonts
+issue_tracker: https://github.com/deminearchiver/materium/issues
 publish_to: none
 resolution: workspace
 

@@ -1,7 +1,9 @@
 name: materium_i18n
-description: "A new Flutter package project."
-version: 0.0.1
-homepage:
+description: A new Flutter package project.
+version: 1.0.0
+homepage: https://github.com/deminearchiver/materium
+repository: https://github.com/deminearchiver/materium/tree/main/materium_i18n
+issue_tracker: https://github.com/deminearchiver/materium/issues
 publish_to: none
 resolution: workspace
 
@@ -10,9 +12,9 @@ environment:
   flutter: ">=3.38.0"
 
 dependencies:
-  collection: ^1.19.1
   flutter:
     sdk: flutter
+  collection: ^1.19.1
   meta: ^1.17.0
   slang: ^4.11.1
   slang_flutter: ^4.11.0
@@ -20,6 +22,6 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  deminearchiver_lints: ^1.1.1
   build_runner: ^2.10.4
+  deminearchiver_lints: ^1.1.1
   slang_build_runner: ^4.11.0
