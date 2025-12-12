@@ -316,12 +316,6 @@ class $AssetsTranslationsGen {
   /// File path: assets/translations/nl.json
   String get nl => 'assets/translations/nl.json';
 
-  /// File path: assets/translations/package-lock.json
-  String get packageLock => 'assets/translations/package-lock.json';
-
-  /// File path: assets/translations/package.json
-  String get package => 'assets/translations/package.json';
-
   /// File path: assets/translations/pl.json
   String get pl => 'assets/translations/pl.json';
 
@@ -333,9 +327,6 @@ class $AssetsTranslationsGen {
 
   /// File path: assets/translations/ru.json
   String get ru => 'assets/translations/ru.json';
-
-  /// File path: assets/translations/standardize.mjs
-  String get standardize => 'assets/translations/standardize.mjs';
 
   /// File path: assets/translations/sv.json
   String get sv => 'assets/translations/sv.json';
@@ -378,13 +369,10 @@ class $AssetsTranslationsGen {
     ko,
     ml,
     nl,
-    packageLock,
-    package,
     pl,
     ptBR,
     pt,
     ru,
-    standardize,
     sv,
     tr,
     uk,
