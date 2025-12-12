@@ -25,9 +25,6 @@ import 'package:share_plus/share_plus.dart';
 import 'package:super_editor/super_editor.dart';
 
 // ignore: implementation_imports
-import 'package:materium_fonts/src/assets/fonts.gen.dart';
-
-// ignore: implementation_imports
 import 'package:material/src/material_shapes/material_shapes.dart'
     show RoundedPolygonInternalExtension;
 import 'package:super_keyboard/super_keyboard.dart';
@@ -35,6 +32,8 @@ import 'package:super_keyboard/super_keyboard.dart';
 import 'package:syntax_highlight/syntax_highlight.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:url_launcher/url_launcher_string.dart';
+
+import 'package:materium/assets/fonts.gen.dart';
 
 class DeveloperPageBackButton extends StatelessWidget {
   const DeveloperPageBackButton({super.key});
@@ -694,7 +693,7 @@ class _DeveloperMarkdown1PageState extends State<DeveloperMarkdown1Page> {
                               style: typescaleTheme.bodyMedium
                                   .toTextStyle()
                                   .copyWith(
-                                    fontFamily: Fonts.firaCode,
+                                    fontFamily: FontFamily.firaCode,
                                     fontWeight: FontWeight.w400,
                                     fontVariations: const [
                                       FontVariation.weight(400.0),
@@ -728,7 +727,7 @@ class _DeveloperMarkdown1PageState extends State<DeveloperMarkdown1Page> {
                         h3Padding: EdgeInsets.zero,
                         code: const TextStyle(
                           inherit: true,
-                          fontFamily: Fonts.firaCode,
+                          fontFamily: FontFamily.firaCode,
                           fontWeight: FontWeight.w500,
                           fontVariations: [FontVariation.weight(500.0)],
                         ),
@@ -913,7 +912,7 @@ class _DeveloperMarkdown2PageState extends State<DeveloperMarkdown2Page> {
                         .toTextStyle()
                         .copyWith(
                           color: colorTheme.onSurface,
-                          fontFamily: Fonts.firaCode,
+                          fontFamily: FontFamily.firaCode,
                         ),
                   };
                 }),

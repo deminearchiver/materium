@@ -9,7 +9,6 @@ workspace:
   - dynamic_color/example
   - layout
   - material
-  - materium_fonts
   - materium_i18n
   - materium_tools
 
@@ -26,8 +25,6 @@ dependencies:
     path: layout
   material:
     path: material
-  materium_fonts:
-    path: materium_fonts
   materium_i18n:
     path: materium_i18n
   meta: ^1.17.0
@@ -118,7 +115,45 @@ flutter:
   generate: false
 
   assets:
+    # Certificates
     - assets/ca/
+
+    # Graphics
     - assets/graphics/
+
+    # App icons
     - assets/ic_launcher/
+
+    # Translation files for easy_localization
     - assets/translations/
+
+    # Open Font Licenses
+    - assets/fonts/firacode/OFL.txt
+    - assets/fonts/googlesans/OFL.txt
+    - assets/fonts/googlesanscode/OFL.txt
+    - assets/fonts/googlesansflex/OFL.txt
+    - assets/fonts/robotoflex/OFL.txt
+
+  fonts:
+    - family: Fira Code
+      fonts:
+        - asset: assets/fonts/firacode/FiraCode-VariableFont_wght.ttf
+          style: normal
+    - family: Google Sans
+      fonts:
+        - asset: assets/fonts/googlesans/GoogleSans-VariableFont_GRAD,opsz,wght.ttf
+          style: normal
+        - asset: assets/fonts/googlesans/GoogleSans-Italic-VariableFont_GRAD,opsz,wght.ttf
+          style: italic
+    - family: Google Sans Code
+      fonts:
+        - asset: assets/fonts/googlesanscode/GoogleSansCode-VariableFont_wght.ttf
+          style: normal
+        - asset: assets/fonts/googlesanscode/GoogleSansCode-Italic-VariableFont_wght.ttf
+          style: italic
+    - family: Google Sans Flex
+      fonts:
+        - asset: assets/fonts/googlesansflex/GoogleSansFlex-VariableFont_GRAD,ROND,opsz,slnt,wdth,wght.ttf
+    - family: Roboto Flex
+      fonts:
+        - asset: assets/fonts/robotoflex/RobotoFlex-VariableFont_GRAD,XOPQ,XTRA,YOPQ,YTAS,YTDE,YTFI,YTLC,YTUC,opsz,slnt,wdth,wght.ttf

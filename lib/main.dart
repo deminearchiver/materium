@@ -24,9 +24,6 @@ import 'package:easy_localization/src/easy_localization_controller.dart';
 // ignore: implementation_imports
 import 'package:easy_localization/src/localization.dart';
 
-// ignore: implementation_imports
-import 'package:materium_fonts/src/assets/assets.gen.dart' as materium_fonts;
-
 List<MapEntry<Locale, String>> supportedLocales = const [
   MapEntry(Locale("en"), "English"),
   MapEntry(Locale("zh"), "简体中文"),
@@ -134,10 +131,10 @@ class MyTaskHandler extends TaskHandler {
 
 Stream<LicenseEntry> _licenses() async* {
   final assets = <String>[
-    materium_fonts.Assets.fonts.firacode.ofl,
-    materium_fonts.Assets.fonts.googlesanscode.ofl,
-    materium_fonts.Assets.fonts.googlesansflex.ofl,
-    materium_fonts.Assets.fonts.robotoflex.ofl,
+    Assets.fonts.firacode.ofl,
+    Assets.fonts.googlesanscode.ofl,
+    Assets.fonts.googlesansflex.ofl,
+    Assets.fonts.robotoflex.ofl,
   ];
   for (final asset in assets) {
     final license = await rootBundle.loadString(asset);

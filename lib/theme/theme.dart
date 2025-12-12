@@ -1,16 +1,14 @@
 import 'package:flutter_markdown_plus/flutter_markdown_plus.dart';
 import 'package:material/material_color_utilities.dart';
+import 'package:materium/assets/fonts.gen.dart';
 import 'package:materium/flutter.dart';
-
-// ignore: implementation_imports
-import 'package:materium_fonts/src/assets/fonts.gen.dart';
 
 // Open fonts (bundled as assets or available as system fonts)
 const _roboto = "Roboto";
-const _firaCode = Fonts.firaCode;
-const _googleSans = Fonts.googleSans;
-const _googleSansCode = Fonts.googleSansCode;
-const _googleSansFlex = Fonts.googleSansFlex;
+const _firaCode = FontFamily.firaCode;
+const _googleSans = FontFamily.googleSans;
+const _googleSansCode = FontFamily.googleSansCode;
+const _googleSansFlex = FontFamily.googleSansFlex;
 const _robotoFlex = "Roboto Flex";
 
 // Google brand fonts (cannot be bundled)

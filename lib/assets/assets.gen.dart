@@ -27,6 +27,30 @@ class $AssetsCaGen {
   List<String> get values => [letsEncryptR3];
 }
 
+class $AssetsFontsGen {
+  const $AssetsFontsGen();
+
+  /// Directory path: assets/fonts/firacode
+  $AssetsFontsFiracodeGen get firacode => const $AssetsFontsFiracodeGen();
+
+  /// Directory path: assets/fonts/googlesans
+  $AssetsFontsGooglesansGen get googlesans => const $AssetsFontsGooglesansGen();
+
+  /// Directory path: assets/fonts/googlesanscode
+  $AssetsFontsGooglesanscodeGen get googlesanscode =>
+      const $AssetsFontsGooglesanscodeGen();
+
+  /// Directory path: assets/fonts/googlesansflex
+  $AssetsFontsGooglesansflexGen get googlesansflex =>
+      const $AssetsFontsGooglesansflexGen();
+
+  /// Directory path: assets/fonts/robotoflex
+  $AssetsFontsRobotoflexGen get robotoflex => const $AssetsFontsRobotoflexGen();
+
+  /// Directory path: assets/fonts
+  String get path => 'assets/fonts';
+}
+
 class $AssetsGraphicsGen {
   const $AssetsGraphicsGen();
 
@@ -292,6 +316,12 @@ class $AssetsTranslationsGen {
   /// File path: assets/translations/nl.json
   String get nl => 'assets/translations/nl.json';
 
+  /// File path: assets/translations/package-lock.json
+  String get packageLock => 'assets/translations/package-lock.json';
+
+  /// File path: assets/translations/package.json
+  String get package => 'assets/translations/package.json';
+
   /// File path: assets/translations/pl.json
   String get pl => 'assets/translations/pl.json';
 
@@ -304,8 +334,8 @@ class $AssetsTranslationsGen {
   /// File path: assets/translations/ru.json
   String get ru => 'assets/translations/ru.json';
 
-  /// File path: assets/translations/standardize.js
-  String get standardize => 'assets/translations/standardize.js';
+  /// File path: assets/translations/standardize.mjs
+  String get standardize => 'assets/translations/standardize.mjs';
 
   /// File path: assets/translations/sv.json
   String get sv => 'assets/translations/sv.json';
@@ -348,6 +378,8 @@ class $AssetsTranslationsGen {
     ko,
     ml,
     nl,
+    packageLock,
+    package,
     pl,
     ptBR,
     pt,
@@ -362,10 +394,76 @@ class $AssetsTranslationsGen {
   ];
 }
 
+class $AssetsFontsFiracodeGen {
+  const $AssetsFontsFiracodeGen();
+
+  /// File path: assets/fonts/firacode/OFL.txt
+  String get ofl => 'assets/fonts/firacode/OFL.txt';
+
+  /// Directory path: assets/fonts/firacode
+  String get path => 'assets/fonts/firacode';
+
+  /// List of all assets
+  List<String> get values => [ofl];
+}
+
+class $AssetsFontsGooglesansGen {
+  const $AssetsFontsGooglesansGen();
+
+  /// File path: assets/fonts/googlesans/OFL.txt
+  String get ofl => 'assets/fonts/googlesans/OFL.txt';
+
+  /// Directory path: assets/fonts/googlesans
+  String get path => 'assets/fonts/googlesans';
+
+  /// List of all assets
+  List<String> get values => [ofl];
+}
+
+class $AssetsFontsGooglesanscodeGen {
+  const $AssetsFontsGooglesanscodeGen();
+
+  /// File path: assets/fonts/googlesanscode/OFL.txt
+  String get ofl => 'assets/fonts/googlesanscode/OFL.txt';
+
+  /// Directory path: assets/fonts/googlesanscode
+  String get path => 'assets/fonts/googlesanscode';
+
+  /// List of all assets
+  List<String> get values => [ofl];
+}
+
+class $AssetsFontsGooglesansflexGen {
+  const $AssetsFontsGooglesansflexGen();
+
+  /// File path: assets/fonts/googlesansflex/OFL.txt
+  String get ofl => 'assets/fonts/googlesansflex/OFL.txt';
+
+  /// Directory path: assets/fonts/googlesansflex
+  String get path => 'assets/fonts/googlesansflex';
+
+  /// List of all assets
+  List<String> get values => [ofl];
+}
+
+class $AssetsFontsRobotoflexGen {
+  const $AssetsFontsRobotoflexGen();
+
+  /// File path: assets/fonts/robotoflex/OFL.txt
+  String get ofl => 'assets/fonts/robotoflex/OFL.txt';
+
+  /// Directory path: assets/fonts/robotoflex
+  String get path => 'assets/fonts/robotoflex';
+
+  /// List of all assets
+  List<String> get values => [ofl];
+}
+
 class Assets {
   const Assets._();
 
   static const $AssetsCaGen ca = $AssetsCaGen();
+  static const $AssetsFontsGen fonts = $AssetsFontsGen();
   static const $AssetsGraphicsGen graphics = $AssetsGraphicsGen();
   static const $AssetsIcLauncherGen icLauncher = $AssetsIcLauncherGen();
   static const $AssetsTranslationsGen translations = $AssetsTranslationsGen();
