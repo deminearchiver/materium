@@ -1,3 +1,5 @@
+// ignore_for_file: deprecated_member_use_from_same_package, deprecated_member_use
+
 import 'dart:collection';
 import 'dart:math' as math;
 import 'dart:ui';
@@ -555,11 +557,11 @@ class _RenderRadioButtonPaint extends RenderBox
   }
 
   void _paintIcon(PaintingContext context) {
-    const double relativeIconSize = 20.0;
-    const double relativeCircleRadius = relativeIconSize / 2.0;
-    const double relativeStrokeWidth = 2.0;
-    const double relativeDotSize = 12.0;
-    const double relativeDotRadius = relativeDotSize / 2.0;
+    const relativeIconSize = 20.0;
+    const relativeCircleRadius = relativeIconSize / 2.0;
+    const relativeStrokeWidth = 2.0;
+    const relativeDotSize = 12.0;
+    const relativeDotRadius = relativeDotSize / 2.0;
 
     final center = size.center(Offset.zero);
     final scale = iconSize.value / relativeIconSize;
@@ -737,16 +739,10 @@ class _RadioGroupButtonState<T extends Object?>
 
   _LegacyRadioGroupRegistry<T>? _internalRadioRegistry;
   RadioGroupRegistry<T> get _effectiveRegistry {
-    if (widget.groupRegistry != null) {
-      return widget.groupRegistry!;
-    }
+    if (widget.groupRegistry != null) return widget.groupRegistry!;
 
-    final RadioGroupRegistry<T>? inheritedRegistry = RadioGroup.maybeOf<T>(
-      context,
-    );
-    if (inheritedRegistry != null) {
-      return inheritedRegistry;
-    }
+    final inheritedRegistry = RadioGroup.maybeOf<T>(context);
+    if (inheritedRegistry != null) return inheritedRegistry;
 
     // Handles deprecated API.
     return _internalRadioRegistry ??= _LegacyRadioGroupRegistry<T>(this);
@@ -868,6 +864,10 @@ class _RawRadioState<T extends Object?> extends State<_RawRadio<T>>
   FocusNode get focusNode => widget.focusNode;
 
   @override
+  // ignore: override_on_non_overriding_member
+  bool get enabled => isInteractive;
+
+  @override
   T get radioValue => widget.value;
 
   ValueChanged<bool?>? get onChanged =>
@@ -904,20 +904,32 @@ class _RawRadioState<T extends Object?> extends State<_RawRadio<T>>
   @override
   Widget build(BuildContext context) {
     final bool? accessibilitySelected;
+    String? semanticsHint;
+
     switch (defaultTargetPlatform) {
       case TargetPlatform.android:
       case TargetPlatform.fuchsia:
       case TargetPlatform.linux:
       case TargetPlatform.windows:
         accessibilitySelected = null;
+
       case TargetPlatform.iOS:
       case TargetPlatform.macOS:
         accessibilitySelected = value;
+
+        // Only provide hint for unselected radio buttons to avoid duplication
+        // of the selected state announcement.
+        // Selected state is already announced by iOS via the 'selected' property.
+        if (!value) {
+          final localizations = WidgetsLocalizations.of(context);
+          semanticsHint = localizations._radioButtonUnselectedLabel;
+        }
     }
     return Semantics(
       inMutuallyExclusiveGroup: true,
       checked: value,
       selected: accessibilitySelected,
+      hint: semanticsHint,
       child: widget.builder(context, this),
     );
   }
@@ -954,4 +966,16 @@ class _ValueListenable<T extends Object?> extends ValueListenable<T> {
 
   @override
   void removeListener(VoidCallback listener) {}
+}
+
+extension on WidgetsLocalizations {
+  // TODO: remove when radioButtonUnselectedLabel lands on stable
+  String? get _radioButtonUnselectedLabel {
+    try {
+      final Object? result = (this as dynamic).radioButtonUnselectedLabel;
+      return result != null && result is String ? result : null;
+    } on NoSuchMethodError {
+      return null;
+    }
+  }
 }

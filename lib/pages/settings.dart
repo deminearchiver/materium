@@ -1,5 +1,3 @@
-import 'dart:math' as math;
-
 import 'package:device_info_ffi/device_info_ffi.dart';
 import 'package:drift/drift.dart';
 import 'package:dynamic_color_ffi/dynamic_color_ffi.dart';
@@ -1110,7 +1108,7 @@ class _SettingsPageState extends State<SettingsPage> {
                     ],
                   ),
                   const SizedBox(height: 16.0),
-                  DropdownMenuFormField<Locale?>(
+                  DropdownMenuFormField<Outer<Locale?>>(
                     key: const ValueKey("language"),
                     expandedInsets: EdgeInsets.zero,
                     inputDecorationTheme: const InputDecorationThemeData(
@@ -1121,17 +1119,24 @@ class _SettingsPageState extends State<SettingsPage> {
                     enableFilter: true,
                     enableSearch: true,
                     requestFocusOnTap: true,
-                    initialSelection: settingsProvider.forcedLocale,
+                    initialSelection: Outer(settingsProvider.forcedLocale),
                     dropdownMenuEntries: [
-                      DropdownMenuEntry(value: null, label: tr('followSystem')),
+                      DropdownMenuEntry(
+                        value: const Outer(null),
+                        label: tr('followSystem'),
+                      ),
                       ...supportedLocales.map(
-                        (e) => DropdownMenuEntry(value: e.key, label: e.value),
+                        (e) => DropdownMenuEntry(
+                          value: Outer(e.key),
+                          label: e.value,
+                        ),
                       ),
                     ],
                     onSelected: (value) {
-                      settingsProvider.forcedLocale = value;
-                      if (value != null) {
-                        context.setLocale(value);
+                      final resolvedValue = value?.inner;
+                      settingsProvider.forcedLocale = resolvedValue;
+                      if (resolvedValue != null) {
+                        context.setLocale(resolvedValue);
                       } else {
                         settingsProvider.resetLocaleSafe(context);
                       }

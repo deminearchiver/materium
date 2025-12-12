@@ -373,7 +373,7 @@ class _GeneratedFormState extends State<GeneratedForm> {
           if (formItem.opts!.isEmpty) {
             return Text(tr('dropdownNoOptsError'));
           }
-          return DropdownMenuFormField<Object?>(
+          return DropdownMenuFormField<Object>(
             expandedInsets: EdgeInsets.zero,
             inputDecorationTheme: const InputDecorationThemeData(
               border: UnderlineInputBorder(),
@@ -397,7 +397,7 @@ class _GeneratedFormState extends State<GeneratedForm> {
           );
         } else if (formItem is GeneratedFormSubForm) {
           values[formItem.key] = [];
-          for (Map<String, dynamic> v
+          for (final Map<String, dynamic> v
               in ((formItem.defaultValue ?? []) as List<dynamic>)) {
             final fullDefaults = getDefaultValuesFromFormItems(formItem.items);
             for (final element in v.entries) {
