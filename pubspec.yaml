@@ -9,7 +9,6 @@ workspace:
   - dynamic_color/example
   - layout
   - material
-  - materium_i18n
   - materium_tools
 
 environment:
@@ -25,8 +24,6 @@ dependencies:
     path: layout
   material:
     path: material
-  materium_i18n:
-    path: materium_i18n
   meta: ^1.17.0
   path_provider: ^2.1.5
   flutter_fgbg: ^0.7.1
@@ -95,6 +92,8 @@ dependencies:
   device_info_ffi: ^1.0.3
   dynamic_color_ffi: ^1.0.2
   screen_corners_ffi: ^1.0.2
+  slang: ^4.11.1
+  slang_flutter: ^4.11.0
 
 dev_dependencies:
   deminearchiver_lints: ^1.1.1
@@ -104,6 +103,8 @@ dev_dependencies:
   flutter_gen_runner: ^5.12.0
   drift_dev: ^2.30.0
   retrofit_generator: ^10.2.0
+  slang_build_runner: ^4.11.0
+  slang_gpt: ^0.11.1
 
 dependency_overrides:
   material_color_utilities: ^0.13.0

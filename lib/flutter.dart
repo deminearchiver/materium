@@ -70,7 +70,11 @@ export 'package:material_symbols_icons/material_symbols_icons.dart';
 export 'package:layout/layout.dart';
 export 'package:material/material.dart';
 
-// Self-import
+// Adjacent libraries
+
+export 'i18n/strings.g.dart';
+
+// Shared utilities
 
 import 'package:dynamic_color_ffi/dynamic_color_ffi.dart';
 import 'package:materium/flutter.dart';

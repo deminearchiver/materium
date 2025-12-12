@@ -30,3 +30,24 @@ targets:
           databases:
             materium: lib/database/database.dart
           schema_dir: drift_schemas/
+      slang_build_runner:
+        options:
+          base_locale: en
+          fallback_strategy: base_locale_empty_string
+
+          input_directory: assets/i18n
+          input_file_pattern: .json
+          output_directory: lib/i18n
+
+          flat_map: false
+
+          imports:
+            - package:materium/flutter.dart
+          contexts: {}
+
+          obfuscation:
+            enabled: false
+
+          format:
+            enabled: true
+            width: 80
