@@ -29,28 +29,20 @@
 
 - [Fork](#fork)
   - [Self-built only](#self-built-only)
-    - [What about codesigning?](#what-about-codesigning)
   - [Redesign](#redesign)
-    - [Material 3 Expressive](#material-3-expressive)
-    - [Markdown styles update](#markdown-styles-update)
   - [Internal changes](#internal-changes)
   - [Other](#other)
 - [Roadmap](#roadmap)
   - [Global changes](#global-changes)
   - [User-facing changes](#user-facing-changes)
   - [New features](#new-features)
-  - [Material 3 Expressive](#material-3-expressive-1)
+  - [Material 3 Expressive](#material-3-expressive)
   - [Internal changes](#internal-changes-1)
   - [Organization](#organization)
   - [Miscellaneous](#miscellaneous)
 - [About](#about)
   - [Useful links](#useful-links)
   - [Supported app sources](#supported-app-sources)
-    - [Open Source (general)](#open-source-general)
-    - [Other (general)](#other-general)
-    - [Other (app-specific)](#other-app-specific)
-    - [Direct APK Link](#direct-apk-link)
-    - [HTML](#html)
 - [Finding app configurations](#finding-app-configurations)
 - [Limitations](#limitations)
 
@@ -74,7 +66,7 @@ For the time being, it's recommended to use the default "debug" keystore for rel
 
 The redesign of the app is introduced through incremental adoption, which involves introducing changes gradually.
 
-#### Material 3 Expressive
+#### New design system
 
 This version of the app features the all-new fresh and shiny [**Material 3 Expressive**](https://m3.material.io) open-source design system created at **Google**.
 
@@ -171,10 +163,10 @@ Here's a list of widgets that are planned to have a custom implementation:
   - [x] Support default style
   - [ ] Support theming
 - [ ] Common buttons (`Button` and `ToggleButton`)
-  - [x] Support default style
+  - [ ] Support default style
   - [ ] Support theming
 - [ ] Icon buttons (`IconButton` and `IconToggleButton`)
-  - [x] Support default style
+  - [ ] Support default style
   - [ ] Support theming
 - [ ] Standard button group (`StandardButtonGroup`)
   - One of the most complex widgets to implement, will probably require a custom render object. In that case children will be required to support dry layout.

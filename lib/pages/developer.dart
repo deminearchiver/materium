@@ -91,6 +91,7 @@ class _DeveloperPageState extends State<DeveloperPage> {
   @override
   Widget build(BuildContext context) {
     final colorTheme = ColorTheme.of(context);
+    final typescaleTheme = TypescaleTheme.of(context);
 
     final staticColors = StaticColorsData.fallback(
       variant: DynamicSchemeVariant.tonalSpot,
@@ -119,256 +120,268 @@ class _DeveloperPageState extends State<DeveloperPage> {
             ),
             title: const Text("Developer Options"),
           ),
-          SliverList.list(
-            children: [
-              // Padding(
-              //   padding: const EdgeInsets.symmetric(horizontal: 16.0),
-              //   child: Flex.vertical(
-              //     children: [
-              //       ListItemContainer(
-              //         isFirst: true,
-              //         child: ConstrainedBox(
-              //           constraints: BoxConstraints(minHeight: 56.0),
-              //           child: Padding(
-              //             padding: const EdgeInsets.symmetric(horizontal: 16.0),
-              //             child: Align.center(
-              //               child: CustomLinearProgressIndicator(
-              //                 progress: _progress,
-              //                 // minHeight: 16.0,
-              //                 // trackGap: 4.0,
-              //                 // borderRadius: BorderRadius.circular(8.0),
-              //               ),
-              //             ),
-              //           ),
-              //         ),
-              //       ),
-              //       const SizedBox(height: 2.0),
-              //       ListItemContainer(
-              //         isLast: true,
-              //         child: ConstrainedBox(
-              //           constraints: BoxConstraints(minHeight: 56.0),
-              //           child: Padding(
-              //             padding: const EdgeInsets.symmetric(horizontal: 16.0),
-              //             child: Align.center(
-              //               child: Slider(
-              //                 onChanged: (value) =>
-              //                     setState(() => _progress = value),
-              //                 value: _progress,
-              //               ),
-              //             ),
-              //           ),
-              //         ),
-              //       ),
-              //     ],
-              //   ),
-              // ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                child: Flex.vertical(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  spacing: 2.0,
-                  children: [
-                    ListItemContainer(
-                      isFirst: true,
-                      containerColor: .all(colorTheme.surfaceBright),
-                      child: MergeSemantics(
-                        child: ListItemInteraction(
-                          onTap: () => Navigator.of(context).push(
-                            MaterialPageRoute(
-                              builder: (context) =>
-                                  const DeveloperMarkdown1Page(),
-                            ),
-                          ),
-                          child: ListItemLayout(
-                            leading: SizedBox.square(
-                              dimension: 40.0,
-                              child: Material(
-                                animationDuration: Duration.zero,
-                                type: MaterialType.card,
-                                clipBehavior: Clip.antiAlias,
-                                color: staticColors.green.colorFixed,
-                                shape: const StadiumBorder(),
-                                child: Align.center(
-                                  child: Icon(
-                                    Symbols.markdown_rounded,
-                                    fill: 1.0,
-                                    color:
-                                        staticColors.green.onColorFixedVariant,
-                                  ),
-                                ),
-                              ),
-                            ),
-                            headline: const Text("Markdown Demo 1"),
-                            supportingText: const Text(
-                              "Uses flutter_markdown_plus",
-                            ),
-                            trailing: const Icon(
-                              Symbols.keyboard_arrow_right_rounded,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                    ListItemContainer(
-                      containerColor: .all(colorTheme.surfaceBright),
-                      child: MergeSemantics(
-                        child: ListItemInteraction(
-                          onTap: () => Navigator.of(context).push(
-                            MaterialPageRoute(
-                              builder: (context) =>
-                                  const DeveloperMarkdown2Page(),
-                            ),
-                          ),
-                          child: ListItemLayout(
-                            leading: SizedBox.square(
-                              dimension: 40.0,
-                              child: Material(
-                                animationDuration: Duration.zero,
-                                type: MaterialType.card,
-                                clipBehavior: Clip.antiAlias,
-                                color: staticColors.green.colorFixed,
-                                shape: const StadiumBorder(),
-                                child: Align.center(
-                                  child: Icon(
-                                    Symbols.markdown_rounded,
-                                    fill: 1.0,
-                                    color:
-                                        staticColors.green.onColorFixedVariant,
-                                  ),
-                                ),
-                              ),
-                            ),
-                            headline: const Text("Markdown Demo 2"),
-                            supportingText: const Text("Uses super_editor"),
-                            trailing: const Icon(
-                              Symbols.keyboard_arrow_right_rounded,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                    ListItemContainer(
-                      containerColor: .all(colorTheme.surfaceBright),
-                      child: MergeSemantics(
-                        child: ListItemInteraction(
-                          onTap: () => Navigator.of(context).push(
-                            MaterialPageRoute(
-                              builder: (context) => const _MaterialDemoView(),
-                            ),
-                          ),
-                          child: ListItemLayout(
-                            leading: SizedBox.square(
-                              dimension: 40.0,
-                              child: Material(
-                                animationDuration: Duration.zero,
-                                type: MaterialType.card,
-                                clipBehavior: Clip.antiAlias,
-                                color: staticColors.blue.colorFixed,
-                                shape: const StadiumBorder(),
-                                child: Align.center(
-                                  child: Icon(
-                                    Symbols.magic_button_rounded,
-                                    fill: 1.0,
-                                    color:
-                                        staticColors.blue.onColorFixedVariant,
-                                  ),
-                                ),
-                              ),
-                            ),
-                            headline: const Text("Material 3 Expressive"),
-                            supportingText: const Text(
-                              "Demo of the new design system",
-                            ),
-                            trailing: const Icon(
-                              Symbols.keyboard_arrow_right_rounded,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                    ListItemContainer(
-                      containerColor: .all(colorTheme.surfaceBright),
-                      child: MergeSemantics(
-                        child: ListItemInteraction(
-                          onTap: () => Navigator.of(context).push(
-                            MaterialPageRoute(
-                              builder: (context) => const Settings2View(),
-                            ),
-                          ),
-                          child: ListItemLayout(
-                            leading: SizedBox.square(
-                              dimension: 40.0,
-                              child: Material(
-                                animationDuration: Duration.zero,
-                                type: MaterialType.card,
-                                clipBehavior: Clip.antiAlias,
-                                color: staticColors.cyan.colorFixed,
-                                shape: const StadiumBorder(),
-                                child: Align.center(
-                                  child: Icon(
-                                    Symbols.settings_rounded,
-                                    fill: 1.0,
-                                    color:
-                                        staticColors.cyan.onColorFixedVariant,
-                                  ),
-                                ),
-                              ),
-                            ),
-                            headline: const Text("New settings experience"),
-                            supportingText: const Text(
-                              "Try out new design for settings",
-                            ),
-                            trailing: const Icon(
-                              Symbols.keyboard_arrow_right_rounded,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                    ListItemContainer(
-                      isLast: true,
-                      containerColor: .all(colorTheme.surfaceBright),
-                      child: MergeSemantics(
-                        child: ListItemInteraction(
-                          onTap: () => Navigator.of(context).push(
-                            MaterialPageRoute(
-                              builder: (context) =>
-                                  const _DeveloperAddAppPage(),
-                            ),
-                          ),
-                          child: ListItemLayout(
-                            leading: SizedBox.square(
-                              dimension: 40.0,
-                              child: Material(
-                                animationDuration: Duration.zero,
-                                type: MaterialType.card,
-                                clipBehavior: Clip.antiAlias,
-                                color: staticColors.cyan.colorFixed,
-                                shape: const StadiumBorder(),
-                                child: Align.center(
-                                  child: Icon(
-                                    Symbols.add_rounded,
-                                    fill: 1.0,
-                                    color:
-                                        staticColors.cyan.onColorFixedVariant,
-                                  ),
-                                ),
-                              ),
-                            ),
-                            headline: const Text("Add app page redesign"),
-                            supportingText: const Text("The title says it all"),
-                            trailing: const Icon(
-                              Symbols.keyboard_arrow_right_rounded,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
+          ListItemTheme.merge(
+            data: .from(
+              containerColor: .all(colorTheme.surfaceBright),
+              headlineTextStyle: .all(
+                typescaleTheme.titleMediumEmphasized.toTextStyle(),
               ),
-              SizedBox(height: MediaQuery.paddingOf(context).bottom),
-            ],
+            ),
+            child: SliverList.list(
+              children: [
+                // Padding(
+                //   padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                //   child: Flex.vertical(
+                //     children: [
+                //       ListItemContainer(
+                //         isFirst: true,
+                //         child: ConstrainedBox(
+                //           constraints: BoxConstraints(minHeight: 56.0),
+                //           child: Padding(
+                //             padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                //             child: Align.center(
+                //               child: CustomLinearProgressIndicator(
+                //                 progress: _progress,
+                //                 // minHeight: 16.0,
+                //                 // trackGap: 4.0,
+                //                 // borderRadius: BorderRadius.circular(8.0),
+                //               ),
+                //             ),
+                //           ),
+                //         ),
+                //       ),
+                //       const SizedBox(height: 2.0),
+                //       ListItemContainer(
+                //         isLast: true,
+                //         child: ConstrainedBox(
+                //           constraints: BoxConstraints(minHeight: 56.0),
+                //           child: Padding(
+                //             padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                //             child: Align.center(
+                //               child: Slider(
+                //                 onChanged: (value) =>
+                //                     setState(() => _progress = value),
+                //                 value: _progress,
+                //               ),
+                //             ),
+                //           ),
+                //         ),
+                //       ),
+                //     ],
+                //   ),
+                // ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                  child: Flex.vertical(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    spacing: 2.0,
+                    children: [
+                      ListItemContainer(
+                        isFirst: true,
+                        containerColor: .all(colorTheme.surfaceBright),
+                        child: MergeSemantics(
+                          child: ListItemInteraction(
+                            onTap: () => Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (context) =>
+                                    const DeveloperMarkdown1Page(),
+                              ),
+                            ),
+                            child: ListItemLayout(
+                              leading: SizedBox.square(
+                                dimension: 40.0,
+                                child: Material(
+                                  animationDuration: Duration.zero,
+                                  type: MaterialType.card,
+                                  clipBehavior: Clip.antiAlias,
+                                  color: staticColors.green.colorFixed,
+                                  shape: const StadiumBorder(),
+                                  child: Align.center(
+                                    child: Icon(
+                                      Symbols.markdown_rounded,
+                                      fill: 1.0,
+                                      color: staticColors
+                                          .green
+                                          .onColorFixedVariant,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              headline: const Text("Markdown Demo 1"),
+                              supportingText: const Text(
+                                "Uses flutter_markdown_plus",
+                              ),
+                              trailing: const Icon(
+                                Symbols.keyboard_arrow_right_rounded,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                      ListItemContainer(
+                        containerColor: .all(colorTheme.surfaceBright),
+                        child: MergeSemantics(
+                          child: ListItemInteraction(
+                            onTap: () => Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (context) =>
+                                    const DeveloperMarkdown2Page(),
+                              ),
+                            ),
+                            child: ListItemLayout(
+                              leading: SizedBox.square(
+                                dimension: 40.0,
+                                child: Material(
+                                  animationDuration: Duration.zero,
+                                  type: MaterialType.card,
+                                  clipBehavior: Clip.antiAlias,
+                                  color: staticColors.green.colorFixed,
+                                  shape: const StadiumBorder(),
+                                  child: Align.center(
+                                    child: Icon(
+                                      Symbols.markdown_rounded,
+                                      fill: 1.0,
+                                      color: staticColors
+                                          .green
+                                          .onColorFixedVariant,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              headline: const Text("Markdown Demo 2"),
+                              supportingText: const Text("Uses super_editor"),
+                              trailing: const Icon(
+                                Symbols.keyboard_arrow_right_rounded,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                      ListItemContainer(
+                        containerColor: .all(colorTheme.surfaceBright),
+                        child: MergeSemantics(
+                          child: ListItemInteraction(
+                            onTap: () => Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (context) => const _MaterialDemoView(),
+                              ),
+                            ),
+                            child: ListItemLayout(
+                              leading: SizedBox.square(
+                                dimension: 40.0,
+                                child: Material(
+                                  animationDuration: Duration.zero,
+                                  type: MaterialType.card,
+                                  clipBehavior: Clip.antiAlias,
+                                  color: staticColors.blue.colorFixed,
+                                  shape: const StadiumBorder(),
+                                  child: Align.center(
+                                    child: Icon(
+                                      Symbols.magic_button_rounded,
+                                      fill: 1.0,
+                                      color:
+                                          staticColors.blue.onColorFixedVariant,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              headline: const Text("Material 3 Expressive"),
+                              supportingText: const Text(
+                                "Demo of the new design system",
+                              ),
+                              trailing: const Icon(
+                                Symbols.keyboard_arrow_right_rounded,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                      ListItemContainer(
+                        containerColor: .all(colorTheme.surfaceBright),
+                        child: MergeSemantics(
+                          child: ListItemInteraction(
+                            onTap: () => Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (context) => const Settings2View(),
+                              ),
+                            ),
+                            child: ListItemLayout(
+                              leading: SizedBox.square(
+                                dimension: 40.0,
+                                child: Material(
+                                  animationDuration: Duration.zero,
+                                  type: MaterialType.card,
+                                  clipBehavior: Clip.antiAlias,
+                                  color: staticColors.cyan.colorFixed,
+                                  shape: const StadiumBorder(),
+                                  child: Align.center(
+                                    child: Icon(
+                                      Symbols.settings_rounded,
+                                      fill: 1.0,
+                                      color:
+                                          staticColors.cyan.onColorFixedVariant,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              headline: const Text("New settings experience"),
+                              supportingText: const Text(
+                                "Try out new design for settings",
+                              ),
+                              trailing: const Icon(
+                                Symbols.keyboard_arrow_right_rounded,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                      ListItemContainer(
+                        isLast: true,
+                        containerColor: .all(colorTheme.surfaceBright),
+                        child: MergeSemantics(
+                          child: ListItemInteraction(
+                            onTap: () => Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (context) =>
+                                    const _DeveloperAddAppPage(),
+                              ),
+                            ),
+                            child: ListItemLayout(
+                              leading: SizedBox.square(
+                                dimension: 40.0,
+                                child: Material(
+                                  animationDuration: Duration.zero,
+                                  type: MaterialType.card,
+                                  clipBehavior: Clip.antiAlias,
+                                  color: staticColors.cyan.colorFixed,
+                                  shape: const StadiumBorder(),
+                                  child: Align.center(
+                                    child: Icon(
+                                      Symbols.add_rounded,
+                                      fill: 1.0,
+                                      color:
+                                          staticColors.cyan.onColorFixedVariant,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              headline: const Text("Add app page redesign"),
+                              supportingText: const Text(
+                                "The title says it all",
+                              ),
+                              trailing: const Icon(
+                                Symbols.keyboard_arrow_right_rounded,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                SizedBox(height: MediaQuery.paddingOf(context).bottom),
+              ],
+            ),
           ),
         ],
       ),
@@ -2331,95 +2344,24 @@ class _Settings2ViewState extends State<Settings2View> {
           //   ),
           //   title: Text("Settings"),
           // ),
-          SettingsAppBar(),
-          SliverList.list(
-            children: [
-              const SizedBox(height: 16 - 4.0),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                child: ListItemContainer(
-                  isFirst: true,
-                  containerColor: .all(colorTheme.surfaceBright),
-                  child: ListItemInteraction(
-                    onTap: () {},
-                    child: ListItemLayout(
-                      leading: SizedBox.square(
-                        dimension: 40.0,
-                        child: Material(
-                          animationDuration: Duration.zero,
-                          type: MaterialType.card,
-                          clipBehavior: Clip.antiAlias,
-                          color: staticColors.blue.colorFixed,
-                          shape: CornersBorder.rounded(
-                            corners: Corners.all(shapeTheme.corner.full),
-                          ),
-                          child: Align.center(
-                            child: Icon(
-                              Symbols.tune_rounded,
-                              fill: 1.0,
-                              color: staticColors.blue.onColorFixedVariant,
-                            ),
-                          ),
-                        ),
-                      ),
-                      headline: Text("General"),
-                      supportingText: Text("Behavioral options"),
-                      trailing: const Icon(
-                        Symbols.keyboard_arrow_right_rounded,
-                      ),
-                    ),
-                  ),
-                ),
+          const SettingsAppBar(),
+          ListItemTheme.merge(
+            data: .from(
+              containerColor: .all(colorTheme.surfaceBright),
+              headlineTextStyle: .all(
+                typescaleTheme.titleMediumEmphasized.toTextStyle(),
               ),
-              const SizedBox(height: 2.0),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                child: ListItemContainer(
-                  containerColor: .all(colorTheme.surfaceBright),
-                  child: ListItemInteraction(
-                    onTap: () {},
-                    child: ListItemLayout(
-                      leading: SizedBox.square(
-                        dimension: 40.0,
-                        child: Material(
-                          animationDuration: Duration.zero,
-                          type: MaterialType.card,
-                          clipBehavior: Clip.antiAlias,
-                          color: staticColors.yellow.colorFixed,
-                          shape: CornersBorder.rounded(
-                            corners: Corners.all(shapeTheme.corner.full),
-                          ),
-                          child: Align.center(
-                            child: Icon(
-                              Symbols.palette_rounded,
-                              fill: 1.0,
-                              color: staticColors.yellow.onColorFixedVariant,
-                            ),
-                          ),
-                        ),
-                      ),
-                      headline: Text("Appearance"),
-                      supportingText: Text("App theme and language"),
-                      trailing: const Icon(
-                        Symbols.keyboard_arrow_right_rounded,
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-              const SizedBox(height: 2.0),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                child: ListItemContainer(
-                  isLast: true,
-                  containerColor: .all(colorTheme.surfaceBright),
-                  child: MergeSemantics(
+            ),
+            child: SliverList.list(
+              children: [
+                const SizedBox(height: 16 - 4.0),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                  child: ListItemContainer(
+                    isFirst: true,
+                    containerColor: .all(colorTheme.surfaceBright),
                     child: ListItemInteraction(
-                      onTap: () => Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (context) => const AboutPage(),
-                        ),
-                      ),
+                      onTap: () {},
                       child: ListItemLayout(
                         leading: SizedBox.square(
                           dimension: 40.0,
@@ -2427,19 +2369,21 @@ class _Settings2ViewState extends State<Settings2View> {
                             animationDuration: Duration.zero,
                             type: MaterialType.card,
                             clipBehavior: Clip.antiAlias,
-                            color: staticColors.pink.colorFixed,
-                            shape: const StadiumBorder(),
+                            color: staticColors.blue.colorFixed,
+                            shape: CornersBorder.rounded(
+                              corners: Corners.all(shapeTheme.corner.full),
+                            ),
                             child: Align.center(
                               child: Icon(
-                                Symbols.info_rounded,
+                                Symbols.tune_rounded,
                                 fill: 1.0,
-                                color: staticColors.pink.onColorFixedVariant,
+                                color: staticColors.blue.onColorFixedVariant,
                               ),
                             ),
                           ),
                         ),
-                        headline: const Text("About"),
-                        supportingText: const Text("App version and info"),
+                        headline: Text("General"),
+                        supportingText: Text("Behavioral options"),
                         trailing: const Icon(
                           Symbols.keyboard_arrow_right_rounded,
                         ),
@@ -2447,8 +2391,85 @@ class _Settings2ViewState extends State<Settings2View> {
                     ),
                   ),
                 ),
-              ),
-            ],
+                const SizedBox(height: 2.0),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                  child: ListItemContainer(
+                    containerColor: .all(colorTheme.surfaceBright),
+                    child: ListItemInteraction(
+                      onTap: () {},
+                      child: ListItemLayout(
+                        leading: SizedBox.square(
+                          dimension: 40.0,
+                          child: Material(
+                            animationDuration: Duration.zero,
+                            type: MaterialType.card,
+                            clipBehavior: Clip.antiAlias,
+                            color: staticColors.yellow.colorFixed,
+                            shape: CornersBorder.rounded(
+                              corners: Corners.all(shapeTheme.corner.full),
+                            ),
+                            child: Align.center(
+                              child: Icon(
+                                Symbols.palette_rounded,
+                                fill: 1.0,
+                                color: staticColors.yellow.onColorFixedVariant,
+                              ),
+                            ),
+                          ),
+                        ),
+                        headline: Text("Appearance"),
+                        supportingText: Text("App theme and language"),
+                        trailing: const Icon(
+                          Symbols.keyboard_arrow_right_rounded,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 2.0),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                  child: ListItemContainer(
+                    isLast: true,
+                    containerColor: .all(colorTheme.surfaceBright),
+                    child: MergeSemantics(
+                      child: ListItemInteraction(
+                        onTap: () => Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) => const AboutPage(),
+                          ),
+                        ),
+                        child: ListItemLayout(
+                          leading: SizedBox.square(
+                            dimension: 40.0,
+                            child: Material(
+                              animationDuration: Duration.zero,
+                              type: MaterialType.card,
+                              clipBehavior: Clip.antiAlias,
+                              color: staticColors.pink.colorFixed,
+                              shape: const StadiumBorder(),
+                              child: Align.center(
+                                child: Icon(
+                                  Symbols.info_rounded,
+                                  fill: 1.0,
+                                  color: staticColors.pink.onColorFixedVariant,
+                                ),
+                              ),
+                            ),
+                          ),
+                          headline: const Text("About"),
+                          supportingText: const Text("App version and info"),
+                          trailing: const Icon(
+                            Symbols.keyboard_arrow_right_rounded,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ),
           SliverToBoxAdapter(
             child: SizedBox(height: MediaQuery.heightOf(context)),
@@ -2559,7 +2580,6 @@ class _AboutPageState extends State<AboutPage> with TickerProviderStateMixin {
                     ),
                     SelectableText(
                       "Materium",
-                      maxLines: 1,
                       textAlign: TextAlign.center,
                       style: typescaleTheme.displaySmallEmphasized
                           .toTextStyle()
@@ -2571,20 +2591,19 @@ class _AboutPageState extends State<AboutPage> with TickerProviderStateMixin {
                     const SizedBox(height: 8.0),
                     SelectableText(
                       "Get Android app updates straight from the source",
-                      maxLines: null,
                       textAlign: TextAlign.center,
                       style: typescaleTheme.bodyLarge.toTextStyle().copyWith(
                         color: colorTheme.onSurface,
                         overflow: TextOverflow.ellipsis,
                       ),
                     ),
-                    const SizedBox(height: 16.0),
-                    ListItemContainer(
-                      isFirst: true,
-                      child: ListItemInteraction(
-                        child: ListItemLayout(headline: Text("Contributors")),
-                      ),
-                    ),
+                    // const SizedBox(height: 16.0),
+                    // ListItemContainer(
+                    //   isFirst: true,
+                    //   child: ListItemInteraction(
+                    //     child: ListItemLayout(headline: Text("Contributors")),
+                    //   ),
+                    // ),
                   ],
                 ),
               ),
@@ -2628,9 +2647,9 @@ class _MaterialDemoViewState extends State<_MaterialDemoView> {
     });
   }
 
-  bool _enabled = true;
-  bool _selected = false;
-  double _progress = 0.0;
+  final _enabled = ValueNotifier<bool>(true);
+  final _selected = ValueNotifier<bool>(false);
+  final _progress = ValueNotifier<double>(0.0);
 
   final List<RoundedPolygon> _indeterminateIndicatorPolygons1 = [
     MaterialShapes.flower,
@@ -2691,897 +2710,924 @@ class _MaterialDemoViewState extends State<_MaterialDemoView> {
                   16.0,
                   0.0,
                 ),
-                title: Text("Material 3 Expressive"),
-                subtitle: Text("Design system"),
+                title: const Text("Material 3 Expressive"),
+                subtitle: const Text("Design system"),
               ),
-              SliverList.list(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(32.0, 12.0, 32.0, 8.0),
-                    child: Text(
-                      "Shape",
-                      style: typescaleTheme.labelLarge.toTextStyle(
-                        color: colorTheme.onSurfaceVariant,
-                      ),
-                    ),
+              ListItemTheme.merge(
+                data: .from(
+                  containerColor: .all(colorTheme.surfaceBright),
+                  headlineTextStyle: .all(
+                    typescaleTheme.titleMediumEmphasized.toTextStyle(),
                   ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                    child: ListItemContainer(
-                      isFirst: true,
-                      child: ListItemInteraction(
-                        onTap: () => Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const _ShapeLibraryView(),
-                          ),
-                        ),
-                        onLongPress: () async {
-                          await launchUrlString(
-                            "https://m3.material.io/styles/shape/overview-principles#579dd4ba-39f3-4e60-bd9b-1d97ed6ef1bf",
-                          );
-                        },
-                        child: ListItemLayout(
-                          leading: SizedBox.square(
-                            dimension: 40.0,
-                            child: Material(
-                              animationDuration: Duration.zero,
-                              type: MaterialType.card,
-                              clipBehavior: Clip.antiAlias,
-                              color: staticColors.yellow.colorFixed,
-                              shape: const StadiumBorder(),
-                              child: Align.center(
-                                child: Icon(
-                                  Symbols.interests_rounded,
-                                  fill: 1.0,
-                                  color:
-                                      staticColors.yellow.onColorFixedVariant,
-                                ),
-                              ),
-                            ),
-                          ),
-                          headline: const Text("Shape library"),
-                          supportingText: const Text(
-                            "Material 3 Expressive has 35 shapes.\n"
-                            "Long press to view docs",
-                          ),
-                          trailing: const Icon(
-                            Symbols.keyboard_arrow_right_rounded,
-                          ),
+                ),
+                child: SliverList.list(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(32.0, 12.0, 32.0, 8.0),
+                      child: Text(
+                        "Shape",
+                        style: typescaleTheme.labelLarge.toTextStyle(
+                          color: colorTheme.onSurfaceVariant,
                         ),
                       ),
                     ),
-                  ),
-                  const SizedBox(height: 2.0),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                    child: ListItemContainer(
-                      isLast: true,
-                      child: ListItemInteraction(
-                        onTap: () async {
-                          await Fluttertoast.showToast(
-                            msg: "Not yet implemented!",
-                            toastLength: Toast.LENGTH_SHORT,
-                          );
-                        },
-                        onLongPress: () async {
-                          await launchUrlString(
-                            "https://m3.material.io/styles/shape/shape-morph",
-                          );
-                        },
-                        child: ListItemLayout(
-                          leading: SizedBox.square(
-                            dimension: 40.0,
-                            child: Material(
-                              animationDuration: Duration.zero,
-                              type: MaterialType.card,
-                              clipBehavior: Clip.antiAlias,
-                              color: staticColors.yellow.colorFixed,
-                              shape: const StadiumBorder(),
-                              child: Align.center(
-                                child: Icon(
-                                  Symbols.draw_abstract_rounded,
-                                  fill: 1.0,
-                                  color:
-                                      staticColors.yellow.onColorFixedVariant,
-                                ),
-                              ),
-                            ),
-                          ),
-                          headline: const Text("Shape morph"),
-                          supportingText: const Text("Long press to view docs"),
-                          trailing: const Icon(
-                            Symbols.keyboard_arrow_right_rounded,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(32.0, 12.0, 32.0, 8.0),
-                    child: Text(
-                      "Motion",
-                      style: typescaleTheme.labelLarge.toTextStyle(
-                        color: colorTheme.onSurfaceVariant,
-                      ),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                    child: ListItemContainer(
-                      isFirst: true,
-                      isLast: true,
-                      child: Flex.vertical(
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
-                        children: [
-                          ListItemInteraction(
-                            onLongPress: timeDilation != 1.0
-                                ? () {
-                                    setState(() {
-                                      timeDilation = 1.0;
-                                    });
-                                    Fluttertoast.showToast(
-                                      msg:
-                                          "Animation duration scale set to 1.0x",
-                                    );
-                                  }
-                                : null,
-                            child: ListItemLayout(
-                              leading: SizedBox.square(
-                                dimension: 40.0,
-                                child: Material(
-                                  animationDuration: Duration.zero,
-                                  type: MaterialType.card,
-                                  clipBehavior: Clip.antiAlias,
-                                  color: staticColors.cyan.colorFixed,
-                                  shape: const StadiumBorder(),
-                                  child: Align.center(
-                                    child: Icon(
-                                      switch (_speed) {
-                                        < 1.0 =>
-                                          Symbols.timer_arrow_down_rounded,
-                                        > 1.0 => Symbols.timer_arrow_up_rounded,
-                                        _ => Symbols.timer_rounded,
-                                      },
-                                      fill: 1.0,
-                                      color:
-                                          staticColors.cyan.onColorFixedVariant,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              headline: const Text("Animation duration scale"),
-                              supportingText: _speed != 1.0
-                                  ? const Text("Long press to reset")
-                                  : const Text(
-                                      "Control the speed of animations",
-                                    ),
-                              trailing: Text("${(_speed).toStringAsFixed(2)}x"),
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.fromLTRB(
-                              16.0,
-                              8.0,
-                              16.0,
-                              16.0,
-                            ),
-                            child: Slider(
-                              padding: EdgeInsets.zero,
-                              value: _speedIndex.toDouble(),
-                              min: 0.0,
-                              max: (_speedValues.length - 1).toDouble(),
-                              divisions: _speedValues.length - 1,
-                              onChanged: (value) =>
-                                  _setSpeedIndex(value.toInt()),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(32.0, 12.0, 32.0, 8.0),
-                    child: Text(
-                      "Basic input",
-                      style: typescaleTheme.labelLarge.toTextStyle(
-                        color: colorTheme.onSurfaceVariant,
-                      ),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                    child: ListItemContainer(
-                      isFirst: true,
-                      child: MergeSemantics(
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                      child: ListItemContainer(
+                        isFirst: true,
                         child: ListItemInteraction(
-                          onTap: () => setState(() => _enabled = !_enabled),
-                          child: ListItemLayout(
-                            padding: const EdgeInsets.fromLTRB(
-                              16.0,
-                              12.0,
-                              16.0 - 8.0,
-                              12.0,
+                          onTap: () => Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const _ShapeLibraryView(),
                             ),
+                          ),
+                          onLongPress: () async {
+                            await launchUrlString(
+                              "https://m3.material.io/styles/shape/overview-principles#579dd4ba-39f3-4e60-bd9b-1d97ed6ef1bf",
+                            );
+                          },
+                          child: ListItemLayout(
                             leading: SizedBox.square(
                               dimension: 40.0,
                               child: Material(
                                 animationDuration: Duration.zero,
                                 type: MaterialType.card,
                                 clipBehavior: Clip.antiAlias,
-                                color: staticColors.red.colorFixed,
+                                color: staticColors.yellow.colorFixed,
                                 shape: const StadiumBorder(),
                                 child: Align.center(
                                   child: Icon(
-                                    Symbols.ads_click_rounded,
+                                    Symbols.interests_rounded,
                                     fill: 1.0,
-                                    color: staticColors.red.onColorFixedVariant,
+                                    color:
+                                        staticColors.yellow.onColorFixedVariant,
                                   ),
                                 ),
                               ),
                             ),
-                            headline: const Text(
-                              "Enable basic input",
-                              maxLines: 2,
+                            headline: const Text("Shape library"),
+                            supportingText: const Text(
+                              "Material 3 Expressive has 35 shapes.\n"
+                              "Long press to view docs",
                             ),
-                            trailing: ExcludeFocus(
-                              child: Switch(
-                                onCheckedChanged: (value) =>
-                                    setState(() => _enabled = value),
-                                checked: _enabled,
-                              ),
+                            trailing: const Icon(
+                              Symbols.keyboard_arrow_right_rounded,
                             ),
                           ),
                         ),
                       ),
                     ),
-                  ),
-                  const SizedBox(height: 2.0),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                    child: ListItemContainer(
-                      isLast: true,
-                      child: Flex.vertical(
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
-                        children: [
-                          ListItemLayout(
+                    const SizedBox(height: 2.0),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                      child: ListItemContainer(
+                        isLast: true,
+                        child: ListItemInteraction(
+                          onTap: () async {
+                            await Fluttertoast.showToast(
+                              msg: "Not yet implemented!",
+                              toastLength: Toast.LENGTH_SHORT,
+                            );
+                          },
+                          onLongPress: () async {
+                            await launchUrlString(
+                              "https://m3.material.io/styles/shape/shape-morph",
+                            );
+                          },
+                          child: ListItemLayout(
                             leading: SizedBox.square(
                               dimension: 40.0,
                               child: Material(
                                 animationDuration: Duration.zero,
                                 type: MaterialType.card,
                                 clipBehavior: Clip.antiAlias,
-                                color: staticColors.red.colorFixed,
+                                color: staticColors.yellow.colorFixed,
                                 shape: const StadiumBorder(),
                                 child: Align.center(
                                   child: Icon(
-                                    Symbols.check_box_rounded,
+                                    Symbols.draw_abstract_rounded,
                                     fill: 1.0,
-                                    color: staticColors.red.onColorFixedVariant,
+                                    color:
+                                        staticColors.yellow.onColorFixedVariant,
                                   ),
                                 ),
                               ),
                             ),
-                            headline: Text(
-                              "Basic input",
-                              style: TextStyle(
-                                color: _enabled
-                                    ? null
-                                    : colorTheme.onSurface.withValues(
-                                        alpha: 0.38,
-                                      ),
-                              ),
+                            headline: const Text("Shape morph"),
+                            supportingText: const Text(
+                              "Long press to view docs",
                             ),
-                            supportingText: Text(
-                              "Switch · Checkbox · Radio button",
-                              style: TextStyle(
-                                color: _enabled
-                                    ? null
-                                    : colorTheme.onSurface.withValues(
-                                        alpha: 0.38,
-                                      ),
-                              ),
+                            trailing: const Icon(
+                              Symbols.keyboard_arrow_right_rounded,
                             ),
                           ),
-                          Padding(
-                            padding: const EdgeInsets.fromLTRB(
-                              16.0,
-                              0.0,
-                              16.0,
-                              16.0,
-                            ),
-                            child: ConstrainedBox(
-                              constraints: const BoxConstraints(
-                                maxHeight: 160.0,
-                              ),
-                              child: Flex.horizontal(
-                                spacing: 16.0,
-                                children: [
-                                  Flexible.tight(
-                                    child: FittedBox(
-                                      fit: BoxFit.contain,
-                                      child: Switch(
-                                        onCheckedChanged: _enabled
-                                            ? (value) => setState(
-                                                () => _selected = value,
-                                              )
-                                            : null,
-                                        checked: _selected,
-                                      ),
-                                    ),
-                                  ),
-                                  Flexible.tight(
-                                    child: FittedBox(
-                                      fit: BoxFit.contain,
-                                      child: Checkbox.biState(
-                                        onCheckedChanged: _enabled
-                                            ? (value) => setState(
-                                                () => _selected = value,
-                                              )
-                                            : null,
-                                        checked: _selected,
-                                      ),
-                                    ),
-                                  ),
-                                  Flexible.tight(
-                                    child: FittedBox(
-                                      fit: BoxFit.contain,
-                                      child: RadioButton(
-                                        onTap: _enabled
-                                            ? () => setState(
-                                                () => _selected = !_selected,
-                                              )
-                                            : null,
-                                        selected: _selected,
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(32.0, 12.0, 32.0, 8.0),
-                    child: Text(
-                      "Loading indicator",
-                      style: typescaleTheme.labelLarge.toTextStyle(
-                        color: colorTheme.onSurfaceVariant,
-                      ),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                    child: ListItemContainer(
-                      isFirst: true,
-                      child: Flex.vertical(
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
-                        children: [
-                          ListItemInteraction(
-                            onTap: () async {
-                              await Fluttertoast.showToast(
-                                msg: "Not yet implemented!",
-                                toastLength: Toast.LENGTH_SHORT,
-                              );
-                            },
-                            child: ListItemLayout(
-                              leading: SizedBox.square(
-                                dimension: 40.0,
-                                child: Material(
-                                  animationDuration: Duration.zero,
-                                  type: MaterialType.card,
-                                  clipBehavior: Clip.antiAlias,
-                                  color: staticColors.blue.colorFixed,
-                                  shape: const StadiumBorder(),
-                                  child: Align.center(
-                                    child: Icon(
-                                      Symbols.progress_activity_rounded,
-                                      fill: 1.0,
-                                      color:
-                                          staticColors.blue.onColorFixedVariant,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              headline: const Text("Loading indicator"),
-                              supportingText: const Text(
-                                "Indeterminate · Uncontained",
-                              ),
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.fromLTRB(
-                              16.0,
-                              12.0,
-                              16.0,
-                              16.0,
-                            ),
-                            child: ConstrainedBox(
-                              constraints: const BoxConstraints(
-                                maxHeight: 160.0,
-                              ),
-                              child: Flex.horizontal(
-                                spacing: 16.0,
-                                children: [
-                                  const Flexible.tight(
-                                    child: FittedBox(
-                                      fit: BoxFit.contain,
-                                      child: IndeterminateLoadingIndicator(
-                                        contained: false,
-                                      ),
-                                    ),
-                                  ),
-                                  Flexible.tight(
-                                    child: FittedBox(
-                                      fit: BoxFit.contain,
-                                      child: IndeterminateLoadingIndicator(
-                                        contained: false,
-                                        indicatorPolygons:
-                                            _indeterminateIndicatorPolygons1,
-                                      ),
-                                    ),
-                                  ),
-                                  Flexible.tight(
-                                    child: FittedBox(
-                                      fit: BoxFit.contain,
-                                      child: IndeterminateLoadingIndicator(
-                                        contained: false,
-                                        indicatorPolygons:
-                                            _indeterminateIndicatorPolygons2,
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 2.0),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                    child: ListItemContainer(
-                      child: Flex.vertical(
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
-                        children: [
-                          ListItemInteraction(
-                            onTap: () async {
-                              await Fluttertoast.showToast(
-                                msg: "Not yet implemented!",
-                                toastLength: Toast.LENGTH_SHORT,
-                              );
-                            },
-                            child: ListItemLayout(
-                              leading: SizedBox.square(
-                                dimension: 40.0,
-                                child: Material(
-                                  animationDuration: Duration.zero,
-                                  type: MaterialType.card,
-                                  clipBehavior: Clip.antiAlias,
-                                  color: staticColors.blue.colorFixed,
-                                  shape: const StadiumBorder(),
-                                  child: Align.center(
-                                    child: Icon(
-                                      Symbols.progress_activity_rounded,
-                                      fill: 1.0,
-                                      color:
-                                          staticColors.blue.onColorFixedVariant,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              headline: const Text("Loading indicator"),
-                              supportingText: const Text(
-                                "Indeterminate · Contained",
-                              ),
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.fromLTRB(
-                              16.0,
-                              12.0,
-                              16.0,
-                              16.0,
-                            ),
-                            child: ConstrainedBox(
-                              constraints: const BoxConstraints(
-                                maxHeight: 160.0,
-                              ),
-                              child: Flex.horizontal(
-                                spacing: 16.0,
-                                children: [
-                                  const Flexible.tight(
-                                    child: FittedBox(
-                                      fit: BoxFit.contain,
-                                      child: IndeterminateLoadingIndicator(
-                                        contained: true,
-                                      ),
-                                    ),
-                                  ),
-                                  Flexible.tight(
-                                    child: FittedBox(
-                                      fit: BoxFit.contain,
-                                      child: IndeterminateLoadingIndicator(
-                                        contained: true,
-                                        indicatorPolygons:
-                                            _indeterminateIndicatorPolygons1,
-                                      ),
-                                    ),
-                                  ),
-                                  Flexible.tight(
-                                    child: FittedBox(
-                                      fit: BoxFit.contain,
-                                      child: IndeterminateLoadingIndicator(
-                                        contained: true,
-                                        indicatorPolygons:
-                                            _indeterminateIndicatorPolygons2,
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 2.0),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                    child: ListItemContainer(
-                      child: Flex.vertical(
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
-                        children: [
-                          ListItemInteraction(
-                            onTap: () async {
-                              await Fluttertoast.showToast(
-                                msg: "Not yet implemented!",
-                                toastLength: Toast.LENGTH_SHORT,
-                              );
-                            },
-                            child: ListItemLayout(
-                              leading: SizedBox.square(
-                                dimension: 40.0,
-                                child: Material(
-                                  animationDuration: Duration.zero,
-                                  type: MaterialType.card,
-                                  clipBehavior: Clip.antiAlias,
-                                  color: staticColors.blue.colorFixed,
-                                  shape: const StadiumBorder(),
-                                  child: Align.center(
-                                    child: Icon(
-                                      Symbols.clock_loader_60_rounded,
-                                      fill: 1.0,
-                                      color:
-                                          staticColors.blue.onColorFixedVariant,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              headline: const Text("Progress"),
-                              supportingText: const Text(
-                                "Determinate loading indicator progress",
-                              ),
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.fromLTRB(
-                              16.0,
-                              8.0,
-                              16.0,
-                              16.0,
-                            ),
-                            child: Slider(
-                              padding: EdgeInsets.zero,
-                              value: _progress,
-                              onChanged: (value) =>
-                                  setState(() => _progress = value),
-                              label: (_progress * 100.0).round().toString(),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 2.0),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                    child: ListItemContainer(
-                      child: Flex.vertical(
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
-                        children: [
-                          ListItemInteraction(
-                            onTap: () async {
-                              await Fluttertoast.showToast(
-                                msg: "Not yet implemented!",
-                                toastLength: Toast.LENGTH_SHORT,
-                              );
-                            },
-                            child: ListItemLayout(
-                              leading: SizedBox.square(
-                                dimension: 40.0,
-                                child: Material(
-                                  animationDuration: Duration.zero,
-                                  type: MaterialType.card,
-                                  clipBehavior: Clip.antiAlias,
-                                  color: staticColors.blue.colorFixed,
-                                  shape: const StadiumBorder(),
-                                  child: Align.center(
-                                    child: Icon(
-                                      Symbols.refresh_rounded,
-                                      fill: 1.0,
-                                      color:
-                                          staticColors.blue.onColorFixedVariant,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              headline: const Text("Loading indicator"),
-                              supportingText: const Text(
-                                "Determinate · Uncontained",
-                              ),
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.fromLTRB(
-                              16.0,
-                              12.0,
-                              16.0,
-                              16.0,
-                            ),
-                            child: ConstrainedBox(
-                              constraints: const BoxConstraints(
-                                maxHeight: 160.0,
-                              ),
-                              child: Flex.horizontal(
-                                spacing: 16.0,
-                                children: [
-                                  Flexible.tight(
-                                    child: FittedBox(
-                                      fit: BoxFit.contain,
-                                      child: DeterminateLoadingIndicator(
-                                        progress: _progress,
-                                        contained: false,
-                                      ),
-                                    ),
-                                  ),
-                                  Flexible.tight(
-                                    child: FittedBox(
-                                      fit: BoxFit.contain,
-                                      child: DeterminateLoadingIndicator(
-                                        progress: _progress,
-                                        contained: false,
-                                        indicatorPolygons: [
-                                          ..._indeterminateIndicatorPolygons1,
-                                          _indeterminateIndicatorPolygons1
-                                              .first,
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                  Flexible.tight(
-                                    child: FittedBox(
-                                      fit: BoxFit.contain,
-                                      child: DeterminateLoadingIndicator(
-                                        progress: _progress,
-                                        contained: false,
-                                        indicatorPolygons: [
-                                          ..._indeterminateIndicatorPolygons2,
-                                          _indeterminateIndicatorPolygons2
-                                              .first,
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 2.0),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                    child: ListItemContainer(
-                      isLast: true,
-                      child: Flex.vertical(
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
-                        children: [
-                          ListItemInteraction(
-                            onTap: () async {
-                              await Fluttertoast.showToast(
-                                msg: "Not yet implemented!",
-                                toastLength: Toast.LENGTH_SHORT,
-                              );
-                            },
-                            child: ListItemLayout(
-                              leading: SizedBox.square(
-                                dimension: 40.0,
-                                child: Material(
-                                  animationDuration: Duration.zero,
-                                  type: MaterialType.card,
-                                  clipBehavior: Clip.antiAlias,
-                                  color: staticColors.blue.colorFixed,
-                                  shape: const StadiumBorder(),
-                                  child: Align.center(
-                                    child: Icon(
-                                      Symbols.refresh_rounded,
-                                      fill: 1.0,
-                                      color:
-                                          staticColors.blue.onColorFixedVariant,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              headline: const Text("Loading indicator"),
-                              supportingText: const Text(
-                                "Determinate · Contained",
-                              ),
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.fromLTRB(
-                              16.0,
-                              12.0,
-                              16.0,
-                              16.0,
-                            ),
-                            child: ConstrainedBox(
-                              constraints: const BoxConstraints(
-                                maxHeight: 160.0,
-                              ),
-                              child: Flex.horizontal(
-                                spacing: 16.0,
-                                children: [
-                                  Flexible.tight(
-                                    child: FittedBox(
-                                      fit: BoxFit.contain,
-                                      child: DeterminateLoadingIndicator(
-                                        progress: _progress,
-                                        contained: true,
-                                      ),
-                                    ),
-                                  ),
-                                  Flexible.tight(
-                                    child: FittedBox(
-                                      fit: BoxFit.contain,
-                                      child: DeterminateLoadingIndicator(
-                                        progress: _progress,
-                                        contained: true,
-                                        indicatorPolygons: [
-                                          ..._indeterminateIndicatorPolygons1,
-                                          _indeterminateIndicatorPolygons1
-                                              .first,
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                  Flexible.tight(
-                                    child: FittedBox(
-                                      fit: BoxFit.contain,
-                                      child: DeterminateLoadingIndicator(
-                                        progress: _progress,
-                                        contained: true,
-                                        indicatorPolygons: [
-                                          ..._indeterminateIndicatorPolygons2,
-                                          _indeterminateIndicatorPolygons2
-                                              .first,
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(32.0, 12.0, 32.0, 8.0),
-                    child: Text(
-                      "Android Design",
-                      style: typescaleTheme.labelLarge.toTextStyle(
-                        color: colorTheme.onSurfaceVariant,
-                      ),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                    child: ListItemContainer(
-                      isFirst: true,
-                      isLast: true,
-                      containerShape: .all(
-                        CornersBorder.rounded(
-                          corners: .all(shapeTheme.corner.full),
                         ),
                       ),
-                      containerColor: .all(colorTheme.primaryContainer),
-                      child: MergeSemantics(
-                        child: ListItemInteraction(
-                          onTap: () => setState(() => _selected = !_selected),
-                          stateLayerColor: .all(colorTheme.onPrimaryContainer),
-                          child: ListItemLayout(
-                            minHeight: 72.0,
-                            maxHeight: 72.0,
-                            padding: const EdgeInsets.fromLTRB(
-                              32.0,
-                              0.0,
-                              20.0 - 8.0,
-                              0.0,
-                            ),
-                            headline: Text(
-                              "Android 16 Switch",
-                              style: typescaleTheme.titleMediumEmphasized
-                                  .toTextStyle(
-                                    color: colorTheme.onPrimaryContainer,
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(32.0, 12.0, 32.0, 8.0),
+                      child: Text(
+                        "Motion",
+                        style: typescaleTheme.labelLarge.toTextStyle(
+                          color: colorTheme.onSurfaceVariant,
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                      child: ListItemContainer(
+                        isFirst: true,
+                        isLast: true,
+                        child: Flex.vertical(
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          children: [
+                            ListItemInteraction(
+                              onLongPress: timeDilation != 1.0
+                                  ? () {
+                                      setState(() {
+                                        timeDilation = 1.0;
+                                      });
+                                      Fluttertoast.showToast(
+                                        msg:
+                                            "Animation duration scale set to 1.0x",
+                                      );
+                                    }
+                                  : null,
+                              child: ListItemLayout(
+                                leading: SizedBox.square(
+                                  dimension: 40.0,
+                                  child: Material(
+                                    animationDuration: Duration.zero,
+                                    type: MaterialType.card,
+                                    clipBehavior: Clip.antiAlias,
+                                    color: staticColors.cyan.colorFixed,
+                                    shape: const StadiumBorder(),
+                                    child: Align.center(
+                                      child: Icon(
+                                        switch (_speed) {
+                                          < 1.0 =>
+                                            Symbols.timer_arrow_down_rounded,
+                                          > 1.0 =>
+                                            Symbols.timer_arrow_up_rounded,
+                                          _ => Symbols.timer_rounded,
+                                        },
+                                        fill: 1.0,
+                                        color: staticColors
+                                            .cyan
+                                            .onColorFixedVariant,
+                                      ),
+                                    ),
                                   ),
+                                ),
+                                headline: const Text(
+                                  "Animation duration scale",
+                                ),
+                                supportingText: _speed != 1.0
+                                    ? const Text("Long press to reset")
+                                    : const Text(
+                                        "Control the speed of animations",
+                                      ),
+                                trailing: Text(
+                                  "${(_speed).toStringAsFixed(2)}x",
+                                ),
+                              ),
                             ),
-                            trailing: ExcludeFocus(
-                              child: Switch(
-                                onCheckedChanged: (value) =>
-                                    setState(() => _selected = value),
-                                checked: _selected,
+                            Padding(
+                              padding: const EdgeInsets.fromLTRB(
+                                16.0,
+                                8.0,
+                                16.0,
+                                16.0,
+                              ),
+                              child: Slider(
+                                padding: EdgeInsets.zero,
+                                value: _speedIndex.toDouble(),
+                                min: 0.0,
+                                max: (_speedValues.length - 1).toDouble(),
+                                divisions: _speedValues.length - 1,
+                                onChanged: (value) =>
+                                    _setSpeedIndex(value.toInt()),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(32.0, 12.0, 32.0, 8.0),
+                      child: Text(
+                        "Basic input",
+                        style: typescaleTheme.labelLarge.toTextStyle(
+                          color: colorTheme.onSurfaceVariant,
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                      child: ListItemContainer(
+                        isFirst: true,
+                        child: MergeSemantics(
+                          child: ListItemInteraction(
+                            onTap: () => _enabled.value = !_enabled.value,
+                            child: ListItemLayout(
+                              padding: const .fromLTRB(
+                                16.0,
+                                0.0,
+                                16.0 - 8.0,
+                                0.0,
+                              ),
+                              trailingPadding: const .symmetric(
+                                vertical: (32.0 + 2 * 10.0 - 48.0) / 2.0,
+                              ),
+                              leading: SizedBox.square(
+                                dimension: 40.0,
+                                child: Material(
+                                  animationDuration: Duration.zero,
+                                  type: MaterialType.card,
+                                  clipBehavior: Clip.antiAlias,
+                                  color: staticColors.red.colorFixed,
+                                  shape: const StadiumBorder(),
+                                  child: Align.center(
+                                    child: Icon(
+                                      Symbols.ads_click_rounded,
+                                      fill: 1.0,
+                                      color:
+                                          staticColors.red.onColorFixedVariant,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              headline: const Text("Enable basic input"),
+                              trailing: ExcludeFocus(
+                                child: ListenableBuilder(
+                                  listenable: _enabled,
+                                  builder: (context, _) => Switch(
+                                    onCheckedChanged: (value) =>
+                                        _enabled.value = value,
+                                    checked: _enabled.value,
+                                  ),
+                                ),
                               ),
                             ),
                           ),
                         ),
                       ),
                     ),
-                  ),
-                  // Builder(
-                  //   builder: (context) {
-                  //     final startCorners = Corners.horizontal(
-                  //       left: shapeTheme.corner.full,
-                  //       right: shapeTheme.corner.extraSmall,
-                  //     );
-                  //     return Flex.horizontal(
-                  //       spacing: 2.0,
-                  //       children: [
-                  //         SizedBox(
-                  //           height: 40.0,
-                  //           child: Material(
-                  //             animationDuration: Duration.zero,
-                  //             clipBehavior: .antiAlias,
-                  //             shape: CornersBorder.rounded(
-                  //               corners: startCorners,
-                  //             ),
-                  //             color: colorTheme.secondaryContainer,
-                  //             child: CenterOptically(
-                  //               corners: startCorners,
-                  //               maxOffsets: EdgeInsets.all(double.infinity),
-                  //               child: Padding(
-                  //                 padding: EdgeInsets.symmetric(
-                  //                   horizontal: 16.0,
-                  //                   vertical: 10.0,
-                  //                 ),
-                  //                 child: Text(
-                  //                   "Hello world!",
-                  //                   style: typescaleTheme.labelLarge
-                  //                       .toTextStyle(
-                  //                         color:
-                  //                             colorTheme.onSecondaryContainer,
-                  //                       ),
-                  //                 ),
-                  //               ),
-                  //             ),
-                  //           ),
-                  //         ),
-                  //       ],
-                  //     );
-                  //   },
-                  // ),
-                  const SizedBox(height: 16.0),
-                ],
+                    const SizedBox(height: 2.0),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                      child: ListItemContainer(
+                        isLast: true,
+                        child: Flex.vertical(
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          children: [
+                            ListItemLayout(
+                              leading: SizedBox.square(
+                                dimension: 40.0,
+                                child: Material(
+                                  animationDuration: Duration.zero,
+                                  type: MaterialType.card,
+                                  clipBehavior: Clip.antiAlias,
+                                  color: staticColors.red.colorFixed,
+                                  shape: const StadiumBorder(),
+                                  child: Align.center(
+                                    child: Icon(
+                                      Symbols.check_box_rounded,
+                                      fill: 1.0,
+                                      color:
+                                          staticColors.red.onColorFixedVariant,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              headline: const Text("Basic input"),
+                              supportingText: const Text(
+                                "Switch · Checkbox · Radio button",
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.fromLTRB(
+                                16.0,
+                                0.0,
+                                16.0,
+                                16.0,
+                              ),
+                              child: ConstrainedBox(
+                                constraints: const BoxConstraints(
+                                  maxHeight: 160.0,
+                                ),
+                                child: ListenableBuilder(
+                                  listenable: Listenable.merge([
+                                    _enabled,
+                                    _selected,
+                                  ]),
+                                  builder: (context, _) => Flex.horizontal(
+                                    spacing: 16.0,
+                                    children: [
+                                      Flexible.tight(
+                                        child: FittedBox(
+                                          fit: BoxFit.contain,
+                                          child: Switch(
+                                            onCheckedChanged: _enabled.value
+                                                ? (value) =>
+                                                      _selected.value = value
+                                                : null,
+                                            checked: _selected.value,
+                                          ),
+                                        ),
+                                      ),
+                                      Flexible.tight(
+                                        child: FittedBox(
+                                          fit: BoxFit.contain,
+                                          child: Checkbox.biState(
+                                            onCheckedChanged: _enabled.value
+                                                ? (value) =>
+                                                      _selected.value = value
+                                                : null,
+                                            checked: _selected.value,
+                                          ),
+                                        ),
+                                      ),
+                                      Flexible.tight(
+                                        child: FittedBox(
+                                          fit: BoxFit.contain,
+                                          child: RadioButton(
+                                            onTap: _enabled.value
+                                                ? () => _selected.value =
+                                                      !_selected.value
+                                                : null,
+                                            selected: _selected.value,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(32.0, 12.0, 32.0, 8.0),
+                      child: Text(
+                        "Loading indicator",
+                        style: typescaleTheme.labelLarge.toTextStyle(
+                          color: colorTheme.onSurfaceVariant,
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                      child: ListItemContainer(
+                        isFirst: true,
+                        child: Flex.vertical(
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          children: [
+                            ListItemInteraction(
+                              onTap: () async {
+                                await Fluttertoast.showToast(
+                                  msg: "Not yet implemented!",
+                                  toastLength: Toast.LENGTH_SHORT,
+                                );
+                              },
+                              child: ListItemLayout(
+                                leading: SizedBox.square(
+                                  dimension: 40.0,
+                                  child: Material(
+                                    animationDuration: Duration.zero,
+                                    type: MaterialType.card,
+                                    clipBehavior: Clip.antiAlias,
+                                    color: staticColors.blue.colorFixed,
+                                    shape: const StadiumBorder(),
+                                    child: Align.center(
+                                      child: Icon(
+                                        Symbols.progress_activity_rounded,
+                                        fill: 1.0,
+                                        color: staticColors
+                                            .blue
+                                            .onColorFixedVariant,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                headline: const Text("Loading indicator"),
+                                supportingText: const Text(
+                                  "Indeterminate · Uncontained",
+                                ),
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.fromLTRB(
+                                16.0,
+                                12.0,
+                                16.0,
+                                16.0,
+                              ),
+                              child: ConstrainedBox(
+                                constraints: const BoxConstraints(
+                                  maxHeight: 160.0,
+                                ),
+                                child: Flex.horizontal(
+                                  spacing: 16.0,
+                                  children: [
+                                    const Flexible.tight(
+                                      child: FittedBox(
+                                        fit: BoxFit.contain,
+                                        child: IndeterminateLoadingIndicator(
+                                          contained: false,
+                                        ),
+                                      ),
+                                    ),
+                                    Flexible.tight(
+                                      child: FittedBox(
+                                        fit: BoxFit.contain,
+                                        child: IndeterminateLoadingIndicator(
+                                          contained: false,
+                                          indicatorPolygons:
+                                              _indeterminateIndicatorPolygons1,
+                                        ),
+                                      ),
+                                    ),
+                                    Flexible.tight(
+                                      child: FittedBox(
+                                        fit: BoxFit.contain,
+                                        child: IndeterminateLoadingIndicator(
+                                          contained: false,
+                                          indicatorPolygons:
+                                              _indeterminateIndicatorPolygons2,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 2.0),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                      child: ListItemContainer(
+                        child: Flex.vertical(
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          children: [
+                            ListItemInteraction(
+                              onTap: () async {
+                                await Fluttertoast.showToast(
+                                  msg: "Not yet implemented!",
+                                  toastLength: Toast.LENGTH_SHORT,
+                                );
+                              },
+                              child: ListItemLayout(
+                                leading: SizedBox.square(
+                                  dimension: 40.0,
+                                  child: Material(
+                                    animationDuration: Duration.zero,
+                                    type: MaterialType.card,
+                                    clipBehavior: Clip.antiAlias,
+                                    color: staticColors.blue.colorFixed,
+                                    shape: const StadiumBorder(),
+                                    child: Align.center(
+                                      child: Icon(
+                                        Symbols.progress_activity_rounded,
+                                        fill: 1.0,
+                                        color: staticColors
+                                            .blue
+                                            .onColorFixedVariant,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                headline: const Text("Loading indicator"),
+                                supportingText: const Text(
+                                  "Indeterminate · Contained",
+                                ),
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.fromLTRB(
+                                16.0,
+                                12.0,
+                                16.0,
+                                16.0,
+                              ),
+                              child: ConstrainedBox(
+                                constraints: const BoxConstraints(
+                                  maxHeight: 160.0,
+                                ),
+                                child: Flex.horizontal(
+                                  spacing: 16.0,
+                                  children: [
+                                    const Flexible.tight(
+                                      child: FittedBox(
+                                        fit: BoxFit.contain,
+                                        child: IndeterminateLoadingIndicator(
+                                          contained: true,
+                                        ),
+                                      ),
+                                    ),
+                                    Flexible.tight(
+                                      child: FittedBox(
+                                        fit: BoxFit.contain,
+                                        child: IndeterminateLoadingIndicator(
+                                          contained: true,
+                                          indicatorPolygons:
+                                              _indeterminateIndicatorPolygons1,
+                                        ),
+                                      ),
+                                    ),
+                                    Flexible.tight(
+                                      child: FittedBox(
+                                        fit: BoxFit.contain,
+                                        child: IndeterminateLoadingIndicator(
+                                          contained: true,
+                                          indicatorPolygons:
+                                              _indeterminateIndicatorPolygons2,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 2.0),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                      child: ListItemContainer(
+                        child: Flex.vertical(
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          children: [
+                            ListItemInteraction(
+                              onTap: () async {
+                                await Fluttertoast.showToast(
+                                  msg: "Not yet implemented!",
+                                  toastLength: Toast.LENGTH_SHORT,
+                                );
+                              },
+                              child: ListItemLayout(
+                                leading: SizedBox.square(
+                                  dimension: 40.0,
+                                  child: Material(
+                                    animationDuration: Duration.zero,
+                                    type: MaterialType.card,
+                                    clipBehavior: Clip.antiAlias,
+                                    color: staticColors.blue.colorFixed,
+                                    shape: const StadiumBorder(),
+                                    child: Align.center(
+                                      child: Icon(
+                                        Symbols.clock_loader_60_rounded,
+                                        fill: 1.0,
+                                        color: staticColors
+                                            .blue
+                                            .onColorFixedVariant,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                headline: const Text("Progress"),
+                                supportingText: const Text(
+                                  "Determinate loading indicator progress",
+                                ),
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.fromLTRB(
+                                16.0,
+                                8.0,
+                                16.0,
+                                16.0,
+                              ),
+                              child: ListenableBuilder(
+                                listenable: _progress,
+                                builder: (context, _) => Slider(
+                                  padding: EdgeInsets.zero,
+                                  value: _progress.value,
+                                  onChanged: (value) => _progress.value = value,
+                                  label: (_progress.value * 100.0)
+                                      .toStringAsFixed(0),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 2.0),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                      child: ListItemContainer(
+                        child: Flex.vertical(
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          children: [
+                            ListItemInteraction(
+                              onTap: () async {
+                                await Fluttertoast.showToast(
+                                  msg: "Not yet implemented!",
+                                  toastLength: Toast.LENGTH_SHORT,
+                                );
+                              },
+                              child: ListItemLayout(
+                                leading: SizedBox.square(
+                                  dimension: 40.0,
+                                  child: Material(
+                                    animationDuration: Duration.zero,
+                                    type: MaterialType.card,
+                                    clipBehavior: Clip.antiAlias,
+                                    color: staticColors.blue.colorFixed,
+                                    shape: const StadiumBorder(),
+                                    child: Align.center(
+                                      child: Icon(
+                                        Symbols.refresh_rounded,
+                                        fill: 1.0,
+                                        color: staticColors
+                                            .blue
+                                            .onColorFixedVariant,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                headline: const Text("Loading indicator"),
+                                supportingText: const Text(
+                                  "Determinate · Uncontained",
+                                ),
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.fromLTRB(
+                                16.0,
+                                12.0,
+                                16.0,
+                                16.0,
+                              ),
+                              child: ConstrainedBox(
+                                constraints: const BoxConstraints(
+                                  maxHeight: 160.0,
+                                ),
+                                child: ListenableBuilder(
+                                  listenable: _progress,
+                                  builder: (context, _) => Flex.horizontal(
+                                    spacing: 16.0,
+                                    children: [
+                                      Flexible.tight(
+                                        child: FittedBox(
+                                          fit: BoxFit.contain,
+                                          child: DeterminateLoadingIndicator(
+                                            progress: _progress.value,
+                                            contained: false,
+                                          ),
+                                        ),
+                                      ),
+                                      Flexible.tight(
+                                        child: FittedBox(
+                                          fit: BoxFit.contain,
+                                          child: DeterminateLoadingIndicator(
+                                            progress: _progress.value,
+                                            contained: false,
+                                            indicatorPolygons: [
+                                              ..._indeterminateIndicatorPolygons1,
+                                              _indeterminateIndicatorPolygons1
+                                                  .first,
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                      Flexible.tight(
+                                        child: FittedBox(
+                                          fit: BoxFit.contain,
+                                          child: DeterminateLoadingIndicator(
+                                            progress: _progress.value,
+                                            contained: false,
+                                            indicatorPolygons: [
+                                              ..._indeterminateIndicatorPolygons2,
+                                              _indeterminateIndicatorPolygons2
+                                                  .first,
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 2.0),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                      child: ListItemContainer(
+                        isLast: true,
+                        child: Flex.vertical(
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          children: [
+                            ListItemInteraction(
+                              onTap: () async {
+                                await Fluttertoast.showToast(
+                                  msg: "Not yet implemented!",
+                                  toastLength: Toast.LENGTH_SHORT,
+                                );
+                              },
+                              child: ListItemLayout(
+                                leading: SizedBox.square(
+                                  dimension: 40.0,
+                                  child: Material(
+                                    animationDuration: Duration.zero,
+                                    type: MaterialType.card,
+                                    clipBehavior: Clip.antiAlias,
+                                    color: staticColors.blue.colorFixed,
+                                    shape: const StadiumBorder(),
+                                    child: Align.center(
+                                      child: Icon(
+                                        Symbols.refresh_rounded,
+                                        fill: 1.0,
+                                        color: staticColors
+                                            .blue
+                                            .onColorFixedVariant,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                headline: const Text("Loading indicator"),
+                                supportingText: const Text(
+                                  "Determinate · Contained",
+                                ),
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.fromLTRB(
+                                16.0,
+                                12.0,
+                                16.0,
+                                16.0,
+                              ),
+                              child: ConstrainedBox(
+                                constraints: const BoxConstraints(
+                                  maxHeight: 160.0,
+                                ),
+                                child: ListenableBuilder(
+                                  listenable: _progress,
+                                  builder: (context, _) => Flex.horizontal(
+                                    spacing: 16.0,
+                                    children: [
+                                      Flexible.tight(
+                                        child: FittedBox(
+                                          fit: BoxFit.contain,
+                                          child: DeterminateLoadingIndicator(
+                                            progress: _progress.value,
+                                            contained: true,
+                                          ),
+                                        ),
+                                      ),
+                                      Flexible.tight(
+                                        child: FittedBox(
+                                          fit: BoxFit.contain,
+                                          child: DeterminateLoadingIndicator(
+                                            progress: _progress.value,
+                                            contained: true,
+                                            indicatorPolygons: [
+                                              ..._indeterminateIndicatorPolygons1,
+                                              _indeterminateIndicatorPolygons1
+                                                  .first,
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                      Flexible.tight(
+                                        child: FittedBox(
+                                          fit: BoxFit.contain,
+                                          child: DeterminateLoadingIndicator(
+                                            progress: _progress.value,
+                                            contained: true,
+                                            indicatorPolygons: [
+                                              ..._indeterminateIndicatorPolygons2,
+                                              _indeterminateIndicatorPolygons2
+                                                  .first,
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(32.0, 12.0, 32.0, 8.0),
+                      child: Text(
+                        "Android Design",
+                        style: typescaleTheme.labelLarge.toTextStyle(
+                          color: colorTheme.onSurfaceVariant,
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                      child: ListItemContainer(
+                        isFirst: true,
+                        isLast: true,
+                        containerShape: .all(
+                          CornersBorder.rounded(
+                            corners: .all(shapeTheme.corner.full),
+                          ),
+                        ),
+                        containerColor: .all(colorTheme.primaryContainer),
+                        child: MergeSemantics(
+                          child: ListItemInteraction(
+                            onTap: () => _selected.value = !_selected.value,
+                            stateLayerColor: .all(
+                              colorTheme.onPrimaryContainer,
+                            ),
+                            child: ListItemLayout(
+                              minHeight: 72.0,
+                              maxHeight: 72.0,
+                              padding: const EdgeInsets.fromLTRB(
+                                32.0,
+                                0.0,
+                                20.0 - 8.0,
+                                0.0,
+                              ),
+                              headline: Text(
+                                "Android 16 Switch",
+                                style: typescaleTheme.titleMediumEmphasized
+                                    .toTextStyle(
+                                      color: colorTheme.onPrimaryContainer,
+                                    ),
+                              ),
+                              trailing: ListenableBuilder(
+                                listenable: _selected,
+                                builder: (context, _) => ExcludeFocus(
+                                  child: Switch(
+                                    onCheckedChanged: (value) =>
+                                        _selected.value = value,
+                                    checked: _selected.value,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                    // Builder(
+                    //   builder: (context) {
+                    //     final startCorners = Corners.horizontal(
+                    //       left: shapeTheme.corner.full,
+                    //       right: shapeTheme.corner.extraSmall,
+                    //     );
+                    //     return Flex.horizontal(
+                    //       spacing: 2.0,
+                    //       children: [
+                    //         SizedBox(
+                    //           height: 40.0,
+                    //           child: Material(
+                    //             animationDuration: Duration.zero,
+                    //             clipBehavior: .antiAlias,
+                    //             shape: CornersBorder.rounded(
+                    //               corners: startCorners,
+                    //             ),
+                    //             color: colorTheme.secondaryContainer,
+                    //             child: CenterOptically(
+                    //               corners: startCorners,
+                    //               maxOffsets: EdgeInsets.all(double.infinity),
+                    //               child: Padding(
+                    //                 padding: EdgeInsets.symmetric(
+                    //                   horizontal: 16.0,
+                    //                   vertical: 10.0,
+                    //                 ),
+                    //                 child: Text(
+                    //                   "Hello world!",
+                    //                   style: typescaleTheme.labelLarge
+                    //                       .toTextStyle(
+                    //                         color:
+                    //                             colorTheme.onSecondaryContainer,
+                    //                       ),
+                    //                 ),
+                    //               ),
+                    //             ),
+                    //           ),
+                    //         ),
+                    //       ],
+                    //     );
+                    //   },
+                    // ),
+                    const SizedBox(height: 16.0),
+                  ],
+                ),
               ),
               SliverToBoxAdapter(child: SizedBox(height: padding.bottom)),
             ],

@@ -308,6 +308,7 @@ class _ListItemInteractionState extends State<ListItemInteraction> {
             isPressed: _pressed,
             isFocused: _focused && !_pressed,
           );
+
     if (result.isDisabled) {
       states.add(WidgetState.disabled);
     } else {
@@ -486,6 +487,16 @@ class _ListItemInteractionState extends State<ListItemInteraction> {
   }
 }
 
+enum ListItemAlignment {
+  top,
+  middle;
+
+  CrossAxisAlignment _toCrossAxisAlignment() => switch (this) {
+    .top => .start,
+    .middle => .center,
+  };
+}
+
 class ListItemLayout extends StatefulWidget {
   const ListItemLayout({
     super.key,
@@ -498,6 +509,7 @@ class ListItemLayout extends StatefulWidget {
     this.trailingPadding,
     this.leadingSpace,
     this.trailingSpace,
+    this.alignment = .middle,
     this.leading,
     this.overline,
     this.headline,
@@ -514,6 +526,7 @@ class ListItemLayout extends StatefulWidget {
   final EdgeInsetsGeometry? trailingPadding;
   final double? leadingSpace;
   final double? trailingSpace;
+  final ListItemAlignment alignment;
 
   final Widget? leading;
   final Widget? overline;
@@ -601,7 +614,7 @@ class _ListItemLayoutState extends State<ListItemLayout> {
         child: Flex.horizontal(
           mainAxisSize: .max,
           mainAxisAlignment: .start,
-          crossAxisAlignment: .center,
+          crossAxisAlignment: widget.alignment._toCrossAxisAlignment(),
           children: [
             if (leading != null)
               Padding(
@@ -623,16 +636,12 @@ class _ListItemLayoutState extends State<ListItemLayout> {
                       DefaultTextStyle.merge(
                         style: listItemTheme.overlineTextStyle.resolve(states),
                         textAlign: .start,
-                        maxLines: 1,
-                        overflow: .ellipsis,
                         child: overline,
                       ),
                     if (widget.headline case final headline?)
                       DefaultTextStyle.merge(
                         style: listItemTheme.headlineTextStyle.resolve(states),
                         textAlign: .start,
-                        maxLines: 1,
-                        overflow: .ellipsis,
                         child: headline,
                       ),
                     if (widget.supportingText case final supportingText?)
@@ -641,8 +650,6 @@ class _ListItemLayoutState extends State<ListItemLayout> {
                           states,
                         ),
                         textAlign: .start,
-                        maxLines: 2,
-                        overflow: .ellipsis,
                         child: supportingText,
                       ),
                   ],
