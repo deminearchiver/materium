@@ -45,14 +45,14 @@ final class Cam16 {
   ) {
     // Transform XYZ to 'cone'/'rgb' responses
     const matrix = xyzToCam16rgb;
-    double rT = (x * matrix[0][0]) + (y * matrix[0][1]) + (z * matrix[0][2]);
-    double gT = (x * matrix[1][0]) + (y * matrix[1][1]) + (z * matrix[1][2]);
-    double bT = (x * matrix[2][0]) + (y * matrix[2][1]) + (z * matrix[2][2]);
+    final rT = (x * matrix[0][0]) + (y * matrix[0][1]) + (z * matrix[0][2]);
+    final gT = (x * matrix[1][0]) + (y * matrix[1][1]) + (z * matrix[1][2]);
+    final bT = (x * matrix[2][0]) + (y * matrix[2][1]) + (z * matrix[2][2]);
 
     // Discount illuminant
-    double rD = viewingConditions.rgbD[0] * rT;
-    double gD = viewingConditions.rgbD[1] * gT;
-    double bD = viewingConditions.rgbD[2] * bT;
+    final rD = viewingConditions.rgbD[0] * rT;
+    final gD = viewingConditions.rgbD[1] * gT;
+    final bD = viewingConditions.rgbD[2] * bT;
 
     // Chromatic adaptation
     final rAF = math
@@ -125,8 +125,7 @@ final class Cam16 {
     final mstar = 1.0 / 0.0228 * math.log(1.0 + 0.0228 * m); // log1p
     final astar = mstar * math.cos(hueRadians);
     final bstar = mstar * math.sin(hueRadians);
-
-    return Cam16._(hue, c, j, q, m, s, jstar, astar, bstar);
+    return ._(hue, c, j, q, m, s, jstar, astar, bstar);
   }
 
   @internal
@@ -143,11 +142,11 @@ final class Cam16 {
     final x = 0.41233895 * redL + 0.35762064 * greenL + 0.18051042 * blueL;
     final y = 0.2126 * redL + 0.7152 * greenL + 0.0722 * blueL;
     final z = 0.01932141 * redL + 0.11916382 * greenL + 0.95034478 * blueL;
-    return Cam16.fromXyzInViewingConditions(x, y, z, viewingConditions);
+    return .fromXyzInViewingConditions(x, y, z, viewingConditions);
   }
 
   factory Cam16.fromInt(int argb) =>
-      Cam16.fromIntInViewingConditions(argb, ViewingConditions.sRgb);
+      .fromIntInViewingConditions(argb, ViewingConditions.sRgb);
 
   @internal
   factory Cam16.fromJchInViewingConditions(
@@ -173,12 +172,12 @@ final class Cam16 {
     final mstar = 1.0 / 0.0228 * math.log(1.0 + 0.0228 * m);
     final astar = mstar * math.cos(hueRadians);
     final bstar = mstar * math.sin(hueRadians);
-    return Cam16._(h, c, j, q, m, s, jstar, astar, bstar);
+    return ._(h, c, j, q, m, s, jstar, astar, bstar);
   }
 
   @internal
   factory Cam16.fromJch(double j, double c, double h) =>
-      Cam16.fromJchInViewingConditions(j, c, h, ViewingConditions.sRgb);
+      .fromJchInViewingConditions(j, c, h, ViewingConditions.sRgb);
 
   factory Cam16.fromUcsInViewingConditions(
     double jstar,
@@ -189,21 +188,16 @@ final class Cam16 {
     final m = MathUtils.hypot(astar, bstar);
     final m2 = (math.exp(m * 0.0228) - 1.0) / 0.0228;
     final c = m2 / viewingConditions.flRoot;
-    double h = math.atan2(bstar, astar) * (180.0 / math.pi);
+    var h = math.atan2(bstar, astar) * (180.0 / math.pi);
     if (h < 0.0) {
       h += 360.0;
     }
     final j = jstar / (1.0 - (jstar - 100.0) * 0.007);
-    return Cam16.fromJchInViewingConditions(j, c, h, viewingConditions);
+    return .fromJchInViewingConditions(j, c, h, viewingConditions);
   }
 
   factory Cam16.fromUcs(double jstar, double astar, double bstar) =>
-      Cam16.fromUcsInViewingConditions(
-        jstar,
-        astar,
-        bstar,
-        ViewingConditions.sRgb,
-      );
+      .fromUcsInViewingConditions(jstar, astar, bstar, ViewingConditions.sRgb);
 
   /// Hue in CAM16.
   final double hue;
@@ -344,20 +338,19 @@ final class Cam16 {
       ")";
 
   @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        runtimeType == other.runtimeType &&
-            other is Cam16 &&
-            hue == other.hue &&
-            chroma == other.chroma &&
-            j == other.j &&
-            q == other.q &&
-            m == other.m &&
-            s == other.s &&
-            jstar == other.jstar &&
-            astar == other.astar &&
-            bstar == other.bstar;
-  }
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      runtimeType == other.runtimeType &&
+          other is Cam16 &&
+          hue == other.hue &&
+          chroma == other.chroma &&
+          j == other.j &&
+          q == other.q &&
+          m == other.m &&
+          s == other.s &&
+          jstar == other.jstar &&
+          astar == other.astar &&
+          bstar == other.bstar;
 
   @override
   int get hashCode => Object.hash(hue, chroma, j, q, m, s, jstar, astar, bstar);

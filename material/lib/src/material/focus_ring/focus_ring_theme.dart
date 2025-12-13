@@ -43,7 +43,7 @@ abstract class FocusRingThemeDataPartial {
           outwardOffset != null ||
           shape != null ||
           width != null
-      ? FocusRingThemeDataPartial.from(
+      ? .from(
           activeWidth: activeWidth ?? this.activeWidth,
           color: color ?? this.color,
           duration: duration ?? this.duration,
@@ -177,7 +177,7 @@ abstract class FocusRingThemeData extends FocusRingThemeDataPartial {
           outwardOffset != null ||
           shape != null ||
           width != null
-      ? FocusRingThemeData.from(
+      ? .from(
           activeWidth: activeWidth ?? this.activeWidth,
           color: color ?? this.color,
           duration: duration ?? this.duration,

@@ -797,10 +797,7 @@ class _RenderCheckboxPaint extends RenderBox
   set textDirection(TextDirection? value) {
     if (_textDirection == value) return;
     _textDirection = value;
-    _markNeedsResolution();
-  }
-
-  void _markNeedsResolution() {
+    _resolvedContainerShapeCache = null;
     markNeedsLayout();
   }
 
@@ -936,7 +933,7 @@ class _RenderCheckboxPaint extends RenderBox
     final outlineColor = this.outlineColor.value;
 
     final containerPaint = Paint()
-      ..style = PaintingStyle.fill
+      ..style = .fill
       ..color = containerColor;
 
     // TODO: remove because RepaintBoundary seems to have fixed pixel alignment
@@ -944,38 +941,36 @@ class _RenderCheckboxPaint extends RenderBox
       final rrect = borderRadius.toRRect(shiftedRect);
       context.canvas.drawRRect(rrect, containerPaint);
     } else {
-      final innerBorderRadius =
-          borderRadius - BorderRadius.circular(outlineWidth);
+      final innerBorderRadius = borderRadius - .circular(outlineWidth);
       final innerRRect = RRect.fromLTRBAndCorners(
         shiftedRect.left + outlineWidth,
         shiftedRect.top + outlineWidth,
         shiftedRect.right - outlineWidth,
         shiftedRect.bottom - outlineWidth,
-        topLeft: innerBorderRadius.topLeft.clamp(minimum: Radius.zero),
-        topRight: innerBorderRadius.topRight.clamp(minimum: Radius.zero),
-        bottomRight: innerBorderRadius.bottomRight.clamp(minimum: Radius.zero),
-        bottomLeft: innerBorderRadius.bottomLeft.clamp(minimum: Radius.zero),
+        topLeft: innerBorderRadius.topLeft.clamp(minimum: .zero),
+        topRight: innerBorderRadius.topRight.clamp(minimum: .zero),
+        bottomRight: innerBorderRadius.bottomRight.clamp(minimum: .zero),
+        bottomLeft: innerBorderRadius.bottomLeft.clamp(minimum: .zero),
       );
       context.canvas.drawRRect(innerRRect, containerPaint);
     }
     if (outlineWidth > 0.0 && containerColor != outlineColor) {
       final halfOutlineWidth = math.max(0.0, outlineWidth / 2.0);
 
-      final outerBorderRadius =
-          borderRadius - BorderRadius.circular(halfOutlineWidth);
+      final outerBorderRadius = borderRadius - .circular(halfOutlineWidth);
       final outerRRect = RRect.fromLTRBAndCorners(
         shiftedRect.left + halfOutlineWidth,
         shiftedRect.top + halfOutlineWidth,
         shiftedRect.right - halfOutlineWidth,
         shiftedRect.bottom - halfOutlineWidth,
-        topLeft: outerBorderRadius.topLeft.clamp(minimum: Radius.zero),
-        topRight: outerBorderRadius.topRight.clamp(minimum: Radius.zero),
-        bottomRight: outerBorderRadius.bottomRight.clamp(minimum: Radius.zero),
-        bottomLeft: outerBorderRadius.bottomLeft.clamp(minimum: Radius.zero),
+        topLeft: outerBorderRadius.topLeft.clamp(minimum: .zero),
+        topRight: outerBorderRadius.topRight.clamp(minimum: .zero),
+        bottomRight: outerBorderRadius.bottomRight.clamp(minimum: .zero),
+        bottomLeft: outerBorderRadius.bottomLeft.clamp(minimum: .zero),
       );
 
       final outlinePaint = Paint()
-        ..style = PaintingStyle.stroke
+        ..style = .stroke
         ..color = outlineColor
         ..strokeWidth = outlineWidth;
 
@@ -983,36 +978,34 @@ class _RenderCheckboxPaint extends RenderBox
     }
 
     // if (outlineWidth > 0.0 && containerColor != outlineColor) {
-    //   final innerBorderRadius =
-    //       borderRadius - BorderRadius.circular(outlineWidth);
+    //   final innerBorderRadius = borderRadius - .circular(outlineWidth);
     //   final innerRRect = RRect.fromLTRBAndCorners(
     //     shiftedRect.left + outlineWidth,
     //     shiftedRect.top + outlineWidth,
     //     shiftedRect.right - outlineWidth,
     //     shiftedRect.bottom - outlineWidth,
-    //     topLeft: innerBorderRadius.topLeft.clamp(minimum: Radius.zero),
-    //     topRight: innerBorderRadius.topRight.clamp(minimum: Radius.zero),
-    //     bottomRight: innerBorderRadius.bottomRight.clamp(minimum: Radius.zero),
-    //     bottomLeft: innerBorderRadius.bottomLeft.clamp(minimum: Radius.zero),
+    //     topLeft: innerBorderRadius.topLeft.clamp(minimum: .zero),
+    //     topRight: innerBorderRadius.topRight.clamp(minimum: .zero),
+    //     bottomRight: innerBorderRadius.bottomRight.clamp(minimum: .zero),
+    //     bottomLeft: innerBorderRadius.bottomLeft.clamp(minimum: .zero),
     //   );
     //   context.canvas.drawRRect(innerRRect, containerPaint);
 
     //   final halfOutlineWidth = math.max(0.0, outlineWidth / 2.0);
-    //   final outerBorderRadius =
-    //       borderRadius - BorderRadius.circular(halfOutlineWidth);
+    //   final outerBorderRadius = borderRadius - .circular(halfOutlineWidth);
     //   final outerRRect = RRect.fromLTRBAndCorners(
     //     shiftedRect.left + halfOutlineWidth,
     //     shiftedRect.top + halfOutlineWidth,
     //     shiftedRect.right - halfOutlineWidth,
     //     shiftedRect.bottom - halfOutlineWidth,
-    //     topLeft: outerBorderRadius.topLeft.clamp(minimum: Radius.zero),
-    //     topRight: outerBorderRadius.topRight.clamp(minimum: Radius.zero),
-    //     bottomRight: outerBorderRadius.bottomRight.clamp(minimum: Radius.zero),
-    //     bottomLeft: outerBorderRadius.bottomLeft.clamp(minimum: Radius.zero),
+    //     topLeft: outerBorderRadius.topLeft.clamp(minimum: .zero),
+    //     topRight: outerBorderRadius.topRight.clamp(minimum: .zero),
+    //     bottomRight: outerBorderRadius.bottomRight.clamp(minimum: .zero),
+    //     bottomLeft: outerBorderRadius.bottomLeft.clamp(minimum: .zero),
     //   );
 
     //   final outlinePaint = Paint()
-    //     ..style = PaintingStyle.stroke
+    //     ..style = .stroke
     //     ..color = outlineColor
     //     ..strokeWidth = outlineWidth;
 
@@ -1026,23 +1019,23 @@ class _RenderCheckboxPaint extends RenderBox
   void _paintCheck(PaintingContext context, Rect shiftedRect) {
     final iconColor = this.iconColor.value;
     final iconPaint = Paint()
-      ..style = PaintingStyle.stroke
+      ..style = .stroke
       ..color = iconColor
       ..strokeWidth = iconStrokeWidth
       ..strokeCap = iconStrokeCap
       ..strokeJoin = iconStrokeJoin;
 
-    final double checkFraction = this.checkFraction.value;
-    final double crossCenterGravitation = this.crossCenterGravitation.value;
+    final checkFraction = this.checkFraction.value;
+    final crossCenterGravitation = this.crossCenterGravitation.value;
 
     if (checkFraction > 0.0) {
-      const double leftX = 0.25;
-      const double leftY = 0.5;
+      const leftX = 0.25;
+      const leftY = 0.5;
 
-      const double middleX = 0.4;
-      const double middleY = 0.65;
-      const double rightX = 0.75;
-      const double rightY = 0.3;
+      const middleX = 0.4;
+      const middleY = 0.65;
+      const rightX = 0.75;
+      const rightY = 0.3;
 
       final hasOvershoot = checkFraction > 1.0;
 

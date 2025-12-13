@@ -46,7 +46,7 @@ abstract class ElevationThemeDataPartial with Diagnosticable {
           level3 != null ||
           level4 != null ||
           level5 != null
-      ? ElevationThemeDataPartial.from(
+      ? .from(
           level0: level0 ?? this.level0,
           level1: level1 ?? this.level1,
           level2: level2 ?? this.level2,
@@ -175,7 +175,7 @@ abstract class ElevationThemeData extends ElevationThemeDataPartial {
           level3 != null ||
           level4 != null ||
           level5 != null
-      ? ElevationThemeData.from(
+      ? .from(
           level0: level0 ?? this.level0,
           level1: level1 ?? this.level1,
           level2: level2 ?? this.level2,

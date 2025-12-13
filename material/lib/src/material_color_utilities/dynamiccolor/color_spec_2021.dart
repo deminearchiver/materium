@@ -20,14 +20,11 @@ import 'variant.dart';
 final class ColorSpec2021 implements ColorSpec {
   const ColorSpec2021();
 
-  static bool _isMonochrome(DynamicScheme scheme) {
-    return scheme.variant == Variant.monochrome;
-  }
+  static bool _isMonochrome(DynamicScheme scheme) =>
+      scheme.variant == .monochrome;
 
-  static bool _isFidelity(DynamicScheme scheme) {
-    return scheme.variant == Variant.fidelity ||
-        scheme.variant == Variant.content;
-  }
+  static bool _isFidelity(DynamicScheme scheme) =>
+      scheme.variant == .fidelity || scheme.variant == .content;
 
   static double _findDesiredChromaByTone(
     double hue,
@@ -35,14 +32,14 @@ final class ColorSpec2021 implements ColorSpec {
     double tone,
     bool byDecreasingTone,
   ) {
-    double answer = tone;
+    var answer = tone;
 
-    Hct closestToChroma = Hct.from(hue, chroma, tone);
+    var closestToChroma = Hct.from(hue, chroma, tone);
     if (closestToChroma.chroma < chroma) {
-      double chromaPeak = closestToChroma.chroma;
+      var chromaPeak = closestToChroma.chroma;
       while (closestToChroma.chroma < chroma) {
         answer += byDecreasingTone ? -1.0 : 1.0;
-        Hct potentialSolution = Hct.from(hue, chroma, answer);
+        final potentialSolution = Hct.from(hue, chroma, answer);
         if (chromaPeak > potentialSolution.chroma) {
           break;
         }
@@ -50,8 +47,8 @@ final class ColorSpec2021 implements ColorSpec {
           break;
         }
 
-        double potentialDelta = (potentialSolution.chroma - chroma).abs();
-        double currentDelta = (closestToChroma.chroma - chroma).abs();
+        final potentialDelta = (potentialSolution.chroma - chroma).abs();
+        final currentDelta = (closestToChroma.chroma - chroma).abs();
         if (potentialDelta < currentDelta) {
           closestToChroma = potentialSolution;
         }
@@ -299,16 +296,14 @@ final class ColorSpec2021 implements ColorSpec {
       roleA: primaryContainer,
       roleB: primary,
       delta: 10.0,
-      polarity: TonePolarity.relativeLighter,
+      polarity: .relativeLighter,
       stayTogether: false,
-      constraint: DeltaConstraint.nearer,
+      constraint: .nearer,
     ),
   );
 
   @override
-  DynamicColor? get primaryDim {
-    return null;
-  }
+  DynamicColor? get primaryDim => null;
 
   @override
   DynamicColor get onPrimary => DynamicColor(
@@ -344,9 +339,9 @@ final class ColorSpec2021 implements ColorSpec {
       roleA: primaryContainer,
       roleB: primary,
       delta: 10.0,
-      polarity: TonePolarity.relativeLighter,
+      polarity: .relativeLighter,
       stayTogether: false,
-      constraint: DeltaConstraint.nearer,
+      constraint: .nearer,
     ),
   );
 
@@ -388,16 +383,14 @@ final class ColorSpec2021 implements ColorSpec {
       roleA: secondaryContainer,
       roleB: secondary,
       delta: 10.0,
-      polarity: TonePolarity.relativeLighter,
+      polarity: .relativeLighter,
       stayTogether: false,
-      constraint: DeltaConstraint.nearer,
+      constraint: .nearer,
     ),
   );
 
   @override
-  DynamicColor? get secondaryDim {
-    return null;
-  }
+  DynamicColor? get secondaryDim => null;
 
   @override
   DynamicColor get onSecondary => DynamicColor(
@@ -421,7 +414,7 @@ final class ColorSpec2021 implements ColorSpec {
       if (_isMonochrome(s)) {
         return s.isDark ? 30.0 : 85.0;
       }
-      final double initialTone = s.isDark ? 30.0 : 90.0;
+      final initialTone = s.isDark ? 30.0 : 90.0;
       if (!_isFidelity(s)) return initialTone;
       return _findDesiredChromaByTone(
         s.secondaryPalette.hue,
@@ -437,9 +430,9 @@ final class ColorSpec2021 implements ColorSpec {
       roleA: secondaryContainer,
       roleB: secondary,
       delta: 10.0,
-      polarity: TonePolarity.relativeLighter,
+      polarity: .relativeLighter,
       stayTogether: false,
-      constraint: DeltaConstraint.nearer,
+      constraint: .nearer,
     ),
   );
 
@@ -477,16 +470,14 @@ final class ColorSpec2021 implements ColorSpec {
       roleA: tertiaryContainer,
       roleB: tertiary,
       delta: 10.0,
-      polarity: TonePolarity.relativeLighter,
+      polarity: .relativeLighter,
       stayTogether: false,
-      constraint: DeltaConstraint.nearer,
+      constraint: .nearer,
     ),
   );
 
   @override
-  DynamicColor? get tertiaryDim {
-    return null;
-  }
+  DynamicColor? get tertiaryDim => null;
 
   @override
   DynamicColor get onTertiary => DynamicColor(
@@ -523,9 +514,9 @@ final class ColorSpec2021 implements ColorSpec {
       roleA: tertiaryContainer,
       roleB: tertiary,
       delta: 10.0,
-      polarity: TonePolarity.relativeLighter,
+      polarity: .relativeLighter,
       stayTogether: false,
-      constraint: DeltaConstraint.nearer,
+      constraint: .nearer,
     ),
   );
 
@@ -558,16 +549,14 @@ final class ColorSpec2021 implements ColorSpec {
       roleA: errorContainer,
       roleB: error,
       delta: 10.0,
-      polarity: TonePolarity.relativeLighter,
+      polarity: .relativeLighter,
       stayTogether: false,
-      constraint: DeltaConstraint.nearer,
+      constraint: .nearer,
     ),
   );
 
   @override
-  DynamicColor? get errorDim {
-    return null;
-  }
+  DynamicColor? get errorDim => null;
 
   @override
   DynamicColor get onError => DynamicColor(
@@ -590,9 +579,9 @@ final class ColorSpec2021 implements ColorSpec {
       roleA: errorContainer,
       roleB: error,
       delta: 10.0,
-      polarity: TonePolarity.relativeLighter,
+      polarity: .relativeLighter,
       stayTogether: false,
-      constraint: DeltaConstraint.nearer,
+      constraint: .nearer,
     ),
   );
 
@@ -622,7 +611,7 @@ final class ColorSpec2021 implements ColorSpec {
       roleA: primaryFixed,
       roleB: primaryFixedDim,
       delta: 10.0,
-      polarity: TonePolarity.lighter,
+      polarity: .lighter,
       stayTogether: true,
     ),
   );
@@ -639,7 +628,7 @@ final class ColorSpec2021 implements ColorSpec {
       roleA: primaryFixed,
       roleB: primaryFixedDim,
       delta: 10.0,
-      polarity: TonePolarity.lighter,
+      polarity: .lighter,
       stayTogether: true,
     ),
   );
@@ -676,7 +665,7 @@ final class ColorSpec2021 implements ColorSpec {
       roleA: secondaryFixed,
       roleB: secondaryFixedDim,
       delta: 10.0,
-      polarity: TonePolarity.lighter,
+      polarity: .lighter,
       stayTogether: true,
     ),
   );
@@ -693,7 +682,7 @@ final class ColorSpec2021 implements ColorSpec {
       roleA: secondaryFixed,
       roleB: secondaryFixedDim,
       delta: 10.0,
-      polarity: TonePolarity.lighter,
+      polarity: .lighter,
       stayTogether: true,
     ),
   );
@@ -730,7 +719,7 @@ final class ColorSpec2021 implements ColorSpec {
       roleA: tertiaryFixed,
       roleB: tertiaryFixedDim,
       delta: 10.0,
-      polarity: TonePolarity.lighter,
+      polarity: .lighter,
       stayTogether: true,
     ),
   );
@@ -747,7 +736,7 @@ final class ColorSpec2021 implements ColorSpec {
       roleA: tertiaryFixed,
       roleB: tertiaryFixedDim,
       delta: 10.0,
-      polarity: TonePolarity.lighter,
+      polarity: .lighter,
       stayTogether: true,
     ),
   );
@@ -831,9 +820,8 @@ final class ColorSpec2021 implements ColorSpec {
   );
 
   @override
-  DynamicColor highestSurface(DynamicScheme scheme) {
-    return scheme.isDark ? surfaceBright : surfaceDim;
-  }
+  DynamicColor highestSurface(DynamicScheme scheme) =>
+      scheme.isDark ? surfaceBright : surfaceDim;
 
   @override
   Hct getHct(DynamicScheme scheme, DynamicColor color) {
@@ -855,15 +843,15 @@ final class ColorSpec2021 implements ColorSpec {
       final stayTogether = toneDeltaPair.stayTogether;
 
       final aIsNearer =
-          (toneDeltaPair.constraint == DeltaConstraint.nearer ||
-          (polarity == TonePolarity.lighter && !scheme.isDark) ||
-          (polarity == TonePolarity.darker && !scheme.isDark));
+          (toneDeltaPair.constraint == .nearer ||
+          (polarity == .lighter && !scheme.isDark) ||
+          (polarity == .darker && !scheme.isDark));
       final nearer = aIsNearer ? roleA : roleB;
       final farther = aIsNearer ? roleB : roleA;
       final amNearer = color.name == nearer.name;
       final expansionDir = scheme.isDark ? 1 : -1;
-      double nTone = nearer.tone(scheme);
-      double fTone = farther.tone(scheme);
+      var nTone = nearer.tone(scheme);
+      var fTone = farther.tone(scheme);
 
       // 1st round: solve to min, each
       if (color.background != null &&
@@ -899,42 +887,46 @@ final class ColorSpec2021 implements ColorSpec {
       // If constraint is not satisfied, try another round.
       if ((fTone - nTone) * expansionDir < delta) {
         // 2nd round: expand farther to match delta.
-        fTone = MathUtils.clampDouble(0, 100, nTone + delta * expansionDir);
+        fTone = MathUtils.clampDouble(0.0, 100.0, nTone + delta * expansionDir);
         // If constraint is not satisfied, try another round.
         if ((fTone - nTone) * expansionDir < delta) {
           // 3rd round: contract nearer to match delta.
-          nTone = MathUtils.clampDouble(0, 100, fTone - delta * expansionDir);
+          nTone = MathUtils.clampDouble(
+            0.0,
+            100.0,
+            fTone - delta * expansionDir,
+          );
         }
       }
 
       // Avoids the 50-59 awkward zone.
-      if (50 <= nTone && nTone < 60) {
+      if (50.0 <= nTone && nTone < 60.0) {
         // If `nearer` is in the awkward zone, move it away, together with
         // `farther`.
-        if (expansionDir > 0) {
-          nTone = 60;
+        if (expansionDir > 0.0) {
+          nTone = 60.0;
           fTone = math.max(fTone, nTone + delta * expansionDir);
         } else {
-          nTone = 49;
+          nTone = 49.0;
           fTone = math.min(fTone, nTone + delta * expansionDir);
         }
-      } else if (50 <= fTone && fTone < 60) {
+      } else if (50.0 <= fTone && fTone < 60.0) {
         if (stayTogether) {
           // Fixes both, to avoid two colors on opposite sides of the "awkward
           // zone".
           if (expansionDir > 0) {
-            nTone = 60;
+            nTone = 60.0;
             fTone = math.max(fTone, nTone + delta * expansionDir);
           } else {
-            nTone = 49;
+            nTone = 49.0;
             fTone = math.min(fTone, nTone + delta * expansionDir);
           }
         } else {
           // Not required to stay together; fixes just one.
           if (expansionDir > 0) {
-            fTone = 60;
+            fTone = 60.0;
           } else {
-            fTone = 49;
+            fTone = 49.0;
           }
         }
       }
@@ -943,7 +935,7 @@ final class ColorSpec2021 implements ColorSpec {
       return amNearer ? nTone : fTone;
     } else {
       // Case 2: No contrast pair; just solve for itself.
-      double answer = color.tone(scheme);
+      var answer = color.tone(scheme);
 
       if (color.background?.call(scheme) == null ||
           color.contrastCurve?.call(scheme) == null) {
@@ -966,12 +958,12 @@ final class ColorSpec2021 implements ColorSpec {
         answer = DynamicColor.foregroundTone(bgTone, desiredRatio);
       }
 
-      if (color.isBackground && 50 <= answer && answer < 60) {
+      if (color.isBackground && 50.0 <= answer && answer < 60.0) {
         // Must adjust
-        if (Contrast.ratioOfTones(49, bgTone) >= desiredRatio) {
-          answer = 49;
+        if (Contrast.ratioOfTones(49.0, bgTone) >= desiredRatio) {
+          answer = 49.0;
         } else {
-          answer = 60;
+          answer = 60.0;
         }
       }
 
@@ -1000,15 +992,8 @@ final class ColorSpec2021 implements ColorSpec {
       final darkOption = Contrast.darker(lower, desiredRatio);
 
       // Tones suitable for the foreground.
-      final List<double> availables = [];
-      if (lightOption != null) {
-        availables.add(lightOption);
-      }
-      if (darkOption != null) {
-        availables.add(darkOption);
-      }
-
-      bool prefersLight =
+      final availables = <double>[?lightOption, ?darkOption];
+      final prefersLight =
           DynamicColor.tonePrefersLightForeground(bgTone1) ||
           DynamicColor.tonePrefersLightForeground(bgTone2);
       if (prefersLight) {
@@ -1026,29 +1011,21 @@ final class ColorSpec2021 implements ColorSpec {
     Platform platform,
     double contrastLevel,
   ) => switch (variant) {
-    Variant.content || Variant.fidelity => TonalPalette.fromHueAndChroma(
-      sourceColorHct.hue,
-      sourceColorHct.chroma,
-    ),
-    Variant.fruitSalad => TonalPalette.fromHueAndChroma(
+    .content ||
+    .fidelity => .fromHueAndChroma(sourceColorHct.hue, sourceColorHct.chroma),
+    .fruitSalad => .fromHueAndChroma(
       MathUtils.sanitizeDegreesDouble(sourceColorHct.hue - 50.0),
       48.0,
     ),
-    Variant.monochrome => TonalPalette.fromHueAndChroma(
-      sourceColorHct.hue,
-      0.0,
+    .monochrome => .fromHueAndChroma(sourceColorHct.hue, 0.0),
+    .neutral => .fromHueAndChroma(sourceColorHct.hue, 12.0),
+    .rainbow => .fromHueAndChroma(sourceColorHct.hue, 48.0),
+    .tonalSpot => .fromHueAndChroma(sourceColorHct.hue, 36.0),
+    .expressive => .fromHueAndChroma(
+      MathUtils.sanitizeDegreesDouble(sourceColorHct.hue + 240.0),
+      40.0,
     ),
-    Variant.neutral => TonalPalette.fromHueAndChroma(sourceColorHct.hue, 12.0),
-    Variant.rainbow => TonalPalette.fromHueAndChroma(sourceColorHct.hue, 48.0),
-    Variant.tonalSpot => TonalPalette.fromHueAndChroma(
-      sourceColorHct.hue,
-      36.0,
-    ),
-    Variant.expressive => TonalPalette.fromHueAndChroma(
-      MathUtils.sanitizeDegreesDouble(sourceColorHct.hue + 240),
-      40,
-    ),
-    Variant.vibrant => TonalPalette.fromHueAndChroma(sourceColorHct.hue, 200.0),
+    .vibrant => .fromHueAndChroma(sourceColorHct.hue, 200.0),
   };
 
   @override
@@ -1059,37 +1036,31 @@ final class ColorSpec2021 implements ColorSpec {
     Platform platform,
     double contrastLevel,
   ) => switch (variant) {
-    Variant.content || Variant.fidelity => TonalPalette.fromHueAndChroma(
+    .content || .fidelity => .fromHueAndChroma(
       sourceColorHct.hue,
       math.max(sourceColorHct.chroma - 32.0, sourceColorHct.chroma * 0.5),
     ),
-    Variant.fruitSalad => TonalPalette.fromHueAndChroma(
+    .fruitSalad => .fromHueAndChroma(
       MathUtils.sanitizeDegreesDouble(sourceColorHct.hue - 50.0),
       36.0,
     ),
-    Variant.monochrome => TonalPalette.fromHueAndChroma(
-      sourceColorHct.hue,
-      0.0,
-    ),
-    Variant.neutral => TonalPalette.fromHueAndChroma(sourceColorHct.hue, 8.0),
-    Variant.rainbow => TonalPalette.fromHueAndChroma(sourceColorHct.hue, 16.0),
-    Variant.tonalSpot => TonalPalette.fromHueAndChroma(
-      sourceColorHct.hue,
-      16.0,
-    ),
-    Variant.expressive => TonalPalette.fromHueAndChroma(
+    .monochrome => .fromHueAndChroma(sourceColorHct.hue, 0.0),
+    .neutral => .fromHueAndChroma(sourceColorHct.hue, 8.0),
+    .rainbow => .fromHueAndChroma(sourceColorHct.hue, 16.0),
+    .tonalSpot => .fromHueAndChroma(sourceColorHct.hue, 16.0),
+    .expressive => .fromHueAndChroma(
       DynamicScheme.getRotatedHue(
         sourceColorHct,
-        [0, 21, 51, 121, 151, 191, 271, 321, 360],
-        [45, 95, 45, 20, 45, 90, 45, 45, 45],
+        [0.0, 21.0, 51.0, 121.0, 151.0, 191.0, 271.0, 321.0, 360.0],
+        [45.0, 95.0, 45.0, 20.0, 45.0, 90.0, 45.0, 45.0, 45.0],
       ),
       24.0,
     ),
-    Variant.vibrant => TonalPalette.fromHueAndChroma(
+    .vibrant => .fromHueAndChroma(
       DynamicScheme.getRotatedHue(
         sourceColorHct,
-        const [0, 41, 61, 101, 131, 181, 251, 301, 360],
-        const [18, 15, 10, 12, 15, 18, 15, 12, 12],
+        const [0.0, 41.0, 61.0, 101.0, 131.0, 181.0, 251.0, 301.0, 360.0],
+        const [18.0, 15.0, 10.0, 12.0, 15.0, 18.0, 15.0, 12.0, 12.0],
       ),
       24.0,
     ),
@@ -1103,42 +1074,36 @@ final class ColorSpec2021 implements ColorSpec {
     Platform platform,
     double contrastLevel,
   ) => switch (variant) {
-    Variant.content => TonalPalette.fromHct(
+    .content => .fromHct(
       DislikeAnalyzer.fixIfDisliked(
         TemperatureCache(sourceColorHct).getAnalogousColors(3, 6)[2],
       ),
     ),
-    Variant.fidelity => TonalPalette.fromHct(
+    .fidelity => .fromHct(
       DislikeAnalyzer.fixIfDisliked(
         TemperatureCache(sourceColorHct).getComplement(),
       ),
     ),
-    Variant.fruitSalad => TonalPalette.fromHueAndChroma(
-      sourceColorHct.hue,
-      36.0,
-    ),
-    Variant.monochrome => TonalPalette.fromHueAndChroma(
-      sourceColorHct.hue,
-      0.0,
-    ),
-    Variant.neutral => TonalPalette.fromHueAndChroma(sourceColorHct.hue, 16.0),
-    Variant.rainbow || Variant.tonalSpot => TonalPalette.fromHueAndChroma(
+    .fruitSalad => .fromHueAndChroma(sourceColorHct.hue, 36.0),
+    .monochrome => .fromHueAndChroma(sourceColorHct.hue, 0.0),
+    .neutral => .fromHueAndChroma(sourceColorHct.hue, 16.0),
+    .rainbow || .tonalSpot => .fromHueAndChroma(
       MathUtils.sanitizeDegreesDouble(sourceColorHct.hue + 60.0),
       24.0,
     ),
-    Variant.expressive => TonalPalette.fromHueAndChroma(
+    .expressive => .fromHueAndChroma(
       DynamicScheme.getRotatedHue(
         sourceColorHct,
-        [0, 21, 51, 121, 151, 191, 271, 321, 360],
-        [120, 120, 20, 45, 20, 15, 20, 120, 120],
+        [0.0, 21.0, 51.0, 121.0, 151.0, 191.0, 271.0, 321.0, 360.0],
+        [120.0, 120.0, 20.0, 45.0, 20.0, 15.0, 20.0, 120.0, 120.0],
       ),
       32.0,
     ),
-    Variant.vibrant => TonalPalette.fromHueAndChroma(
+    .vibrant => .fromHueAndChroma(
       DynamicScheme.getRotatedHue(
         sourceColorHct,
-        [0, 41, 61, 101, 131, 181, 251, 301, 360],
-        [35, 30, 20, 25, 30, 35, 30, 25, 25],
+        [0.0, 41.0, 61.0, 101.0, 131.0, 181.0, 251.0, 301.0, 360.0],
+        [35.0, 30.0, 20.0, 25.0, 30.0, 35.0, 30.0, 25.0, 25.0],
       ),
       32.0,
     ),
@@ -1152,26 +1117,20 @@ final class ColorSpec2021 implements ColorSpec {
     Platform platform,
     double contrastLevel,
   ) => switch (variant) {
-    Variant.content || Variant.fidelity => TonalPalette.fromHueAndChroma(
+    .content || .fidelity => .fromHueAndChroma(
       sourceColorHct.hue,
       sourceColorHct.chroma / 8.0,
     ),
-    Variant.fruitSalad => TonalPalette.fromHueAndChroma(
-      sourceColorHct.hue,
-      10.0,
+    .fruitSalad => .fromHueAndChroma(sourceColorHct.hue, 10.0),
+    .monochrome => .fromHueAndChroma(sourceColorHct.hue, 0.0),
+    .neutral => .fromHueAndChroma(sourceColorHct.hue, 2.0),
+    .rainbow => .fromHueAndChroma(sourceColorHct.hue, 0.0),
+    .tonalSpot => .fromHueAndChroma(sourceColorHct.hue, 6.0),
+    .expressive => .fromHueAndChroma(
+      MathUtils.sanitizeDegreesDouble(sourceColorHct.hue + 15.0),
+      8.0,
     ),
-    Variant.monochrome => TonalPalette.fromHueAndChroma(
-      sourceColorHct.hue,
-      0.0,
-    ),
-    Variant.neutral => TonalPalette.fromHueAndChroma(sourceColorHct.hue, 2.0),
-    Variant.rainbow => TonalPalette.fromHueAndChroma(sourceColorHct.hue, 0.0),
-    Variant.tonalSpot => TonalPalette.fromHueAndChroma(sourceColorHct.hue, 6.0),
-    Variant.expressive => TonalPalette.fromHueAndChroma(
-      MathUtils.sanitizeDegreesDouble(sourceColorHct.hue + 15),
-      8,
-    ),
-    Variant.vibrant => TonalPalette.fromHueAndChroma(sourceColorHct.hue, 10),
+    .vibrant => .fromHueAndChroma(sourceColorHct.hue, 10.0),
   };
 
   @override
@@ -1182,26 +1141,20 @@ final class ColorSpec2021 implements ColorSpec {
     Platform platform,
     double contrastLevel,
   ) => switch (variant) {
-    Variant.content || Variant.fidelity => TonalPalette.fromHueAndChroma(
+    .content || .fidelity => .fromHueAndChroma(
       sourceColorHct.hue,
       (sourceColorHct.chroma / 8.0) + 4.0,
     ),
-    Variant.fruitSalad => TonalPalette.fromHueAndChroma(
-      sourceColorHct.hue,
-      16.0,
+    .fruitSalad => .fromHueAndChroma(sourceColorHct.hue, 16.0),
+    .monochrome => .fromHueAndChroma(sourceColorHct.hue, 0.0),
+    .neutral => .fromHueAndChroma(sourceColorHct.hue, 2.0),
+    .rainbow => .fromHueAndChroma(sourceColorHct.hue, 0.0),
+    .tonalSpot => .fromHueAndChroma(sourceColorHct.hue, 8.0),
+    .expressive => .fromHueAndChroma(
+      MathUtils.sanitizeDegreesDouble(sourceColorHct.hue + 15.0),
+      12.0,
     ),
-    Variant.monochrome => TonalPalette.fromHueAndChroma(
-      sourceColorHct.hue,
-      0.0,
-    ),
-    Variant.neutral => TonalPalette.fromHueAndChroma(sourceColorHct.hue, 2.0),
-    Variant.rainbow => TonalPalette.fromHueAndChroma(sourceColorHct.hue, 0.0),
-    Variant.tonalSpot => TonalPalette.fromHueAndChroma(sourceColorHct.hue, 8.0),
-    Variant.expressive => TonalPalette.fromHueAndChroma(
-      MathUtils.sanitizeDegreesDouble(sourceColorHct.hue + 15),
-      12,
-    ),
-    Variant.vibrant => TonalPalette.fromHueAndChroma(sourceColorHct.hue, 12),
+    .vibrant => .fromHueAndChroma(sourceColorHct.hue, 12.0),
   };
 
   @override
@@ -1211,5 +1164,5 @@ final class ColorSpec2021 implements ColorSpec {
     bool isDark,
     Platform platform,
     double contrastLevel,
-  ) => TonalPalette.fromHueAndChroma(25.0, 84.0);
+  ) => .fromHueAndChroma(25.0, 84.0);
 }

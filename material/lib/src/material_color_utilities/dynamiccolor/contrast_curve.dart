@@ -35,15 +35,14 @@ final class ContrastCurve {
   String toString() => "ContrastCurve($low, $normal, $medium, $high)";
 
   @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        runtimeType == other.runtimeType &&
-            other is ContrastCurve &&
-            low == other.low &&
-            normal == other.normal &&
-            medium == other.medium &&
-            high == other.high;
-  }
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      runtimeType == other.runtimeType &&
+          other is ContrastCurve &&
+          low == other.low &&
+          normal == other.normal &&
+          medium == other.medium &&
+          high == other.high;
 
   @override
   int get hashCode => Object.hash(low, normal, medium, high);

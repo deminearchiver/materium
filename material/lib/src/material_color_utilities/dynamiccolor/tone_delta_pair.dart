@@ -54,7 +54,7 @@ final class ToneDeltaPair {
     required this.delta,
     required this.polarity,
     this.stayTogether = true,
-    this.constraint = DeltaConstraint.exact,
+    this.constraint = .exact,
   });
 
   /// The first role in a pair.
@@ -79,17 +79,16 @@ final class ToneDeltaPair {
   final DeltaConstraint constraint;
 
   @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        runtimeType == other.runtimeType &&
-            other is ToneDeltaPair &&
-            roleA == other.roleA &&
-            roleB == other.roleB &&
-            delta == other.delta &&
-            polarity == other.polarity &&
-            stayTogether == other.stayTogether &&
-            constraint == other.constraint;
-  }
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      runtimeType == other.runtimeType &&
+          other is ToneDeltaPair &&
+          roleA == other.roleA &&
+          roleB == other.roleB &&
+          delta == other.delta &&
+          polarity == other.polarity &&
+          stayTogether == other.stayTogether &&
+          constraint == other.constraint;
 
   @override
   int get hashCode =>

@@ -1,5 +1,4 @@
 import '../dynamiccolor/dynamic_scheme.dart';
-import '../dynamiccolor/variant.dart';
 
 /// A scheme that places the source color in Scheme.primaryContainer.
 ///
@@ -19,5 +18,5 @@ class SchemeContent extends DynamicScheme {
     required super.contrastLevel,
     super.specVersion = DynamicScheme.defaultSpecVersion,
     super.platform = DynamicScheme.defaultPlatform,
-  }) : super.fromPalettesOrKeyColors(variant: Variant.content);
+  }) : super.fromPalettesOrKeyColors(variant: .content);
 }

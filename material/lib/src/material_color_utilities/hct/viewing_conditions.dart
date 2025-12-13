@@ -48,7 +48,7 @@ final class ViewingConditions {
     final c = (f >= 0.9)
         ? MathUtils.lerp(0.59, 0.69, ((f - 0.9) * 10.0))
         : MathUtils.lerp(0.525, 0.59, ((f - 0.8) * 10.0));
-    double d = discountingIlluminant
+    var d = discountingIlluminant
         ? 1.0
         : f *
               (1.0 -
@@ -85,8 +85,8 @@ final class ViewingConditions {
       (400.0 * rgbAFactors[2]) / (rgbAFactors[2] + 27.13),
     ];
 
-    double aw = ((2.0 * rgbA[0]) + rgbA[1] + (0.05 * rgbA[2])) * nbb;
-    return ViewingConditions._(
+    final aw = ((2.0 * rgbA[0]) + rgbA[1] + (0.05 * rgbA[2])) * nbb;
+    return ._(
       n,
       aw,
       nbb,
@@ -100,14 +100,13 @@ final class ViewingConditions {
     );
   }
 
-  factory ViewingConditions.defaultWithBackgroundLstar(double lstar) =>
-      ViewingConditions.make(
-        ColorUtils.whitePointD65(),
-        (200.0 / math.pi * ColorUtils.yFromLstar(50.0) / 100.0),
-        lstar,
-        2.0,
-        false,
-      );
+  factory ViewingConditions.defaultWithBackgroundLstar(double lstar) => .make(
+    ColorUtils.whitePointD65(),
+    (200.0 / math.pi * ColorUtils.yFromLstar(50.0) / 100.0),
+    lstar,
+    2.0,
+    false,
+  );
 
   final double aw;
   final double nbb;
@@ -136,27 +135,25 @@ final class ViewingConditions {
       ")";
 
   @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        runtimeType == other.runtimeType &&
-            other is ViewingConditions &&
-            n == other.n &&
-            aw == other.aw &&
-            nbb == other.nbb &&
-            ncb == other.ncb &&
-            c == other.c &&
-            nc == other.nc &&
-            rgbD == other.rgbD &&
-            fl == other.fl &&
-            flRoot == other.flRoot &&
-            z == other.z;
-  }
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      runtimeType == other.runtimeType &&
+          other is ViewingConditions &&
+          n == other.n &&
+          aw == other.aw &&
+          nbb == other.nbb &&
+          ncb == other.ncb &&
+          c == other.c &&
+          nc == other.nc &&
+          rgbD == other.rgbD &&
+          fl == other.fl &&
+          flRoot == other.flRoot &&
+          z == other.z;
 
   @override
   int get hashCode => Object.hash(n, aw, nbb, ncb, c, nc, rgbD, fl, flRoot, z);
 
-  static final ViewingConditions sRgb =
-      ViewingConditions.defaultWithBackgroundLstar(50.0);
+  static final ViewingConditions sRgb = .defaultWithBackgroundLstar(50.0);
 
   static final ViewingConditions standard = sRgb;
 }

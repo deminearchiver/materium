@@ -21,5 +21,5 @@ abstract final class DislikeAnalyzer {
 
   /// If color is disliked, lighten it to make it likable.
   static Hct fixIfDisliked(Hct hct) =>
-      isDisliked(hct) ? Hct.from(hct.hue, hct.chroma, 70.0) : hct;
+      isDisliked(hct) ? .from(hct.hue, hct.chroma, 70.0) : hct;
 }

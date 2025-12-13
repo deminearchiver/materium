@@ -44,12 +44,12 @@ class _FocusRingState extends State<FocusRing>
 
   late AnimationController _widthController;
 
-  final Tween<double> _growValueTween = Tween<double>(begin: 0.0);
-  final Tween<double> _shrinkValueTween = Tween<double>();
-  final CurveTween _growCurveTween = CurveTween(
+  final _growValueTween = Tween<double>(begin: 0.0);
+  final _shrinkValueTween = Tween<double>();
+  final _growCurveTween = CurveTween(
     curve: const EasingThemeData.fallback().linear,
   );
-  final CurveTween _shrinkCurveTween = CurveTween(
+  final _shrinkCurveTween = CurveTween(
     curve: const EasingThemeData.fallback().linear,
   );
 
@@ -80,12 +80,11 @@ class _FocusRingState extends State<FocusRing>
   }
 
   void _animationStatusListener(AnimationStatus status) {
-    _toggleOverlay(status != AnimationStatus.dismissed);
+    _toggleOverlay(status != .dismissed);
   }
 
   void _callDeferred(VoidCallback callback) {
-    if (SchedulerBinding.instance.schedulerPhase ==
-        SchedulerPhase.persistentCallbacks) {
+    if (SchedulerBinding.instance.schedulerPhase == .persistentCallbacks) {
       SchedulerBinding.instance.addPostFrameCallback((_) {
         callback();
       });
@@ -123,7 +122,7 @@ class _FocusRingState extends State<FocusRing>
       if (widget.visible) {
         _widthController.animateTo(1.0, duration: _focusRingTheme.duration);
       } else {
-        _widthController.animateBack(0.0, duration: Duration.zero);
+        _widthController.animateBack(0.0, duration: .zero);
       }
     }
   }
@@ -192,47 +191,39 @@ class _FocusRingState extends State<FocusRing>
     BuildContext context,
     OverlayChildLayoutInfo info,
     Widget child,
-  ) {
-    // final focusIndicatorOffset = switch(widget.placement) {
-    //   FocusRingPlacement.inward => _focusRingTheme.inwardOffset,
-    //   FocusRingPlacement.outward => _focusRingTheme.outwardOffset,
-    // };
-    // final focusIndicatorSize = Size(
-    //   info.childSize.width + focusIndicatorOffset * 2.0,
-    //   info.childSize.height + focusIndicatorOffset * 2.0,
-    // );
-    final wrappedChild = widget.layoutBuilder(context, info, child);
-    return IgnorePointer(
-      child: Align.topLeft(
-        child: Transform(
-          transform: info.childPaintTransform,
-          child: SizedBox.fromSize(size: info.childSize, child: wrappedChild),
+  ) => IgnorePointer(
+    child: Align.topLeft(
+      child: Transform(
+        transform: info.childPaintTransform,
+        child: SizedBox.fromSize(
+          size: info.childSize,
+          child: widget.layoutBuilder(context, info, child),
         ),
       ),
-    );
-  }
+    ),
+  );
 
   Widget _buildIndicator(BuildContext context) {
     final padding = switch (widget.placement) {
-      FocusRingPlacement.inward => _focusRingTheme.inwardOffset,
-      FocusRingPlacement.outward => -_focusRingTheme.outwardOffset,
+      .inward => _focusRingTheme.inwardOffset,
+      .outward => -_focusRingTheme.outwardOffset,
     };
     final strokeAlign = switch (widget.placement) {
-      FocusRingPlacement.inward => BorderSide.strokeAlignInside,
-      FocusRingPlacement.outward => BorderSide.strokeAlignOutside,
+      .inward => BorderSide.strokeAlignInside,
+      .outward => BorderSide.strokeAlignOutside,
     };
     return AnimatedBuilder(
       animation: _widthController,
       builder: (context, _) => Padding(
         padding: EdgeInsetsGeometry.all(padding),
         child: DecoratedBox(
-          position: DecorationPosition.foreground,
+          position: .foreground,
           decoration: ShapeDecoration(
             shape: CornersBorder.rounded(
               corners: _focusRingTheme.shape,
               side: _widthAnimation.value > 0.0
                   ? BorderSide(
-                      style: BorderStyle.solid,
+                      style: .solid,
                       color: _focusRingTheme.color,
                       width: _widthAnimation.value,
                       strokeAlign: strokeAlign,

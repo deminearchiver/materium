@@ -31,9 +31,7 @@ final _indeterminateIndicatorPolygons = <RoundedPolygon>[
 
 final _determinateIndicatorPolygons = <RoundedPolygon>[
   // ignore: invalid_use_of_internal_member
-  MaterialShapes.circle.transformedWithMatrix(
-    Matrix4.rotationZ(2.0 * math.pi / 20.0),
-  ),
+  MaterialShapes.circle.transformedWithMatrix(.rotationZ(2.0 * math.pi / 20.0)),
   MaterialShapes.softBurst,
 ];
 
@@ -81,7 +79,7 @@ class _DeterminateLoadingIndicatorState
   late List<Morph> _morphSequence;
   late double _morphScaleFactor;
 
-  final Matrix4 _scaleMatrix = Matrix4.zero();
+  final _scaleMatrix = Matrix4.zero();
 
   void _updateMorphScaleFactor(List<RoundedPolygon> indicatorPolygons) {
     _morphScaleFactor =
@@ -169,9 +167,8 @@ class _DeterminateLoadingIndicatorState
             minHeight: _kContainerHeight,
           ),
           child: Material(
-            animationDuration: Duration.zero,
-            clipBehavior: Clip.antiAlias,
-            type: MaterialType.card,
+            animationDuration: .zero,
+            clipBehavior: .antiAlias,
             shape: CornersBorder.rounded(
               corners: Corners.all(shapeTheme.corner.full),
             ),
@@ -218,7 +215,7 @@ class _DeterminateLoadingIndicatorPainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    final center = size.center(Offset.zero);
+    final center = size.center(.zero);
 
     final morphPath = currentMorph.toPath(
       progress: adjustedProgressValue,
@@ -233,7 +230,7 @@ class _DeterminateLoadingIndicatorPainter extends CustomPainter {
     );
 
     final paint = Paint()
-      ..style = PaintingStyle.fill
+      ..style = .fill
       ..color = indicatorColor;
 
     canvas
@@ -250,15 +247,14 @@ class _DeterminateLoadingIndicatorPainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(_DeterminateLoadingIndicatorPainter oldDelegate) {
-    // TODO: measure the performance impact of these comparisons
-    return currentMorph != oldDelegate.currentMorph ||
-        morphScaleFactor != oldDelegate.morphScaleFactor ||
-        adjustedProgressValue != oldDelegate.adjustedProgressValue ||
-        rotation != oldDelegate.rotation ||
-        indicatorColor != oldDelegate.indicatorColor ||
-        scaleMatrix != oldDelegate.scaleMatrix;
-  }
+  bool shouldRepaint(_DeterminateLoadingIndicatorPainter oldDelegate) =>
+      // TODO: measure the performance impact of these comparisons
+      currentMorph != oldDelegate.currentMorph ||
+      morphScaleFactor != oldDelegate.morphScaleFactor ||
+      adjustedProgressValue != oldDelegate.adjustedProgressValue ||
+      rotation != oldDelegate.rotation ||
+      indicatorColor != oldDelegate.indicatorColor ||
+      scaleMatrix != oldDelegate.scaleMatrix;
 }
 
 class IndeterminateLoadingIndicator extends StatefulWidget {
@@ -295,11 +291,11 @@ class IndeterminateLoadingIndicator extends StatefulWidget {
 class _IndeterminateLoadingIndicatorState
     extends State<IndeterminateLoadingIndicator>
     with SingleTickerProviderStateMixin {
-  final Matrix4 _scaleMatrix = Matrix4.zero();
+  final _scaleMatrix = Matrix4.zero();
 
-  final ValueNotifier<double> _globalAngle = ValueNotifier(0.0);
+  final _globalAngle = ValueNotifier<double>(0.0);
 
-  final ValueNotifier<int> _morphIndex = ValueNotifier(0);
+  final _morphIndex = ValueNotifier<int>(0);
 
   late List<Morph> _morphSequence;
   late double _morphScaleFactor;
@@ -319,7 +315,7 @@ class _IndeterminateLoadingIndicatorState
   }
 
   void _statusListener(AnimationStatus status) {
-    if (status != AnimationStatus.completed) return;
+    if (status != .completed) return;
     _globalAngle.value =
         (_globalAngle.value + _kSingleRotationAngle) % _kFullRotationAngle;
     _morphIndex.value = (_morphIndex.value + 1) % _morphSequence.length;
@@ -435,9 +431,8 @@ class _IndeterminateLoadingIndicatorState
             minHeight: _kContainerHeight,
           ),
           child: Material(
-            animationDuration: Duration.zero,
-            clipBehavior: Clip.antiAlias,
-            type: MaterialType.card,
+            animationDuration: .zero,
+            clipBehavior: .antiAlias,
             shape: CornersBorder.rounded(
               corners: Corners.all(shapeTheme.corner.full),
             ),
@@ -502,7 +497,7 @@ class _IndeterminateLoadingIndicatorPainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    final center = size.center(Offset.zero);
+    final center = size.center(.zero);
 
     final angle =
         globalAngle.value +
@@ -522,7 +517,7 @@ class _IndeterminateLoadingIndicatorPainter extends CustomPainter {
     );
 
     final paint = Paint()
-      ..style = PaintingStyle.fill
+      ..style = .fill
       ..color = indicatorColor;
 
     canvas
@@ -539,17 +534,16 @@ class _IndeterminateLoadingIndicatorPainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(_IndeterminateLoadingIndicatorPainter oldDelegate) {
-    return indicatorColor != oldDelegate.indicatorColor ||
-        morphScaleFactor != oldDelegate.morphScaleFactor ||
-        morphs != oldDelegate.morphs ||
-        morphIndex != oldDelegate.morphIndex ||
-        globalAngle != oldDelegate.globalAngle ||
-        rotation != oldDelegate.rotation ||
-        scale != oldDelegate.scale ||
-        morphProgress != oldDelegate.morphProgress ||
-        scaleMatrix != oldDelegate.scaleMatrix;
-  }
+  bool shouldRepaint(_IndeterminateLoadingIndicatorPainter oldDelegate) =>
+      indicatorColor != oldDelegate.indicatorColor ||
+      morphScaleFactor != oldDelegate.morphScaleFactor ||
+      morphs != oldDelegate.morphs ||
+      morphIndex != oldDelegate.morphIndex ||
+      globalAngle != oldDelegate.globalAngle ||
+      rotation != oldDelegate.rotation ||
+      scale != oldDelegate.scale ||
+      morphProgress != oldDelegate.morphProgress ||
+      scaleMatrix != oldDelegate.scaleMatrix;
 }
 
 Iterable<Morph> _generateMorphSequence({
@@ -582,7 +576,7 @@ List<Morph> _updateMorphSequence({
   morphSequence
     ?..clear()
     ..addAll(iterable);
-  return morphSequence ?? [...iterable];
+  return morphSequence ?? iterable.toList(growable: false);
 }
 
 double _calculateScaleFactor(
@@ -612,7 +606,7 @@ Path _processPath({
   required double scaleFactor,
   Matrix4? scaleMatrix,
 }) {
-  scaleMatrix ??= Matrix4.zero();
+  scaleMatrix ??= .zero();
   scaleMatrix
     ..setIdentity()
     ..scaleByDouble(
@@ -626,7 +620,6 @@ Path _processPath({
   path = path.transform(scaleMatrix.storage);
 
   // Translate the path to align its center with the available size center.
-  path = path.shift(size.center(Offset.zero) - path.getBounds().center);
-
-  return path;
+  final transformedBounds = path.getBounds();
+  return path.shift(size.center(.zero) - transformedBounds.center);
 }

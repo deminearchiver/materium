@@ -24,7 +24,7 @@ abstract class LoadingIndicatorThemeDataPartial with Diagnosticable {
       indicatorColor != null ||
           containedIndicatorColor != null ||
           containedContainerColor != null
-      ? LoadingIndicatorThemeDataPartial.from(
+      ? .from(
           indicatorColor: indicatorColor ?? this.indicatorColor,
           containedContainerColor:
               containedContainerColor ?? this.containedContainerColor,
@@ -93,7 +93,7 @@ abstract class LoadingIndicatorThemeDataPartial with Diagnosticable {
     double t,
   ) {
     if (a == b) return a;
-    return LoadingIndicatorThemeDataPartial.from(
+    return .from(
       indicatorColor: Color.lerp(a?.indicatorColor, b?.indicatorColor, t),
       containedContainerColor: Color.lerp(
         a?.containedContainerColor,
@@ -207,7 +207,7 @@ abstract class LoadingIndicatorThemeData
     double t,
   ) {
     if (a == b) return a;
-    return LoadingIndicatorThemeData.from(
+    return .from(
       indicatorColor: Color.lerp(a.indicatorColor, b.indicatorColor, t)!,
       containedContainerColor: Color.lerp(
         a.containedContainerColor,

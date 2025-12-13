@@ -3,53 +3,39 @@ import 'dart:math' as math;
 import 'math_utils.dart';
 
 abstract final class ColorUtils {
-  static const List<List<double>> _srgbToXyz = [
+  static const _srgbToXyz = <List<double>>[
     [0.41233895, 0.35762064, 0.18051042],
     [0.2126, 0.7152, 0.0722],
     [0.01932141, 0.11916382, 0.95034478],
   ];
 
-  static const List<List<double>> _xyzToSrgb = [
+  static const _xyzToSrgb = <List<double>>[
     [3.2413774792388685, -1.5376652402851851, -0.49885366846268053],
     [-0.9691452513005321, 1.8758853451067872, 0.04156585616912061],
     [0.05562093689691305, -0.20395524564742123, 1.0571799111220335],
   ];
 
-  static const List<double> _whitePointD65 = [95.047, 100.0, 108.883];
+  static const _whitePointD65 = <double>[95.047, 100.0, 108.883];
 
-  static int argbFromRgb(int red, int green, int blue) {
-    return (255 << 24) |
-        ((red & 255) << 16) |
-        ((green & 255) << 8) |
-        (blue & 255);
-  }
+  static int argbFromRgb(int red, int green, int blue) =>
+      (255 << 24) | ((red & 255) << 16) | ((green & 255) << 8) | (blue & 255);
 
   static int argbFromLinrgb(List<double> linrgb) {
-    int r = delinearized(linrgb[0]);
-    int g = delinearized(linrgb[1]);
-    int b = delinearized(linrgb[2]);
+    final r = delinearized(linrgb[0]);
+    final g = delinearized(linrgb[1]);
+    final b = delinearized(linrgb[2]);
     return argbFromRgb(r, g, b);
   }
 
-  static int alphaFromArgb(int argb) {
-    return (argb >> 24) & 255;
-  }
+  static int alphaFromArgb(int argb) => (argb >> 24) & 255;
 
-  static int redFromArgb(int argb) {
-    return (argb >> 16) & 255;
-  }
+  static int redFromArgb(int argb) => (argb >> 16) & 255;
 
-  static int greenFromArgb(int argb) {
-    return (argb >> 8) & 255;
-  }
+  static int greenFromArgb(int argb) => (argb >> 8) & 255;
 
-  static int blueFromArgb(int argb) {
-    return argb & 255;
-  }
+  static int blueFromArgb(int argb) => argb & 255;
 
-  static bool isOpaque(int argb) {
-    return alphaFromArgb(argb) >= 255;
-  }
+  static bool isOpaque(int argb) => alphaFromArgb(argb) >= 255;
 
   static int argbFromXyz(double x, double y, double z) {
     const matrix = _xyzToSrgb;
@@ -124,13 +110,10 @@ abstract final class ColorUtils {
     return 116.0 * _labF(y / 100.0) - 16.0;
   }
 
-  static double yFromLstar(double lstar) {
-    return 100.0 * _labInvf((lstar + 16.0) / 116.0);
-  }
+  static double yFromLstar(double lstar) =>
+      100.0 * _labInvf((lstar + 16.0) / 116.0);
 
-  static double lstarFromY(double y) {
-    return _labF(y / 100.0) * 116.0 - 16.0;
-  }
+  static double lstarFromY(double y) => _labF(y / 100.0) * 116.0 - 16.0;
 
   static double linearized(int rgbComponent) {
     final normalized = rgbComponent / 255.0;

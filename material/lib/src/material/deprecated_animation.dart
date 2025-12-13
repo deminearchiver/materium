@@ -53,9 +53,8 @@ abstract class ImplicitAnimation<T extends Object?> extends Animation<T>
 
   @protected
   bool buildTween() {
-    bool shouldStartAnimation = false;
-
-    Tween<T>? tween = _tween;
+    var shouldStartAnimation = false;
+    var tween = _tween;
     if (targetValue != null) {
       tween ??= builder(targetValue);
       if (targetValue != (tween.end ?? tween.begin)) {
@@ -67,7 +66,6 @@ abstract class ImplicitAnimation<T extends Object?> extends Animation<T>
       tween = null;
     }
     _tween = tween;
-
     return shouldStartAnimation;
   }
 
@@ -154,9 +152,7 @@ class CurveImplicitAnimation<T extends Object?> extends ImplicitAnimation<T> {
   Curve get curve => _curve;
 
   set curve(Curve value) {
-    if (_curve == value) {
-      return;
-    }
+    if (_curve == value) return;
     _curve = value;
     _animation.dispose();
     _animation = _createAnimation();
@@ -169,9 +165,7 @@ class CurveImplicitAnimation<T extends Object?> extends ImplicitAnimation<T> {
   TweenBuilder<T> get builder => _builder;
 
   set builder(TweenBuilder<T> value) {
-    if (_builder == value) {
-      return;
-    }
+    if (_builder == value) return;
     _builder = value;
     final current = _tween?.evaluate(_animation);
     startAnimation(from: current);
@@ -183,21 +177,16 @@ class CurveImplicitAnimation<T extends Object?> extends ImplicitAnimation<T> {
   T get targetValue => _targetValue;
 
   set targetValue(T value) {
-    if (_targetValue == value) {
-      return;
-    }
+    if (_targetValue == value) return;
     _targetValue = value;
     startAnimation();
   }
 
   @override
-  TickerFuture animate() {
-    return controller.forward(from: 0.0);
-  }
+  TickerFuture animate() => controller.forward(from: 0.0);
 
-  CurvedAnimation _createAnimation() {
-    return CurvedAnimation(parent: controller, curve: _curve);
-  }
+  CurvedAnimation _createAnimation() =>
+      CurvedAnimation(parent: controller, curve: _curve);
 }
 
 class SpringImplicitAnimation<T extends Object?> extends ImplicitAnimation<T> {
@@ -210,10 +199,7 @@ class SpringImplicitAnimation<T extends Object?> extends ImplicitAnimation<T> {
   }) : _spring = spring,
        _targetValue = initialValue,
        _builder = builder,
-       controller = AnimationController.unbounded(
-         vsync: vsync,
-         debugLabel: debugLabel,
-       ),
+       controller = .unbounded(vsync: vsync, debugLabel: debugLabel),
        super();
 
   @override
@@ -227,9 +213,7 @@ class SpringImplicitAnimation<T extends Object?> extends ImplicitAnimation<T> {
   SpringDescription get spring => _spring;
 
   set spring(SpringDescription value) {
-    if (_spring == value) {
-      return;
-    }
+    if (_spring == value) return;
     _spring = value;
     startAnimation();
   }
@@ -240,9 +224,7 @@ class SpringImplicitAnimation<T extends Object?> extends ImplicitAnimation<T> {
   TweenBuilder<T> get builder => _builder;
 
   set builder(TweenBuilder<T> value) {
-    if (_builder == value) {
-      return;
-    }
+    if (_builder == value) return;
     _builder = value;
     final current = tween?.evaluate(controller);
     tween = null;
@@ -255,9 +237,7 @@ class SpringImplicitAnimation<T extends Object?> extends ImplicitAnimation<T> {
   T get targetValue => _targetValue;
 
   set targetValue(T value) {
-    if (_targetValue == value) {
-      return;
-    }
+    if (_targetValue == value) return;
     _targetValue = value;
     startAnimation();
   }
@@ -283,15 +263,10 @@ class SpringImplicitAnimation<T extends Object?> extends ImplicitAnimation<T> {
   }
 
   @override
-  TickerFuture animate() {
-    final simulation = _createSimulation();
-    return controller.animateWith(simulation);
-  }
+  TickerFuture animate() => controller.animateWith(_createSimulation());
 
-  Simulation _createSimulation() {
-    return SpringSimulation(_spring, 0.0, 1.0, 1.0, snapToEnd: true);
-    // return ScrollSpringSimulation(_spring, 0.0, 1.0, 1.0);
-  }
+  Simulation _createSimulation() =>
+      SpringSimulation(_spring, 0.0, 1.0, 1.0, snapToEnd: true);
 }
 
 // class DualWeightedAnimation<T> extends Animation<T>
@@ -405,10 +380,10 @@ class SpringImplicitAnimation<T extends Object?> extends ImplicitAnimation<T> {
 //   }
 
 //   AnimationStatus get _status => switch (weight.status) {
-//     AnimationStatus.reverse => begin.status,
-//     AnimationStatus.dismissed => begin.status,
-//     AnimationStatus.forward => end.status,
-//     AnimationStatus.completed => end.status,
+//     .reverse => begin.status,
+//     .dismissed => begin.status,
+//     .forward => end.status,
+//     .completed => end.status,
 //   };
 
 //   @override
@@ -496,8 +471,8 @@ abstract class WeightAnimation<T extends Object?> extends Animation<T>
   String toString() => "${objectRuntimeType(this, "WeightAnimation")}<$T>()";
 
   static double calculateTotalWeight(List<double> weights) {
-    double totalWeight = 0.0;
-    for (int i = 0; i < weights.length; i++) {
+    var totalWeight = 0.0;
+    for (var i = 0; i < weights.length; i++) {
       final weight = weights[i];
       assert(weight >= 0.0);
       totalWeight += weight;
@@ -509,8 +484,8 @@ abstract class WeightAnimation<T extends Object?> extends Animation<T>
   static double combineDouble(List<double> values, List<double> weights) {
     assert(values.length == weights.length);
     final totalWeight = calculateTotalWeight(weights);
-    double result = 0.0;
-    for (int i = 0; i < values.length; i++) {
+    var result = 0.0;
+    for (var i = 0; i < values.length; i++) {
       final value = values[i];
       final weight = weights[i];
       final fraction = weight / totalWeight;
@@ -537,25 +512,27 @@ class _WeightAnimationFromMap<T extends Object?> extends WeightAnimation<T> {
   @override
   void didStartListening() {
     for (final item in _items.values) {
-      item.addValueListener((_, _) {
-        notifyListeners();
-      });
-      item.addValueStatusListener((_, _, _) {
-        notifyStatusListeners(status);
-      });
-      item.addWeightListener((_, _) {
-        notifyListeners();
-      });
+      item
+        ..addValueListener((_, _) {
+          notifyListeners();
+        })
+        ..addValueStatusListener((_, _, _) {
+          notifyStatusListeners(status);
+        })
+        ..addWeightListener((_, _) {
+          notifyListeners();
+        });
     }
   }
 
   @override
   void didStopListening() {
     for (final item in _items.values) {
-      item.removeValueListener();
-      item.removeValueStatusListener();
-      item.removeWeightListener();
-      item.removeWeightStatusListener();
+      item
+        ..removeValueListener()
+        ..removeValueStatusListener()
+        ..removeWeightListener()
+        ..removeWeightStatusListener();
     }
   }
 
@@ -587,9 +564,8 @@ class _WeightAnimationFromMap<T extends Object?> extends WeightAnimation<T> {
   ) {
     assert(statuses.length == weights.length);
     final totalWeight = WeightAnimation.calculateTotalWeight(weights);
-    final Map<AnimationStatus, double> statusToWeight =
-        <AnimationStatus, double>{};
-    for (int i = 0; i < statuses.length; i++) {
+    final statusToWeight = <AnimationStatus, double>{};
+    for (var i = 0; i < statuses.length; i++) {
       final status = statuses[i];
       final weight = weights[i];
       statusToWeight.update(
@@ -673,9 +649,9 @@ class _WeightAnimationFromTween<T extends Object?> extends WeightAnimation<T> {
   T get value => _builder(_begin.value, _end.value).evaluate(_weight);
 }
 
-typedef _Listener<T> =
+typedef _Listener<T extends Object?> =
     void Function(_AnimationWeight item, Animation<T> animation);
-typedef _StatusListener<T> =
+typedef _StatusListener<T extends Object?> =
     void Function(
       _AnimationWeight item,
       Animation<T> animation,
@@ -729,21 +705,18 @@ class _AnimationWeight<T extends Object?> {
 
   void addValueStatusListener(_StatusListener<T> listener) {
     void callback(AnimationStatus status) => listener(this, value, status);
-
     value.addStatusListener(callback);
     _valueStatusListener = callback;
   }
 
   void addWeightListener(_Listener<double> listener) {
     void callback() => listener(this, weight);
-
     weight.addListener(callback);
     _weightListener = callback;
   }
 
   void addWeightStatusListener(_StatusListener<double> listener) {
     void callback(AnimationStatus status) => listener(this, weight, status);
-
     weight.addStatusListener(callback);
     _weightStatusListener = callback;
   }

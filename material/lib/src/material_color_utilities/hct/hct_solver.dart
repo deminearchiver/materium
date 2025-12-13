@@ -9,21 +9,21 @@ import 'viewing_conditions.dart';
 import 'cam16.dart';
 
 abstract final class HctSolver {
-  static const List<List<double>> _scaledDiscountFromLinrgb = <List<double>>[
+  static const _scaledDiscountFromLinrgb = <List<double>>[
     [0.001200833568784504, 0.002389694492170889, 0.0002795742885861124],
     [0.0005891086651375999, 0.0029785502573438758, 0.0003270666104008398],
     [0.00010146692491640572, 0.0005364214359186694, 0.0032979401770712076],
   ];
 
-  static const List<List<double>> _linrgbFromScaledDiscount = <List<double>>[
+  static const _linrgbFromScaledDiscount = <List<double>>[
     [1373.2198709594231, -1100.4251190754821, -7.278681089101213],
     [-271.815969077903, 559.6580465940733, -32.46047482791194],
     [1.9622899599665666, -57.173814538844006, 308.7233197812385],
   ];
 
-  static const List<double> _yFromLinrgb = <double>[0.2126, 0.7152, 0.0722];
+  static const _yFromLinrgb = <double>[0.2126, 0.7152, 0.0722];
 
-  static const List<double> _criticalPlanes = <double>[
+  static const _criticalPlanes = <double>[
     0.015176349177441876,
     0.045529047532325624,
     0.07588174588720938,
@@ -380,9 +380,9 @@ abstract final class HctSolver {
   @internal
   static List<List<double>> bisectToSegment(double y, double targetHue) {
     List<double>? left;
-    List<double>? right = left;
-    double leftHue = 0.0;
-    double rightHue = 0.0;
+    var right = left;
+    var leftHue = 0.0;
+    var rightHue = 0.0;
     var initialized = false;
     var uncut = true;
     for (var n = 0; n < 12; n++) {
@@ -473,7 +473,7 @@ abstract final class HctSolver {
   @internal
   static int findResultByJ(double hueRadians, double chroma, double y) {
     // Initial estimate of j.
-    double j = math.sqrt(y) * 11.0;
+    var j = math.sqrt(y) * 11.0;
     // ===========================================================
     // Operations inlined from Cam16 to avoid repeated calculation
     // ===========================================================
@@ -528,10 +528,10 @@ abstract final class HctSolver {
       if (linrgb[0] < 0.0 || linrgb[1] < 0.0 || linrgb[2] < 0.0) {
         return 0;
       }
-      double kR = _yFromLinrgb[0];
-      double kG = _yFromLinrgb[1];
-      double kB = _yFromLinrgb[2];
-      double fnj = kR * linrgb[0] + kG * linrgb[1] + kB * linrgb[2];
+      final kR = _yFromLinrgb[0];
+      final kG = _yFromLinrgb[1];
+      final kB = _yFromLinrgb[2];
+      final fnj = kR * linrgb[0] + kG * linrgb[1] + kB * linrgb[2];
       if (fnj <= 0.0) {
         return 0;
       }

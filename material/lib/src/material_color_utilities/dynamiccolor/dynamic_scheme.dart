@@ -37,7 +37,7 @@ class DynamicScheme {
     TonalPalette? errorPalette,
   }) : sourceColorArgb = sourceColorHct.toInt(),
        specVersion = _maybeFallbackSpecVersion(specVersion, variant),
-       errorPalette = errorPalette ?? TonalPalette.fromHueAndChroma(25.0, 84.0);
+       errorPalette = errorPalette ?? .fromHueAndChroma(25.0, 84.0);
 
   DynamicScheme._fromPalettesOrKeyColors({
     required this.sourceColorHct,
@@ -145,11 +145,11 @@ class DynamicScheme {
          sourceColorHct: sourceColorHct ?? Hct.fromInt(0xFF6750A4),
          isDark: isDark,
          contrastLevel: contrastLevel ?? 0.0,
-         variant: variant ?? Variant.tonalSpot,
+         variant: variant ?? .tonalSpot,
          platform: platform ?? defaultPlatform,
          specVersion: _maybeFallbackSpecVersion(
            specVersion ?? defaultSpecVersion,
-           variant ?? Variant.tonalSpot,
+           variant ?? .tonalSpot,
          ),
          primaryPalette: primaryPalette,
          secondaryPalette: secondaryPalette,
@@ -200,13 +200,9 @@ class DynamicScheme {
   /// The source color of the scheme in ARGB format.
   final int sourceColorArgb;
 
-  Hct getHct(DynamicColor dynamicColor) {
-    return dynamicColor.getHct(this);
-  }
+  Hct getHct(DynamicColor dynamicColor) => dynamicColor.getHct(this);
 
-  int getArgb(DynamicColor dynamicColor) {
-    return dynamicColor.getArgb(this);
-  }
+  int getArgb(DynamicColor dynamicColor) => dynamicColor.getArgb(this);
 
   int get primaryPaletteKeyColor =>
       getArgb(_dynamicColors.primaryPaletteKeyColor);
@@ -365,24 +361,23 @@ class DynamicScheme {
       "specVersion=$specVersion";
 
   @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        runtimeType == other.runtimeType &&
-            other is DynamicScheme &&
-            sourceColorArgb == other.sourceColorArgb &&
-            sourceColorHct == other.sourceColorHct &&
-            variant == other.variant &&
-            isDark == other.isDark &&
-            platform == other.platform &&
-            contrastLevel == other.contrastLevel &&
-            specVersion == other.specVersion &&
-            primaryPalette == other.primaryPalette &&
-            secondaryPalette == other.secondaryPalette &&
-            tertiaryPalette == other.tertiaryPalette &&
-            neutralPalette == other.neutralPalette &&
-            neutralVariantPalette == other.neutralVariantPalette &&
-            errorPalette == other.errorPalette;
-  }
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      runtimeType == other.runtimeType &&
+          other is DynamicScheme &&
+          sourceColorArgb == other.sourceColorArgb &&
+          sourceColorHct == other.sourceColorHct &&
+          variant == other.variant &&
+          isDark == other.isDark &&
+          platform == other.platform &&
+          contrastLevel == other.contrastLevel &&
+          specVersion == other.specVersion &&
+          primaryPalette == other.primaryPalette &&
+          secondaryPalette == other.secondaryPalette &&
+          tertiaryPalette == other.tertiaryPalette &&
+          neutralPalette == other.neutralPalette &&
+          neutralVariantPalette == other.neutralVariantPalette &&
+          errorPalette == other.errorPalette;
 
   @override
   int get hashCode => Object.hash(
@@ -402,8 +397,8 @@ class DynamicScheme {
     errorPalette,
   );
 
-  static const SpecVersion defaultSpecVersion = SpecVersion.spec2021;
-  static const Platform defaultPlatform = Platform.phone;
+  static const SpecVersion defaultSpecVersion = .spec2021;
+  static const Platform defaultPlatform = .phone;
 
   static const MaterialDynamicColors _dynamicColors = MaterialDynamicColors();
 
@@ -411,22 +406,20 @@ class DynamicScheme {
     DynamicScheme other,
     bool isDark, [
     double? contrastLevel,
-  ]) {
-    return DynamicScheme(
-      sourceColorHct: other.sourceColorHct,
-      variant: other.variant,
-      isDark: isDark,
-      contrastLevel: contrastLevel ?? other.contrastLevel,
-      platform: other.platform,
-      specVersion: other.specVersion,
-      primaryPalette: other.primaryPalette,
-      secondaryPalette: other.secondaryPalette,
-      tertiaryPalette: other.tertiaryPalette,
-      neutralPalette: other.neutralPalette,
-      neutralVariantPalette: other.neutralVariantPalette,
-      errorPalette: other.errorPalette,
-    );
-  }
+  ]) => DynamicScheme(
+    sourceColorHct: other.sourceColorHct,
+    variant: other.variant,
+    isDark: isDark,
+    contrastLevel: contrastLevel ?? other.contrastLevel,
+    platform: other.platform,
+    specVersion: other.specVersion,
+    primaryPalette: other.primaryPalette,
+    secondaryPalette: other.secondaryPalette,
+    tertiaryPalette: other.tertiaryPalette,
+    neutralPalette: other.neutralPalette,
+    neutralVariantPalette: other.neutralVariantPalette,
+    errorPalette: other.errorPalette,
+  );
 
   static double getPiecewiseValue(
     Hct sourceColorHct,
@@ -435,7 +428,7 @@ class DynamicScheme {
   ) {
     final size = math.min(hueBreakpoints.length - 1, hues.length);
     final sourceHue = sourceColorHct.hue;
-    for (int i = 0; i < size; i++) {
+    for (var i = 0; i < size; i++) {
       if (sourceHue >= hueBreakpoints[i] && sourceHue < hueBreakpoints[i + 1]) {
         return MathUtils.sanitizeDegreesDouble(hues[i]);
       }
@@ -449,11 +442,7 @@ class DynamicScheme {
     List<double> hueBreakpoints,
     List<double> rotations,
   ) {
-    double rotation = getPiecewiseValue(
-      sourceColorHct,
-      hueBreakpoints,
-      rotations,
-    );
+    var rotation = getPiecewiseValue(sourceColorHct, hueBreakpoints, rotations);
     if (math.min(hueBreakpoints.length - 1, rotations.length) <= 0) {
       // No condition matched, return the source hue.
       rotation = 0.0;
@@ -468,14 +457,11 @@ class DynamicScheme {
     SpecVersion specVersion,
     Variant variant,
   ) => switch (variant) {
-    Variant.expressive ||
-    Variant.vibrant ||
-    Variant.tonalSpot ||
-    Variant.neutral => specVersion,
-    Variant.monochrome ||
-    Variant.fidelity ||
-    Variant.content ||
-    Variant.rainbow ||
-    Variant.fruitSalad => SpecVersion.spec2021,
+    .expressive || .vibrant || .tonalSpot || .neutral => specVersion,
+    .monochrome ||
+    .fidelity ||
+    .content ||
+    .rainbow ||
+    .fruitSalad => .spec2021,
   };
 }

@@ -43,22 +43,16 @@ final class ColorSpec2025 implements ColorSpec {
   @override
   DynamicColor get background {
     final color2025 = surface.copyWith(name: "background");
-    return _baseSpec.background.extendSpecVersion(
-      SpecVersion.spec2025,
-      color2025,
-    );
+    return _baseSpec.background.extendSpecVersion(.spec2025, color2025);
   }
 
   @override
   DynamicColor get onBackground {
     final color2025 = onSurface.copyWith(
       name: "on_background",
-      tone: (s) => s.platform == Platform.watch ? 100.0 : onSurface.getTone(s),
+      tone: (s) => s.platform == .watch ? 100.0 : onSurface.getTone(s),
     );
-    return _baseSpec.onBackground.extendSpecVersion(
-      SpecVersion.spec2025,
-      color2025,
-    );
+    return _baseSpec.onBackground.extendSpecVersion(.spec2025, color2025);
   }
 
   @override
@@ -67,13 +61,13 @@ final class ColorSpec2025 implements ColorSpec {
       name: "surface",
       palette: (s) => s.neutralPalette,
       tone: (s) {
-        if (s.platform == Platform.phone) {
+        if (s.platform == .phone) {
           if (s.isDark) {
             return 4.0;
           } else {
             if (Hct.isYellow(s.neutralPalette.hue)) {
               return 99.0;
-            } else if (s.variant == Variant.vibrant) {
+            } else if (s.variant == .vibrant) {
               return 97.0;
             } else {
               return 98.0;
@@ -99,7 +93,7 @@ final class ColorSpec2025 implements ColorSpec {
         } else {
           if (Hct.isYellow(s.neutralPalette.hue)) {
             return 90.0;
-          } else if (s.variant == Variant.vibrant) {
+          } else if (s.variant == .vibrant) {
             return 85.0;
           } else {
             return 87.0;
@@ -109,23 +103,20 @@ final class ColorSpec2025 implements ColorSpec {
       isBackground: true,
       chromaMultiplier: (s) {
         if (!s.isDark) {
-          if (s.variant == Variant.neutral) {
+          if (s.variant == .neutral) {
             return 2.5;
-          } else if (s.variant == Variant.tonalSpot) {
+          } else if (s.variant == .tonalSpot) {
             return 1.7;
-          } else if (s.variant == Variant.expressive) {
+          } else if (s.variant == .expressive) {
             return Hct.isYellow(s.neutralPalette.hue) ? 2.7 : 1.75;
-          } else if (s.variant == Variant.vibrant) {
+          } else if (s.variant == .vibrant) {
             return 1.36;
           }
         }
         return 1.0;
       },
     );
-    return _baseSpec.surfaceDim.extendSpecVersion(
-      SpecVersion.spec2025,
-      color2025,
-    );
+    return _baseSpec.surfaceDim.extendSpecVersion(.spec2025, color2025);
   }
 
   @override
@@ -139,7 +130,7 @@ final class ColorSpec2025 implements ColorSpec {
         } else {
           if (Hct.isYellow(s.neutralPalette.hue)) {
             return 99.0;
-          } else if (s.variant == Variant.vibrant) {
+          } else if (s.variant == .vibrant) {
             return 97.0;
           } else {
             return 98.0;
@@ -149,23 +140,20 @@ final class ColorSpec2025 implements ColorSpec {
       isBackground: true,
       chromaMultiplier: (s) {
         if (s.isDark) {
-          if (s.variant == Variant.neutral) {
+          if (s.variant == .neutral) {
             return 2.5;
-          } else if (s.variant == Variant.tonalSpot) {
+          } else if (s.variant == .tonalSpot) {
             return 1.7;
-          } else if (s.variant == Variant.expressive) {
+          } else if (s.variant == .expressive) {
             return Hct.isYellow(s.neutralPalette.hue) ? 2.7 : 1.75;
-          } else if (s.variant == Variant.vibrant) {
+          } else if (s.variant == .vibrant) {
             return 1.36;
           }
         }
         return 1.0;
       },
     );
-    return _baseSpec.surfaceBright.extendSpecVersion(
-      SpecVersion.spec2025,
-      color2025,
-    );
+    return _baseSpec.surfaceBright.extendSpecVersion(.spec2025, color2025);
   }
 
   @override
@@ -177,7 +165,7 @@ final class ColorSpec2025 implements ColorSpec {
       isBackground: true,
     );
     return _baseSpec.surfaceContainerLowest.extendSpecVersion(
-      SpecVersion.spec2025,
+      .spec2025,
       color2025,
     );
   }
@@ -188,13 +176,13 @@ final class ColorSpec2025 implements ColorSpec {
       name: "surface_container_low",
       palette: (s) => s.neutralPalette,
       tone: (s) {
-        if (s.platform == Platform.phone) {
+        if (s.platform == .phone) {
           if (s.isDark) {
             return 6.0;
           } else {
             if (Hct.isYellow(s.neutralPalette.hue)) {
               return 98.0;
-            } else if (s.variant == Variant.vibrant) {
+            } else if (s.variant == .vibrant) {
               return 95.0;
             } else {
               return 96.0;
@@ -206,14 +194,14 @@ final class ColorSpec2025 implements ColorSpec {
       },
       isBackground: true,
       chromaMultiplier: (s) {
-        if (s.platform == Platform.phone) {
-          if (s.variant == Variant.neutral) {
+        if (s.platform == .phone) {
+          if (s.variant == .neutral) {
             return 1.3;
-          } else if (s.variant == Variant.tonalSpot) {
+          } else if (s.variant == .tonalSpot) {
             return 1.25;
-          } else if (s.variant == Variant.expressive) {
+          } else if (s.variant == .expressive) {
             return Hct.isYellow(s.neutralPalette.hue) ? 1.3 : 1.15;
-          } else if (s.variant == Variant.vibrant) {
+          } else if (s.variant == .vibrant) {
             return 1.08;
           }
         }
@@ -221,7 +209,7 @@ final class ColorSpec2025 implements ColorSpec {
       },
     );
     return _baseSpec.surfaceContainerLow.extendSpecVersion(
-      SpecVersion.spec2025,
+      .spec2025,
       color2025,
     );
   }
@@ -232,13 +220,13 @@ final class ColorSpec2025 implements ColorSpec {
       name: "surface_container",
       palette: (s) => s.neutralPalette,
       tone: (s) {
-        if (s.platform == Platform.phone) {
+        if (s.platform == .phone) {
           if (s.isDark) {
             return 9.0;
           } else {
             if (Hct.isYellow(s.neutralPalette.hue)) {
               return 96.0;
-            } else if (s.variant == Variant.vibrant) {
+            } else if (s.variant == .vibrant) {
               return 92.0;
             } else {
               return 94.0;
@@ -250,24 +238,21 @@ final class ColorSpec2025 implements ColorSpec {
       },
       isBackground: true,
       chromaMultiplier: (s) {
-        if (s.platform == Platform.phone) {
-          if (s.variant == Variant.neutral) {
+        if (s.platform == .phone) {
+          if (s.variant == .neutral) {
             return 1.6;
-          } else if (s.variant == Variant.tonalSpot) {
+          } else if (s.variant == .tonalSpot) {
             return 1.4;
-          } else if (s.variant == Variant.expressive) {
+          } else if (s.variant == .expressive) {
             return Hct.isYellow(s.neutralPalette.hue) ? 1.6 : 1.3;
-          } else if (s.variant == Variant.vibrant) {
+          } else if (s.variant == .vibrant) {
             return 1.15;
           }
         }
         return 1.0;
       },
     );
-    return _baseSpec.surfaceContainer.extendSpecVersion(
-      SpecVersion.spec2025,
-      color2025,
-    );
+    return _baseSpec.surfaceContainer.extendSpecVersion(.spec2025, color2025);
   }
 
   @override
@@ -276,13 +261,13 @@ final class ColorSpec2025 implements ColorSpec {
       name: "surface_container_high",
       palette: (s) => s.neutralPalette,
       tone: (s) {
-        if (s.platform == Platform.phone) {
+        if (s.platform == .phone) {
           if (s.isDark) {
             return 12.0;
           } else {
             if (Hct.isYellow(s.neutralPalette.hue)) {
               return 94.0;
-            } else if (s.variant == Variant.vibrant) {
+            } else if (s.variant == .vibrant) {
               return 90.0;
             } else {
               return 92.0;
@@ -294,14 +279,14 @@ final class ColorSpec2025 implements ColorSpec {
       },
       isBackground: true,
       chromaMultiplier: (s) {
-        if (s.platform == Platform.phone) {
-          if (s.variant == Variant.neutral) {
+        if (s.platform == .phone) {
+          if (s.variant == .neutral) {
             return 1.9;
-          } else if (s.variant == Variant.tonalSpot) {
+          } else if (s.variant == .tonalSpot) {
             return 1.5;
-          } else if (s.variant == Variant.expressive) {
+          } else if (s.variant == .expressive) {
             return Hct.isYellow(s.neutralPalette.hue) ? 1.95 : 1.45;
-          } else if (s.variant == Variant.vibrant) {
+          } else if (s.variant == .vibrant) {
             return 1.22;
           }
         }
@@ -309,7 +294,7 @@ final class ColorSpec2025 implements ColorSpec {
       },
     );
     return _baseSpec.surfaceContainerHigh.extendSpecVersion(
-      SpecVersion.spec2025,
+      .spec2025,
       color2025,
     );
   }
@@ -325,7 +310,7 @@ final class ColorSpec2025 implements ColorSpec {
         } else {
           if (Hct.isYellow(s.neutralPalette.hue)) {
             return 92.0;
-          } else if (s.variant == Variant.vibrant) {
+          } else if (s.variant == .vibrant) {
             return 88.0;
           } else {
             return 90.0;
@@ -334,20 +319,20 @@ final class ColorSpec2025 implements ColorSpec {
       },
       isBackground: true,
       chromaMultiplier: (s) {
-        if (s.variant == Variant.neutral) {
+        if (s.variant == .neutral) {
           return 2.2;
-        } else if (s.variant == Variant.tonalSpot) {
+        } else if (s.variant == .tonalSpot) {
           return 1.7;
-        } else if (s.variant == Variant.expressive) {
+        } else if (s.variant == .expressive) {
           return Hct.isYellow(s.neutralPalette.hue) ? 2.3 : 1.6;
-        } else if (s.variant == Variant.vibrant) {
+        } else if (s.variant == .vibrant) {
           return 1.29;
         }
         return 1.0;
       },
     );
     return _baseSpec.surfaceContainerHighest.extendSpecVersion(
-      SpecVersion.spec2025,
+      .spec2025,
       color2025,
     );
   }
@@ -358,11 +343,11 @@ final class ColorSpec2025 implements ColorSpec {
       name: "on_surface",
       palette: (s) => s.neutralPalette,
       tone: (s) {
-        if (s.variant == Variant.vibrant) {
+        if (s.variant == .vibrant) {
           return _tMaxC(s.neutralPalette, 0, 100, 1.1);
         } else {
           return DynamicColor.getInitialToneFromBackground((scheme) {
-            if (scheme.platform == Platform.phone) {
+            if (scheme.platform == .phone) {
               return scheme.isDark ? surfaceBright : surfaceDim;
             } else {
               return surfaceContainerHigh;
@@ -371,12 +356,12 @@ final class ColorSpec2025 implements ColorSpec {
         }
       },
       chromaMultiplier: (s) {
-        if (s.platform == Platform.phone) {
-          if (s.variant == Variant.neutral) {
+        if (s.platform == .phone) {
+          if (s.variant == .neutral) {
             return 2.2;
-          } else if (s.variant == Variant.tonalSpot) {
+          } else if (s.variant == .tonalSpot) {
             return 1.7;
-          } else if (s.variant == Variant.expressive) {
+          } else if (s.variant == .expressive) {
             return Hct.isYellow(s.neutralPalette.hue)
                 ? (s.isDark ? 3.0 : 2.3)
                 : 1.6;
@@ -385,29 +370,23 @@ final class ColorSpec2025 implements ColorSpec {
         return 1.0;
       },
       background: (s) {
-        if (s.platform == Platform.phone) {
+        if (s.platform == .phone) {
           return s.isDark ? surfaceBright : surfaceDim;
         } else {
           return surfaceContainerHigh;
         }
       },
-      contrastCurve: (s) => s.isDark && s.platform == Platform.phone
+      contrastCurve: (s) => s.isDark && s.platform == .phone
           ? _getContrastCurve(11)
           : _getContrastCurve(9),
     );
-    return _baseSpec.onSurface.extendSpecVersion(
-      SpecVersion.spec2025,
-      color2025,
-    );
+    return _baseSpec.onSurface.extendSpecVersion(.spec2025, color2025);
   }
 
   @override
   DynamicColor get surfaceVariant {
     final color2025 = surfaceContainerHighest.copyWith(name: "surface_variant");
-    return _baseSpec.surfaceVariant.extendSpecVersion(
-      SpecVersion.spec2025,
-      color2025,
-    );
+    return _baseSpec.surfaceVariant.extendSpecVersion(.spec2025, color2025);
   }
 
   @override
@@ -416,12 +395,12 @@ final class ColorSpec2025 implements ColorSpec {
       name: "on_surface_variant",
       palette: (s) => s.neutralPalette,
       chromaMultiplier: (s) {
-        if (s.platform == Platform.phone) {
-          if (s.variant == Variant.neutral) {
+        if (s.platform == .phone) {
+          if (s.variant == .neutral) {
             return 2.2;
-          } else if (s.variant == Variant.tonalSpot) {
+          } else if (s.variant == .tonalSpot) {
             return 1.7;
-          } else if (s.variant == Variant.expressive) {
+          } else if (s.variant == .expressive) {
             return Hct.isYellow(s.neutralPalette.hue)
                 ? (s.isDark ? 3.0 : 2.3)
                 : 1.6;
@@ -430,22 +409,19 @@ final class ColorSpec2025 implements ColorSpec {
         return 1.0;
       },
       background: (s) {
-        if (s.platform == Platform.phone) {
+        if (s.platform == .phone) {
           return s.isDark ? surfaceBright : surfaceDim;
         } else {
           return surfaceContainerHigh;
         }
       },
-      contrastCurve: (s) => s.platform == Platform.phone
+      contrastCurve: (s) => s.platform == .phone
           ? s.isDark
                 ? _getContrastCurve(6.0)
                 : _getContrastCurve(4.5)
           : _getContrastCurve(7.0),
     );
-    return _baseSpec.onSurfaceVariant.extendSpecVersion(
-      SpecVersion.spec2025,
-      color2025,
-    );
+    return _baseSpec.onSurfaceVariant.extendSpecVersion(.spec2025, color2025);
   }
 
   @override
@@ -456,10 +432,7 @@ final class ColorSpec2025 implements ColorSpec {
       tone: (s) => s.isDark ? 98.0 : 4.0,
       isBackground: true,
     );
-    return _baseSpec.inverseSurface.extendSpecVersion(
-      SpecVersion.spec2025,
-      color2025,
-    );
+    return _baseSpec.inverseSurface.extendSpecVersion(.spec2025, color2025);
   }
 
   @override
@@ -470,10 +443,7 @@ final class ColorSpec2025 implements ColorSpec {
       background: (s) => inverseSurface,
       contrastCurve: (s) => _getContrastCurve(7),
     );
-    return _baseSpec.inverseOnSurface.extendSpecVersion(
-      SpecVersion.spec2025,
-      color2025,
-    );
+    return _baseSpec.inverseOnSurface.extendSpecVersion(.spec2025, color2025);
   }
 
   @override
@@ -482,12 +452,12 @@ final class ColorSpec2025 implements ColorSpec {
       name: "outline",
       palette: (s) => s.neutralPalette,
       chromaMultiplier: (s) {
-        if (s.platform == Platform.phone) {
-          if (s.variant == Variant.neutral) {
+        if (s.platform == .phone) {
+          if (s.variant == .neutral) {
             return 2.2;
-          } else if (s.variant == Variant.tonalSpot) {
+          } else if (s.variant == .tonalSpot) {
             return 1.7;
-          } else if (s.variant == Variant.expressive) {
+          } else if (s.variant == .expressive) {
             return Hct.isYellow(s.neutralPalette.hue)
                 ? (s.isDark ? 3.0 : 2.3)
                 : 1.6;
@@ -496,15 +466,14 @@ final class ColorSpec2025 implements ColorSpec {
         return 1.0;
       },
       background: (s) {
-        if (s.platform == Platform.phone) {
+        if (s.platform == .phone) {
           return s.isDark ? surfaceBright : surfaceDim;
         } else {
           return surfaceContainerHigh;
         }
       },
-      contrastCurve: (s) => s.platform == Platform.phone
-          ? _getContrastCurve(3)
-          : _getContrastCurve(4.5),
+      contrastCurve: (s) =>
+          s.platform == .phone ? _getContrastCurve(3) : _getContrastCurve(4.5),
     );
     return _baseSpec.outline.extendSpecVersion(SpecVersion.spec2025, color2025);
   }
@@ -515,12 +484,12 @@ final class ColorSpec2025 implements ColorSpec {
       name: "outline_variant",
       palette: (s) => s.neutralPalette,
       chromaMultiplier: (s) {
-        if (s.platform == Platform.phone) {
-          if (s.variant == Variant.neutral) {
+        if (s.platform == .phone) {
+          if (s.variant == .neutral) {
             return 2.2;
-          } else if (s.variant == Variant.tonalSpot) {
+          } else if (s.variant == .tonalSpot) {
             return 1.7;
-          } else if (s.variant == Variant.expressive) {
+          } else if (s.variant == .expressive) {
             return Hct.isYellow(s.neutralPalette.hue)
                 ? (s.isDark ? 3.0 : 2.3)
                 : 1.6;
@@ -529,20 +498,16 @@ final class ColorSpec2025 implements ColorSpec {
         return 1.0;
       },
       background: (s) {
-        if (s.platform == Platform.phone) {
+        if (s.platform == .phone) {
           return s.isDark ? surfaceBright : surfaceDim;
         } else {
           return surfaceContainerHigh;
         }
       },
-      contrastCurve: (s) => s.platform == Platform.phone
-          ? _getContrastCurve(1.5)
-          : _getContrastCurve(3),
+      contrastCurve: (s) =>
+          s.platform == .phone ? _getContrastCurve(1.5) : _getContrastCurve(3),
     );
-    return _baseSpec.outlineVariant.extendSpecVersion(
-      SpecVersion.spec2025,
-      color2025,
-    );
+    return _baseSpec.outlineVariant.extendSpecVersion(.spec2025, color2025);
   }
 
   @override
@@ -554,10 +519,7 @@ final class ColorSpec2025 implements ColorSpec {
   @override
   DynamicColor get surfaceTint {
     final color2025 = primary.copyWith(name: "surface_tint");
-    return _baseSpec.surfaceTint.extendSpecVersion(
-      SpecVersion.spec2025,
-      color2025,
-    );
+    return _baseSpec.surfaceTint.extendSpecVersion(.spec2025, color2025);
   }
 
   @override
@@ -566,14 +528,14 @@ final class ColorSpec2025 implements ColorSpec {
       name: "primary",
       palette: (s) => s.primaryPalette,
       tone: (s) {
-        if (s.variant == Variant.neutral) {
-          if (s.platform == Platform.phone) {
+        if (s.variant == .neutral) {
+          if (s.platform == .phone) {
             return s.isDark ? 80.0 : 40.0;
           } else {
             return 90.0;
           }
-        } else if (s.variant == Variant.tonalSpot) {
-          if (s.platform == Platform.phone) {
+        } else if (s.variant == .tonalSpot) {
+          if (s.platform == .phone) {
             if (s.isDark) {
               return 80.0;
             } else {
@@ -582,8 +544,8 @@ final class ColorSpec2025 implements ColorSpec {
           } else {
             return _tMaxC(s.primaryPalette, 0, 90);
           }
-        } else if (s.variant == Variant.expressive) {
-          if (s.platform == Platform.phone) {
+        } else if (s.variant == .expressive) {
+          if (s.platform == .phone) {
             return _tMaxC(
               s.primaryPalette,
               0,
@@ -599,7 +561,7 @@ final class ColorSpec2025 implements ColorSpec {
           }
         } else {
           // VIBRANT
-          if (s.platform == Platform.phone) {
+          if (s.platform == .phone) {
             return _tMaxC(
               s.primaryPalette,
               0,
@@ -613,22 +575,21 @@ final class ColorSpec2025 implements ColorSpec {
       },
       isBackground: true,
       background: (s) {
-        if (s.platform == Platform.phone) {
+        if (s.platform == .phone) {
           return s.isDark ? surfaceBright : surfaceDim;
         } else {
           return surfaceContainerHigh;
         }
       },
-      contrastCurve: (s) => s.platform == Platform.phone
-          ? _getContrastCurve(4.5)
-          : _getContrastCurve(7),
-      toneDeltaPair: (s) => s.platform == Platform.phone
+      contrastCurve: (s) =>
+          s.platform == .phone ? _getContrastCurve(4.5) : _getContrastCurve(7),
+      toneDeltaPair: (s) => s.platform == .phone
           ? ToneDeltaPair(
               roleA: primaryContainer,
               roleB: primary,
               delta: 5.0,
-              polarity: TonePolarity.relativeLighter,
-              constraint: DeltaConstraint.farther,
+              polarity: .relativeLighter,
+              constraint: .farther,
             )
           : null,
     );
@@ -641,9 +602,9 @@ final class ColorSpec2025 implements ColorSpec {
       name: "primary_dim",
       palette: (s) => s.primaryPalette,
       tone: (s) {
-        if (s.variant == Variant.neutral) {
+        if (s.variant == .neutral) {
           return 85.0;
-        } else if (s.variant == Variant.tonalSpot) {
+        } else if (s.variant == .tonalSpot) {
           return _tMaxC(s.primaryPalette, 0, 90);
         } else {
           return _tMaxC(s.primaryPalette);
@@ -656,8 +617,8 @@ final class ColorSpec2025 implements ColorSpec {
         roleA: primaryDim,
         roleB: primary,
         delta: 5.0,
-        polarity: TonePolarity.darker,
-        constraint: DeltaConstraint.farther,
+        polarity: .darker,
+        constraint: .farther,
       ),
     );
   }
@@ -667,15 +628,11 @@ final class ColorSpec2025 implements ColorSpec {
     final color2025 = DynamicColor(
       name: "on_primary",
       palette: (s) => s.primaryPalette,
-      background: (s) => s.platform == Platform.phone ? primary : primaryDim,
-      contrastCurve: (s) => s.platform == Platform.phone
-          ? _getContrastCurve(6)
-          : _getContrastCurve(7),
+      background: (s) => s.platform == .phone ? primary : primaryDim,
+      contrastCurve: (s) =>
+          s.platform == .phone ? _getContrastCurve(6) : _getContrastCurve(7),
     );
-    return _baseSpec.onPrimary.extendSpecVersion(
-      SpecVersion.spec2025,
-      color2025,
-    );
+    return _baseSpec.onPrimary.extendSpecVersion(.spec2025, color2025);
   }
 
   @override
@@ -684,15 +641,15 @@ final class ColorSpec2025 implements ColorSpec {
       name: "primary_container",
       palette: (s) => s.primaryPalette,
       tone: (s) {
-        if (s.platform == Platform.watch) {
+        if (s.platform == .watch) {
           return 30.0;
-        } else if (s.variant == Variant.neutral) {
+        } else if (s.variant == .neutral) {
           return s.isDark ? 30.0 : 90.0;
-        } else if (s.variant == Variant.tonalSpot) {
+        } else if (s.variant == .tonalSpot) {
           return s.isDark
               ? _tMinC(s.primaryPalette, 35, 93)
               : _tMaxC(s.primaryPalette, 0, 90);
-        } else if (s.variant == Variant.expressive) {
+        } else if (s.variant == .expressive) {
           return s.isDark
               ? _tMaxC(s.primaryPalette, 30, 93)
               : _tMaxC(
@@ -713,29 +670,26 @@ final class ColorSpec2025 implements ColorSpec {
       },
       isBackground: true,
       background: (s) {
-        if (s.platform == Platform.phone) {
+        if (s.platform == .phone) {
           return s.isDark ? surfaceBright : surfaceDim;
         } else {
           return null;
         }
       },
-      toneDeltaPair: (s) => s.platform == Platform.watch
+      toneDeltaPair: (s) => s.platform == .watch
           ? ToneDeltaPair(
               roleA: primaryContainer,
               roleB: primaryDim,
               delta: 10.0,
-              polarity: TonePolarity.darker,
-              constraint: DeltaConstraint.farther,
+              polarity: .darker,
+              constraint: .farther,
             )
           : null,
-      contrastCurve: (s) => s.platform == Platform.phone && s.contrastLevel > 0
+      contrastCurve: (s) => s.platform == .phone && s.contrastLevel > 0
           ? _getContrastCurve(1.5)
           : null,
     );
-    return _baseSpec.primaryContainer.extendSpecVersion(
-      SpecVersion.spec2025,
-      color2025,
-    );
+    return _baseSpec.primaryContainer.extendSpecVersion(.spec2025, color2025);
   }
 
   @override
@@ -744,14 +698,10 @@ final class ColorSpec2025 implements ColorSpec {
       name: "on_primary_container",
       palette: (s) => s.primaryPalette,
       background: (s) => primaryContainer,
-      contrastCurve: (s) => s.platform == Platform.phone
-          ? _getContrastCurve(6)
-          : _getContrastCurve(7),
+      contrastCurve: (s) =>
+          s.platform == .phone ? _getContrastCurve(6) : _getContrastCurve(7),
     );
-    return _baseSpec.onPrimaryContainer.extendSpecVersion(
-      SpecVersion.spec2025,
-      color2025,
-    );
+    return _baseSpec.onPrimaryContainer.extendSpecVersion(.spec2025, color2025);
   }
 
   @override
@@ -761,14 +711,10 @@ final class ColorSpec2025 implements ColorSpec {
       palette: (s) => s.primaryPalette,
       tone: (s) => _tMaxC(s.primaryPalette),
       background: (s) => inverseSurface,
-      contrastCurve: (s) => s.platform == Platform.phone
-          ? _getContrastCurve(6)
-          : _getContrastCurve(7),
+      contrastCurve: (s) =>
+          s.platform == .phone ? _getContrastCurve(6) : _getContrastCurve(7),
     );
-    return _baseSpec.inversePrimary.extendSpecVersion(
-      SpecVersion.spec2025,
-      color2025,
-    );
+    return _baseSpec.inversePrimary.extendSpecVersion(.spec2025, color2025);
   }
 
   @override
@@ -777,15 +723,15 @@ final class ColorSpec2025 implements ColorSpec {
       name: "secondary",
       palette: (s) => s.secondaryPalette,
       tone: (s) {
-        if (s.platform == Platform.watch) {
-          return s.variant == Variant.neutral
+        if (s.platform == .watch) {
+          return s.variant == .neutral
               ? 90.0
               : _tMaxC(s.secondaryPalette, 0, 90);
-        } else if (s.variant == Variant.neutral) {
+        } else if (s.variant == .neutral) {
           return s.isDark
               ? _tMinC(s.secondaryPalette, 0, 98)
               : _tMaxC(s.secondaryPalette);
-        } else if (s.variant == Variant.vibrant) {
+        } else if (s.variant == .vibrant) {
           return _tMaxC(s.secondaryPalette, 0, s.isDark ? 90 : 98);
         } else {
           // EXPRESSIVE and TONAL_SPOT
@@ -794,29 +740,25 @@ final class ColorSpec2025 implements ColorSpec {
       },
       isBackground: true,
       background: (s) {
-        if (s.platform == Platform.phone) {
+        if (s.platform == .phone) {
           return s.isDark ? surfaceBright : surfaceDim;
         } else {
           return surfaceContainerHigh;
         }
       },
-      contrastCurve: (s) => s.platform == Platform.phone
-          ? _getContrastCurve(4.5)
-          : _getContrastCurve(7),
-      toneDeltaPair: (s) => s.platform == Platform.phone
+      contrastCurve: (s) =>
+          s.platform == .phone ? _getContrastCurve(4.5) : _getContrastCurve(7),
+      toneDeltaPair: (s) => s.platform == .phone
           ? ToneDeltaPair(
               roleA: secondaryContainer,
               roleB: secondary,
               delta: 5.0,
-              polarity: TonePolarity.relativeLighter,
-              constraint: DeltaConstraint.farther,
+              polarity: .relativeLighter,
+              constraint: .farther,
             )
           : null,
     );
-    return _baseSpec.secondary.extendSpecVersion(
-      SpecVersion.spec2025,
-      color2025,
-    );
+    return _baseSpec.secondary.extendSpecVersion(.spec2025, color2025);
   }
 
   @override
@@ -825,7 +767,7 @@ final class ColorSpec2025 implements ColorSpec {
       name: "secondary_dim",
       palette: (s) => s.secondaryPalette,
       tone: (s) {
-        if (s.variant == Variant.neutral) {
+        if (s.variant == .neutral) {
           return 85.0;
         } else {
           return _tMaxC(s.secondaryPalette, 0, 90);
@@ -838,8 +780,8 @@ final class ColorSpec2025 implements ColorSpec {
         roleA: secondaryDim,
         roleB: secondary,
         delta: 5.0,
-        polarity: TonePolarity.darker,
-        constraint: DeltaConstraint.farther,
+        polarity: .darker,
+        constraint: .farther,
       ),
     );
   }
@@ -849,16 +791,11 @@ final class ColorSpec2025 implements ColorSpec {
     final color2025 = DynamicColor(
       name: "on_secondary",
       palette: (s) => s.secondaryPalette,
-      background: (s) =>
-          s.platform == Platform.phone ? secondary : secondaryDim,
-      contrastCurve: (s) => s.platform == Platform.phone
-          ? _getContrastCurve(6)
-          : _getContrastCurve(7),
+      background: (s) => s.platform == .phone ? secondary : secondaryDim,
+      contrastCurve: (s) =>
+          s.platform == .phone ? _getContrastCurve(6) : _getContrastCurve(7),
     );
-    return _baseSpec.onSecondary.extendSpecVersion(
-      SpecVersion.spec2025,
-      color2025,
-    );
+    return _baseSpec.onSecondary.extendSpecVersion(.spec2025, color2025);
   }
 
   @override
@@ -867,13 +804,13 @@ final class ColorSpec2025 implements ColorSpec {
       name: "secondary_container",
       palette: (s) => s.secondaryPalette,
       tone: (s) {
-        if (s.platform == Platform.watch) {
+        if (s.platform == .watch) {
           return 30.0;
-        } else if (s.variant == Variant.vibrant) {
+        } else if (s.variant == .vibrant) {
           return s.isDark
               ? _tMinC(s.secondaryPalette, 30, 40)
               : _tMaxC(s.secondaryPalette, 84, 90);
-        } else if (s.variant == Variant.expressive) {
+        } else if (s.variant == .expressive) {
           return s.isDark ? 15.0 : _tMaxC(s.secondaryPalette, 90, 95);
         } else {
           return s.isDark ? 25.0 : 90.0;
@@ -881,30 +818,26 @@ final class ColorSpec2025 implements ColorSpec {
       },
       isBackground: true,
       background: (s) {
-        if (s.platform == Platform.phone) {
+        if (s.platform == .phone) {
           return s.isDark ? surfaceBright : surfaceDim;
         } else {
           return null;
         }
       },
-      toneDeltaPair: (s) => s.platform == Platform.watch
+      toneDeltaPair: (s) => s.platform == .watch
           ? ToneDeltaPair(
               roleA: secondaryContainer,
               roleB: secondaryDim,
               delta: 10.0,
-              polarity: TonePolarity.darker,
-              constraint: DeltaConstraint.farther,
+              polarity: .darker,
+              constraint: .farther,
             )
           : null,
-      contrastCurve: (s) =>
-          s.platform == Platform.phone && s.contrastLevel > 0.0
+      contrastCurve: (s) => s.platform == .phone && s.contrastLevel > 0.0
           ? _getContrastCurve(1.5)
           : null,
     );
-    return _baseSpec.secondaryContainer.extendSpecVersion(
-      SpecVersion.spec2025,
-      color2025,
-    );
+    return _baseSpec.secondaryContainer.extendSpecVersion(.spec2025, color2025);
   }
 
   @override
@@ -913,12 +846,11 @@ final class ColorSpec2025 implements ColorSpec {
       name: "on_secondary_container",
       palette: (s) => s.secondaryPalette,
       background: (s) => secondaryContainer,
-      contrastCurve: (s) => s.platform == Platform.phone
-          ? _getContrastCurve(6)
-          : _getContrastCurve(7),
+      contrastCurve: (s) =>
+          s.platform == .phone ? _getContrastCurve(6) : _getContrastCurve(7),
     );
     return _baseSpec.onSecondaryContainer.extendSpecVersion(
-      SpecVersion.spec2025,
+      .spec2025,
       color2025,
     );
   }
@@ -929,12 +861,11 @@ final class ColorSpec2025 implements ColorSpec {
       name: "tertiary",
       palette: (s) => s.tertiaryPalette,
       tone: (s) {
-        if (s.platform == Platform.watch) {
-          return s.variant == Variant.tonalSpot
+        if (s.platform == .watch) {
+          return s.variant == .tonalSpot
               ? _tMaxC(s.tertiaryPalette, 0, 90)
               : _tMaxC(s.tertiaryPalette);
-        } else if (s.variant == Variant.expressive ||
-            s.variant == Variant.vibrant) {
+        } else if (s.variant == .expressive || s.variant == .vibrant) {
           return _tMaxC(
             s.tertiaryPalette,
             /* lowerBound= */ 0,
@@ -951,29 +882,25 @@ final class ColorSpec2025 implements ColorSpec {
       },
       isBackground: true,
       background: (s) {
-        if (s.platform == Platform.phone) {
+        if (s.platform == .phone) {
           return s.isDark ? surfaceBright : surfaceDim;
         } else {
           return surfaceContainerHigh;
         }
       },
-      contrastCurve: (s) => s.platform == Platform.phone
-          ? _getContrastCurve(4.5)
-          : _getContrastCurve(7),
-      toneDeltaPair: (s) => s.platform == Platform.phone
+      contrastCurve: (s) =>
+          s.platform == .phone ? _getContrastCurve(4.5) : _getContrastCurve(7),
+      toneDeltaPair: (s) => s.platform == .phone
           ? ToneDeltaPair(
               roleA: tertiaryContainer,
               roleB: tertiary,
               delta: 5.0,
-              polarity: TonePolarity.relativeLighter,
-              constraint: DeltaConstraint.farther,
+              polarity: .relativeLighter,
+              constraint: .farther,
             )
           : null,
     );
-    return _baseSpec.tertiary.extendSpecVersion(
-      SpecVersion.spec2025,
-      color2025,
-    );
+    return _baseSpec.tertiary.extendSpecVersion(.spec2025, color2025);
   }
 
   @override
@@ -982,7 +909,7 @@ final class ColorSpec2025 implements ColorSpec {
       name: "tertiary_dim",
       palette: (s) => s.tertiaryPalette,
       tone: (s) {
-        if (s.variant == Variant.tonalSpot) {
+        if (s.variant == .tonalSpot) {
           return _tMaxC(s.tertiaryPalette, 0, 90);
         } else {
           return _tMaxC(s.tertiaryPalette);
@@ -995,8 +922,8 @@ final class ColorSpec2025 implements ColorSpec {
         roleA: tertiaryDim,
         roleB: tertiary,
         delta: 5.0,
-        polarity: TonePolarity.darker,
-        constraint: DeltaConstraint.farther,
+        polarity: .darker,
+        constraint: .farther,
       ),
     );
   }
@@ -1006,15 +933,11 @@ final class ColorSpec2025 implements ColorSpec {
     final color2025 = DynamicColor(
       name: "on_tertiary",
       palette: (s) => s.tertiaryPalette,
-      background: (s) => s.platform == Platform.phone ? tertiary : tertiaryDim,
-      contrastCurve: (s) => s.platform == Platform.phone
-          ? _getContrastCurve(6)
-          : _getContrastCurve(7),
+      background: (s) => s.platform == .phone ? tertiary : tertiaryDim,
+      contrastCurve: (s) =>
+          s.platform == .phone ? _getContrastCurve(6) : _getContrastCurve(7),
     );
-    return _baseSpec.onTertiary.extendSpecVersion(
-      SpecVersion.spec2025,
-      color2025,
-    );
+    return _baseSpec.onTertiary.extendSpecVersion(.spec2025, color2025);
   }
 
   @override
@@ -1023,18 +946,18 @@ final class ColorSpec2025 implements ColorSpec {
       name: "tertiary_container",
       palette: (s) => s.tertiaryPalette,
       tone: (s) {
-        if (s.platform == Platform.watch) {
-          return s.variant == Variant.tonalSpot
+        if (s.platform == .watch) {
+          return s.variant == .tonalSpot
               ? _tMaxC(s.tertiaryPalette, 0, 90)
               : _tMaxC(s.tertiaryPalette);
         } else {
-          if (s.variant == Variant.neutral) {
+          if (s.variant == .neutral) {
             return s.isDark
                 ? _tMaxC(s.tertiaryPalette, 0, 93)
                 : _tMaxC(s.tertiaryPalette, 0, 96);
-          } else if (s.variant == Variant.tonalSpot) {
+          } else if (s.variant == .tonalSpot) {
             return _tMaxC(s.tertiaryPalette, 0, s.isDark ? 93 : 100);
-          } else if (s.variant == Variant.expressive) {
+          } else if (s.variant == .expressive) {
             return _tMaxC(
               s.tertiaryPalette,
               /* lowerBound= */ 75,
@@ -1052,29 +975,26 @@ final class ColorSpec2025 implements ColorSpec {
       },
       isBackground: true,
       background: (s) {
-        if (s.platform == Platform.phone) {
+        if (s.platform == .phone) {
           return s.isDark ? surfaceBright : surfaceDim;
         } else {
           return null;
         }
       },
-      toneDeltaPair: (s) => s.platform == Platform.watch
+      toneDeltaPair: (s) => s.platform == .watch
           ? ToneDeltaPair(
               roleA: tertiaryContainer,
               roleB: tertiaryDim,
               delta: 10.0,
-              polarity: TonePolarity.darker,
-              constraint: DeltaConstraint.farther,
+              polarity: .darker,
+              constraint: .farther,
             )
           : null,
-      contrastCurve: (s) => s.platform == Platform.phone && s.contrastLevel > 0
+      contrastCurve: (s) => s.platform == .phone && s.contrastLevel > 0
           ? _getContrastCurve(1.5)
           : null,
     );
-    return _baseSpec.tertiaryContainer.extendSpecVersion(
-      SpecVersion.spec2025,
-      color2025,
-    );
+    return _baseSpec.tertiaryContainer.extendSpecVersion(.spec2025, color2025);
   }
 
   @override
@@ -1083,12 +1003,11 @@ final class ColorSpec2025 implements ColorSpec {
       name: "on_tertiary_container",
       palette: (s) => s.tertiaryPalette,
       background: (s) => tertiaryContainer,
-      contrastCurve: (s) => s.platform == Platform.phone
-          ? _getContrastCurve(6)
-          : _getContrastCurve(7),
+      contrastCurve: (s) =>
+          s.platform == .phone ? _getContrastCurve(6) : _getContrastCurve(7),
     );
     return _baseSpec.onTertiaryContainer.extendSpecVersion(
-      SpecVersion.spec2025,
+      .spec2025,
       color2025,
     );
   }
@@ -1099,7 +1018,7 @@ final class ColorSpec2025 implements ColorSpec {
       name: "error",
       palette: (s) => s.errorPalette,
       tone: (s) {
-        if (s.platform == Platform.phone) {
+        if (s.platform == .phone) {
           return s.isDark
               ? _tMinC(s.errorPalette, 0, 98)
               : _tMaxC(s.errorPalette);
@@ -1109,22 +1028,21 @@ final class ColorSpec2025 implements ColorSpec {
       },
       isBackground: true,
       background: (s) {
-        if (s.platform == Platform.phone) {
+        if (s.platform == .phone) {
           return s.isDark ? surfaceBright : surfaceDim;
         } else {
           return surfaceContainerHigh;
         }
       },
-      contrastCurve: (s) => s.platform == Platform.phone
-          ? _getContrastCurve(4.5)
-          : _getContrastCurve(7),
-      toneDeltaPair: (s) => s.platform == Platform.phone
+      contrastCurve: (s) =>
+          s.platform == .phone ? _getContrastCurve(4.5) : _getContrastCurve(7),
+      toneDeltaPair: (s) => s.platform == .phone
           ? ToneDeltaPair(
               roleA: errorContainer,
               roleB: error,
               delta: 5.0,
-              polarity: TonePolarity.relativeLighter,
-              constraint: DeltaConstraint.farther,
+              polarity: .relativeLighter,
+              constraint: .farther,
             )
           : null,
     );
@@ -1144,8 +1062,8 @@ final class ColorSpec2025 implements ColorSpec {
         roleA: errorDim,
         roleB: error,
         delta: 5.0,
-        polarity: TonePolarity.darker,
-        constraint: DeltaConstraint.farther,
+        polarity: .darker,
+        constraint: .farther,
       ),
     );
   }
@@ -1155,10 +1073,9 @@ final class ColorSpec2025 implements ColorSpec {
     final color2025 = DynamicColor(
       name: "on_error",
       palette: (s) => s.errorPalette,
-      background: (s) => s.platform == Platform.phone ? error : errorDim,
-      contrastCurve: (s) => s.platform == Platform.phone
-          ? _getContrastCurve(6)
-          : _getContrastCurve(7),
+      background: (s) => s.platform == .phone ? error : errorDim,
+      contrastCurve: (s) =>
+          s.platform == .phone ? _getContrastCurve(6) : _getContrastCurve(7),
     );
     return _baseSpec.onError.extendSpecVersion(SpecVersion.spec2025, color2025);
   }
@@ -1169,7 +1086,7 @@ final class ColorSpec2025 implements ColorSpec {
       name: "error_container",
       palette: (s) => s.errorPalette,
       tone: (s) {
-        if (s.platform == Platform.watch) {
+        if (s.platform == .watch) {
           return 30.0;
         } else {
           return s.isDark
@@ -1179,29 +1096,26 @@ final class ColorSpec2025 implements ColorSpec {
       },
       isBackground: true,
       background: (s) {
-        if (s.platform == Platform.phone) {
+        if (s.platform == .phone) {
           return s.isDark ? surfaceBright : surfaceDim;
         } else {
           return null;
         }
       },
-      toneDeltaPair: (s) => s.platform == Platform.watch
+      toneDeltaPair: (s) => s.platform == .watch
           ? ToneDeltaPair(
               roleA: errorContainer,
               roleB: errorDim,
               delta: 10.0,
-              polarity: TonePolarity.darker,
-              constraint: DeltaConstraint.farther,
+              polarity: .darker,
+              constraint: .farther,
             )
           : null,
-      contrastCurve: (s) => s.platform == Platform.phone && s.contrastLevel > 0
+      contrastCurve: (s) => s.platform == .phone && s.contrastLevel > 0
           ? _getContrastCurve(1.5)
           : null,
     );
-    return _baseSpec.errorContainer.extendSpecVersion(
-      SpecVersion.spec2025,
-      color2025,
-    );
+    return _baseSpec.errorContainer.extendSpecVersion(.spec2025, color2025);
   }
 
   @override
@@ -1210,14 +1124,11 @@ final class ColorSpec2025 implements ColorSpec {
       name: "on_error_container",
       palette: (s) => s.errorPalette,
       background: (s) => errorContainer,
-      contrastCurve: (s) => s.platform == Platform.phone
+      contrastCurve: (s) => s.platform == .phone
           ? _getContrastCurve(4.5)
           : _getContrastCurve(7.0),
     );
-    return _baseSpec.onErrorContainer.extendSpecVersion(
-      SpecVersion.spec2025,
-      color2025,
-    );
+    return _baseSpec.onErrorContainer.extendSpecVersion(.spec2025, color2025);
   }
 
   @override
@@ -1226,26 +1137,21 @@ final class ColorSpec2025 implements ColorSpec {
       name: "primary_fixed",
       palette: (s) => s.primaryPalette,
       tone: (s) {
-        final tempS = DynamicScheme.from(s, false, 0.0);
-        return primaryContainer.getTone(tempS);
+        return primaryContainer.getTone(.from(s, false, 0.0));
       },
       isBackground: true,
       background: (s) {
-        if (s.platform == Platform.phone) {
+        if (s.platform == .phone) {
           return s.isDark ? surfaceBright : surfaceDim;
         } else {
           return null;
         }
       },
-      contrastCurve: (s) =>
-          s.platform == Platform.phone && s.contrastLevel > 0.0
+      contrastCurve: (s) => s.platform == .phone && s.contrastLevel > 0.0
           ? _getContrastCurve(1.5)
           : null,
     );
-    return _baseSpec.primaryFixed.extendSpecVersion(
-      SpecVersion.spec2025,
-      color2025,
-    );
+    return _baseSpec.primaryFixed.extendSpecVersion(.spec2025, color2025);
   }
 
   @override
@@ -1259,14 +1165,11 @@ final class ColorSpec2025 implements ColorSpec {
         roleA: primaryFixedDim,
         roleB: primaryFixed,
         delta: 5.0,
-        polarity: TonePolarity.darker,
-        constraint: DeltaConstraint.exact,
+        polarity: .darker,
+        constraint: .exact,
       ),
     );
-    return _baseSpec.primaryFixedDim.extendSpecVersion(
-      SpecVersion.spec2025,
-      color2025,
-    );
+    return _baseSpec.primaryFixedDim.extendSpecVersion(.spec2025, color2025);
   }
 
   @override
@@ -1277,10 +1180,7 @@ final class ColorSpec2025 implements ColorSpec {
       background: (s) => primaryFixedDim,
       contrastCurve: (s) => _getContrastCurve(7),
     );
-    return _baseSpec.onPrimaryFixed.extendSpecVersion(
-      SpecVersion.spec2025,
-      color2025,
-    );
+    return _baseSpec.onPrimaryFixed.extendSpecVersion(.spec2025, color2025);
   }
 
   @override
@@ -1292,7 +1192,7 @@ final class ColorSpec2025 implements ColorSpec {
       contrastCurve: (s) => _getContrastCurve(4.5),
     );
     return _baseSpec.onPrimaryFixedVariant.extendSpecVersion(
-      SpecVersion.spec2025,
+      .spec2025,
       color2025,
     );
   }
@@ -1302,27 +1202,20 @@ final class ColorSpec2025 implements ColorSpec {
     final color2025 = DynamicColor(
       name: "secondary_fixed",
       palette: (s) => s.secondaryPalette,
-      tone: (s) {
-        final tempS = DynamicScheme.from(s, false, 0.0);
-        return secondaryContainer.getTone(tempS);
-      },
+      tone: (s) => secondaryContainer.getTone(.from(s, false, 0.0)),
       isBackground: true,
       background: (s) {
-        if (s.platform == Platform.phone) {
+        if (s.platform == .phone) {
           return s.isDark ? surfaceBright : surfaceDim;
         } else {
           return null;
         }
       },
-      contrastCurve: (s) =>
-          s.platform == Platform.phone && s.contrastLevel > 0.0
+      contrastCurve: (s) => s.platform == .phone && s.contrastLevel > 0.0
           ? _getContrastCurve(1.5)
           : null,
     );
-    return _baseSpec.secondaryFixed.extendSpecVersion(
-      SpecVersion.spec2025,
-      color2025,
-    );
+    return _baseSpec.secondaryFixed.extendSpecVersion(.spec2025, color2025);
   }
 
   @override
@@ -1336,14 +1229,11 @@ final class ColorSpec2025 implements ColorSpec {
         roleA: secondaryFixedDim,
         roleB: secondaryFixed,
         delta: 5.0,
-        polarity: TonePolarity.darker,
-        constraint: DeltaConstraint.exact,
+        polarity: .darker,
+        constraint: .exact,
       ),
     );
-    return _baseSpec.secondaryFixedDim.extendSpecVersion(
-      SpecVersion.spec2025,
-      color2025,
-    );
+    return _baseSpec.secondaryFixedDim.extendSpecVersion(.spec2025, color2025);
   }
 
   @override
@@ -1354,10 +1244,7 @@ final class ColorSpec2025 implements ColorSpec {
       background: (s) => secondaryFixedDim,
       contrastCurve: (s) => _getContrastCurve(7),
     );
-    return _baseSpec.onSecondaryFixed.extendSpecVersion(
-      SpecVersion.spec2025,
-      color2025,
-    );
+    return _baseSpec.onSecondaryFixed.extendSpecVersion(.spec2025, color2025);
   }
 
   @override
@@ -1369,7 +1256,7 @@ final class ColorSpec2025 implements ColorSpec {
       contrastCurve: (s) => _getContrastCurve(4.5),
     );
     return _baseSpec.onSecondaryFixedVariant.extendSpecVersion(
-      SpecVersion.spec2025,
+      .spec2025,
       color2025,
     );
   }
@@ -1379,27 +1266,20 @@ final class ColorSpec2025 implements ColorSpec {
     final color2025 = DynamicColor(
       name: "tertiary_fixed",
       palette: (s) => s.tertiaryPalette,
-      tone: (s) {
-        final tempS = DynamicScheme.from(s, false, 0.0);
-        return tertiaryContainer.getTone(tempS);
-      },
+      tone: (s) => tertiaryContainer.getTone(.from(s, false, 0.0)),
       isBackground: true,
       background: (s) {
-        if (s.platform == Platform.phone) {
+        if (s.platform == .phone) {
           return s.isDark ? surfaceBright : surfaceDim;
         } else {
           return null;
         }
       },
-      contrastCurve: (s) =>
-          s.platform == Platform.phone && s.contrastLevel > 0.0
+      contrastCurve: (s) => s.platform == .phone && s.contrastLevel > 0.0
           ? _getContrastCurve(1.5)
           : null,
     );
-    return _baseSpec.tertiaryFixed.extendSpecVersion(
-      SpecVersion.spec2025,
-      color2025,
-    );
+    return _baseSpec.tertiaryFixed.extendSpecVersion(.spec2025, color2025);
   }
 
   @override
@@ -1413,14 +1293,11 @@ final class ColorSpec2025 implements ColorSpec {
         roleA: tertiaryFixedDim,
         roleB: tertiaryFixed,
         delta: 5.0,
-        polarity: TonePolarity.darker,
-        constraint: DeltaConstraint.exact,
+        polarity: .darker,
+        constraint: .exact,
       ),
     );
-    return _baseSpec.tertiaryFixedDim.extendSpecVersion(
-      SpecVersion.spec2025,
-      color2025,
-    );
+    return _baseSpec.tertiaryFixedDim.extendSpecVersion(.spec2025, color2025);
   }
 
   @override
@@ -1429,12 +1306,9 @@ final class ColorSpec2025 implements ColorSpec {
       name: "on_tertiary_fixed",
       palette: (s) => s.tertiaryPalette,
       background: (s) => tertiaryFixedDim,
-      contrastCurve: (s) => _getContrastCurve(7),
+      contrastCurve: (s) => _getContrastCurve(7.0),
     );
-    return _baseSpec.onTertiaryFixed.extendSpecVersion(
-      SpecVersion.spec2025,
-      color2025,
-    );
+    return _baseSpec.onTertiaryFixed.extendSpecVersion(.spec2025, color2025);
   }
 
   @override
@@ -1446,7 +1320,7 @@ final class ColorSpec2025 implements ColorSpec {
       contrastCurve: (s) => _getContrastCurve(4.5),
     );
     return _baseSpec.onTertiaryFixedVariant.extendSpecVersion(
-      SpecVersion.spec2025,
+      .spec2025,
       color2025,
     );
   }
@@ -1455,20 +1329,14 @@ final class ColorSpec2025 implements ColorSpec {
   DynamicColor get controlActivated {
     // Remapped to primaryContainer for 2025 spec.
     final color2025 = primaryContainer.copyWith(name: "control_activated");
-    return _baseSpec.controlActivated.extendSpecVersion(
-      SpecVersion.spec2025,
-      color2025,
-    );
+    return _baseSpec.controlActivated.extendSpecVersion(.spec2025, color2025);
   }
 
   @override
   DynamicColor get controlNormal {
     // Remapped to onSurfaceVariant for 2025 spec.
     final color2025 = onSurfaceVariant.copyWith(name: "control_normal");
-    return _baseSpec.controlNormal.extendSpecVersion(
-      SpecVersion.spec2025,
-      color2025,
-    );
+    return _baseSpec.controlNormal.extendSpecVersion(.spec2025, color2025);
   }
 
   @override
@@ -1478,10 +1346,7 @@ final class ColorSpec2025 implements ColorSpec {
   DynamicColor get textPrimaryInverse {
     // Remapped to inverseOnSurface for 2025 spec.
     final color2025 = inverseOnSurface.copyWith(name: "text_primary_inverse");
-    return _baseSpec.textPrimaryInverse.extendSpecVersion(
-      SpecVersion.spec2025,
-      color2025,
-    );
+    return _baseSpec.textPrimaryInverse.extendSpecVersion(.spec2025, color2025);
   }
 
   @override
@@ -1532,32 +1397,32 @@ final class ColorSpec2025 implements ColorSpec {
       final polarity = toneDeltaPair.polarity;
       final constraint = toneDeltaPair.constraint;
       final absoluteDelta =
-          polarity == TonePolarity.darker ||
-              (polarity == TonePolarity.relativeLighter && scheme.isDark) ||
-              (polarity == TonePolarity.relativeDarker && !scheme.isDark)
+          polarity == .darker ||
+              (polarity == .relativeLighter && scheme.isDark) ||
+              (polarity == .relativeDarker && !scheme.isDark)
           ? -toneDeltaPair.delta
           : toneDeltaPair.delta;
 
       final amRoleA = color.name == roleA.name;
       final selfRole = amRoleA ? roleA : roleB;
       final referenceRole = amRoleA ? roleB : roleA;
-      double selfTone = selfRole.tone(scheme);
+      var selfTone = selfRole.tone(scheme);
       final referenceTone = referenceRole.getTone(scheme);
-      final relativeDelta = absoluteDelta * (amRoleA ? 1 : -1);
+      final relativeDelta = absoluteDelta * (amRoleA ? 1.0 : -1.0);
 
       switch (constraint) {
-        case DeltaConstraint.exact:
+        case .exact:
           selfTone = MathUtils.clampDouble(
-            0,
-            100,
+            0.0,
+            100.0,
             referenceTone + relativeDelta,
           );
           break;
-        case DeltaConstraint.nearer:
-          if (relativeDelta > 0) {
+        case .nearer:
+          if (relativeDelta > 0.0) {
             selfTone = MathUtils.clampDouble(
-              0,
-              100,
+              0.0,
+              100.0,
               MathUtils.clampDouble(
                 referenceTone,
                 referenceTone + relativeDelta,
@@ -1566,8 +1431,8 @@ final class ColorSpec2025 implements ColorSpec {
             );
           } else {
             selfTone = MathUtils.clampDouble(
-              0,
-              100,
+              0.0,
+              100.0,
               MathUtils.clampDouble(
                 referenceTone + relativeDelta,
                 referenceTone,
@@ -1576,16 +1441,16 @@ final class ColorSpec2025 implements ColorSpec {
             );
           }
           break;
-        case DeltaConstraint.farther:
-          if (relativeDelta > 0) {
+        case .farther:
+          if (relativeDelta > 0.0) {
             selfTone = MathUtils.clampDouble(
               referenceTone + relativeDelta,
-              100,
+              100.0,
               selfTone,
             );
           } else {
             selfTone = MathUtils.clampDouble(
-              0,
+              0.0,
               referenceTone + relativeDelta,
               selfTone,
             );
@@ -1597,11 +1462,11 @@ final class ColorSpec2025 implements ColorSpec {
         final background = color.background!(scheme);
         final contrastCurve = color.contrastCurve!(scheme);
         if (background != null && contrastCurve != null) {
-          double bgTone = background.getTone(scheme);
-          double selfContrast = contrastCurve.get(scheme.contrastLevel);
+          final bgTone = background.getTone(scheme);
+          final selfContrast = contrastCurve.get(scheme.contrastLevel);
           selfTone =
               Contrast.ratioOfTones(bgTone, selfTone) >= selfContrast &&
-                  scheme.contrastLevel >= 0
+                  scheme.contrastLevel >= 0.0
               ? selfTone
               : DynamicColor.foregroundTone(bgTone, selfContrast);
         }
@@ -1611,9 +1476,9 @@ final class ColorSpec2025 implements ColorSpec {
       // Accent fixed dim colors should not be adjusted.
       if (color.isBackground && !color.name.endsWith("_fixed_dim")) {
         if (selfTone >= 57) {
-          selfTone = MathUtils.clampDouble(65, 100, selfTone);
+          selfTone = MathUtils.clampDouble(65.0, 100.0, selfTone);
         } else {
-          selfTone = MathUtils.clampDouble(0, 49, selfTone);
+          selfTone = MathUtils.clampDouble(0.0, 49.0, selfTone);
         }
       }
 
@@ -1637,17 +1502,17 @@ final class ColorSpec2025 implements ColorSpec {
       // (<0).
       answer =
           Contrast.ratioOfTones(bgTone, answer) >= desiredRatio &&
-              scheme.contrastLevel >= 0
+              scheme.contrastLevel >= 0.0
           ? answer
           : DynamicColor.foregroundTone(bgTone, desiredRatio);
 
       // This can avoid the awkward tones for background colors including the access fixed colors.
       // Accent fixed dim colors should not be adjusted.
       if (color.isBackground && !color.name.endsWith("_fixed_dim")) {
-        if (answer >= 57) {
-          answer = MathUtils.clampDouble(65, 100, answer);
+        if (answer >= 57.0) {
+          answer = MathUtils.clampDouble(65.0, 100.0, answer);
         } else {
-          answer = MathUtils.clampDouble(0, 49, answer);
+          answer = MathUtils.clampDouble(0.0, 49.0, answer);
         }
       }
 
@@ -1675,14 +1540,7 @@ final class ColorSpec2025 implements ColorSpec {
       final darkOption = Contrast.darker(lower, desiredRatio);
 
       // Tones suitable for the foreground.
-      final List<double> availables = <double>[];
-      if (lightOption != null) {
-        availables.add(lightOption);
-      }
-      if (darkOption != null) {
-        availables.add(darkOption);
-      }
-
+      final availables = <double>[?lightOption, ?darkOption];
       final prefersLight =
           DynamicColor.tonePrefersLightForeground(bgTone1) ||
           DynamicColor.tonePrefersLightForeground(bgTone2);
@@ -1701,23 +1559,23 @@ final class ColorSpec2025 implements ColorSpec {
     Platform platform,
     double contrastLevel,
   ) => switch (variant) {
-    Variant.neutral => TonalPalette.fromHueAndChroma(
+    .neutral => .fromHueAndChroma(
       sourceColorHct.hue,
-      platform == Platform.phone
-          ? (Hct.isBlue(sourceColorHct.hue) ? 12 : 8)
-          : (Hct.isBlue(sourceColorHct.hue) ? 16 : 12),
+      platform == .phone
+          ? (Hct.isBlue(sourceColorHct.hue) ? 12.0 : 8.0)
+          : (Hct.isBlue(sourceColorHct.hue) ? 16.0 : 12.0),
     ),
-    Variant.tonalSpot => TonalPalette.fromHueAndChroma(
+    .tonalSpot => .fromHueAndChroma(
       sourceColorHct.hue,
-      platform == Platform.phone && isDark ? 26 : 32,
+      platform == .phone && isDark ? 26.0 : 32.0,
     ),
-    Variant.expressive => TonalPalette.fromHueAndChroma(
+    .expressive => .fromHueAndChroma(
       sourceColorHct.hue,
-      platform == Platform.phone ? (isDark ? 36 : 48) : 40,
+      platform == .phone ? (isDark ? 36.0 : 48.0) : 40.0,
     ),
-    Variant.vibrant => TonalPalette.fromHueAndChroma(
+    .vibrant => .fromHueAndChroma(
       sourceColorHct.hue,
-      platform == Platform.phone ? 74 : 56,
+      platform == .phone ? 74.0 : 56.0,
     ),
     _ => _baseSpec.getPrimaryPalette(
       variant,
@@ -1736,28 +1594,28 @@ final class ColorSpec2025 implements ColorSpec {
     Platform platform,
     double contrastLevel,
   ) => switch (variant) {
-    Variant.neutral => TonalPalette.fromHueAndChroma(
+    .neutral => .fromHueAndChroma(
       sourceColorHct.hue,
-      platform == Platform.phone
-          ? (Hct.isBlue(sourceColorHct.hue) ? 6 : 4)
-          : (Hct.isBlue(sourceColorHct.hue) ? 10 : 6),
+      platform == .phone
+          ? (Hct.isBlue(sourceColorHct.hue) ? 6.0 : 4.0)
+          : (Hct.isBlue(sourceColorHct.hue) ? 10.0 : 6.0),
     ),
-    Variant.tonalSpot => TonalPalette.fromHueAndChroma(sourceColorHct.hue, 16),
-    Variant.expressive => TonalPalette.fromHueAndChroma(
+    .tonalSpot => .fromHueAndChroma(sourceColorHct.hue, 16.0),
+    .expressive => .fromHueAndChroma(
       DynamicScheme.getRotatedHue(
         sourceColorHct,
-        const [0, 105, 140, 204, 253, 278, 300, 333, 360],
-        const [-160, 155, -100, 96, -96, -156, -165, -160],
+        const [0.0, 105.0, 140.0, 204.0, 253.0, 278.0, 300.0, 333.0, 360.0],
+        const [-160.0, 155.0, -100.0, 96.0, -96.0, -156.0, -165.0, -160.0],
       ),
-      platform == Platform.phone ? (isDark ? 16 : 24) : 24,
+      platform == .phone ? (isDark ? 16.0 : 24.0) : 24.0,
     ),
-    Variant.vibrant => TonalPalette.fromHueAndChroma(
+    .vibrant => .fromHueAndChroma(
       DynamicScheme.getRotatedHue(
         sourceColorHct,
-        const [0, 38, 105, 140, 333, 360],
-        const [-14, 10, -14, 10, -14],
+        const [0.0, 38.0, 105.0, 140.0, 333.0, 360.0],
+        const [-14.0, 10.0, -14.0, 10.0, -14.0],
       ),
-      platform == Platform.phone ? 56 : 36,
+      platform == .phone ? 56.0 : 36.0,
     ),
     _ => _baseSpec.getSecondaryPalette(
       variant,
@@ -1776,37 +1634,37 @@ final class ColorSpec2025 implements ColorSpec {
     Platform platform,
     double contrastLevel,
   ) => switch (variant) {
-    Variant.neutral => TonalPalette.fromHueAndChroma(
+    .neutral => .fromHueAndChroma(
       DynamicScheme.getRotatedHue(
         sourceColorHct,
-        const [0, 38, 105, 161, 204, 278, 333, 360],
-        const [-32, 26, 10, -39, 24, -15, -32],
+        const [0.0, 38.0, 105.0, 161.0, 204.0, 278.0, 333.0, 360.0],
+        const [-32.0, 26.0, 10.0, -39.0, 24.0, -15.0, -32.0],
       ),
-      platform == Platform.phone ? 20 : 36,
+      platform == .phone ? 20.0 : 36.0,
     ),
-    Variant.tonalSpot => TonalPalette.fromHueAndChroma(
+    .tonalSpot => .fromHueAndChroma(
       DynamicScheme.getRotatedHue(
         sourceColorHct,
-        const [0, 20, 71, 161, 333, 360],
-        const [-40, 48, -32, 40, -32],
+        const [0.0, 20.0, 71.0, 161.0, 333.0, 360.0],
+        const [-40.0, 48.0, -32.0, 40.0, -32.0],
       ),
-      platform == Platform.phone ? 28 : 32,
+      platform == .phone ? 28.0 : 32.0,
     ),
-    Variant.expressive => TonalPalette.fromHueAndChroma(
+    .expressive => .fromHueAndChroma(
       DynamicScheme.getRotatedHue(
         sourceColorHct,
-        const [0, 105, 140, 204, 253, 278, 300, 333, 360],
-        const [-165, 160, -105, 101, -101, -160, -170, -165],
+        const [0.0, 105.0, 140.0, 204.0, 253.0, 278.0, 300.0, 333.0, 360.0],
+        const [-165.0, 160.0, -105.0, 101.0, -101.0, -160.0, -170.0, -165.0],
       ),
-      48,
+      48.0,
     ),
-    Variant.vibrant => TonalPalette.fromHueAndChroma(
+    .vibrant => .fromHueAndChroma(
       DynamicScheme.getRotatedHue(
         sourceColorHct,
-        const [0, 38, 71, 105, 140, 161, 253, 333, 360],
-        const [-72, 35, 24, -24, 62, 50, 62, -72],
+        const [0.0, 38.0, 71.0, 105.0, 140.0, 161.0, 253.0, 333.0, 360.0],
+        const [-72.0, 35.0, 24.0, -24.0, 62.0, 50.0, 62.0, -72.0],
       ),
-      56,
+      56.0,
     ),
     _ => _baseSpec.getTertiaryPalette(
       variant,
@@ -1825,19 +1683,19 @@ final class ColorSpec2025 implements ColorSpec {
     Platform platform,
     double contrastLevel,
   ) => switch (variant) {
-    Variant.neutral => TonalPalette.fromHueAndChroma(
+    .neutral => .fromHueAndChroma(
       sourceColorHct.hue,
-      platform == Platform.phone ? 1.4 : 6,
+      platform == .phone ? 1.4 : 6.0,
     ),
-    Variant.tonalSpot => TonalPalette.fromHueAndChroma(
+    .tonalSpot => .fromHueAndChroma(
       sourceColorHct.hue,
-      platform == Platform.phone ? 5 : 10,
+      platform == .phone ? 5.0 : 10.0,
     ),
-    Variant.expressive => TonalPalette.fromHueAndChroma(
+    .expressive => .fromHueAndChroma(
       _getExpressiveNeutralHue(sourceColorHct),
       _getExpressiveNeutralChroma(sourceColorHct, isDark, platform),
     ),
-    Variant.vibrant => TonalPalette.fromHueAndChroma(
+    .vibrant => .fromHueAndChroma(
       _getVibrantNeutralHue(sourceColorHct),
       _getVibrantNeutralChroma(sourceColorHct, platform),
     ),
@@ -1859,37 +1717,37 @@ final class ColorSpec2025 implements ColorSpec {
     double contrastLevel,
   ) {
     switch (variant) {
-      case Variant.neutral:
-        return TonalPalette.fromHueAndChroma(
+      case .neutral:
+        return .fromHueAndChroma(
           sourceColorHct.hue,
-          (platform == Platform.phone ? 1.4 : 6) * 2.2,
+          (platform == .phone ? 1.4 : 6.0) * 2.2,
         );
-      case Variant.tonalSpot:
-        return TonalPalette.fromHueAndChroma(
+      case .tonalSpot:
+        return .fromHueAndChroma(
           sourceColorHct.hue,
-          (platform == Platform.phone ? 5 : 10) * 1.7,
+          (platform == .phone ? 5.0 : 10.0) * 1.7,
         );
-      case Variant.expressive:
+      case .expressive:
         final expressiveNeutralHue = _getExpressiveNeutralHue(sourceColorHct);
         final expressiveNeutralChroma = _getExpressiveNeutralChroma(
           sourceColorHct,
           isDark,
           platform,
         );
-        return TonalPalette.fromHueAndChroma(
+        return .fromHueAndChroma(
           expressiveNeutralHue,
           expressiveNeutralChroma *
-              (expressiveNeutralHue >= 105 && expressiveNeutralHue < 125
+              (expressiveNeutralHue >= 105.0 && expressiveNeutralHue < 125.0
                   ? 1.6
                   : 2.3),
         );
-      case Variant.vibrant:
+      case .vibrant:
         final vibrantNeutralHue = _getVibrantNeutralHue(sourceColorHct);
         final vibrantNeutralChroma = _getVibrantNeutralChroma(
           sourceColorHct,
           platform,
         );
-        return TonalPalette.fromHueAndChroma(
+        return .fromHueAndChroma(
           vibrantNeutralHue,
           vibrantNeutralChroma * 1.29,
         );
@@ -1914,26 +1772,20 @@ final class ColorSpec2025 implements ColorSpec {
   ) {
     final errorHue = DynamicScheme.getPiecewiseValue(
       sourceColorHct,
-      const [0, 3, 13, 23, 33, 43, 153, 273, 360],
-      const [12, 22, 32, 12, 22, 32, 22, 12],
+      const [0.0, 3.0, 13.0, 23.0, 33.0, 43.0, 153.0, 273.0, 360.0],
+      const [12.0, 22.0, 32.0, 12.0, 22.0, 32.0, 22.0, 12.0],
     );
     return switch (variant) {
-      Variant.neutral => TonalPalette.fromHueAndChroma(
+      .neutral => .fromHueAndChroma(errorHue, platform == .phone ? 50.0 : 40.0),
+      .tonalSpot => .fromHueAndChroma(
         errorHue,
-        platform == Platform.phone ? 50 : 40,
+        platform == .phone ? 60.0 : 48.0,
       ),
-      Variant.tonalSpot => TonalPalette.fromHueAndChroma(
+      .expressive => .fromHueAndChroma(
         errorHue,
-        platform == Platform.phone ? 60 : 48,
+        platform == .phone ? 64.0 : 48.0,
       ),
-      Variant.expressive => TonalPalette.fromHueAndChroma(
-        errorHue,
-        platform == Platform.phone ? 64 : 48,
-      ),
-      Variant.vibrant => TonalPalette.fromHueAndChroma(
-        errorHue,
-        platform == Platform.phone ? 80 : 60,
-      ),
+      .vibrant => .fromHueAndChroma(errorHue, platform == .phone ? 80.0 : 60.0),
       _ => _baseSpec.getErrorPalette(
         variant,
         sourceColorHct,
@@ -1944,40 +1796,38 @@ final class ColorSpec2025 implements ColorSpec {
     };
   }
 
-  static double _getExpressiveNeutralHue(Hct sourceColorHct) {
-    return DynamicScheme.getRotatedHue(
-      sourceColorHct,
-      const [0, 71, 124, 253, 278, 300, 360],
-      const [10, 0, 10, 0, 10, 0],
-    );
-  }
+  static double _getExpressiveNeutralHue(Hct sourceColorHct) =>
+      DynamicScheme.getRotatedHue(
+        sourceColorHct,
+        const [0.0, 71.0, 124.0, 253.0, 278.0, 300.0, 360.0],
+        const [10.0, 0.0, 10.0, 0.0, 10.0, 0.0],
+      );
 
   static double _getExpressiveNeutralChroma(
     Hct sourceColorHct,
     bool isDark,
     Platform platform,
-  ) {
-    final neutralHue = _getExpressiveNeutralHue(sourceColorHct);
-    return platform == Platform.phone
-        ? (isDark ? (Hct.isYellow(neutralHue) ? 6 : 14) : 18)
-        : 12;
-  }
+  ) => platform == .phone
+      ? (isDark
+            ? (Hct.isYellow(_getExpressiveNeutralHue(sourceColorHct))
+                  ? 6.0
+                  : 14.0)
+            : 18.0)
+      : 12.0;
 
-  static double _getVibrantNeutralHue(Hct sourceColorHct) {
-    return DynamicScheme.getRotatedHue(
-      sourceColorHct,
-      const [0, 38, 105, 140, 333, 360],
-      const [-14, 10, -14, 10, -14],
-    );
-  }
+  static double _getVibrantNeutralHue(Hct sourceColorHct) =>
+      DynamicScheme.getRotatedHue(
+        sourceColorHct,
+        const [0.0, 38.0, 105.0, 140.0, 333.0, 360.0],
+        const [-14.0, 10.0, -14.0, 10.0, -14.0],
+      );
 
   static double _getVibrantNeutralChroma(
     Hct sourceColorHct,
     Platform platform,
-  ) {
-    final neutralHue = _getVibrantNeutralHue(sourceColorHct);
-    return platform == Platform.phone ? 28 : (Hct.isBlue(neutralHue) ? 28 : 20);
-  }
+  ) => platform == .phone
+      ? 28.0
+      : (Hct.isBlue(_getVibrantNeutralHue(sourceColorHct)) ? 28.0 : 20.0);
 
   static double _tMaxC(
     TonalPalette palette, [
@@ -1985,7 +1835,7 @@ final class ColorSpec2025 implements ColorSpec {
     double upperBound = 100.0,
     double chromaMultiplier = 1.0,
   ]) {
-    double answer = _findBestToneForChroma(
+    final answer = _findBestToneForChroma(
       palette.hue,
       palette.chroma * chromaMultiplier,
       100.0,
@@ -1999,10 +1849,10 @@ final class ColorSpec2025 implements ColorSpec {
     double lowerBound = 0.0,
     double upperBound = 100.0,
   ]) {
-    double answer = _findBestToneForChroma(
+    final answer = _findBestToneForChroma(
       palette.hue,
       palette.chroma,
-      0,
+      0.0,
       false,
     );
     return MathUtils.clampDouble(lowerBound, upperBound, answer);
@@ -2014,14 +1864,14 @@ final class ColorSpec2025 implements ColorSpec {
     double tone,
     bool byDecreasingTone,
   ) {
-    double answer = tone;
-    Hct bestCandidate = Hct.from(hue, chroma, answer);
+    var answer = tone;
+    var bestCandidate = Hct.from(hue, chroma, answer);
     while (bestCandidate.chroma < chroma) {
-      if (tone < 0 || tone > 100) {
+      if (tone < 0.0 || tone > 100.0) {
         break;
       }
       tone += byDecreasingTone ? -1.0 : 1.0;
-      Hct newCandidate = Hct.from(hue, chroma, tone);
+      final newCandidate = Hct.from(hue, chroma, tone);
       if (bestCandidate.chroma < newCandidate.chroma) {
         bestCandidate = newCandidate;
         answer = tone;

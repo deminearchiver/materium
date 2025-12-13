@@ -27,7 +27,7 @@ final class QuantizerWu implements Quantizer {
     _createMoments();
     final createBoxesResult = _createBoxes(maxColors);
     final colors = _createResult(createBoxesResult.resultCount);
-    final Map<int, int> resultMap = <int, int>{};
+    final resultMap = <int, int>{};
     for (final color in colors) {
       resultMap[color] = 0;
     }
@@ -60,20 +60,20 @@ final class QuantizerWu implements Quantizer {
   }
 
   void _createMoments() {
-    for (int r = 1; r < _indexCount; ++r) {
+    for (var r = 1; r < _indexCount; ++r) {
       final List<int> area = List.filled(_indexCount, 0);
       final List<int> areaR = List.filled(_indexCount, 0);
       final List<int> areaG = List.filled(_indexCount, 0);
       final List<int> areaB = List.filled(_indexCount, 0);
       final List<double> area2 = List.filled(_indexCount, 0.0);
 
-      for (int g = 1; g < _indexCount; ++g) {
-        int line = 0;
-        int lineR = 0;
-        int lineG = 0;
-        int lineB = 0;
-        double line2 = 0.0;
-        for (int b = 1; b < _indexCount; ++b) {
+      for (var g = 1; g < _indexCount; ++g) {
+        var line = 0;
+        var lineR = 0;
+        var lineG = 0;
+        var lineB = 0;
+        var line2 = 0.0;
+        for (var b = 1; b < _indexCount; ++b) {
           final index = _getIndex(r, g, b);
           line += _weights[index];
           lineR += _momentsR[index];
@@ -101,14 +101,14 @@ final class QuantizerWu implements Quantizer {
   _CreateBoxesResult _createBoxes(int maxColorCount) {
     _cubes = List.generate(maxColorCount, (_) => _Box());
     final List<double> volumeVariance = List.filled(maxColorCount, 0.0);
-    final firstBox = _cubes.first;
-    firstBox.r1 = _indexCount - 1;
-    firstBox.g1 = _indexCount - 1;
-    firstBox.b1 = _indexCount - 1;
+    _cubes.first
+      ..r1 = _indexCount - 1
+      ..g1 = _indexCount - 1
+      ..b1 = _indexCount - 1;
 
-    int generatedColorCount = maxColorCount;
-    int next = 0;
-    for (int i = 1; i < maxColorCount; i++) {
+    var generatedColorCount = maxColorCount;
+    var next = 0;
+    for (var i = 1; i < maxColorCount; i++) {
       if (_cut(_cubes[next], _cubes[i])) {
         volumeVariance[next] = (_cubes[next].vol > 1)
             ? _variance(_cubes[next])
@@ -121,8 +121,8 @@ final class QuantizerWu implements Quantizer {
 
       next = 0;
 
-      double temp = volumeVariance[0];
-      for (int j = 1; j <= i; j++) {
+      var temp = volumeVariance[0];
+      for (var j = 1; j <= i; j++) {
         if (volumeVariance[j] > temp) {
           temp = volumeVariance[j];
           next = j;
@@ -133,13 +133,12 @@ final class QuantizerWu implements Quantizer {
         break;
       }
     }
-
     return _CreateBoxesResult(maxColorCount, generatedColorCount);
   }
 
   List<int> _createResult(int colorCount) {
-    final List<int> colors = <int>[];
-    for (int i = 0; i < colorCount; ++i) {
+    final colors = <int>[];
+    for (var i = 0; i < colorCount; ++i) {
       final cube = _cubes[i];
       final weight = _volume(cube, _weights);
       if (weight > 0) {
@@ -167,21 +166,20 @@ final class QuantizerWu implements Quantizer {
         _moments[_getIndex(cube.r0, cube.g1, cube.b0)] +
         _moments[_getIndex(cube.r0, cube.g0, cube.b1)] -
         _moments[_getIndex(cube.r0, cube.g0, cube.b0)];
-
     final hypotenuse = dr * dr + dg * dg + db * db;
     final volume = _volume(cube, _weights);
     return xx - hypotenuse / volume.toDouble();
   }
 
   bool _cut(_Box one, _Box two) {
-    int wholeR = _volume(one, _momentsR);
-    int wholeG = _volume(one, _momentsG);
-    int wholeB = _volume(one, _momentsB);
-    int wholeW = _volume(one, _weights);
+    final wholeR = _volume(one, _momentsR);
+    final wholeG = _volume(one, _momentsG);
+    final wholeB = _volume(one, _momentsB);
+    final wholeW = _volume(one, _weights);
 
-    _MaximizeResult maxRResult = _maximize(
+    final maxRResult = _maximize(
       one,
-      _Direction.red,
+      .red,
       one.r0 + 1,
       one.r1,
       wholeR,
@@ -189,9 +187,9 @@ final class QuantizerWu implements Quantizer {
       wholeB,
       wholeW,
     );
-    _MaximizeResult maxGResult = _maximize(
+    final maxGResult = _maximize(
       one,
-      _Direction.green,
+      .green,
       one.g0 + 1,
       one.g1,
       wholeR,
@@ -199,9 +197,9 @@ final class QuantizerWu implements Quantizer {
       wholeB,
       wholeW,
     );
-    _MaximizeResult maxBResult = _maximize(
+    final maxBResult = _maximize(
       one,
-      _Direction.blue,
+      .blue,
       one.b0 + 1,
       one.b1,
       wholeR,
@@ -210,38 +208,39 @@ final class QuantizerWu implements Quantizer {
       wholeW,
     );
     final _Direction cutDirection;
-    double maxR = maxRResult.maximum;
-    double maxG = maxGResult.maximum;
-    double maxB = maxBResult.maximum;
+    final maxR = maxRResult.maximum;
+    final maxG = maxGResult.maximum;
+    final maxB = maxBResult.maximum;
     if (maxR >= maxG && maxR >= maxB) {
       if (maxRResult.cutLocation < 0) {
         return false;
       }
-      cutDirection = _Direction.red;
+      cutDirection = .red;
     } else if (maxG >= maxR && maxG >= maxB) {
-      cutDirection = _Direction.green;
+      cutDirection = .green;
     } else {
-      cutDirection = _Direction.blue;
+      cutDirection = .blue;
     }
 
-    two.r1 = one.r1;
-    two.g1 = one.g1;
-    two.b1 = one.b1;
+    two
+      ..r1 = one.r1
+      ..g1 = one.g1
+      ..b1 = one.b1;
 
     switch (cutDirection) {
-      case _Direction.red:
+      case .red:
         one.r1 = maxRResult.cutLocation;
         two.r0 = one.r1;
         two.g0 = one.g0;
         two.b0 = one.b0;
         break;
-      case _Direction.green:
+      case .green:
         one.g1 = maxGResult.cutLocation;
         two.r0 = one.r0;
         two.g0 = one.g1;
         two.b0 = one.b0;
         break;
-      case _Direction.blue:
+      case .blue:
         one.b1 = maxBResult.cutLocation;
         two.r0 = one.r0;
         two.g0 = one.g0;
@@ -270,14 +269,14 @@ final class QuantizerWu implements Quantizer {
     final bottomB = _bottom(cube, direction, _momentsB);
     final bottomW = _bottom(cube, direction, _weights);
 
-    double max = 0.0;
-    int cut = -1;
+    var max = 0.0;
+    var cut = -1;
 
-    int halfR = 0;
-    int halfG = 0;
-    int halfB = 0;
-    int halfW = 0;
-    for (int i = first; i < last; i++) {
+    var halfR = 0;
+    var halfG = 0;
+    var halfB = 0;
+    var halfW = 0;
+    for (var i = first; i < last; i++) {
       halfR = bottomR + _top(cube, direction, i, _momentsR);
       halfG = bottomG + _top(cube, direction, i, _momentsG);
       halfB = bottomB + _top(cube, direction, i, _momentsB);
@@ -286,10 +285,10 @@ final class QuantizerWu implements Quantizer {
         continue;
       }
 
-      double tempNumerator = (halfR * halfR + halfG * halfG + halfB * halfB)
+      var tempNumerator = (halfR * halfR + halfG * halfG + halfB * halfB)
           .toDouble();
-      double tempDenominator = halfW.toDouble();
-      double temp = tempNumerator / tempDenominator;
+      var tempDenominator = halfW.toDouble();
+      var temp = tempNumerator / tempDenominator;
 
       halfR = wholeR - halfR;
       halfG = wholeG - halfG;
@@ -312,70 +311,65 @@ final class QuantizerWu implements Quantizer {
     return _MaximizeResult(cut, max);
   }
 
-  static int _getIndex(int r, int g, int b) {
-    return (r << (_indexBits * 2)) +
-        (r << (_indexBits + 1)) +
-        r +
-        (g << _indexBits) +
-        g +
-        b;
-  }
+  static int _getIndex(int r, int g, int b) =>
+      (r << (_indexBits * 2)) +
+      (r << (_indexBits + 1)) +
+      r +
+      (g << _indexBits) +
+      g +
+      b;
 
-  static int _volume(_Box cube, List<int> moment) {
-    return (moment[_getIndex(cube.r1, cube.g1, cube.b1)] -
-        moment[_getIndex(cube.r1, cube.g1, cube.b0)] -
-        moment[_getIndex(cube.r1, cube.g0, cube.b1)] +
-        moment[_getIndex(cube.r1, cube.g0, cube.b0)] -
-        moment[_getIndex(cube.r0, cube.g1, cube.b1)] +
-        moment[_getIndex(cube.r0, cube.g1, cube.b0)] +
-        moment[_getIndex(cube.r0, cube.g0, cube.b1)] -
-        moment[_getIndex(cube.r0, cube.g0, cube.b0)]);
-  }
+  static int _volume(_Box cube, List<int> moment) =>
+      (moment[_getIndex(cube.r1, cube.g1, cube.b1)] -
+      moment[_getIndex(cube.r1, cube.g1, cube.b0)] -
+      moment[_getIndex(cube.r1, cube.g0, cube.b1)] +
+      moment[_getIndex(cube.r1, cube.g0, cube.b0)] -
+      moment[_getIndex(cube.r0, cube.g1, cube.b1)] +
+      moment[_getIndex(cube.r0, cube.g1, cube.b0)] +
+      moment[_getIndex(cube.r0, cube.g0, cube.b1)] -
+      moment[_getIndex(cube.r0, cube.g0, cube.b0)]);
 
-  static int _bottom(_Box cube, _Direction direction, List<int> moment) {
-    return switch (direction) {
-      _Direction.red =>
-        -moment[_getIndex(cube.r0, cube.g1, cube.b1)] +
-            moment[_getIndex(cube.r0, cube.g1, cube.b0)] +
-            moment[_getIndex(cube.r0, cube.g0, cube.b1)] -
-            moment[_getIndex(cube.r0, cube.g0, cube.b0)],
-      _Direction.green =>
-        -moment[_getIndex(cube.r1, cube.g0, cube.b1)] +
-            moment[_getIndex(cube.r1, cube.g0, cube.b0)] +
-            moment[_getIndex(cube.r0, cube.g0, cube.b1)] -
-            moment[_getIndex(cube.r0, cube.g0, cube.b0)],
-      _Direction.blue =>
-        -moment[_getIndex(cube.r1, cube.g1, cube.b0)] +
-            moment[_getIndex(cube.r1, cube.g0, cube.b0)] +
-            moment[_getIndex(cube.r0, cube.g1, cube.b0)] -
-            moment[_getIndex(cube.r0, cube.g0, cube.b0)],
-    };
-  }
+  static int _bottom(_Box cube, _Direction direction, List<int> moment) =>
+      switch (direction) {
+        .red =>
+          -moment[_getIndex(cube.r0, cube.g1, cube.b1)] +
+              moment[_getIndex(cube.r0, cube.g1, cube.b0)] +
+              moment[_getIndex(cube.r0, cube.g0, cube.b1)] -
+              moment[_getIndex(cube.r0, cube.g0, cube.b0)],
+        .green =>
+          -moment[_getIndex(cube.r1, cube.g0, cube.b1)] +
+              moment[_getIndex(cube.r1, cube.g0, cube.b0)] +
+              moment[_getIndex(cube.r0, cube.g0, cube.b1)] -
+              moment[_getIndex(cube.r0, cube.g0, cube.b0)],
+        .blue =>
+          -moment[_getIndex(cube.r1, cube.g1, cube.b0)] +
+              moment[_getIndex(cube.r1, cube.g0, cube.b0)] +
+              moment[_getIndex(cube.r0, cube.g1, cube.b0)] -
+              moment[_getIndex(cube.r0, cube.g0, cube.b0)],
+      };
 
   static int _top(
     _Box cube,
     _Direction direction,
     int position,
     List<int> moment,
-  ) {
-    return switch (direction) {
-      _Direction.red =>
-        (moment[_getIndex(position, cube.g1, cube.b1)] -
-            moment[_getIndex(position, cube.g1, cube.b0)] -
-            moment[_getIndex(position, cube.g0, cube.b1)] +
-            moment[_getIndex(position, cube.g0, cube.b0)]),
-      _Direction.green =>
-        (moment[_getIndex(cube.r1, position, cube.b1)] -
-            moment[_getIndex(cube.r1, position, cube.b0)] -
-            moment[_getIndex(cube.r0, position, cube.b1)] +
-            moment[_getIndex(cube.r0, position, cube.b0)]),
-      _Direction.blue =>
-        (moment[_getIndex(cube.r1, cube.g1, position)] -
-            moment[_getIndex(cube.r1, cube.g0, position)] -
-            moment[_getIndex(cube.r0, cube.g1, position)] +
-            moment[_getIndex(cube.r0, cube.g0, position)]),
-    };
-  }
+  ) => switch (direction) {
+    .red =>
+      (moment[_getIndex(position, cube.g1, cube.b1)] -
+          moment[_getIndex(position, cube.g1, cube.b0)] -
+          moment[_getIndex(position, cube.g0, cube.b1)] +
+          moment[_getIndex(position, cube.g0, cube.b0)]),
+    .green =>
+      (moment[_getIndex(cube.r1, position, cube.b1)] -
+          moment[_getIndex(cube.r1, position, cube.b0)] -
+          moment[_getIndex(cube.r0, position, cube.b1)] +
+          moment[_getIndex(cube.r0, position, cube.b0)]),
+    .blue =>
+      (moment[_getIndex(cube.r1, cube.g1, position)] -
+          moment[_getIndex(cube.r1, cube.g0, position)] -
+          moment[_getIndex(cube.r0, cube.g1, position)] +
+          moment[_getIndex(cube.r0, cube.g0, position)]),
+  };
 }
 
 enum _Direction { red, green, blue }
@@ -388,13 +382,12 @@ final class _MaximizeResult {
   final double maximum;
 
   @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        runtimeType == other.runtimeType &&
-            other is _MaximizeResult &&
-            cutLocation == other.cutLocation &&
-            maximum == other.maximum;
-  }
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      runtimeType == other.runtimeType &&
+          other is _MaximizeResult &&
+          cutLocation == other.cutLocation &&
+          maximum == other.maximum;
 
   @override
   int get hashCode => Object.hash(cutLocation, maximum);
@@ -407,13 +400,12 @@ final class _CreateBoxesResult {
   final int resultCount;
 
   @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        runtimeType == other.runtimeType &&
-            other is _CreateBoxesResult &&
-            requestedCount == other.requestedCount &&
-            resultCount == other.resultCount;
-  }
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      runtimeType == other.runtimeType &&
+          other is _CreateBoxesResult &&
+          requestedCount == other.requestedCount &&
+          resultCount == other.resultCount;
 
   @override
   int get hashCode => Object.hash(requestedCount, resultCount);

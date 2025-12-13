@@ -29,9 +29,9 @@ final class PointProviderLab implements PointProvider {
   /// because this method is called at least once for each pixel in an image.
   @override
   double distance(List<double> one, List<double> two) {
-    double dL = (one[0] - two[0]);
-    double dA = (one[1] - two[1]);
-    double dB = (one[2] - two[2]);
+    final dL = (one[0] - two[0]);
+    final dA = (one[1] - two[1]);
+    final dB = (one[2] - two[2]);
     return (dL * dL + dA * dA + dB * dB);
   }
 }

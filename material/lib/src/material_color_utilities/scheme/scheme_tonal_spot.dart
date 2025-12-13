@@ -1,5 +1,4 @@
 import '../dynamiccolor/dynamic_scheme.dart';
-import '../dynamiccolor/variant.dart';
 
 /// A calm theme, sedated colors that aren't particularly chromatic.
 ///
@@ -15,5 +14,5 @@ class SchemeTonalSpot extends DynamicScheme {
     required super.contrastLevel,
     super.specVersion = DynamicScheme.defaultSpecVersion,
     super.platform = DynamicScheme.defaultPlatform,
-  }) : super.fromPalettesOrKeyColors(variant: Variant.tonalSpot);
+  }) : super.fromPalettesOrKeyColors(variant: .tonalSpot);
 }

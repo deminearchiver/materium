@@ -43,7 +43,7 @@ abstract class IconThemeDataPartial with Diagnosticable {
           grade != null ||
           opticalSize != null ||
           fill != null
-      ? IconThemeDataPartial.from(
+      ? .from(
           color: color ?? this.color,
           size: size ?? this.size,
           weight: weight ?? this.weight,

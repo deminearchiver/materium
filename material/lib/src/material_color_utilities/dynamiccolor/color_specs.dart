@@ -8,7 +8,7 @@ abstract final class ColorSpecs {
   static const ColorSpec _spec2025 = ColorSpec2025();
 
   static ColorSpec get([
-    SpecVersion specVersion = SpecVersion.spec2021,
+    SpecVersion specVersion = .spec2021,
     bool isExtendedFidelity = false,
-  ]) => specVersion == SpecVersion.spec2025 ? _spec2025 : _spec2021;
+  ]) => specVersion == .spec2025 ? _spec2025 : _spec2021;
 }

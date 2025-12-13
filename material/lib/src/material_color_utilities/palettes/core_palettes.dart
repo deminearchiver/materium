@@ -22,16 +22,15 @@ final class CorePalettes {
   final TonalPalette neutralVariant;
 
   @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        runtimeType == other.runtimeType &&
-            other is CorePalettes &&
-            primary == other.primary &&
-            secondary == other.secondary &&
-            tertiary == other.tertiary &&
-            neutral == other.neutral &&
-            neutralVariant == other.neutralVariant;
-  }
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      runtimeType == other.runtimeType &&
+          other is CorePalettes &&
+          primary == other.primary &&
+          secondary == other.secondary &&
+          tertiary == other.tertiary &&
+          neutral == other.neutral &&
+          neutralVariant == other.neutralVariant;
 
   @override
   int get hashCode =>

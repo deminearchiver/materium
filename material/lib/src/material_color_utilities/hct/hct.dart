@@ -9,12 +9,10 @@ final class Hct {
     _setInternalState(argb);
   }
 
-  factory Hct.from(double hue, double chroma, double tone) {
-    final argb = HctSolver.solveToInt(hue, chroma, tone);
-    return Hct._(argb);
-  }
+  factory Hct.from(double hue, double chroma, double tone) =>
+      ._(HctSolver.solveToInt(hue, chroma, tone));
 
-  factory Hct.fromInt(int argb) => Hct._(argb);
+  factory Hct.fromInt(int argb) => ._(argb);
 
   late int _argb;
   late double _hue;
@@ -40,11 +38,11 @@ final class Hct {
 
   Hct inViewingConditions(ViewingConditions vc) {
     // 1. Use CAM16 to find XYZ coordinates of color in specified VC.
-    Cam16 cam16 = Cam16.fromInt(toInt());
+    final cam16 = Cam16.fromInt(toInt());
     final viewedInVc = cam16.xyzInViewingConditions(vc);
 
     // 2. Create CAM16 of those XYZ coordinates in default VC.
-    Cam16 recastInVc = Cam16.fromXyzInViewingConditions(
+    final recastInVc = Cam16.fromXyzInViewingConditions(
       viewedInVc[0],
       viewedInVc[1],
       viewedInVc[2],
@@ -54,7 +52,7 @@ final class Hct {
     // 3. Create HCT from:
     // - CAM16 using default VC with XYZ coordinates in specified VC.
     // - L* converted from Y in XYZ coordinates in specified VC.
-    return Hct.from(
+    return .from(
       recastInVc.hue,
       recastInVc.chroma,
       ColorUtils.lstarFromY(viewedInVc[1]),
@@ -78,15 +76,14 @@ final class Hct {
       ")";
 
   @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        runtimeType == other.runtimeType &&
-            other is Hct &&
-            _argb == other._argb &&
-            _hue == other._hue &&
-            _chroma == other._chroma &&
-            _tone == other._tone;
-  }
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      runtimeType == other.runtimeType &&
+          other is Hct &&
+          _argb == other._argb &&
+          _hue == other._hue &&
+          _chroma == other._chroma &&
+          _tone == other._tone;
 
   @override
   int get hashCode => Object.hash(_argb, _hue, _chroma, _tone);

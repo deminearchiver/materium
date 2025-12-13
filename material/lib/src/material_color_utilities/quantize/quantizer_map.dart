@@ -6,7 +6,7 @@ final class QuantizerMap implements Quantizer {
 
   @override
   QuantizerResult quantize(List<int> pixels, int maxColors) {
-    final Map<int, int> pixelByCount = <int, int>{};
+    final pixelByCount = <int, int>{};
     for (final pixel in pixels) {
       pixelByCount.update(
         pixel,

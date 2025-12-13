@@ -25,7 +25,7 @@ abstract final class Score {
     // total count.
     final colorsHct = <Hct>[];
     final List<int> huePopulation = List.filled(360, 0);
-    double populationSum = 0.0;
+    var populationSum = 0.0;
     for (final MapEntry(:key, :value) in colorsToPopulation.entries) {
       final hct = Hct.fromInt(key);
       colorsHct.add(hct);
@@ -37,7 +37,7 @@ abstract final class Score {
     // Hues with more usage in neighboring 30 degree slice get a larger number.
     final List<double> hueExcitedProportions = List.filled(360, 0.0);
     for (var hue = 0; hue < 360; hue++) {
-      var proportion = huePopulation[hue].toDouble() / populationSum;
+      final proportion = huePopulation[hue].toDouble() / populationSum;
       for (var i = hue - 14; i < hue + 16; i++) {
         final neighborHue = MathUtils.sanitizeDegreesInt(i);
         hueExcitedProportions[neighborHue] += proportion;
@@ -46,7 +46,7 @@ abstract final class Score {
 
     // Scores each HCT color based on usage and chroma, while optionally
     // filtering out values that do not have enough chroma or usage.
-    final List<_ScoredHct> scoredHcts = <_ScoredHct>[];
+    final scoredHcts = <_ScoredHct>[];
     for (final hct in colorsHct) {
       final hue = MathUtils.sanitizeDegreesInt(hct.hue.round());
       final proportion = hueExcitedProportions[hue];
@@ -71,7 +71,7 @@ abstract final class Score {
     // the colors with the largest distribution of hues possible. Starting at
     // 90 degrees(maximum difference for 4 colors) then decreasing down to a
     // 15 degree minimum.
-    final List<Hct> chosenColors = <Hct>[];
+    final chosenColors = <Hct>[];
     for (
       var differenceDegrees = 90;
       differenceDegrees >= 15;
@@ -99,7 +99,7 @@ abstract final class Score {
         break;
       }
     }
-    final List<int> colors = <int>[];
+    final colors = <int>[];
     if (chosenColors.isEmpty) {
       colors.add(fallbackColorArgb);
     }
@@ -117,13 +117,12 @@ final class _ScoredHct {
   final double score;
 
   @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        runtimeType == other.runtimeType &&
-            other is _ScoredHct &&
-            hct == other.hct &&
-            score == other.score;
-  }
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      runtimeType == other.runtimeType &&
+          other is _ScoredHct &&
+          hct == other.hct &&
+          score == other.score;
 
   @override
   int get hashCode => Object.hash(hct, score);

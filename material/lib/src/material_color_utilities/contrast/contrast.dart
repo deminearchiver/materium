@@ -12,16 +12,16 @@ import '../utils/color_utils.dart';
 abstract final class Contrast {
   /// The minimum contrast ratio of two colors. Contrast ratio equation =
   /// (lighter + 5) / (darker + 5). If lighter == darker, ratio == 1.
-  static const double ratioMin = 1.0;
+  static const ratioMin = 1.0;
 
   /// The maximum contrast ratio of two colors. Contrast ratio equation =
   /// (lighter + 5) / (darker + 5). If lighter == 100 and darker = 0,
   /// ratio == 21.
-  static const double ratioMax = 21.0;
+  static const ratioMax = 21.0;
 
-  static const double ratio30 = 3.0;
-  static const double ratio45 = 4.5;
-  static const double ratio70 = 7.0;
+  static const ratio30 = 3.0;
+  static const ratio45 = 4.5;
+  static const ratio70 = 7.0;
 
   // Given a color and a contrast ratio to reach, the luminance of a color
   // that reaches that ratio with the color can be calculated. However,
@@ -36,7 +36,7 @@ abstract final class Contrast {
   //
   // 0.04 selected because it ensures the resulting ratio rounds to the same
   // tenth.
-  static const double _contrastRatioEpsilon = 0.04;
+  static const _contrastRatioEpsilon = 0.04;
 
   // Color spaces that measure luminance, such as Y in XYZ, L* in L*a*b*,
   // or T in HCT, are known as perceptually accurate color spaces.
@@ -67,7 +67,7 @@ abstract final class Contrast {
   // provides a rough guarantee that as long as a perceptual color space gamut
   // maps lightness such that the resulting lightness rounds to the same
   //  as the requested, the desired contrast ratio will be reached.
-  static const double _luminanceGamutMapTolerance = 0.4;
+  static const _luminanceGamutMapTolerance = 0.4;
 
   /// Contrast ratio is a measure of legibility, its used to compare the
   /// lightness of two colors. This method is used commonly in industry due to
@@ -78,8 +78,8 @@ abstract final class Contrast {
   ///
   /// The equation is ratio = lighter Y + 5 / darker Y + 5.
   static double ratioOfYs(double y1, double y2) {
-    final double lighter = math.max(y1, y2);
-    final double darker = lighter == y2 ? y1 : y2;
+    final lighter = math.max(y1, y2);
+    final darker = lighter == y2 ? y1 : y2;
     return (lighter + 5.0) / (darker + 5.0);
   }
 
@@ -107,25 +107,18 @@ abstract final class Contrast {
   /// Returns T in HCT, L* in L*a*b* >= tone parameter that ensures ratio with
   /// input T/L*. Returns null if ratio cannot be achieved.
   static double? lighter(double tone, double ratio) {
-    if (tone < 0.0 || tone > 100.0) {
-      return null;
-    }
+    if (tone < 0.0 || tone > 100.0) return null;
     // Invert the contrast ratio equation to determine lighter Y given a ratio and darker Y.
-    final double darkY = ColorUtils.yFromLstar(tone);
-    final double lightY = ratio * (darkY + 5.0) - 5.0;
-    if (lightY < 0.0 || lightY > 100.0) {
-      return null;
-    }
-    final double realContrast = ratioOfYs(lightY, darkY);
-    final double delta = (realContrast - ratio).abs();
-    if (realContrast < ratio && delta > _contrastRatioEpsilon) {
-      return null;
-    }
-
-    final double returnValue =
+    final darkY = ColorUtils.yFromLstar(tone);
+    final lightY = ratio * (darkY + 5.0) - 5.0;
+    if (lightY < 0.0 || lightY > 100.0) return null;
+    final realContrast = ratioOfYs(lightY, darkY);
+    final delta = (realContrast - ratio).abs();
+    if (realContrast < ratio && delta > _contrastRatioEpsilon) return null;
+    final returnValue =
         ColorUtils.lstarFromY(lightY) + _luminanceGamutMapTolerance;
     // NOMUTANTS--important validation step; functions it is calling may change implementation.
-    return returnValue < 0 || returnValue > 100 ? null : returnValue;
+    return returnValue < 0.0 || returnValue > 100.0 ? null : returnValue;
   }
 
   /// Tone >= tone parameter that ensures ratio. 100 if ratio
@@ -139,26 +132,19 @@ abstract final class Contrast {
   /// Returns T in HCT, L* in L*a*b* <= tone parameter that ensures ratio with
   /// input T/L*. Returns null if ratio cannot be achieved.
   static double? darker(double tone, double ratio) {
-    if (tone < 0.0 || tone > 100.0) {
-      return null;
-    }
+    if (tone < 0.0 || tone > 100.0) return null;
     // Invert the contrast ratio equation to determine darker Y given a ratio and lighter Y.
-    final double lightY = ColorUtils.yFromLstar(tone);
-    final double darkY = ((lightY + 5.0) / ratio) - 5.0;
-    if (darkY < 0.0 || darkY > 100.0) {
-      return null;
-    }
-    final double realContrast = ratioOfYs(lightY, darkY);
-    final double delta = (realContrast - ratio).abs();
-    if (realContrast < ratio && delta > _contrastRatioEpsilon) {
-      return null;
-    }
-
+    final lightY = ColorUtils.yFromLstar(tone);
+    final darkY = ((lightY + 5.0) / ratio) - 5.0;
+    if (darkY < 0.0 || darkY > 100.0) return null;
+    final realContrast = ratioOfYs(lightY, darkY);
+    final delta = (realContrast - ratio).abs();
+    if (realContrast < ratio && delta > _contrastRatioEpsilon) return null;
     // For information on 0.4 constant, see comment in lighter(tone, ratio).
-    final double returnValue =
+    final returnValue =
         ColorUtils.lstarFromY(darkY) - _luminanceGamutMapTolerance;
     // NOMUTANTS--important validation step; functions it is calling may change implementation.
-    return returnValue < 0 || returnValue > 100 ? null : returnValue;
+    return returnValue < 0.0 || returnValue > 100.0 ? null : returnValue;
   }
 
   /// Tone <= tone parameter that ensures ratio. 0 if ratio cannot be achieved.

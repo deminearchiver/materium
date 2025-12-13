@@ -8,21 +8,17 @@ import '../hct/hct.dart';
 final class TonalPalette {
   TonalPalette._(this.hue, this.chroma, this.keyColor);
 
+  TonalPalette.fromInt(int argb) : this.fromHct(Hct.fromInt(argb));
+
+  TonalPalette.fromHct(Hct hct) : this._(hct.hue, hct.chroma, hct);
+
+  TonalPalette.fromHueAndChroma(double hue, double chroma)
+    : this._(hue, chroma, _KeyColor(hue, chroma).create());
+
   final Map<int, int> _cache = <int, int>{};
   final double hue;
   final double chroma;
   final Hct keyColor;
-
-  factory TonalPalette.fromInt(int argb) =>
-      TonalPalette.fromHct(Hct.fromInt(argb));
-
-  factory TonalPalette.fromHct(Hct hct) =>
-      TonalPalette._(hct.hue, hct.chroma, hct);
-
-  factory TonalPalette.fromHueAndChroma(double hue, double chroma) {
-    final keyColor = _KeyColor(hue, chroma).create();
-    return TonalPalette._(hue, chroma, keyColor);
-  }
 
   /// Create an ARGB color with HCT hue and chroma of this Tones instance,
   /// and the provided HCT tone.
@@ -57,15 +53,15 @@ final class TonalPalette {
 
 /// Key color is a color that represents the hue and chroma of a tonal palette.
 final class _KeyColor {
+  _KeyColor(double hue, double requestedChroma)
+    : _hue = hue,
+      _requestedChroma = requestedChroma;
+
   final double _hue;
   final double _requestedChroma;
 
   /// Cache that maps tone to max chroma to avoid duplicated HCT calculation.
   final Map<int, double> _chromaCache = <int, double>{};
-
-  _KeyColor(double hue, double requestedChroma)
-    : _hue = hue,
-      _requestedChroma = requestedChroma;
 
   /// Creates a key color from a [hue] and a [chroma].
   /// The key color is the first tone, starting from T50,
@@ -75,20 +71,22 @@ final class _KeyColor {
   Hct create() {
     // Pivot around T50 because T50 has the most chroma available, on
     // average. Thus it is most likely to have a direct answer.
-    final int pivotTone = 50;
-    final int toneStepSize = 1;
+    const pivotTone = 50;
+    const toneStepSize = 1;
+
     // Epsilon to accept values slightly higher than the requested chroma.
-    final double epsilon = 0.01;
+    const epsilon = 0.01;
 
     // Binary search to find the tone that can provide a chroma that is closest
     // to the requested chroma.
-    int lowerTone = 0;
-    int upperTone = 100;
+    var lowerTone = 0;
+    var upperTone = 100;
     while (lowerTone < upperTone) {
-      final int midTone = ((lowerTone + upperTone) / 2).toInt();
-      bool isAscending =
+      final midTone = (lowerTone + upperTone) ~/ 2;
+      final isAscending =
           _maxChroma(midTone) < _maxChroma(midTone + toneStepSize);
-      bool sufficientChroma = _maxChroma(midTone) >= _requestedChroma - epsilon;
+      final sufficientChroma =
+          _maxChroma(midTone) >= _requestedChroma - epsilon;
 
       if (sufficientChroma) {
         // Either range [lowerTone, midTone] or [midTone, upperTone] has
@@ -112,7 +110,6 @@ final class _KeyColor {
         }
       }
     }
-
     return Hct.from(_hue, _requestedChroma, lowerTone.toDouble());
   }
 
@@ -122,5 +119,5 @@ final class _KeyColor {
     () => Hct.from(_hue, _maxChromaValue, tone.toDouble()).chroma,
   );
 
-  static const double _maxChromaValue = 200.0;
+  static const _maxChromaValue = 200.0;
 }

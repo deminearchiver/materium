@@ -1,5 +1,4 @@
 import '../dynamiccolor/dynamic_scheme.dart';
-import '../dynamiccolor/variant.dart';
 
 /// A scheme that places the source color in Scheme.primaryContainer.
 ///
@@ -17,5 +16,5 @@ class SchemeFidelity extends DynamicScheme {
     required super.contrastLevel,
     super.specVersion = DynamicScheme.defaultSpecVersion,
     super.platform = DynamicScheme.defaultPlatform,
-  }) : super.fromPalettesOrKeyColors(variant: Variant.vibrant);
+  }) : super.fromPalettesOrKeyColors(variant: .vibrant);
 }

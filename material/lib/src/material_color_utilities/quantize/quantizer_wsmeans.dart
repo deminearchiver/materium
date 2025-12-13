@@ -18,15 +18,15 @@ final class QuantizerWsmeans implements Quantizer {
   }) {
     final random = math.Random(0x42688);
 
-    final Map<int, int> pixelToCount = <int, int>{};
+    final pixelToCount = <int, int>{};
     final List<List<double>> points = List.generate(
       inputPixels.length,
       (index) => [],
     );
-    final List<int> pixels = List.filled(inputPixels.length, 0);
+    final pixels = List<int>.filled(inputPixels.length, 0);
     const pointProvider = PointProviderLab();
 
-    int pointCount = 0;
+    var pointCount = 0;
     for (final inputPixel in inputPixels) {
       pixelToCount.update(
         inputPixel,
@@ -40,39 +40,39 @@ final class QuantizerWsmeans implements Quantizer {
       );
     }
 
-    final List<int> counts = List.filled(pointCount, 0);
-    for (int i = 0; i < pointCount; i++) {
+    final counts = List<int>.filled(pointCount, 0);
+    for (var i = 0; i < pointCount; i++) {
       final pixel = pixels[i];
       final count = pixelToCount[pixel];
       assert(count != null);
       counts[i] = count!;
     }
 
-    int clusterCount = math.min(maxColors, pointCount);
+    var clusterCount = math.min(maxColors, pointCount);
     if (startingClusters.isNotEmpty) {
       clusterCount = math.min(clusterCount, startingClusters.length);
     }
 
-    final List<List<double>> clusters = startingClusters
+    final clusters = startingClusters
         .map((startingCluster) => pointProvider.fromInt(startingCluster))
         .toList();
     final clustersCreated = clusters.length;
 
-    int additionalClustersNeeded = clusterCount - clustersCreated;
+    final additionalClustersNeeded = clusterCount - clustersCreated;
     if (additionalClustersNeeded > 0) {
-      for (int i = 0; i < additionalClustersNeeded; i++) {
-        // TODO: implement (Java and Kotlin implementation missing)
+      for (var i = 0; i < additionalClustersNeeded; i++) {
+        // TODO(deminearchiver): implement (Java and Kotlin implementation missing)
       }
     }
 
-    final List<int> clusterIndices = List.generate(
+    final clusterIndices = List<int>.generate(
       pointCount,
       (_) => random.nextInt(clusterCount),
     );
 
     final indexMatrix = List.generate(
       clusterCount,
-      (index) => List.filled(clusterCount, 0),
+      (index) => List<int>.filled(clusterCount, 0),
     );
 
     final List<List<_Distance>> distanceToIndexMatrix = List.generate(
@@ -81,9 +81,9 @@ final class QuantizerWsmeans implements Quantizer {
     );
 
     List<int> pixelCountSums = [];
-    for (int iteration = 0; iteration < _maxIterations; iteration++) {
-      for (int i = 0; i < clusterCount; i++) {
-        for (int j = i + 1; j < clusterCount; j++) {
+    for (var iteration = 0; iteration < _maxIterations; iteration++) {
+      for (var i = 0; i < clusterCount; i++) {
+        for (var j = i + 1; j < clusterCount; j++) {
           final distance = pointProvider.distance(clusters[i], clusters[j]);
           distanceToIndexMatrix[j][i].distance = distance;
           distanceToIndexMatrix[j][i].index = i;
@@ -91,33 +91,33 @@ final class QuantizerWsmeans implements Quantizer {
           distanceToIndexMatrix[i][j].index = j;
         }
         distanceToIndexMatrix[i].sort();
-        for (int j = 0; j < clusterCount; j++) {
+        for (var j = 0; j < clusterCount; j++) {
           indexMatrix[i][j] = distanceToIndexMatrix[i][j].index;
         }
       }
 
-      int pointsMoved = 0;
-      for (int i = 0; i < pointCount; i++) {
+      var pointsMoved = 0;
+      for (var i = 0; i < pointCount; i++) {
         final point = points[i];
         final previousClusterIndex = clusterIndices[i];
         final previousCluster = clusters[previousClusterIndex];
         final previousDistance = pointProvider.distance(point, previousCluster);
 
-        double minimumDistance = previousDistance;
-        int newClusterIndex = -1;
-        for (int j = 0; j < clusterCount; j++) {
+        var minimumDistance = previousDistance;
+        var newClusterIndex = -1;
+        for (var j = 0; j < clusterCount; j++) {
           if (distanceToIndexMatrix[previousClusterIndex][j].distance >=
               4 * previousDistance) {
             continue;
           }
-          double distance = pointProvider.distance(point, clusters[j]);
+          final distance = pointProvider.distance(point, clusters[j]);
           if (distance < minimumDistance) {
             minimumDistance = distance;
             newClusterIndex = j;
           }
         }
         if (newClusterIndex != -1) {
-          double distanceChange =
+          final distanceChange =
               (math.sqrt(minimumDistance) - math.sqrt(previousDistance)).abs();
           if (distanceChange > _minMovementDistance) {
             pointsMoved++;
@@ -129,11 +129,11 @@ final class QuantizerWsmeans implements Quantizer {
         break;
       }
 
-      final List<double> componentASums = List.filled(clusterCount, 0.0);
-      final List<double> componentBSums = List.filled(clusterCount, 0.0);
-      final List<double> componentCSums = List.filled(clusterCount, 0.0);
+      final componentASums = List<double>.filled(clusterCount, 0.0);
+      final componentBSums = List<double>.filled(clusterCount, 0.0);
+      final componentCSums = List<double>.filled(clusterCount, 0.0);
       pixelCountSums = List.filled(clusterCount, 0);
-      for (int i = 0; i < pointCount; i++) {
+      for (var i = 0; i < pointCount; i++) {
         final clusterIndex = clusterIndices[i];
         final point = points[i];
         final count = counts[i];
@@ -143,7 +143,7 @@ final class QuantizerWsmeans implements Quantizer {
         componentCSums[clusterIndex] += (point[2] * count);
       }
 
-      for (int i = 0; i < clusterCount; i++) {
+      for (var i = 0; i < clusterCount; i++) {
         final count = pixelCountSums[i];
         if (count == 0) {
           clusters[i] = [0.0, 0.0, 0.0];
@@ -157,23 +157,21 @@ final class QuantizerWsmeans implements Quantizer {
         clusters[i][2] = c;
       }
     }
-    final Map<int, int> argbToPopulation = <int, int>{};
-    for (int i = 0; i < clusterCount; i++) {
+    final argbToPopulation = <int, int>{};
+    for (var i = 0; i < clusterCount; i++) {
       final count = pixelCountSums[i];
       if (count == 0) {
         continue;
       }
 
-      int possibleNewCluster = pointProvider.toInt(clusters[i]);
+      final possibleNewCluster = pointProvider.toInt(clusters[i]);
       if (argbToPopulation.containsKey(possibleNewCluster)) {
         continue;
       }
 
       argbToPopulation[possibleNewCluster] = count;
     }
-
     return QuantizerResult(colorToCount: argbToPopulation);
-    // return QuantizerResult(colorToCount: {});
   }
 }
 
@@ -184,7 +182,5 @@ class _Distance implements Comparable<_Distance> {
   double distance = -1.0;
 
   @override
-  int compareTo(_Distance other) {
-    return distance.compareTo(other.distance);
-  }
+  int compareTo(_Distance other) => distance.compareTo(other.distance);
 }
