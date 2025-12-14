@@ -105,11 +105,21 @@ dev_dependencies:
   retrofit_generator: ^10.2.0
   slang_build_runner: ^4.11.0
   slang_gpt: ^0.11.1
+  fastforge: ^0.6.6
 
 dependency_overrides:
-  material_color_utilities: ^0.13.0
-  meta: ^1.17.0
+  # Needed for god knows what
   device_info_plus: ^12.3.0
+
+  # Needed for Flutter
+  material_color_utilities: ^0.13.0
+
+  # Different packages may be using different versions
+  meta: ^1.17.0
+
+  # Needed for fastforge
+  archive: ^4.0.7
+  uuid: ^4.5.2
 
 flutter:
   uses-material-design: true
