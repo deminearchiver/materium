@@ -223,6 +223,7 @@ class ListItemInteraction extends StatefulWidget {
     super.key,
     // State
     this.statesController,
+    this.stateLayerShape,
     this.stateLayerColor,
     this.stateLayerOpacity,
     // Focus
@@ -238,6 +239,7 @@ class ListItemInteraction extends StatefulWidget {
   });
 
   final WidgetStatesController? statesController;
+  final ListItemStateProperty<ShapeBorder?>? stateLayerShape;
   final ListItemStateProperty<Color?>? stateLayerColor;
   final ListItemStateProperty<double?>? stateLayerOpacity;
 
@@ -425,6 +427,10 @@ class _ListItemInteractionState extends State<ListItemInteraction> {
 
     final states = _resolveStates();
 
+    final stateLayerShape =
+        widget.stateLayerShape?.resolve(states) ??
+        const RoundedRectangleBorder();
+
     final stateLayerColor =
         widget.stateLayerColor?.orElse(
           (states) => listItemTheme.stateLayerColor.resolve(states),
@@ -464,11 +470,12 @@ class _ListItemInteractionState extends State<ListItemInteraction> {
             onPointerUp: !states.isDisabled ? _onPointerUp : null,
             onPointerCancel: !states.isDisabled ? _onPointerCancel : null,
             child: InkWell(
+              customBorder: stateLayerShape,
+              overlayColor: overlayColor,
               statesController: widget.statesController,
               focusNode: widget.focusNode,
               canRequestFocus: widget.canRequestFocus,
               autofocus: widget.autofocus,
-              overlayColor: overlayColor,
               onTap: !states.isDisabled ? widget.onTap : null,
               onLongPress: !states.isDisabled ? widget.onLongPress : null,
               onTapDown: !states.isDisabled ? _onTapDown : null,
@@ -700,7 +707,8 @@ class _ListItemStates implements SegmentedListItemStates {
   int get hashCode => Object.hash(runtimeType, isFirst, isLast);
 }
 
-sealed class _InteractiveListItemStates extends _ListItemStates {
+sealed class _InteractiveListItemStates extends _ListItemStates
+    implements InteractiveListItemStates {
   const _InteractiveListItemStates({
     required super.isFirst,
     required super.isLast,

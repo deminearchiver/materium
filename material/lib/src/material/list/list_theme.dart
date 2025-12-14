@@ -1,37 +1,29 @@
 import 'package:material/src/material/flutter.dart';
 
-sealed class ListItemStates {
-  const ListItemStates();
-}
+abstract interface class ListItemStates {}
 
-abstract class SegmentedListItemStates extends ListItemStates {
-  const SegmentedListItemStates._();
-
+abstract interface class SegmentedListItemStates implements ListItemStates {
   bool get isFirst;
   bool get isLast;
 }
 
-abstract class InteractiveListItemEnabledStates extends ListItemStates {
-  const InteractiveListItemEnabledStates._();
+abstract interface class InteractiveListItemStates implements ListItemStates {}
 
+abstract interface class InteractiveListItemEnabledStates
+    implements InteractiveListItemStates {
   bool get isHovered;
   bool get isFocused;
   bool get isPressed;
 }
 
-abstract class InteractiveListItemDisabledStates extends ListItemStates {
-  const InteractiveListItemDisabledStates._();
-}
+abstract interface class InteractiveListItemDisabledStates
+    implements InteractiveListItemStates {}
 
-abstract class SelectableListItemStates extends ListItemStates {
-  const SelectableListItemStates._();
-
+abstract interface class SelectableListItemStates implements ListItemStates {
   bool get isSelected;
 }
 
-abstract class DraggableListItemStates extends ListItemStates {
-  const DraggableListItemStates._();
-
+abstract interface class DraggableListItemStates implements ListItemStates {
   bool get isDragged;
 }
 
