@@ -4,18 +4,18 @@ import com.android.build.api.variant.FilterConfiguration.FilterType.*
 import com.android.build.gradle.internal.api.ApkVariantOutputImpl
 
 plugins {
-    id("com.android.application")
-    id("kotlin-android")
-    // The Flutter Gradle Plugin must be applied after the Android and Kotlin Gradle plugins.
-    id("dev.flutter.flutter-gradle-plugin")
+  id("com.android.application")
+  id("kotlin-android")
+  // The Flutter Gradle Plugin must be applied after the Android and Kotlin Gradle plugins.
+  id("dev.flutter.flutter-gradle-plugin")
 }
 
 val localProperties = Properties()
 val localPropertiesFile = rootProject.file("local.properties")
 if (localPropertiesFile.exists()) {
-    localPropertiesFile.reader(Charsets.UTF_8).use { reader ->
-        localProperties.load(reader)
-    }
+  localPropertiesFile.reader(Charsets.UTF_8).use { reader ->
+    localProperties.load(reader)
+  }
 }
 
 var flutterVersionCode = localProperties.getProperty("flutter.versionCode") ?: "1"
@@ -23,72 +23,96 @@ var flutterVersionName = localProperties.getProperty("flutter.versionName") ?: "
 
 val keystoreProperties = Properties()
 val keystorePropertiesFile = rootProject.file("key.properties")
-if (keystorePropertiesFile.exists()) {
+val keystorePropertiesExists = keystorePropertiesFile.exists()
+if (keystorePropertiesExists) {
     keystoreProperties.load(FileInputStream(keystorePropertiesFile))
 }
 
 android {
-    namespace = "dev.deminearchiver.materium"
-    compileSdk = 36
-    ndkVersion = "28.2.13676358"
+  namespace = "dev.deminearchiver.materium"
+  compileSdk = 36
+  ndkVersion = "28.2.13676358"
 
-    compileOptions {
-        isCoreLibraryDesugaringEnabled = true
-        sourceCompatibility = JavaVersion.VERSION_17
-        targetCompatibility = JavaVersion.VERSION_17
-    }
+  compileOptions {
+    isCoreLibraryDesugaringEnabled = true
+    sourceCompatibility = JavaVersion.VERSION_17
+    targetCompatibility = JavaVersion.VERSION_17
+  }
 
-    kotlinOptions {
-        jvmTarget = JavaVersion.VERSION_17.toString()
-    }
+  kotlinOptions {
+    jvmTarget = JavaVersion.VERSION_17.toString()
+  }
 
-    defaultConfig {
-        applicationId = "dev.deminearchiver.materium"
-        // You can update the following values to match your application needs.
-        // For more information, see: https://flutter.dev/to/review-gradle-config.
-        minSdk = 24
-        targetSdk = flutter.targetSdkVersion
-        versionCode = flutterVersionCode.toInt()
-        versionName = flutterVersionName
-    }
+  defaultConfig {
+    applicationId = "dev.deminearchiver.materium"
+    // You can update the following values to match your application needs.
+    // For more information, see: https://flutter.dev/to/review-gradle-config.
+    minSdk = 24
+    targetSdk = flutter.targetSdkVersion
+    versionCode = flutterVersionCode.toInt()
+    versionName = flutterVersionName
+  }
 
-    signingConfigs {
-        create("release") {
-            keyAlias = keystoreProperties["keyAlias"].toString()
-            keyPassword = keystoreProperties["keyPassword"].toString()
-            storeFile = keystoreProperties["storeFile"]?.let { file(it) }
-            storePassword = keystoreProperties["storePassword"].toString()
-        }
+  signingConfigs {
+    create("release") {
+      keyAlias = keystoreProperties["keyAlias"] as String?
+      keyPassword = keystoreProperties["keyPassword"] as String?
+      storeFile = keystoreProperties["storeFile"]?.let { file(it) }
+      storePassword = keystoreProperties["storePassword"] as String?
     }
+  }
 
-    buildTypes {
-        getByName("release") {
-            signingConfig = signingConfigs.getByName("debug")
-        }
-        getByName("debug") {
-            applicationIdSuffix = ".debug"
-            versionNameSuffix = "-debug"
-        }
+  buildTypes {
+    getByName("release") {
+      val releaseSigningConfig = signingConfigs.getByName("release")
+      signingConfig = if (keystorePropertiesExists && releaseSigningConfig.storeFile != null) {
+        releaseSigningConfig
+      } else {
+        logger.error(
+          """
+            You are trying to create a release build, but a key.properties file was not found.
+            Falling back to the "debug" signing config.
+            To sign a release build, a keystore properties file is required.
+
+            The following is an example configuration.
+            Create a file named [project]/android/key.properties that contains a reference to your keystore.
+            Don't include the angle brackets (< >). They indicate that the text serves as a placeholder for your values.
+
+            storePassword=<keystore password>
+            keyPassword=<key password>
+            keyAlias=<key alias>
+            storeFile=<keystore file location>
+
+            For more info, see:
+            * https://docs.flutter.dev/deployment/android#sign-the-app
+          """.trimIndent()
+        )
+        signingConfigs.getByName("debug")
+      }
     }
+    getByName("debug") {
+      applicationIdSuffix = ".debug"
+      versionNameSuffix = "-debug"
+    }
+  }
 }
 
 val abiCodes = mapOf("x86_64" to 1, "armeabi-v7a" to 2, "arm64-v8a" to 3)
 
 android.applicationVariants.configureEach {
-    val variant = this
-    variant.outputs.forEach { output ->
-        val abiVersionCode = abiCodes[output.filters.find { it.filterType == "ABI" }?.identifier]
-        if (abiVersionCode != null) {
-            (output as ApkVariantOutputImpl).versionCodeOverride = variant.versionCode * 10 + abiVersionCode
-        }
+  val variant = this
+  variant.outputs.forEach { output ->
+    val abiVersionCode = abiCodes[output.filters.find { it.filterType == "ABI" }?.identifier]
+    if (abiVersionCode != null) {
+      (output as ApkVariantOutputImpl).versionCodeOverride = variant.versionCode * 10 + abiVersionCode
     }
+  }
 }
 
-
 dependencies {
-    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.1.5")
+  coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.1.5")
 }
 
 flutter {
-    source = "../.."
+  source = "../.."
 }
