@@ -94,6 +94,7 @@ dependencies:
   screen_corners_ffi: ^1.0.2
   slang: ^4.11.1
   slang_flutter: ^4.11.0
+  rhttp: ^0.15.0
 
 dev_dependencies:
   deminearchiver_lints: ^1.1.1
