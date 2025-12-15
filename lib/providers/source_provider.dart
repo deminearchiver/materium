@@ -25,6 +25,7 @@ import 'package:materium/app_sources/izzyondroid.dart';
 import 'package:materium/app_sources/html.dart';
 import 'package:materium/app_sources/jenkins.dart';
 import 'package:materium/app_sources/liteapks.dart';
+import 'package:materium/app_sources/moddroid.dart';
 import 'package:materium/app_sources/neutroncode.dart';
 import 'package:materium/app_sources/rustore.dart';
 import 'package:materium/app_sources/sourceforge.dart';
@@ -1124,6 +1125,7 @@ class SourceProvider {
     Tencent(),
     CoolApk(),
     LiteApks(),
+    Moddroid(),
     VivoAppStore(),
     Jenkins(),
     ApkMirror(),
