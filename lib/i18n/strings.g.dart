@@ -6,7 +6,7 @@
 /// Locales: 1
 /// Strings: 0
 ///
-/// Built on 2025-12-12 at 13:44 UTC
+/// Built on 2025-12-15 at 11:19 UTC
 
 // coverage:ignore-file
 // ignore_for_file: type=lint, unused_import
@@ -48,14 +48,11 @@ enum AppLocale with BaseAppLocale<AppLocale, Translations> {
     PluralResolver? cardinalResolver,
     PluralResolver? ordinalResolver,
   }) async {
-    switch (this) {
-      case AppLocale.en:
-        return TranslationsEn(
-          overrides: overrides,
-          cardinalResolver: cardinalResolver,
-          ordinalResolver: ordinalResolver,
-        );
-    }
+    return buildSync(
+      overrides: overrides,
+      cardinalResolver: cardinalResolver,
+      ordinalResolver: ordinalResolver,
+    );
   }
 
   @override
@@ -125,7 +122,7 @@ extension BuildContextTranslationsExtension on BuildContext {
 /// Manages all translation instances and the current locale
 class LocaleSettings
     extends BaseFlutterLocaleSettings<AppLocale, Translations> {
-  LocaleSettings._() : super(utils: AppLocaleUtils.instance, lazy: true);
+  LocaleSettings._() : super(utils: AppLocaleUtils.instance, lazy: false);
 
   static final instance = LocaleSettings._();
 

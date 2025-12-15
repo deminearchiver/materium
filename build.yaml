@@ -39,6 +39,7 @@ targets:
           input_file_pattern: .json
           output_directory: lib/i18n
 
+          lazy: false
           flat_map: false
 
           imports:
