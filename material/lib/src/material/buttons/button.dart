@@ -139,7 +139,6 @@ class _ButtonState extends State<Button> with TickerProviderStateMixin {
       enabled: true,
       child: RepaintBoundary(
         child: Material(
-          animationDuration: Duration.zero,
           child: Listener(
             behavior: HitTestBehavior.deferToChild,
             onPointerDown: states.enabled

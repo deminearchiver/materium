@@ -374,11 +374,7 @@ class _SwitchState extends State<Switch> with TickerProviderStateMixin {
                 });
               }
             : null,
-        child: Material(
-          animationDuration: Duration.zero,
-          type: MaterialType.card,
-          clipBehavior: Clip.none,
-          color: Colors.transparent,
+        child: Material.empty(
           child: InkWell(
             statesController: _statesController,
             customBorder: stateLayerShape,

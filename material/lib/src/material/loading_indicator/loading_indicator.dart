@@ -167,7 +167,6 @@ class _DeterminateLoadingIndicatorState
             minHeight: _kContainerHeight,
           ),
           child: Material(
-            animationDuration: .zero,
             clipBehavior: .antiAlias,
             shape: CornersBorder.rounded(
               corners: Corners.all(shapeTheme.corner.full),
@@ -431,7 +430,6 @@ class _IndeterminateLoadingIndicatorState
             minHeight: _kContainerHeight,
           ),
           child: Material(
-            animationDuration: .zero,
             clipBehavior: .antiAlias,
             shape: CornersBorder.rounded(
               corners: Corners.all(shapeTheme.corner.full),

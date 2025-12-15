@@ -250,11 +250,7 @@ class _RadioButtonState extends State<RadioButton>
                 });
               }
             : null,
-        child: Material(
-          animationDuration: Duration.zero,
-          type: MaterialType.transparency,
-          clipBehavior: Clip.none,
-          color: Colors.transparent,
+        child: Material.empty(
           child: InkWell(
             statesController: _statesController,
             customBorder: stateLayerShape,

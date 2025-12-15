@@ -21,20 +21,20 @@ typedef ColorSchemeLegacy = ColorScheme;
 // TODO: replace with a typedef
 extension on DynamicSchemeVariant {
   Variant _toVariant() => switch (this) {
-    DynamicSchemeVariant.monochrome => Variant.monochrome,
-    DynamicSchemeVariant.neutral => Variant.neutral,
-    DynamicSchemeVariant.tonalSpot => Variant.tonalSpot,
-    DynamicSchemeVariant.vibrant => Variant.vibrant,
-    DynamicSchemeVariant.expressive => Variant.expressive,
-    DynamicSchemeVariant.fidelity => Variant.fidelity,
-    DynamicSchemeVariant.content => Variant.content,
-    DynamicSchemeVariant.rainbow => Variant.rainbow,
-    DynamicSchemeVariant.fruitSalad => Variant.fruitSalad,
+    .monochrome => .monochrome,
+    .neutral => .neutral,
+    .tonalSpot => .tonalSpot,
+    .vibrant => .vibrant,
+    .expressive => .expressive,
+    .fidelity => .fidelity,
+    .content => .content,
+    .rainbow => .rainbow,
+    .fruitSalad => .fruitSalad,
   };
 }
 
 extension on Color {
-  Hct _toHct() => Hct.fromInt(toARGB32());
+  Hct _toHct() => .fromInt(toARGB32());
 }
 
 @immutable
@@ -350,7 +350,7 @@ abstract class ColorThemeDataPartial with Diagnosticable {
           onError != null ||
           errorContainer != null ||
           onErrorContainer != null
-      ? ColorThemeDataPartial.from(
+      ? .from(
           brightness: brightness ?? this.brightness,
           primaryPaletteKeyColor:
               primaryPaletteKeyColor ?? this.primaryPaletteKeyColor,
@@ -2235,7 +2235,7 @@ abstract class ColorThemeData extends ColorThemeDataPartial {
 
   factory ColorThemeData.fromDynamicScheme(DynamicScheme scheme) =>
       ColorThemeData.from(
-        brightness: scheme.isDark ? Brightness.dark : Brightness.light,
+        brightness: scheme.isDark ? .dark : .light,
         primaryPaletteKeyColor: Color(scheme.primaryPaletteKeyColor),
         secondaryPaletteKeyColor: Color(scheme.secondaryPaletteKeyColor),
         tertiaryPaletteKeyColor: Color(scheme.tertiaryPaletteKeyColor),
@@ -2301,7 +2301,7 @@ abstract class ColorThemeData extends ColorThemeDataPartial {
 
   factory ColorThemeData.fromSeed({
     Color sourceColor = const Color(0xFF6750A4),
-    DynamicSchemeVariant variant = DynamicSchemeVariant.tonalSpot,
+    DynamicSchemeVariant variant = .tonalSpot,
     required Brightness brightness,
     DynamicSchemePlatform platform = DynamicScheme.defaultPlatform,
     double contrastLevel = 0.0,
@@ -2316,7 +2316,11 @@ abstract class ColorThemeData extends ColorThemeDataPartial {
     DynamicScheme.fromPalettesOrKeyColors(
       sourceColorHct: sourceColor._toHct(),
       variant: variant._toVariant(),
-      isDark: brightness == Brightness.dark, // Always exhaustive
+      // Important: exhaustive check in case new enum members get added
+      isDark: switch (brightness) {
+        .light => false,
+        .dark => true,
+      },
       platform: platform,
       contrastLevel: contrastLevel,
       specVersion: specVersion,
@@ -2632,7 +2636,7 @@ abstract class ColorThemeData extends ColorThemeDataPartial {
           onError != null ||
           errorContainer != null ||
           onErrorContainer != null
-      ? ColorThemeData.from(
+      ? .from(
           brightness: brightness ?? this.brightness,
           primaryPaletteKeyColor:
               primaryPaletteKeyColor ?? this.primaryPaletteKeyColor,
@@ -2982,23 +2986,23 @@ abstract class ColorThemeData extends ColorThemeDataPartial {
     ),
   );
 
-  static final ColorThemeData _baselineLight2021 = ColorThemeData.fromSeed(
-    brightness: Brightness.light,
-    variant: DynamicSchemeVariant.tonalSpot,
-    specVersion: DynamicSchemeSpecVersion.spec2021,
-    platform: DynamicSchemePlatform.phone,
+  static final _baselineLight2021 = ColorThemeData.fromSeed(
+    brightness: .light,
+    variant: .tonalSpot,
+    specVersion: .spec2021,
+    platform: .phone,
   );
 
-  static final ColorThemeData _baselineDark2021 = ColorThemeData.fromSeed(
-    brightness: Brightness.dark,
-    variant: DynamicSchemeVariant.tonalSpot,
-    specVersion: DynamicSchemeSpecVersion.spec2021,
-    platform: DynamicSchemePlatform.phone,
+  static final _baselineDark2021 = ColorThemeData.fromSeed(
+    brightness: .dark,
+    variant: .tonalSpot,
+    specVersion: .spec2021,
+    platform: .phone,
   );
 
   static Future<ColorThemeData> fromImage({
     required ImageProvider image,
-    DynamicSchemeVariant variant = DynamicSchemeVariant.tonalSpot,
+    DynamicSchemeVariant variant = .tonalSpot,
     required Brightness brightness,
     DynamicSchemePlatform platform = DynamicScheme.defaultPlatform,
     double contrastLevel = 0.0,
@@ -4202,9 +4206,9 @@ Future<QuantizerResult> _extractColorsFromImageProvider(
 
 /// Scale image size down to reduce computation time of color extraction.
 Future<ui.Image> _imageProviderToScaled(ImageProvider imageProvider) async {
-  const double maxDimension = 112.0;
+  const maxDimension = 112.0;
   final stream = imageProvider.resolve(
-    const ImageConfiguration(size: Size.square(maxDimension)),
+    const ImageConfiguration(size: .square(maxDimension)),
   );
   final imageCompleter = Completer<ui.Image>();
   late ImageStreamListener listener;
@@ -4222,7 +4226,7 @@ Future<ui.Image> _imageProviderToScaled(ImageProvider imageProvider) async {
       double paintHeight = height.toDouble();
       assert(width > 0 && height > 0);
 
-      final bool rescale = width > maxDimension || height > maxDimension;
+      final rescale = width > maxDimension || height > maxDimension;
       if (rescale) {
         paintWidth = (width > height)
             ? maxDimension
@@ -4235,9 +4239,9 @@ Future<ui.Image> _imageProviderToScaled(ImageProvider imageProvider) async {
       final canvas = Canvas(pictureRecorder);
       paintImage(
         canvas: canvas,
-        rect: Rect.fromLTRB(0, 0, paintWidth, paintHeight),
+        rect: .fromLTRB(0, 0, paintWidth, paintHeight),
         image: image,
-        filterQuality: FilterQuality.none,
+        filterQuality: .none,
       );
 
       final picture = pictureRecorder.endRecording();
@@ -4247,19 +4251,17 @@ Future<ui.Image> _imageProviderToScaled(ImageProvider imageProvider) async {
       );
       imageCompleter.complete(info.image);
     },
-    onError: (Object exception, StackTrace? stackTrace) {
+    onError: (exception, stackTrace) {
       stream.removeListener(listener);
       throw Exception("Failed to render image: $exception");
     },
   );
-
   loadFailureTimeout = Timer(const Duration(seconds: 5), () {
     stream.removeListener(listener);
     imageCompleter.completeError(
       TimeoutException("Timeout occurred trying to load image"),
     );
   });
-
   stream.addListener(listener);
   await imageCompleter.future;
   return scaledImage;

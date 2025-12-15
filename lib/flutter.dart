@@ -40,6 +40,9 @@ export 'package:flutter/material.dart'
         WidgetStatePropertyAll,
         WidgetStatesController,
         // ---
+        Material,
+        MaterialType,
+        // ---
         Icon,
         IconTheme,
         IconThemeData,
