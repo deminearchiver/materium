@@ -230,8 +230,6 @@ class _AppPageState extends State<AppPage> {
                     minHeight: 32.0,
                   ),
                   child: Material(
-                    animationDuration: Duration.zero,
-                    type: MaterialType.card,
                     clipBehavior: Clip.antiAlias,
                     shape: CornersBorder.rounded(
                       corners: Corners.all(shapeTheme.corner.medium),
@@ -426,8 +424,6 @@ class _AppPageState extends State<AppPage> {
                   leading: SizedBox.square(
                     dimension: 40.0,
                     child: Material(
-                      animationDuration: Duration.zero,
-                      type: MaterialType.card,
                       clipBehavior: Clip.antiAlias,
                       shape: CornersBorder.rounded(
                         corners: Corners.all(shapeTheme.corner.full),
@@ -452,8 +448,6 @@ class _AppPageState extends State<AppPage> {
                 leading: SizedBox.square(
                   dimension: 40.0,
                   child: Material(
-                    animationDuration: Duration.zero,
-                    type: MaterialType.card,
                     clipBehavior: Clip.antiAlias,
                     shape: CornersBorder.rounded(
                       corners: Corners.all(shapeTheme.corner.full),
@@ -771,7 +765,6 @@ class _AppPageState extends State<AppPage> {
     );
 
     final toolbarIconButtonStyle = ButtonStyle(
-      animationDuration: Duration.zero,
       elevation: const WidgetStatePropertyAll(0.0),
       shadowColor: WidgetStateColor.transparent,
       minimumSize: const WidgetStatePropertyAll(Size.zero),
@@ -832,7 +825,6 @@ class _AppPageState extends State<AppPage> {
                       child: IconButton(
                         onPressed: () => Navigator.of(context).pop(),
                         style: ButtonStyle(
-                          animationDuration: Duration.zero,
                           elevation: const WidgetStatePropertyAll(0.0),
                           shadowColor: WidgetStateColor.transparent,
                           minimumSize: const WidgetStatePropertyAll(Size.zero),
@@ -882,8 +874,6 @@ class _AppPageState extends State<AppPage> {
       bottomNavigationBar: Align.bottomCenter(
         heightFactor: 1.0,
         child: Material(
-          animationDuration: Duration.zero,
-          type: MaterialType.card,
           clipBehavior: Clip.antiAlias,
           shape: CornersBorder.rounded(
             corners: Corners.all(shapeTheme.corner.none),
@@ -1005,7 +995,6 @@ class _AppPageState extends State<AppPage> {
                           }
                         : null,
                     style: ButtonStyle(
-                      animationDuration: Duration.zero,
                       elevation: const WidgetStatePropertyAll(0.0),
                       shadowColor: WidgetStateColor.transparent,
                       minimumSize: const WidgetStatePropertyAll(

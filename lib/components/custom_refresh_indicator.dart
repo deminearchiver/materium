@@ -582,13 +582,12 @@ class CustomRefreshIndicatorState extends State<CustomRefreshIndicator>
           },
         ),
       );
-      final Widget containedLoadingIndicator = Material(
-        animationDuration: Duration.zero,
+      final Widget containedLoadingIndicator = Material.empty(
         clipBehavior: .antiAlias,
         shape: CornersBorder.rounded(corners: .all(shapeTheme.corner.full)),
         color: containerColor,
-        shadowColor: colorTheme.shadow,
         elevation: elevation,
+        shadowColor: colorTheme.shadow,
         child: Stack(
           alignment: .center,
           children: [

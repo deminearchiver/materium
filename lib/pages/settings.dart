@@ -300,8 +300,6 @@ class _SettingsPageState extends State<SettingsPage> {
                           leading: SizedBox.square(
                             dimension: 40.0,
                             child: Material(
-                              animationDuration: Duration.zero,
-                              type: MaterialType.card,
                               clipBehavior: Clip.antiAlias,
                               color: staticColors.orange.colorFixed,
                               shape: const StadiumBorder(),
@@ -338,8 +336,6 @@ class _SettingsPageState extends State<SettingsPage> {
                           leading: SizedBox.square(
                             dimension: 40.0,
                             child: Material(
-                              animationDuration: Duration.zero,
-                              type: MaterialType.card,
                               clipBehavior: Clip.antiAlias,
                               color: staticColors.blue.colorFixed,
                               shape: const StadiumBorder(),
@@ -375,8 +371,6 @@ class _SettingsPageState extends State<SettingsPage> {
                             leading: SizedBox.square(
                               dimension: 40.0,
                               child: Material(
-                                animationDuration: Duration.zero,
-                                type: MaterialType.card,
                                 clipBehavior: Clip.antiAlias,
                                 color: staticColors.cyan.colorFixed,
                                 shape: const StadiumBorder(),
@@ -414,8 +408,6 @@ class _SettingsPageState extends State<SettingsPage> {
                           leading: SizedBox.square(
                             dimension: 40.0,
                             child: Material(
-                              animationDuration: Duration.zero,
-                              type: MaterialType.card,
                               clipBehavior: Clip.antiAlias,
                               color: staticColors.purple.colorFixed,
                               shape: const StadiumBorder(),
@@ -1838,9 +1830,6 @@ class _LogsPageState extends State<_LogsPage> {
                                             leading: SizedBox.square(
                                               dimension: 40.0,
                                               child: Material(
-                                                animationDuration:
-                                                    Duration.zero,
-                                                type: MaterialType.card,
                                                 clipBehavior: Clip.antiAlias,
                                                 color: iconBackgroundColor,
                                                 shape: const StadiumBorder(),

@@ -555,8 +555,6 @@ class AppsPageState extends State<AppsPage> with TickerProviderStateMixin {
           hasUpdate ? getUpdateButton(index) : const SizedBox.shrink(),
           hasUpdate ? const SizedBox(width: 5) : const SizedBox.shrink(),
           Material(
-            animationDuration: Duration.zero,
-            type: MaterialType.card,
             clipBehavior: Clip.antiAlias,
             shape: CornersBorder.rounded(
               corners: Corners.all(shapeTheme.corner.medium),
@@ -1024,8 +1022,6 @@ class AppsPageState extends State<AppsPage> with TickerProviderStateMixin {
                             leading: SizedBox.square(
                               dimension: 40.0,
                               child: Material(
-                                animationDuration: Duration.zero,
-                                type: MaterialType.card,
                                 clipBehavior: Clip.antiAlias,
                                 color: iconContainerColor,
                                 shape: const StadiumBorder(),
@@ -1079,8 +1075,6 @@ class AppsPageState extends State<AppsPage> with TickerProviderStateMixin {
                             leading: SizedBox.square(
                               dimension: 40.0,
                               child: Material(
-                                animationDuration: Duration.zero,
-                                type: MaterialType.card,
                                 clipBehavior: Clip.antiAlias,
                                 color: iconContainerColor,
                                 shape: const StadiumBorder(),
@@ -1119,8 +1113,6 @@ class AppsPageState extends State<AppsPage> with TickerProviderStateMixin {
                               leading: SizedBox.square(
                                 dimension: 40.0,
                                 child: Material(
-                                  animationDuration: Duration.zero,
-                                  type: MaterialType.card,
                                   clipBehavior: Clip.antiAlias,
                                   color: iconContainerColor,
                                   shape: const StadiumBorder(),
@@ -1171,8 +1163,6 @@ class AppsPageState extends State<AppsPage> with TickerProviderStateMixin {
                               leading: SizedBox.square(
                                 dimension: 40.0,
                                 child: Material(
-                                  animationDuration: Duration.zero,
-                                  type: MaterialType.card,
                                   clipBehavior: Clip.antiAlias,
                                   color: iconContainerColor,
                                   shape: const StadiumBorder(),
@@ -1216,8 +1206,6 @@ class AppsPageState extends State<AppsPage> with TickerProviderStateMixin {
                             leading: SizedBox.square(
                               dimension: 40.0,
                               child: Material(
-                                animationDuration: Duration.zero,
-                                type: MaterialType.card,
                                 clipBehavior: Clip.antiAlias,
                                 color: iconContainerColor,
                                 shape: const StadiumBorder(),
@@ -1253,8 +1241,6 @@ class AppsPageState extends State<AppsPage> with TickerProviderStateMixin {
                             leading: SizedBox.square(
                               dimension: 40.0,
                               child: Material(
-                                animationDuration: Duration.zero,
-                                type: MaterialType.card,
                                 clipBehavior: Clip.antiAlias,
                                 color: iconContainerColor,
                                 shape: const StadiumBorder(),
@@ -1471,7 +1457,6 @@ class AppsPageState extends State<AppsPage> with TickerProviderStateMixin {
         sliver: SliverList.builder(
           itemCount: listedApps.length,
           itemBuilder: (context, index) => Material(
-            type: MaterialType.transparency,
             color: Colors.transparent,
             child: getSingleAppHorizTile(index),
           ),
@@ -1725,8 +1710,6 @@ class AppsPageState extends State<AppsPage> with TickerProviderStateMixin {
           width: double.infinity,
           height: 64.0,
           child: Material(
-            animationDuration: Duration.zero,
-            type: MaterialType.card,
             clipBehavior: Clip.antiAlias,
             color: colorTheme.surfaceContainerHigh,
             shape: CornersBorder.rounded(

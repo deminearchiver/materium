@@ -48,7 +48,6 @@ class DeveloperPageBackButton extends StatelessWidget {
     return IconButton(
       onPressed: () => navigator.pop(),
       style: ButtonStyle(
-        animationDuration: Duration.zero,
         elevation: const WidgetStatePropertyAll(0.0),
         shadowColor: WidgetStateColor.transparent,
         minimumSize: const WidgetStatePropertyAll(Size.zero),
@@ -190,8 +189,6 @@ class _DeveloperPageState extends State<DeveloperPage> {
                               leading: SizedBox.square(
                                 dimension: 40.0,
                                 child: Material(
-                                  animationDuration: Duration.zero,
-                                  type: MaterialType.card,
                                   clipBehavior: Clip.antiAlias,
                                   color: staticColors.green.colorFixed,
                                   shape: const StadiumBorder(),
@@ -231,8 +228,6 @@ class _DeveloperPageState extends State<DeveloperPage> {
                               leading: SizedBox.square(
                                 dimension: 40.0,
                                 child: Material(
-                                  animationDuration: Duration.zero,
-                                  type: MaterialType.card,
                                   clipBehavior: Clip.antiAlias,
                                   color: staticColors.green.colorFixed,
                                   shape: const StadiumBorder(),
@@ -269,8 +264,6 @@ class _DeveloperPageState extends State<DeveloperPage> {
                               leading: SizedBox.square(
                                 dimension: 40.0,
                                 child: Material(
-                                  animationDuration: Duration.zero,
-                                  type: MaterialType.card,
                                   clipBehavior: Clip.antiAlias,
                                   color: staticColors.blue.colorFixed,
                                   shape: const StadiumBorder(),
@@ -308,8 +301,6 @@ class _DeveloperPageState extends State<DeveloperPage> {
                               leading: SizedBox.square(
                                 dimension: 40.0,
                                 child: Material(
-                                  animationDuration: Duration.zero,
-                                  type: MaterialType.card,
                                   clipBehavior: Clip.antiAlias,
                                   color: staticColors.cyan.colorFixed,
                                   shape: const StadiumBorder(),
@@ -349,8 +340,6 @@ class _DeveloperPageState extends State<DeveloperPage> {
                               leading: SizedBox.square(
                                 dimension: 40.0,
                                 child: Material(
-                                  animationDuration: Duration.zero,
-                                  type: MaterialType.card,
                                   clipBehavior: Clip.antiAlias,
                                   color: staticColors.cyan.colorFixed,
                                   shape: const StadiumBorder(),
@@ -454,7 +443,6 @@ class _DeveloperAddAppPageState extends State<_DeveloperAddAppPage> {
                               child: ConstrainedBox(
                                 constraints: BoxConstraints(minHeight: 56.0),
                                 child: Material(
-                                  animationDuration: Duration.zero,
                                   clipBehavior: Clip.antiAlias,
                                   color: colorTheme.surfaceBright,
                                   shape: CornersBorder.rounded(
@@ -1543,7 +1531,6 @@ class _SettingsAppBarState extends State<SettingsAppBar> {
                 IconButton(
                   onPressed: () => Navigator.of(context).pop(),
                   style: ButtonStyle(
-                    animationDuration: Duration.zero,
                     elevation: const WidgetStatePropertyAll(0.0),
                     shadowColor: WidgetStateColor.transparent,
                     minimumSize: const WidgetStatePropertyAll(Size.zero),
@@ -1582,8 +1569,6 @@ class _SettingsAppBarState extends State<SettingsAppBar> {
                     child: SizedBox(
                       height: 56.0,
                       child: Material(
-                        animationDuration: Duration.zero,
-                        type: MaterialType.card,
                         clipBehavior: Clip.antiAlias,
                         color: colorTheme.surfaceBright,
                         shape: CornersBorder.rounded(
@@ -1650,7 +1635,6 @@ class _SettingsAppBarState extends State<SettingsAppBar> {
                       }
                     },
                     style: ButtonStyle(
-                      animationDuration: Duration.zero,
                       elevation: const WidgetStatePropertyAll(0.0),
                       shadowColor: WidgetStateColor.transparent,
                       minimumSize: const WidgetStatePropertyAll(Size.zero),
@@ -2005,7 +1989,6 @@ class _SettingsAppBarRoute<T extends Object?> extends PopupRoute<T> {
             final backIconButton = IconButton(
               onPressed: () => Navigator.of(context).pop(),
               style: ButtonStyle(
-                animationDuration: Duration.zero,
                 elevation: const WidgetStatePropertyAll(0.0),
                 shadowColor: WidgetStateColor.transparent,
                 minimumSize: const WidgetStatePropertyAll(Size.zero),
@@ -2039,7 +2022,6 @@ class _SettingsAppBarRoute<T extends Object?> extends PopupRoute<T> {
             final clearIconButton = IconButton(
               onPressed: () {},
               style: ButtonStyle(
-                animationDuration: Duration.zero,
                 elevation: const WidgetStatePropertyAll(0.0),
                 shadowColor: WidgetStateColor.transparent,
                 minimumSize: const WidgetStatePropertyAll(Size.zero),
@@ -2077,7 +2059,6 @@ class _SettingsAppBarRoute<T extends Object?> extends PopupRoute<T> {
                   width: containerRect.width,
                   height: containerRect.height,
                   child: Material(
-                    animationDuration: Duration.zero,
                     clipBehavior: Clip.antiAlias,
                     color: containerColor,
                     shape: shape,
@@ -2112,7 +2093,6 @@ class _SettingsAppBarRoute<T extends Object?> extends PopupRoute<T> {
                                         shrinkOffset,
                                         overlapsContent,
                                       ) => Material(
-                                        animationDuration: Duration.zero,
                                         clipBehavior: Clip.antiAlias,
                                         color: containerColor,
                                         child: SizedBox(
@@ -2365,8 +2345,6 @@ class _Settings2ViewState extends State<Settings2View> {
                         leading: SizedBox.square(
                           dimension: 40.0,
                           child: Material(
-                            animationDuration: Duration.zero,
-                            type: MaterialType.card,
                             clipBehavior: Clip.antiAlias,
                             color: staticColors.blue.colorFixed,
                             shape: CornersBorder.rounded(
@@ -2401,8 +2379,6 @@ class _Settings2ViewState extends State<Settings2View> {
                         leading: SizedBox.square(
                           dimension: 40.0,
                           child: Material(
-                            animationDuration: Duration.zero,
-                            type: MaterialType.card,
                             clipBehavior: Clip.antiAlias,
                             color: staticColors.yellow.colorFixed,
                             shape: CornersBorder.rounded(
@@ -2443,8 +2419,6 @@ class _Settings2ViewState extends State<Settings2View> {
                           leading: SizedBox.square(
                             dimension: 40.0,
                             child: Material(
-                              animationDuration: Duration.zero,
-                              type: MaterialType.card,
                               clipBehavior: Clip.antiAlias,
                               color: staticColors.pink.colorFixed,
                               shape: const StadiumBorder(),
@@ -2557,7 +2531,6 @@ class _AboutPageState extends State<AboutPage> with TickerProviderStateMixin {
                         animation: _rotationController,
                         builder: (context, child) {
                           return Material(
-                            animationDuration: Duration.zero,
                             clipBehavior: Clip.antiAlias,
                             shape: RoundedPolygonBorder(
                               polygon: MaterialShapes.cookie12Sided
@@ -2750,8 +2723,6 @@ class _MaterialDemoViewState extends State<_MaterialDemoView> {
                             leading: SizedBox.square(
                               dimension: 40.0,
                               child: Material(
-                                animationDuration: Duration.zero,
-                                type: MaterialType.card,
                                 clipBehavior: Clip.antiAlias,
                                 color: staticColors.yellow.colorFixed,
                                 shape: const StadiumBorder(),
@@ -2798,8 +2769,6 @@ class _MaterialDemoViewState extends State<_MaterialDemoView> {
                             leading: SizedBox.square(
                               dimension: 40.0,
                               child: Material(
-                                animationDuration: Duration.zero,
-                                type: MaterialType.card,
                                 clipBehavior: Clip.antiAlias,
                                 color: staticColors.yellow.colorFixed,
                                 shape: const StadiumBorder(),
@@ -2857,8 +2826,6 @@ class _MaterialDemoViewState extends State<_MaterialDemoView> {
                                 leading: SizedBox.square(
                                   dimension: 40.0,
                                   child: Material(
-                                    animationDuration: Duration.zero,
-                                    type: MaterialType.card,
                                     clipBehavior: Clip.antiAlias,
                                     color: staticColors.cyan.colorFixed,
                                     shape: const StadiumBorder(),
@@ -2942,8 +2909,6 @@ class _MaterialDemoViewState extends State<_MaterialDemoView> {
                               leading: SizedBox.square(
                                 dimension: 40.0,
                                 child: Material(
-                                  animationDuration: Duration.zero,
-                                  type: MaterialType.card,
                                   clipBehavior: Clip.antiAlias,
                                   color: staticColors.red.colorFixed,
                                   shape: const StadiumBorder(),
@@ -2985,8 +2950,6 @@ class _MaterialDemoViewState extends State<_MaterialDemoView> {
                               leading: SizedBox.square(
                                 dimension: 40.0,
                                 child: Material(
-                                  animationDuration: Duration.zero,
-                                  type: MaterialType.card,
                                   clipBehavior: Clip.antiAlias,
                                   color: staticColors.red.colorFixed,
                                   shape: const StadiumBorder(),
@@ -3096,8 +3059,6 @@ class _MaterialDemoViewState extends State<_MaterialDemoView> {
                                 leading: SizedBox.square(
                                   dimension: 40.0,
                                   child: Material(
-                                    animationDuration: Duration.zero,
-                                    type: MaterialType.card,
                                     clipBehavior: Clip.antiAlias,
                                     color: staticColors.blue.colorFixed,
                                     shape: const StadiumBorder(),
@@ -3186,8 +3147,6 @@ class _MaterialDemoViewState extends State<_MaterialDemoView> {
                                 leading: SizedBox.square(
                                   dimension: 40.0,
                                   child: Material(
-                                    animationDuration: Duration.zero,
-                                    type: MaterialType.card,
                                     clipBehavior: Clip.antiAlias,
                                     color: staticColors.blue.colorFixed,
                                     shape: const StadiumBorder(),
@@ -3276,8 +3235,6 @@ class _MaterialDemoViewState extends State<_MaterialDemoView> {
                                 leading: SizedBox.square(
                                   dimension: 40.0,
                                   child: Material(
-                                    animationDuration: Duration.zero,
-                                    type: MaterialType.card,
                                     clipBehavior: Clip.antiAlias,
                                     color: staticColors.blue.colorFixed,
                                     shape: const StadiumBorder(),
@@ -3338,8 +3295,6 @@ class _MaterialDemoViewState extends State<_MaterialDemoView> {
                                 leading: SizedBox.square(
                                   dimension: 40.0,
                                   child: Material(
-                                    animationDuration: Duration.zero,
-                                    type: MaterialType.card,
                                     clipBehavior: Clip.antiAlias,
                                     color: staticColors.blue.colorFixed,
                                     shape: const StadiumBorder(),
@@ -3441,8 +3396,6 @@ class _MaterialDemoViewState extends State<_MaterialDemoView> {
                                 leading: SizedBox.square(
                                   dimension: 40.0,
                                   child: Material(
-                                    animationDuration: Duration.zero,
-                                    type: MaterialType.card,
                                     clipBehavior: Clip.antiAlias,
                                     color: staticColors.blue.colorFixed,
                                     shape: const StadiumBorder(),
@@ -3594,7 +3547,6 @@ class _MaterialDemoViewState extends State<_MaterialDemoView> {
                     //         SizedBox(
                     //           height: 40.0,
                     //           child: Material(
-                    //             animationDuration: Duration.zero,
                     //             clipBehavior: .antiAlias,
                     //             shape: CornersBorder.rounded(
                     //               corners: startCorners,
@@ -3767,7 +3719,6 @@ class _ShapeLibraryViewState extends State<_ShapeLibraryView> {
       width: double.infinity,
       height: 56.0,
       child: Material(
-        animationDuration: Duration.zero,
         clipBehavior: Clip.antiAlias,
         shape: CornersBorder.rounded(
           corners: Corners.all(shapeTheme.corner.full),
@@ -3824,7 +3775,6 @@ class _ShapeLibraryViewState extends State<_ShapeLibraryView> {
               if (_controller.text.isNotEmpty)
                 IconButton(
                   style: ButtonStyle(
-                    animationDuration: Duration.zero,
                     elevation: const WidgetStatePropertyAll(0.0),
                     shadowColor: WidgetStateColor.transparent,
                     minimumSize: const WidgetStatePropertyAll(Size.zero),
@@ -3893,7 +3843,6 @@ class _ShapeLibraryViewState extends State<_ShapeLibraryView> {
               maxExtent: 4.0 + 56.0 + 16.0,
               pinned: true,
               builder: (context, shrinkOffset, overlapsContent) => Material(
-                animationDuration: Duration.zero,
                 clipBehavior: Clip.none,
                 color: colorTheme.surfaceContainer,
                 shape: CornersBorder.rounded(
@@ -3926,7 +3875,6 @@ class _ShapeLibraryViewState extends State<_ShapeLibraryView> {
               child: Padding(
                 padding: const EdgeInsets.fromLTRB(16.0, 0.0, 16.0, 16.0),
                 child: Material(
-                  animationDuration: Duration.zero,
                   clipBehavior: Clip.antiAlias,
                   shape: CornersBorder.rounded(
                     corners: Corners.all(shapeTheme.corner.full),
@@ -4024,9 +3972,7 @@ class _ShapeLibraryViewState extends State<_ShapeLibraryView> {
                         AspectRatio(
                           aspectRatio: 1.0,
                           child: Material(
-                            animationDuration: Duration.zero,
                             clipBehavior: Clip.antiAlias,
-                            type: MaterialType.card,
                             shape: shape,
                             color: colorTheme.primary,
                             child: InkWell(
@@ -4074,7 +4020,6 @@ class _ShapeLibraryViewState extends State<_ShapeLibraryView> {
                                         AspectRatio(
                                           aspectRatio: 1.0,
                                           child: Material(
-                                            animationDuration: Duration.zero,
                                             clipBehavior: Clip.antiAlias,
                                             shape: shape,
                                             color: colorTheme.primary,

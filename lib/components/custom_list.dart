@@ -90,9 +90,7 @@ class ListItemContainer extends StatelessWidget {
         containerColor?.resolve(states) ??
         listItemTheme.containerColor.resolve(states);
 
-    return Material(
-      animationDuration: .zero,
-      type: .card,
+    return Material.empty(
       clipBehavior: .antiAlias,
       color: resolvedContainerColor,
       shape: resolvedShape,
@@ -626,9 +624,13 @@ class _ListItemLayoutState extends State<ListItemLayout> {
             if (leading != null)
               Padding(
                 padding: leadingPadding,
-                child: IconTheme.merge(
-                  data: listItemTheme.leadingIconTheme.resolve(states),
-                  child: leading,
+                child: DefaultTextStyle.merge(
+                  textAlign: .start,
+                  style: listItemTheme.leadingTextStyle.resolve(states),
+                  child: IconTheme.merge(
+                    data: listItemTheme.leadingIconTheme.resolve(states),
+                    child: leading,
+                  ),
                 ),
               ),
             Flexible.tight(
@@ -641,22 +643,22 @@ class _ListItemLayoutState extends State<ListItemLayout> {
                   children: [
                     if (widget.overline case final overline?)
                       DefaultTextStyle.merge(
-                        style: listItemTheme.overlineTextStyle.resolve(states),
                         textAlign: .start,
+                        style: listItemTheme.overlineTextStyle.resolve(states),
                         child: overline,
                       ),
                     if (widget.headline case final headline?)
                       DefaultTextStyle.merge(
-                        style: listItemTheme.headlineTextStyle.resolve(states),
                         textAlign: .start,
+                        style: listItemTheme.headlineTextStyle.resolve(states),
                         child: headline,
                       ),
                     if (widget.supportingText case final supportingText?)
                       DefaultTextStyle.merge(
+                        textAlign: .start,
                         style: listItemTheme.supportingTextStyle.resolve(
                           states,
                         ),
-                        textAlign: .start,
                         child: supportingText,
                       ),
                   ],
@@ -667,8 +669,8 @@ class _ListItemLayoutState extends State<ListItemLayout> {
               Padding(
                 padding: trailingPadding,
                 child: DefaultTextStyle.merge(
+                  textAlign: .end,
                   style: listItemTheme.trailingTextStyle.resolve(states),
-                  overflow: .ellipsis,
                   child: IconTheme.merge(
                     data: listItemTheme.trailingIconTheme.resolve(states),
                     child: trailing,
