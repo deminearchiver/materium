@@ -2892,23 +2892,23 @@ class _MaterialDemoViewState extends State<_MaterialDemoView> {
                                 ),
                               ),
                             ),
-                            // Padding(
-                            //   padding: const EdgeInsets.fromLTRB(
-                            //     16.0,
-                            //     8.0,
-                            //     16.0,
-                            //     16.0,
-                            //   ),
-                            //   child: Slider(
-                            //     padding: EdgeInsets.zero,
-                            //     value: _speedIndex.toDouble(),
-                            //     min: 0.0,
-                            //     max: (_speedValues.length - 1).toDouble(),
-                            //     divisions: _speedValues.length - 1,
-                            //     onChanged: (value) =>
-                            //         _setSpeedIndex(value.toInt()),
-                            //   ),
-                            // ),
+                            Padding(
+                              padding: const EdgeInsets.fromLTRB(
+                                16.0,
+                                8.0,
+                                16.0,
+                                16.0,
+                              ),
+                              child: Slider(
+                                padding: EdgeInsets.zero,
+                                value: _speedIndex.toDouble(),
+                                min: 0.0,
+                                max: (_speedValues.length - 1).toDouble(),
+                                divisions: _speedValues.length - 1,
+                                onChanged: (value) =>
+                                    _setSpeedIndex(value.toInt()),
+                              ),
+                            ),
                           ],
                         ),
                       ),
