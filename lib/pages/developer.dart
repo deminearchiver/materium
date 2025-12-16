@@ -1,6 +1,5 @@
 // ignore_for_file: invalid_use_of_internal_member
 
-import 'dart:collection';
 import 'dart:math' as math;
 import 'dart:ui';
 
@@ -9,7 +8,6 @@ import 'package:flutter/scheduler.dart';
 import 'package:flutter_markdown_plus/flutter_markdown_plus.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:material/material_shapes.dart';
-import 'package:materium/assets/assets.gen.dart';
 
 import 'package:materium/components/custom_app_bar.dart';
 import 'package:materium/components/custom_list.dart';
@@ -32,8 +30,6 @@ import 'package:super_keyboard/super_keyboard.dart';
 import 'package:syntax_highlight/syntax_highlight.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:url_launcher/url_launcher_string.dart';
-
-import 'package:materium/assets/fonts.gen.dart';
 
 class DeveloperPageBackButton extends StatelessWidget {
   const DeveloperPageBackButton({super.key});

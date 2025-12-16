@@ -1,6 +1,5 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:materium/components/custom_app_bar.dart';
-import 'package:materium/components/custom_decorated_sliver.dart';
 import 'package:materium/components/custom_list.dart';
 import 'package:materium/components/custom_refresh_indicator.dart';
 import 'package:materium/flutter.dart';

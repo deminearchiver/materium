@@ -1,6 +1,5 @@
 import 'package:flutter_markdown_plus/flutter_markdown_plus.dart';
 import 'package:material/material_color_utilities.dart';
-import 'package:materium/assets/fonts.gen.dart';
 import 'package:materium/flutter.dart';
 
 // Open fonts (bundled as assets or available as system fonts)
@@ -9,11 +8,7 @@ const _firaCode = FontFamily.firaCode;
 const _googleSans = FontFamily.googleSans;
 const _googleSansCode = FontFamily.googleSansCode;
 const _googleSansFlex = FontFamily.googleSansFlex;
-const _robotoFlex = "Roboto Flex";
-
-// Google brand fonts (cannot be bundled)
-const _googleSansDisplay = "Google Sans Display";
-const _googleSansText = "Google Sans Text";
+const _robotoFlex = FontFamily.robotoFlex;
 
 class TypographyDefaults with Diagnosticable {
   const TypographyDefaults.from({
@@ -113,7 +108,7 @@ class TypographyDefaults with Diagnosticable {
   /// a previously restricted but freshly opened Google brand font.
   ///
   /// It falls back to using Roboto Flex, then Roboto.
-  static const TypographyDefaults googleMaterial3Expressive = .from(
+  static const TypographyDefaults material3Expressive2026 = .from(
     typeface: .from(
       // The ROND axis is currently only available for Google Sans Flex,
       // making it a no-op for most of the other possibly installed fonts.
@@ -154,50 +149,6 @@ class TypographyDefaults with Diagnosticable {
       labelLargeEmphasized: TypeStylePartial.from(rond: 100.0),
       labelMediumEmphasized: TypeStylePartial.from(rond: 100.0),
       labelSmallEmphasized: TypeStylePartial.from(rond: 100.0),
-    ),
-  );
-
-  // TODO: decide what to do with this
-  @Deprecated("Use material3Baseline instead")
-  static const TypographyDefaults _googleMaterial3Baseline = .from(
-    typeface: .from(
-      // Google Sans (not "Flex") doesn't support ROND.
-      brand: [_googleSans, _roboto],
-      plain: [_googleSans, _roboto],
-    ),
-    typescale: .from(
-      // ROND wasn't used before the introduction of GM3 Expressive.
-      // We explicitly set this axis to 0 here to avoid confusion.
-      displayLarge: TypeStylePartial.from(rond: 0.0),
-      displayMedium: TypeStylePartial.from(rond: 0.0),
-      displaySmall: TypeStylePartial.from(rond: 0.0),
-      headlineLarge: TypeStylePartial.from(rond: 0.0),
-      headlineMedium: TypeStylePartial.from(rond: 0.0),
-      headlineSmall: TypeStylePartial.from(rond: 0.0),
-      titleLarge: TypeStylePartial.from(rond: 0.0),
-      titleMedium: TypeStylePartial.from(rond: 0.0),
-      titleSmall: TypeStylePartial.from(rond: 0.0),
-      bodyLarge: TypeStylePartial.from(rond: 0.0),
-      bodyMedium: TypeStylePartial.from(rond: 0.0),
-      bodySmall: TypeStylePartial.from(rond: 0.0),
-      labelLarge: TypeStylePartial.from(rond: 0.0),
-      labelMedium: TypeStylePartial.from(rond: 0.0),
-      labelSmall: TypeStylePartial.from(rond: 0.0),
-      displayLargeEmphasized: TypeStylePartial.from(rond: 0.0),
-      displayMediumEmphasized: TypeStylePartial.from(rond: 0.0),
-      displaySmallEmphasized: TypeStylePartial.from(rond: 0.0),
-      headlineLargeEmphasized: TypeStylePartial.from(rond: 0.0),
-      headlineMediumEmphasized: TypeStylePartial.from(rond: 0.0),
-      headlineSmallEmphasized: TypeStylePartial.from(rond: 0.0),
-      titleLargeEmphasized: TypeStylePartial.from(rond: 0.0),
-      titleMediumEmphasized: TypeStylePartial.from(rond: 0.0),
-      titleSmallEmphasized: TypeStylePartial.from(rond: 0.0),
-      bodyLargeEmphasized: TypeStylePartial.from(rond: 0.0),
-      bodyMediumEmphasized: TypeStylePartial.from(rond: 0.0),
-      bodySmallEmphasized: TypeStylePartial.from(rond: 0.0),
-      labelLargeEmphasized: TypeStylePartial.from(rond: 0.0),
-      labelMediumEmphasized: TypeStylePartial.from(rond: 0.0),
-      labelSmallEmphasized: TypeStylePartial.from(rond: 0.0),
     ),
   );
 }

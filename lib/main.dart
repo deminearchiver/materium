@@ -2,7 +2,6 @@ import 'dart:io';
 
 import 'package:dynamic_color_ffi/dynamic_color_ffi.dart';
 import 'package:materium/flutter.dart';
-import 'package:materium/assets/assets.gen.dart';
 import 'package:materium/database/database.dart';
 import 'package:materium/pages/home.dart';
 import 'package:materium/providers/apps_provider.dart';
@@ -404,7 +403,7 @@ class _ObtainiumState extends State<Obtainium> {
   }
 
   Widget _buildTypographyTheme(BuildContext context, Widget child) =>
-      TypographyDefaults.googleMaterial3Expressive.build(context, child);
+      TypographyDefaults.material3Expressive2026.build(context, child);
 
   Widget _buildSpringTheme(BuildContext context, Widget child) =>
       SpringTheme(data: const SpringThemeData.expressive(), child: child);

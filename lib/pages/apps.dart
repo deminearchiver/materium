@@ -2,8 +2,6 @@ import 'dart:convert';
 
 import 'package:collection/collection.dart';
 import 'package:easy_localization/easy_localization.dart';
-import 'package:materium/assets/assets.gen.dart';
-import 'package:materium/components/custom_decorated_sliver.dart';
 import 'package:materium/components/custom_list.dart';
 import 'package:materium/components/custom_refresh_indicator.dart';
 import 'package:materium/components/custom_sliver_scrollbar.dart';

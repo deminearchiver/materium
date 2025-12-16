@@ -5,7 +5,6 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'dart:math';
-import 'dart:ui';
 import 'package:battery_plus/battery_plus.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:crypto/crypto.dart';
@@ -17,8 +16,9 @@ import 'package:android_package_manager/android_package_manager.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:device_info_ffi/device_info_ffi.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:http/io_client.dart' as http;
+import 'package:http/http.dart' as http;
 import 'package:materium/flutter.dart';
-import 'package:http/io_client.dart';
 import 'package:materium/app_sources/direct_apk_link.dart';
 import 'package:materium/app_sources/html.dart';
 import 'package:materium/components/generated_form.dart';
@@ -33,7 +33,6 @@ import 'package:provider/provider.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:flutter_fgbg/flutter_fgbg.dart';
 import 'package:materium/providers/source_provider.dart';
-import 'package:http/http.dart' as http;
 import 'package:android_intent_plus/android_intent.dart';
 import 'package:flutter_archive/flutter_archive.dart';
 import 'package:share_plus/share_plus.dart';
@@ -246,7 +245,7 @@ Future<String> checkPartialDownloadHash(
     req.headers.addAll(headers);
   }
   req.headers[HttpHeaders.rangeHeader] = 'bytes=0-$bytesToGrab';
-  var client = IOClient(createHttpClient(allowInsecure));
+  var client = http.IOClient(createHttpClient(allowInsecure));
   var response = await client.send(req);
   if (response.statusCode < 200 || response.statusCode > 299) {
     throw ObtainiumError(response.reasonPhrase ?? tr('unexpectedError'));
@@ -264,7 +263,7 @@ Future<String?> checkETagHeader(
   var reqHeaders = headers ?? {};
   final req = http.Request('GET', Uri.parse(url));
   req.headers.addAll(reqHeaders);
-  var client = IOClient(createHttpClient(allowInsecure));
+  var client = http.IOClient(createHttpClient(allowInsecure));
   final response = await client.send(req);
   var resHeaders = response.headers;
   client.close();
@@ -299,7 +298,7 @@ Future<File> downloadFile(
   var reqHeaders = headers ?? {};
   var req = http.Request('GET', Uri.parse(url));
   req.headers.addAll(reqHeaders);
-  var headersClient = IOClient(createHttpClient(allowInsecure));
+  var headersClient = http.IOClient(createHttpClient(allowInsecure));
   final headersResponse = await headersClient.send(req);
   var resHeaders = headersResponse.headers;
 

@@ -75,6 +75,9 @@ export 'package:material/material.dart';
 
 // Adjacent libraries
 
+export 'assets/assets.gen.dart';
+export 'assets/fonts.dart';
+export 'assets/fonts.gen.dart';
 export 'i18n/strings.g.dart';
 
 // Shared utilities
