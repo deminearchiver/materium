@@ -178,6 +178,7 @@ class _ListItemContainerScope extends InheritedWidget {
 
   @override
   bool updateShouldNotify(_ListItemContainerScope oldWidget) =>
+      opticalCenterEnabled != oldWidget.opticalCenterEnabled ||
       opticalCenterCorners != oldWidget.opticalCenterCorners ||
       opticalCenterMaxOffsets != oldWidget.opticalCenterMaxOffsets;
 
@@ -268,30 +269,6 @@ class _ListItemInteractionState extends State<ListItemInteraction> {
     return _internalStatesController!;
   }
 
-  // WidgetStateProperty<Color> get _stateLayerColor =>
-  //     WidgetStatePropertyAll(_colorTheme.onSurface);
-
-  // WidgetStateProperty<double> get _stateLayerOpacity =>
-  //     WidgetStateProperty.resolveWith((states) {
-  //       if (states.contains(WidgetState.disabled)) {
-  //         return 0.0;
-  //       }
-  //       if (states.contains(WidgetState.pressed)) {
-  //         return _stateTheme.pressedStateLayerOpacity;
-  //       }
-  //       if (states.contains(WidgetState.hovered)) {
-  //         return _stateTheme.hoverStateLayerOpacity;
-  //       }
-  //       if (states.contains(WidgetState.focused)) {
-  //         return 0.0;
-  //       }
-  //       return 0.0;
-  //     });
-
-  void _statesListener() {
-    setState(() {});
-  }
-
   bool _pressed = false;
   bool _focused = false;
 
@@ -325,6 +302,10 @@ class _ListItemInteractionState extends State<ListItemInteraction> {
       states.remove(WidgetState.focused);
     }
     return result;
+  }
+
+  void _statesListener() {
+    setState(() {});
   }
 
   void _onPointerDown(PointerDownEvent _) {
@@ -460,10 +441,10 @@ class _ListItemInteractionState extends State<ListItemInteraction> {
         ),
         child: FocusRing(
           visible: states.isFocused,
-          placement: FocusRingPlacement.inward,
+          placement: .inward,
           layoutBuilder: (context, info, child) => child,
           child: Listener(
-            behavior: HitTestBehavior.deferToChild,
+            behavior: .deferToChild,
             onPointerDown: !states.isDisabled ? _onPointerDown : null,
             onPointerUp: !states.isDisabled ? _onPointerUp : null,
             onPointerCancel: !states.isDisabled ? _onPointerCancel : null,
@@ -493,19 +474,17 @@ class _ListItemInteractionState extends State<ListItemInteraction> {
 }
 
 enum ListItemAlignment {
-  top,
-  middle;
+  top(.start),
+  middle(.center);
 
-  CrossAxisAlignment _toCrossAxisAlignment() => switch (this) {
-    .top => .start,
-    .middle => .center,
-  };
+  const ListItemAlignment(this.crossAxisAlignment);
+
+  final CrossAxisAlignment crossAxisAlignment;
 }
 
-class ListItemLayout extends StatefulWidget {
+class ListItemLayout extends StatelessWidget {
   const ListItemLayout({
     super.key,
-    this.textDirection,
     this.minHeight,
     this.maxHeight,
     this.padding,
@@ -522,7 +501,6 @@ class ListItemLayout extends StatefulWidget {
     this.trailing,
   }) : assert(overline != null || headline != null || supportingText != null);
 
-  final TextDirection? textDirection;
   final double? minHeight;
   final double? maxHeight;
   final EdgeInsetsGeometry? padding;
@@ -532,7 +510,6 @@ class ListItemLayout extends StatefulWidget {
   final double? leadingSpace;
   final double? trailingSpace;
   final ListItemAlignment alignment;
-
   final Widget? leading;
   final Widget? overline;
   final Widget? headline;
@@ -540,90 +517,49 @@ class ListItemLayout extends StatefulWidget {
   final Widget? trailing;
 
   @override
-  State<ListItemLayout> createState() => _ListItemLayoutState();
-}
-
-class _ListItemLayoutState extends State<ListItemLayout> {
-  @override
   Widget build(BuildContext context) {
-    final defaultTextDirection = Directionality.maybeOf(context);
     final listItemTheme = ListItemTheme.of(context);
-
-    final resolvedTextDirection = widget.textDirection ?? defaultTextDirection;
-
-    final leading = widget.leading;
-    final trailing = widget.trailing;
-
-    final minHeight = widget.minHeight ?? 48.0;
-
-    final maxHeight = widget.maxHeight ?? .infinity;
-
-    final constraints = BoxConstraints(
-      minHeight: minHeight,
-      maxHeight: maxHeight,
-    );
-
-    final resolvedPadding =
-        widget.padding?.resolve(resolvedTextDirection) ??
-        const .symmetric(horizontal: 16.0);
-
-    final resolvedLeadingPadding =
-        widget.leadingPadding?.resolve(resolvedTextDirection) ??
-        const .symmetric(vertical: 10.0);
-
-    final resolvedContentPadding =
-        widget.contentPadding?.resolve(resolvedTextDirection) ??
-        const .symmetric(vertical: 10.0);
-
-    final resolvedTrailingPadding =
-        widget.trailingPadding?.resolve(resolvedTextDirection) ??
-        const .symmetric(vertical: 10.0);
-
-    final resolvedLeadingSpace = widget.leadingSpace ?? 12.0;
-
-    final resolvedTrailingSpace = widget.trailingSpace ?? 12.0;
-
-    final containerPadding = EdgeInsets.fromLTRB(
-      resolvedPadding.left,
-      resolvedPadding.top,
-      resolvedPadding.right,
-      resolvedPadding.bottom,
-    );
-
-    final leadingPadding = EdgeInsets.fromLTRB(
-      resolvedLeadingPadding.left,
-      resolvedLeadingPadding.top,
-      resolvedLeadingPadding.right + resolvedLeadingSpace,
-      resolvedLeadingPadding.bottom,
-    );
-    final trailingPadding = EdgeInsets.fromLTRB(
-      resolvedTrailingSpace + resolvedTrailingPadding.left,
-      resolvedTrailingPadding.top,
-      resolvedTrailingPadding.right,
-      resolvedTrailingPadding.bottom,
-    );
-
-    final contentPadding = EdgeInsets.fromLTRB(
-      resolvedContentPadding.left,
-      resolvedContentPadding.top,
-      resolvedContentPadding.right,
-      resolvedContentPadding.bottom,
-    );
 
     final states = const _ListItemStates(isFirst: false, isLast: false);
 
-    final result = ConstrainedBox(
-      constraints: constraints,
+    final resolvedConstraints = BoxConstraints(
+      minWidth: 0.0,
+      maxWidth: .infinity,
+      minHeight: minHeight ?? 48.0,
+      maxHeight: maxHeight ?? .infinity,
+    );
+
+    final resolvedPadding = padding ?? const .symmetric(horizontal: 16.0);
+
+    final resolvedLeadingSpace = leadingSpace ?? 12.0;
+
+    final resolvedLeadingPadding =
+        leadingPadding?.add(.directional(end: resolvedLeadingSpace)) ??
+        // Avoid getting _MixedEdgeInsets
+        .fromSTEB(0.0, 10.0, resolvedLeadingSpace, 10.0);
+
+    final resolvedContentPadding =
+        contentPadding ?? const .symmetric(vertical: 10.0);
+
+    final resolvedTrailingSpace = trailingSpace ?? 12.0;
+
+    final resolvedTrailingPadding =
+        trailingPadding?.add(.directional(start: resolvedTrailingSpace)) ??
+        // Avoid getting _MixedEdgeInsets
+        .fromSTEB(resolvedTrailingSpace, 10.0, 0.0, 10.0);
+
+    return ConstrainedBox(
+      constraints: resolvedConstraints,
       child: Padding(
-        padding: containerPadding,
+        padding: resolvedPadding,
         child: Flex.horizontal(
           mainAxisSize: .max,
           mainAxisAlignment: .start,
-          crossAxisAlignment: widget.alignment._toCrossAxisAlignment(),
+          crossAxisAlignment: alignment.crossAxisAlignment,
           children: [
-            if (leading != null)
+            if (leading case final leading?)
               Padding(
-                padding: leadingPadding,
+                padding: resolvedLeadingPadding,
                 child: DefaultTextStyle.merge(
                   textAlign: .start,
                   style: listItemTheme.leadingTextStyle.resolve(states),
@@ -635,25 +571,25 @@ class _ListItemLayoutState extends State<ListItemLayout> {
               ),
             Flexible.tight(
               child: Padding(
-                padding: contentPadding,
+                padding: resolvedContentPadding,
                 child: Flex.vertical(
                   mainAxisSize: .min,
                   mainAxisAlignment: .center,
                   crossAxisAlignment: .stretch,
                   children: [
-                    if (widget.overline case final overline?)
+                    if (overline case final overline?)
                       DefaultTextStyle.merge(
                         textAlign: .start,
                         style: listItemTheme.overlineTextStyle.resolve(states),
                         child: overline,
                       ),
-                    if (widget.headline case final headline?)
+                    if (headline case final headline?)
                       DefaultTextStyle.merge(
                         textAlign: .start,
                         style: listItemTheme.headlineTextStyle.resolve(states),
                         child: headline,
                       ),
-                    if (widget.supportingText case final supportingText?)
+                    if (supportingText case final supportingText?)
                       DefaultTextStyle.merge(
                         textAlign: .start,
                         style: listItemTheme.supportingTextStyle.resolve(
@@ -665,9 +601,9 @@ class _ListItemLayoutState extends State<ListItemLayout> {
                 ),
               ),
             ),
-            if (trailing != null)
+            if (trailing case final trailing?)
               Padding(
-                padding: trailingPadding,
+                padding: resolvedTrailingPadding,
                 child: DefaultTextStyle.merge(
                   textAlign: .end,
                   style: listItemTheme.trailingTextStyle.resolve(states),
@@ -681,10 +617,6 @@ class _ListItemLayoutState extends State<ListItemLayout> {
         ),
       ),
     );
-    return resolvedTextDirection != null &&
-            resolvedTextDirection != defaultTextDirection
-        ? Directionality(textDirection: resolvedTextDirection, child: result)
-        : result;
   }
 }
 

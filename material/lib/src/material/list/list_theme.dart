@@ -7,25 +7,20 @@ abstract interface class SegmentedListItemStates implements ListItemStates {
   bool get isLast;
 }
 
-abstract interface class InteractiveListItemStates implements ListItemStates {}
-
-abstract interface class InteractiveListItemEnabledStates
-    implements InteractiveListItemStates {
-  bool get isHovered;
-  bool get isFocused;
-  bool get isPressed;
-}
+abstract interface class InteractiveListItemStates
+    implements ListItemStates, InteractiveStates {}
 
 abstract interface class InteractiveListItemDisabledStates
-    implements InteractiveListItemStates {}
+    implements InteractiveListItemStates, InteractiveDisabledStates {}
 
-abstract interface class SelectableListItemStates implements ListItemStates {
-  bool get isSelected;
-}
+abstract interface class InteractiveListItemEnabledStates
+    implements InteractiveListItemStates, InteractiveEnabledStates {}
 
-abstract interface class DraggableListItemStates implements ListItemStates {
-  bool get isDragged;
-}
+abstract interface class SelectableListItemStates
+    implements ListItemStates, SelectableStates {}
+
+abstract interface class DraggableListItemStates
+    implements ListItemStates, DraggableStates {}
 
 typedef ListItemStateProperty<T extends Object?> =
     StateProperty<T, ListItemStates>;

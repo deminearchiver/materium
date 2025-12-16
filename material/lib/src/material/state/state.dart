@@ -593,18 +593,34 @@ class _StatesControllerFromCodec<S extends Object?>
 
 typedef WidgetStatesCodec<S extends Object?> = Codec<S, WidgetStates>;
 
-mixin HoveredStates {
-  bool get hovered;
+abstract interface class HoverableStates {
+  bool get isHovered;
 }
 
-mixin FocusedStates {
-  bool get focused;
+abstract interface class FocusableStates {
+  bool get isFocused;
 }
 
-mixin PressedStates {
-  bool get pressed;
+abstract interface class PressableStates {
+  bool get isPressed;
 }
 
-mixin SelectedStates {
-  bool get selected;
+abstract interface class DraggableStates {
+  bool get isDragged;
+}
+
+abstract interface class InteractiveStates {}
+
+abstract interface class InteractiveDisabledStates
+    implements InteractiveStates {}
+
+abstract interface class InteractiveEnabledStates
+    implements
+        InteractiveStates,
+        HoverableStates,
+        FocusableStates,
+        PressableStates {}
+
+abstract interface class SelectableStates {
+  bool get isSelected;
 }
