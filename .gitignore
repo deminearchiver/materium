@@ -55,4 +55,10 @@ app.*.map.json
 TODO.txt
 data
 node_modules/
-/dist/
+
+# Attributes from this file will override those from pubspec.yaml; see
+# https://dart.dev/tools/pub/dependencies#pubspec-overrides
+pubspec_overrides.yaml
+
+# FastForge
+dist/

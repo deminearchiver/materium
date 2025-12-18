@@ -86,6 +86,10 @@ import 'package:dynamic_color_ffi/dynamic_color_ffi.dart';
 import 'package:materium/flutter.dart';
 import 'package:screen_corners_ffi/screen_corners_ffi.dart';
 
+// Shared utilities
+
+import 'dart:ui' as ui;
+
 @immutable
 class CombiningBuilder extends StatelessWidget {
   const CombiningBuilder({
@@ -948,4 +952,24 @@ extension ResultResultExtension<T extends Object?, E extends Object?>
     Ok(:final value) => value,
     Error(:final value) => Error(value),
   };
+}
+
+/// Linearly interpolate between two integers.
+///
+/// Same as [lerpDouble] but specialized for non-null `int` type.
+double lerpInt(int a, int b, double t) => a + (b - a) * t;
+
+/// Linearly interpolate between two doubles.
+///
+/// Same as [ui.lerpDouble] but specialized for non-null `double` type.
+double lerpDouble(double a, double b, double t) {
+  // This doesn't match lerpInt to preserve specific behaviors when dealing
+  // with infinity and nan.
+  if (a == b || a.isNaN && b.isNaN) {
+    return a;
+  }
+  assert(a.isFinite, "Cannot interpolate between finite and non-finite values");
+  assert(b.isFinite, "Cannot interpolate between finite and non-finite values");
+  assert(t.isFinite, "t must be finite when interpolating between values");
+  return a * (1.0 - t) + b * t;
 }

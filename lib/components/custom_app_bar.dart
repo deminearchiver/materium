@@ -638,7 +638,7 @@ class _CustomAppBarStretchingFlexibleSpace extends StatelessWidget {
                     state._expandedTitleSubtitleSpace,
                     state._collapsedTitleSubtitleSpace,
                     animation.value,
-                  )!,
+                  ),
                 ),
               if (subtitle case final subtitle?)
                 DefaultTextStyle.merge(

@@ -204,41 +204,27 @@ class CustomRefreshIndicator extends StatefulWidget {
 class CustomRefreshIndicatorState extends State<CustomRefreshIndicator>
     with TickerProviderStateMixin<CustomRefreshIndicator> {
   late AnimationController _positionController;
-  late AnimationController _scaleController;
   late Animation<double> _positionFactor;
-  late Animation<double> _scaleFactor;
   late AnimationController _switchController;
-
-  late Listenable _positionScaleListenable;
 
   RefreshIndicatorStatus? _status;
   late Future<void> _pendingRefreshFuture;
   bool? _isIndicatorAtTop;
   double? _dragOffset;
 
-  final Tween<double> _kDragSizeFactorLimitTween = Tween<double>(
+  final _positionFactorTween = Tween<double>(
     begin: 0.0,
     end: _kDragSizeFactorLimit,
   );
-
-  final Tween<double> _oneToZeroTween = Tween<double>(begin: 1.0, end: 0.0);
 
   @protected
   @override
   void initState() {
     super.initState();
     _positionController = AnimationController(vsync: this);
-    _positionFactor = _positionController.drive(_kDragSizeFactorLimitTween);
+    _positionFactor = _positionController.drive(_positionFactorTween);
 
-    _scaleController = AnimationController(vsync: this);
-    _scaleFactor = _scaleController.drive(_oneToZeroTween);
-
-    _switchController = AnimationController(vsync: this);
-
-    _positionScaleListenable = Listenable.merge([
-      _positionController,
-      _scaleController,
-    ]);
+    _switchController = AnimationController(vsync: this, value: 0.0);
   }
 
   @protected
@@ -246,7 +232,6 @@ class CustomRefreshIndicatorState extends State<CustomRefreshIndicator>
   void dispose() {
     _switchController.dispose();
     _positionController.dispose();
-    _scaleController.dispose();
     super.dispose();
   }
 
@@ -359,7 +344,6 @@ class CustomRefreshIndicatorState extends State<CustomRefreshIndicator>
         return false;
     }
     _dragOffset = 0.0;
-    _scaleController.value = 0.0;
     _positionController.value = 0.0;
     return true;
   }
@@ -394,10 +378,11 @@ class CustomRefreshIndicatorState extends State<CustomRefreshIndicator>
       _status = newMode;
       widget.onStatusChange?.call(_status);
     });
+    _updateSwitchAnimation();
     switch (_status!) {
       case .done:
-        await _scaleController.animateTo(
-          1.0,
+        await _positionController.animateTo(
+          0.0,
           duration: _kIndicatorScaleDuration,
         );
       case .canceled:
@@ -445,6 +430,7 @@ class CustomRefreshIndicatorState extends State<CustomRefreshIndicator>
             });
           }
         });
+    _updateSwitchAnimation();
   }
 
   /// Show the refresh indicator and run the refresh callback as if it had
@@ -475,31 +461,8 @@ class CustomRefreshIndicatorState extends State<CustomRefreshIndicator>
 
   bool? _showIndeterminateIndicator;
 
-  @protected
-  @override
-  Widget build(BuildContext context) {
-    assert(debugCheckHasMaterialLocalizations(context));
-    final Widget child = NotificationListener<ScrollNotification>(
-      onNotification: _handleScrollNotification,
-      child: NotificationListener<OverscrollIndicatorNotification>(
-        onNotification: _handleIndicatorNotification,
-        child: widget.child,
-      ),
-    );
-    assert(() {
-      if (_status == null) {
-        assert(_dragOffset == null);
-        assert(_isIndicatorAtTop == null);
-      } else {
-        assert(_dragOffset != null);
-        assert(_isIndicatorAtTop != null);
-      }
-      return true;
-    }());
-
-    final showIndeterminateIndicator =
-        _status == .snap || _status == .refresh || _status == .done;
-
+  void _updateSwitchAnimation() {
+    final showIndeterminateIndicator = _status == .snap || _status == .refresh;
     if (_showIndeterminateIndicator != showIndeterminateIndicator) {
       final spring = const SpringThemeData.expressive().defaultEffects
           .toSpringDescription();
@@ -520,31 +483,75 @@ class CustomRefreshIndicatorState extends State<CustomRefreshIndicator>
     }
 
     _showIndeterminateIndicator = showIndeterminateIndicator;
+  }
 
-    final colorTheme = ColorTheme.of(context);
-    final elevationTheme = ElevationTheme.of(context);
-    final shapeTheme = ShapeTheme.of(context);
+  late ElevationThemeData _elevationTheme;
+  late EasingThemeData _easingTheme;
+  late ShapeThemeData _shapeTheme;
+  late LoadingIndicatorThemeData _loadingIndicatorTheme;
 
-    final loadingIndicatorTheme = LoadingIndicatorTheme.of(context);
+  final _indeterminateIndicatorOpacityTween = Tween<double>(
+    begin: 0.0,
+    end: 1.0,
+  ).chain(CurveTween(curve: const Interval(0.0, 0.5)));
+
+  final _determinateIndicatorOpacityTween = Tween<double>(
+    begin: 1.0,
+    end: 0.0,
+  ).chain(CurveTween(curve: const Interval(0.5, 1.0)));
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _elevationTheme = ElevationTheme.of(context);
+    _easingTheme = EasingTheme.of(context);
+    _shapeTheme = ShapeTheme.of(context);
+    _loadingIndicatorTheme = LoadingIndicatorTheme.of(context);
+  }
+
+  @protected
+  @override
+  Widget build(BuildContext context) {
+    assert(debugCheckHasMaterialLocalizations(context));
+
+    final Widget child = NotificationListener<ScrollNotification>(
+      onNotification: _handleScrollNotification,
+      child: NotificationListener<OverscrollIndicatorNotification>(
+        onNotification: _handleIndicatorNotification,
+        child: widget.child,
+      ),
+    );
+
+    assert(() {
+      if (_status == null) {
+        assert(_dragOffset == null);
+        assert(_isIndicatorAtTop == null);
+      } else {
+        assert(_dragOffset != null);
+        assert(_isIndicatorAtTop != null);
+      }
+      return true;
+    }());
+
+    _updateSwitchAnimation();
 
     final containerColor =
-        widget.containerColor ?? loadingIndicatorTheme.containedContainerColor;
+        widget.containerColor ?? _loadingIndicatorTheme.containedContainerColor;
 
     final indicatorColor =
-        widget.indicatorColor ?? loadingIndicatorTheme.containedIndicatorColor;
+        widget.indicatorColor ?? _loadingIndicatorTheme.containedIndicatorColor;
 
-    final elevation = widget.elevation ?? elevationTheme.level0;
+    final elevation = widget.elevation ?? _elevationTheme.level0;
 
     Widget? layer;
     if (_status != null) {
+      const containerSize = 48.0;
       final Widget indeterminateLoadingIndicator = AnimatedBuilder(
         animation: _switchController,
         builder: (context, child) {
-          final opacity = const Interval(
-            0.0,
-            0.5,
-            curve: Curves.easeIn,
-          ).transform(clampDouble(_switchController.value, 0.0, 1.0));
+          final opacity = _indeterminateIndicatorOpacityTween.evaluate(
+            _switchController,
+          );
           return Visibility(
             visible: opacity > 0.0,
             child: Opacity(opacity: opacity, child: child!),
@@ -558,11 +565,9 @@ class CustomRefreshIndicatorState extends State<CustomRefreshIndicator>
       final Widget determinateLoadingIndicator = AnimatedBuilder(
         animation: _switchController,
         builder: (context, child) {
-          final opacity = const Interval(
-            0.0,
-            0.5,
-            curve: Curves.easeIn,
-          ).transform(clampDouble(1.0 - _switchController.value, 0.0, 1.0));
+          final opacity = _determinateIndicatorOpacityTween.evaluate(
+            _switchController,
+          );
           return Visibility(
             visible: opacity > 0.0,
             child: Opacity(opacity: opacity, child: child!),
@@ -570,53 +575,48 @@ class CustomRefreshIndicatorState extends State<CustomRefreshIndicator>
         },
         child: AnimatedBuilder(
           animation: _positionController,
-          builder: (context, child) {
+          builder: (context, _) {
             final progress = _positionFactor.value;
             return Transform.rotate(
               angle: progress > 1.0 ? -(progress - 1.0) * math.pi : 0.0,
               child: DeterminateLoadingIndicator(
-                contained: true,
+                contained: false,
+                indicatorColor: indicatorColor,
                 progress: clampDouble(progress, 0.0, 1.0),
               ),
             );
           },
         ),
       );
-      final Widget containedLoadingIndicator = Material.empty(
-        clipBehavior: .antiAlias,
-        shape: CornersBorder.rounded(corners: .all(shapeTheme.corner.full)),
-        color: containerColor,
-        elevation: elevation,
-        shadowColor: colorTheme.shadow,
-        child: Stack(
-          alignment: .center,
-          children: [
-            indeterminateLoadingIndicator,
-            determinateLoadingIndicator,
-          ],
+      final Widget containedLoadingIndicator = SizedBox.square(
+        dimension: containerSize,
+        child: Material(
+          clipBehavior: .antiAlias,
+          shape: CornersBorder.rounded(corners: .all(_shapeTheme.corner.full)),
+          color: containerColor,
+          elevation: elevation,
+          child: Stack(
+            fit: .expand,
+            alignment: .center,
+            children: [
+              indeterminateLoadingIndicator,
+              determinateLoadingIndicator,
+            ],
+          ),
         ),
       );
       final Widget scaleTransition = AnimatedBuilder(
-        animation: _positionScaleListenable,
-        child: containedLoadingIndicator,
+        animation: _positionController,
         builder: (context, child) {
-          final dragScale = const EasingThemeData.fallback().standard.transform(
+          final progress = _easingTheme.legacyDecelerate.transform(
             clampDouble(_positionFactor.value, 0.0, 1.0),
           );
-          final visibilityScale = clampDouble(_scaleFactor.value, 0.0, 1.0);
-          return Transform.scale(
-            scale: dragScale * visibilityScale,
-            child: child!,
+          return Opacity(
+            opacity: progress,
+            child: Transform.scale(scale: progress, child: child!),
           );
         },
-      );
-      final Widget fadeTransition = AnimatedBuilder(
-        animation: _scaleController,
-        child: scaleTransition,
-        builder: (context, child) => Opacity(
-          opacity: clampDouble(_scaleFactor.value, 0.0, 1.0),
-          child: child!,
-        ),
+        child: containedLoadingIndicator,
       );
       final Widget layout = Padding(
         padding: _isIndicatorAtTop!
@@ -624,27 +624,29 @@ class CustomRefreshIndicatorState extends State<CustomRefreshIndicator>
             : .only(bottom: widget.displacement),
         child: Align(
           alignment: _isIndicatorAtTop! ? .topCenter : .bottomCenter,
-          child: fadeTransition,
+          child: scaleTransition,
         ),
       );
-      final Widget positionTransition = ClipRect(
-        child: AnimatedBuilder(
-          animation: _positionController,
-          builder: (context, child) => Align(
-            alignment: _isIndicatorAtTop! ? .bottomCenter : .topCenter,
-            widthFactor: null,
-            heightFactor: math.max(_positionFactor.value, 0.0),
-            child: child!,
-          ),
-          child: layout,
-        ),
-      );
-      layer = Positioned(
-        top: _isIndicatorAtTop! ? widget.edgeOffset : null,
-        bottom: !_isIndicatorAtTop! ? widget.edgeOffset : null,
-        left: 0.0,
-        right: 0.0,
-        child: positionTransition,
+      layer = AnimatedBuilder(
+        animation: _positionController,
+        builder: (context, child) {
+          final progress = clampDouble(_positionFactor.value, 0.0, 1.0);
+          final shift = lerpDouble(containerSize / 2.0, 0.0, progress);
+          final heightFactor = math.max(_positionFactor.value, 0.0);
+          return Positioned(
+            left: 0.0,
+            top: _isIndicatorAtTop! ? widget.edgeOffset + shift : null,
+            right: 0.0,
+            bottom: !_isIndicatorAtTop! ? widget.edgeOffset + shift : null,
+            child: Align(
+              alignment: _isIndicatorAtTop! ? .bottomCenter : .topCenter,
+              widthFactor: null,
+              heightFactor: heightFactor,
+              child: child!,
+            ),
+          );
+        },
+        child: layout,
       );
     }
     return Stack(children: [child, ?layer]);

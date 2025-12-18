@@ -2072,7 +2072,7 @@ class _SettingsAppBarRoute<T extends Object?> extends PopupRoute<T> {
                             -(padding.top + (72.0 - 56.0) / 2.0),
                             0.0,
                             _curvedAnimation.value,
-                          )!,
+                          ),
                         ),
                         child: Stack(
                           fit: StackFit.expand,
@@ -3945,7 +3945,7 @@ class _ShapeLibraryViewState extends State<_ShapeLibraryView> {
                 builder: (context, value, child) => SliverOpacity(
                   opacity: value,
                   sliver: SliverTransform.scale(
-                    scale: lerpDouble(0.75, 1.0, value)!,
+                    scale: lerpDouble(0.75, 1.0, value),
                     sliver: child,
                   ),
                 ),
