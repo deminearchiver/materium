@@ -1,3 +1,6 @@
+define:
+  - &dart-flutter-packages-ref a7beb2490dc10a2171f9177a02ac2aab3a081b69
+
 name: materium
 description: Get Android app updates straight from the source.
 version: 1.2.9+2325
@@ -7,8 +10,6 @@ publish_to: none
 workspace:
   - dynamic_color
   - dynamic_color/example
-  - layout
-  - material
   - materium_tools
 
 environment:
@@ -16,14 +17,19 @@ environment:
   flutter: ">=3.38.0"
 
 dependencies:
+  # SDK dependencies
   flutter:
     sdk: flutter
   flutter_localizations:
     sdk: flutter
+
+  # Workspace dependencies
   layout:
-    path: layout
+    path: ""
   material:
-    path: material
+    path: ""
+
+  # Hosted dependencies
   meta: ^1.17.0
   path_provider: ^2.1.5
   flutter_fgbg: ^0.7.1
@@ -109,18 +115,24 @@ dev_dependencies:
   fastforge: ^0.6.6
 
 dependency_overrides:
-  # Needed for god knows what
-  device_info_plus: ^12.3.0
+  # Git dependencies
+  layout:
+    git:
+      url: https://github.com/deminearchiver/dart-flutter-packages.git
+      ref: *dart-flutter-packages-ref
+      path: packages/layout
+  material:
+    git:
+      url: https://github.com/deminearchiver/dart-flutter-packages.git
+      ref: *dart-flutter-packages-ref
+      path: packages/material
 
-  # Needed for Flutter
-  material_color_utilities: ^0.13.0
-
-  # Different packages may be using different versions
-  meta: ^1.17.0
-
-  # Needed for fastforge
-  archive: ^4.0.7
-  uuid: ^4.5.2
+  # Hosted dependencies
+  archive: ^4.0.7 # fastforge uses outdated version
+  device_info_plus: ^12.3.0 # Needed for unknown reasons
+  material_color_utilities: ^0.13.0 # Flutter pinned dependency
+  meta: ^1.17.0 # Always use latest version
+  uuid: ^4.5.2 # fastforge uses outdated version
 
 flutter:
   uses-material-design: true
