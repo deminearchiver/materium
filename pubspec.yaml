@@ -103,6 +103,7 @@ dependencies:
   rhttp: ^0.15.0
 
 dev_dependencies:
+  # Hosted dependencies
   deminearchiver_lints: ^1.1.1
   build_runner: ^2.10.4
   json_serializable: ^6.11.2
@@ -137,7 +138,6 @@ dependency_overrides:
 flutter:
   uses-material-design: true
   generate: false
-
   assets:
     # Certificates
     - assets/ca/
@@ -157,7 +157,6 @@ flutter:
     - assets/fonts/googlesanscode/OFL.txt
     - assets/fonts/googlesansflex/OFL.txt
     - assets/fonts/robotoflex/OFL.txt
-
   fonts:
     - family: Fira Code
       fonts:
