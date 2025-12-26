@@ -973,3 +973,7 @@ double lerpDouble(double a, double b, double t) {
   assert(t.isFinite, "t must be finite when interpolating between values");
   return a * (1.0 - t) + b * t;
 }
+
+mixin ExternalChangeNotifier on ChangeNotifier {
+  void notify() => notifyListeners();
+}

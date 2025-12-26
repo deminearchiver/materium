@@ -7,6 +7,7 @@ import 'package:materium/pages/home.dart';
 import 'package:materium/providers/apps_provider.dart';
 import 'package:materium/providers/logs_provider.dart';
 import 'package:materium/providers/notifications_provider.dart';
+import 'package:materium/providers/settings_new.dart';
 import 'package:materium/providers/settings_provider.dart';
 import 'package:materium/providers/source_provider.dart';
 import 'package:materium/theme/legacy.dart';
@@ -157,6 +158,7 @@ void main() async {
 
   await AppDatabase.ensureInitialized();
 
+  final settings = await SettingsService.create();
   final settingsProvider = await SettingsProvider.ensureInitialized();
 
   await EasyLocalization.ensureInitialized();
@@ -182,6 +184,7 @@ void main() async {
     MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (context) => AppsProvider()),
+        ChangeNotifierProvider(create: (context) => settings),
         ChangeNotifierProvider(create: (context) => settingsProvider),
         Provider(create: (context) => np),
       ],
