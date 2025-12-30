@@ -59,6 +59,17 @@ class SettingsService with ChangeNotifier {
 
   SettingNotifier<Color> get themeColor => _themeColor;
 
+  late final _useMaterialYou = ExternalSettingNotifier<bool>(
+    defaultValue: true,
+    onLoad: () async => Option.maybe(await _prefs.getBool(_useMaterialYouKey)),
+    onSave: (value) => switch (value) {
+      Some(:final value) => _prefs.setBool(_useMaterialYouKey, value),
+      None() => _prefs.remove(_useMaterialYouKey),
+    },
+  )..addListener(_maybeNotify);
+
+  SettingNotifier<bool> get useMaterialYou => _useMaterialYou;
+
   bool _isNotifyingAllListeners = false;
 
   void _maybeNotify() {
@@ -75,6 +86,7 @@ class SettingsService with ChangeNotifier {
     _useShizuku.notify();
     _theme.notify();
     _themeColor.notify();
+    _useMaterialYou.notify();
 
     // Resume notifying global listeners
     _isNotifyingAllListeners = false;
@@ -87,11 +99,13 @@ class SettingsService with ChangeNotifier {
     bool useShizuku = false,
     bool theme = false,
     bool themeColor = false,
+    bool useMaterialYou = false,
   }) async {
     final futures = <Future<bool>>[
       if (useShizuku) _useShizuku.load(notify: false),
       if (theme) _theme.load(notify: false),
       if (themeColor) _themeColor.load(notify: false),
+      if (useMaterialYou) _useMaterialYou.load(notify: false),
     ];
     if (futures.isNotEmpty) {
       final result = await Future.wait(futures);
@@ -101,30 +115,41 @@ class SettingsService with ChangeNotifier {
     }
   }
 
-  Future<void> loadAll() =>
-      loadOnly(useShizuku: true, theme: true, themeColor: true);
+  Future<void> loadAll() => loadOnly(
+    useShizuku: true,
+    theme: true,
+    themeColor: true,
+    useMaterialYou: true,
+  );
 
   Future<void> saveOnly({
     bool useShizuku = false,
     bool theme = false,
     bool themeColor = false,
+    bool useMaterialYou = false,
   }) async {
     final futures = <Future<void>>[
       if (useShizuku) _useShizuku.save(),
       if (theme) _theme.save(),
       if (themeColor) _themeColor.save(),
+      if (useMaterialYou) _useMaterialYou.save(),
     ];
     if (futures.isNotEmpty) {
       await Future.wait(futures);
     }
   }
 
-  Future<void> saveAll() =>
-      saveOnly(useShizuku: true, theme: true, themeColor: true);
+  Future<void> saveAll() => saveOnly(
+    useShizuku: true,
+    theme: true,
+    themeColor: true,
+    useMaterialYou: true,
+  );
 
   static const _useShizukuKey = "useShizuku";
   static const _themeKey = "theme";
   static const _themeColorKey = "themeColor";
+  static const _useMaterialYouKey = "useMaterialYou";
 
   static Future<SettingsService> create() async {
     final instance = SettingsService._(

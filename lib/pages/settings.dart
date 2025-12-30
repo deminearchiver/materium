@@ -154,9 +154,9 @@ class _SettingsPageState extends State<SettingsPage> {
 
     Future<bool> colorPickerDialog() =>
         ColorPicker(
-          color: settingsProvider.themeColor,
-          onColorChanged: (color) =>
-              setState(() => settingsProvider.themeColor = color),
+          color: settings.themeColor.value,
+          onColorChanged: (value) =>
+              setState(() => settings.themeColor.value = value),
           actionButtons: const ColorPickerActionButtons(
             okButton: true,
             closeButton: true,
@@ -212,10 +212,10 @@ class _SettingsPageState extends State<SettingsPage> {
         );
 
     void selectColor() async {
-      final previousThemeColor = settingsProvider.themeColor;
+      final previousThemeColor = settings.themeColor.value;
       final result = await colorPickerDialog();
       if (context.mounted && !result) {
-        setState(() => settingsProvider.themeColor = previousThemeColor);
+        setState(() => settings.themeColor.value = previousThemeColor);
       }
     }
 
@@ -924,63 +924,78 @@ class _SettingsPageState extends State<SettingsPage> {
                   ),
                   const SizedBox(height: 8.0),
                   if (DynamicColor.isDynamicColorAvailable())
-                    ListItemContainer(
-                      key: const ValueKey("useMaterialYou"),
-                      isFirst: true,
-                      isLast: settingsProvider.useMaterialYou,
-                      child: MergeSemantics(
-                        child: ListItemInteraction(
-                          onTap: () => settingsProvider.useMaterialYou =
-                              !settingsProvider.useMaterialYou,
-                          child: ListItemLayout(
-                            padding: const .fromLTRB(
-                              16.0,
-                              0.0,
-                              16.0 - 8.0,
-                              0.0,
-                            ),
-                            trailingPadding: const .symmetric(
-                              vertical: (32.0 + 2 * 10.0 - 48.0) / 2.0,
-                            ),
-                            headline: Text(tr("useMaterialYou")),
-                            trailing: ExcludeFocus(
-                              child: Switch(
-                                onCheckedChanged: (value) =>
-                                    settingsProvider.useMaterialYou = value,
-                                checked: settingsProvider.useMaterialYou,
+                    ListenableBuilder(
+                      listenable: settings.useMaterialYou,
+                      builder: (context, _) => ListItemContainer(
+                        key: const ValueKey("useMaterialYou"),
+                        isFirst: true,
+                        isLast: settings.useMaterialYou.value,
+                        child: MergeSemantics(
+                          child: ListItemInteraction(
+                            onTap: () => settings.useMaterialYou.value =
+                                !settings.useMaterialYou.value,
+                            child: ListItemLayout(
+                              padding: const .fromLTRB(
+                                16.0,
+                                0.0,
+                                16.0 - 8.0,
+                                0.0,
+                              ),
+                              trailingPadding: const .symmetric(
+                                vertical: (32.0 + 2 * 10.0 - 48.0) / 2.0,
+                              ),
+                              headline: Text(tr("useMaterialYou")),
+                              trailing: ExcludeFocus(
+                                child: Switch(
+                                  onCheckedChanged:
+                                      settings.useMaterialYou.setValue,
+                                  checked: settings.useMaterialYou.value,
+                                ),
                               ),
                             ),
                           ),
                         ),
                       ),
                     ),
-                  if (!settingsProvider.useMaterialYou) ...[
-                    const SizedBox(height: 2.0),
-                    ListItemContainer(
-                      key: const ValueKey("selectColor"),
-                      isLast: true,
-                      child: ListItemInteraction(
-                        onTap: selectColor,
-                        child: ListItemLayout(
-                          headline: Text(
-                            tr("selectX", args: [tr("colour").toLowerCase()]),
-                          ),
-                          supportingText: Text(
-                            "${ColorTools.nameThatColor(settingsProvider.themeColor)} "
-                            "(${ColorTools.materialNameAndCode(settingsProvider.themeColor, colorSwatchNameMap: colorsNameMap)})",
-                          ),
-                          trailing: ColorIndicator(
-                            width: 40,
-                            height: 40,
-                            borderRadius: 20,
-                            color: settingsProvider.themeColor,
-                            onSelectFocus: false,
-                            onSelect: selectColor,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
+                  ListenableBuilder(
+                    listenable: settings.useMaterialYou,
+                    builder: (context, _) => !settings.useMaterialYou.value
+                        ? Padding(
+                            padding: const .only(top: 2.0),
+                            child: ListItemContainer(
+                              key: const ValueKey("selectColor"),
+                              isLast: true,
+                              child: ListItemInteraction(
+                                onTap: selectColor,
+                                child: ListenableBuilder(
+                                  listenable: settings.themeColor,
+                                  builder: (context, _) => ListItemLayout(
+                                    headline: Text(
+                                      tr(
+                                        "selectX",
+                                        args: [tr("colour").toLowerCase()],
+                                      ),
+                                    ),
+                                    supportingText: Text(
+                                      "${ColorTools.nameThatColor(settings.themeColor.value)} "
+                                      "(${ColorTools.materialNameAndCode(settings.themeColor.value, colorSwatchNameMap: colorsNameMap)})",
+                                    ),
+                                    trailing: ColorIndicator(
+                                      width: 40,
+                                      height: 40,
+                                      borderRadius: 20,
+                                      color: settings.themeColor.value,
+                                      onSelectFocus: false,
+                                      onSelect: selectColor,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          )
+                        : const SizedBox.shrink(),
+                  ),
+
                   const SizedBox(height: 16.0),
                   ListenableBuilder(
                     listenable: settings.theme,

@@ -24,6 +24,14 @@ class Obtainium extends StatefulWidget {
 }
 
 class _ObtainiumState extends State<Obtainium> {
+  SettingsService? _settingsOrNull;
+  SettingsService get _settings {
+    assert(_settingsOrNull != null);
+    return _settingsOrNull!;
+  }
+
+  late Listenable _themeListenable;
+
   Future<void> requestNonOptionalPermissions() async {
     final NotificationPermission notificationPermission =
         await FlutterForegroundTask.checkNotificationPermission();
@@ -123,54 +131,56 @@ class _ObtainiumState extends State<Obtainium> {
         child: child,
       );
 
-  Widget _buildColorThemes(BuildContext context, Widget child) {
-    final settingsProvider = context.watch<SettingsProvider>();
+  Widget _buildColorThemes(BuildContext context, Widget child) =>
+      ListenableBuilder(
+        listenable: _themeListenable,
+        builder: (context, child) {
+          final Brightness brightness = switch (_settings.theme.value) {
+            .system => MediaQuery.platformBrightnessOf(context),
+            .light => .light,
+            .dark => .dark,
+          };
+          final highContrast = MediaQuery.highContrastOf(context);
 
-    final themeMode = context.select<SettingsService, ThemeMode>(
-      (settings) => settings.theme.value,
-    );
-    final Brightness brightness = switch (themeMode) {
-      .system => MediaQuery.platformBrightnessOf(context),
-      .light => .light,
-      .dark => .dark,
-    };
-    final highContrast = MediaQuery.highContrastOf(context);
+          final sourceColor = _settings.themeColor.value;
 
-    final sourceColor = settingsProvider.themeColor;
+          final contrastLevel = highContrast ? 1.0 : 0.0;
 
-    final contrastLevel = highContrast ? 1.0 : 0.0;
+          final DynamicSchemeVariant variant = _settings.useMaterialYou.value
+              ? .tonalSpot
+              : .vibrant;
 
-    final DynamicSchemeVariant variant = settingsProvider.useMaterialYou
-        ? .tonalSpot
-        : .vibrant;
+          var colorTheme = ColorThemeData.fromSeed(
+            sourceColor: sourceColor,
+            brightness: brightness,
+            contrastLevel: contrastLevel,
+            variant: variant,
+            platform: _platform,
+            specVersion: _specVersion,
+          );
 
-    var colorTheme = ColorThemeData.fromSeed(
-      sourceColor: sourceColor,
-      brightness: brightness,
-      contrastLevel: contrastLevel,
-      variant: variant,
-      platform: _platform,
-      specVersion: _specVersion,
-    );
+          if (_settings.useMaterialYou.value) {
+            final dynamicColorScheme = DynamicColor.dynamicColorScheme(
+              brightness,
+            );
+            colorTheme = colorTheme.merge(dynamicColorScheme?.toColorTheme());
+          }
 
-    if (settingsProvider.useMaterialYou) {
-      final dynamicColorScheme = DynamicColor.dynamicColorScheme(brightness);
-      colorTheme = colorTheme.merge(dynamicColorScheme?.toColorTheme());
-    }
+          final staticColors = StaticColorsData.fallback(
+            brightness: brightness,
+            contrastLevel: contrastLevel,
+            variant: variant,
+            specVersion: _specVersion,
+            platform: _platform,
+          );
 
-    final staticColors = StaticColorsData.fallback(
-      brightness: brightness,
-      contrastLevel: contrastLevel,
-      variant: variant,
-      specVersion: _specVersion,
-      platform: _platform,
-    );
-
-    return ColorTheme(
-      data: colorTheme,
-      child: StaticColors(data: staticColors, child: child),
-    );
-  }
+          return ColorTheme(
+            data: colorTheme,
+            child: StaticColors(data: staticColors, child: child!),
+          );
+        },
+        child: child,
+      );
 
   Widget _buildSpringTheme(BuildContext context, Widget child) =>
       SpringTheme(data: const .expressive(), child: child);
@@ -239,6 +249,10 @@ class _ObtainiumState extends State<Obtainium> {
     );
   }
 
+  // void onReceiveForegroundServiceData(Object data) {
+  //   print("onReceiveTaskData: $data");
+  // }
+
   @override
   void initState() {
     super.initState();
@@ -248,9 +262,20 @@ class _ObtainiumState extends State<Obtainium> {
     });
   }
 
-  // void onReceiveForegroundServiceData(Object data) {
-  //   print("onReceiveTaskData: $data");
-  // }
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final oldSettings = _settingsOrNull;
+    final newSettings = context.read<SettingsService>();
+    if (oldSettings != newSettings) {
+      _themeListenable = Listenable.merge([
+        newSettings.theme,
+        newSettings.themeColor,
+        newSettings.useMaterialYou,
+      ]);
+    }
+    _settingsOrNull = newSettings;
+  }
 
   @override
   void dispose() {
