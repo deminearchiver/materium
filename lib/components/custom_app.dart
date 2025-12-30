@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:materium/flutter.dart';
+import 'package:materium/theme/legacy.dart';
 
 // Examples can assume:
 // typedef GlobalWidgetsLocalizations = DefaultWidgetsLocalizations;
@@ -503,7 +504,6 @@ class _RawMaterialAppState extends State<RawMaterialApp> {
     onPressed: onPressed,
     semanticsLabel: semanticsLabel,
     icon: Symbols.close_rounded,
-    isDarkTheme: _isDarkTheme,
     buttonKey: key,
   );
 
@@ -518,7 +518,6 @@ class _RawMaterialAppState extends State<RawMaterialApp> {
     icon: usesDefaultAlignment
         ? Symbols.arrow_right_rounded
         : Symbols.arrow_left_rounded,
-    isDarkTheme: _isDarkTheme,
   );
 
   Widget _buildTapBehaviorButton(
@@ -532,7 +531,6 @@ class _RawMaterialAppState extends State<RawMaterialApp> {
     // This unicode icon is also used for the Cupertino-styled button and for
     // DevTools. It should be updated in all 3 places if changed.
     icon: const IconData(0x1F74A),
-    isDarkTheme: _isDarkTheme,
     toggledOn: selectionOnTapEnabled,
   );
 
@@ -666,83 +664,79 @@ class _RawMaterialAppState extends State<RawMaterialApp> {
 
 class _MaterialInspectorButton extends InspectorButton {
   const _MaterialInspectorButton.filled({
-    required super.onPressed,
-    required super.semanticsLabel,
-    required super.icon,
-    required this.isDarkTheme,
     super.buttonKey,
+    required super.onPressed,
+    required super.icon,
+    required super.semanticsLabel,
   }) : super.filled();
 
   const _MaterialInspectorButton.toggle({
+    required super.toggledOn,
     required super.onPressed,
-    required super.semanticsLabel,
     required super.icon,
-    required this.isDarkTheme,
-    super.toggledOn,
+    required super.semanticsLabel,
   }) : super.toggle();
 
   const _MaterialInspectorButton.iconOnly({
     required super.onPressed,
-    required super.semanticsLabel,
     required super.icon,
-    required this.isDarkTheme,
+    required super.semanticsLabel,
   }) : super.iconOnly();
 
-  final bool isDarkTheme;
-
-  BorderSide? _borderSide({required Color color}) => switch (variant) {
-    .filled || .iconOnly => null,
-    .toggle => toggledOn == false ? BorderSide(color: color) : null,
-  };
-
   ButtonStyle _selectionButtonsIconStyle(BuildContext context) {
-    final foreground = foregroundColor(context);
-    final background = backgroundColor(context);
-    return IconButton.styleFrom(
-      foregroundColor: foreground,
-      backgroundColor: background,
-      side: _borderSide(color: foreground),
+    final colorTheme = ColorTheme.of(context);
+    final elevationTheme = ElevationTheme.of(context);
+    final shapeTheme = ShapeTheme.of(context);
+    final stateTheme = StateTheme.of(context);
+
+    final iconOnly = variant == .iconOnly;
+    final backgroundColor = this.backgroundColor(context);
+    final foregroundColor = this.foregroundColor(context);
+
+    return LegacyThemeFactory.createIconButtonStyle(
+      colorTheme: colorTheme,
+      elevationTheme: elevationTheme,
+      shapeTheme: shapeTheme,
+      stateTheme: stateTheme,
+      size: iconOnly ? .extraSmall : .small,
+      shape: iconOnly ? .square : .round,
+      width: .normal,
+      isSelected: toggledOn,
       tapTargetSize: .padded,
+      containerColor: backgroundColor,
+      iconColor: foregroundColor,
+      unselectedContainerColor: backgroundColor,
+      unselectedIconColor: foregroundColor,
+      selectedContainerColor: backgroundColor,
+      selectedIconColor: foregroundColor,
     );
   }
 
-  Color _primaryColor(BuildContext context) => isDarkTheme
-      ? ColorTheme.of(context).onPrimaryContainer
-      : ColorTheme.of(context).primaryContainer;
-
-  Color _secondaryColor(BuildContext context) => isDarkTheme
-      ? ColorTheme.of(context).primaryContainer
-      : ColorTheme.of(context).onPrimaryContainer;
+  @override
+  Color backgroundColor(BuildContext context) {
+    final colorTheme = ColorTheme.of(context);
+    return switch (variant) {
+      .filled => colorTheme.errorContainer,
+      .iconOnly => colorTheme.surfaceContainerLowest,
+      .toggle => toggledOn! ? colorTheme.error : colorTheme.errorContainer,
+    };
+  }
 
   @override
-  Color foregroundColor(BuildContext context) => switch (variant) {
-    .filled => _primaryColor(context),
-    .iconOnly => _secondaryColor(context),
-    .toggle => !toggledOn! ? _secondaryColor(context) : _primaryColor(context),
-  };
-
-  @override
-  Color backgroundColor(BuildContext context) => switch (variant) {
-    .filled => _secondaryColor(context),
-    .iconOnly => Colors.transparent,
-    .toggle => !toggledOn! ? Colors.transparent : _secondaryColor(context),
-  };
+  Color foregroundColor(BuildContext context) {
+    final colorTheme = ColorTheme.of(context);
+    return switch (variant) {
+      .filled => colorTheme.onErrorContainer,
+      .iconOnly => colorTheme.error,
+      .toggle => toggledOn! ? colorTheme.onError : colorTheme.onErrorContainer,
+    };
+  }
 
   @override
   Widget build(BuildContext context) => IconButton(
     key: buttonKey,
-    onPressed: onPressed,
-    iconSize: iconSizeForVariant,
-    padding: _buttonPadding,
-    constraints: _buttonConstraints,
     style: _selectionButtonsIconStyle(context),
+    onPressed: onPressed,
     icon: IconLegacy(icon, semanticLabel: semanticsLabel),
-  );
-
-  static const _buttonPadding = EdgeInsets.zero;
-
-  static const _buttonConstraints = BoxConstraints.tightFor(
-    width: InspectorButton.buttonSize,
-    height: InspectorButton.buttonSize,
   );
 }
