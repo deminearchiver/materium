@@ -221,9 +221,19 @@ class _ObtainiumState extends State<Obtainium> {
 
   Widget _buildNavigatorWrapper(BuildContext context, Widget? child) {
     if (child == null) return const SizedBox.shrink();
-    final localizedLegacyTheme = Theme.of(context);
-    final defaultTextStyle =
-        localizedLegacyTheme.textTheme.bodyLarge ?? const TextStyle();
+
+    final materialLocalization = Localizations.of<MaterialLocalizations>(
+      context,
+      MaterialLocalizations,
+    );
+    final colorTheme = ColorTheme.of(context);
+    final typescaleTheme = TypescaleTheme.of(context);
+
+    final category = materialLocalization?.scriptCategory ?? .englishLike;
+    final localizedTextStyle = _DefaultTextStyles.geometryStyleFor(category);
+    final defaultTextStyle = typescaleTheme.bodyLarge
+        .toTextStyle(color: colorTheme.onSurface)
+        .merge(localizedTextStyle);
     return DefaultTextStyle.merge(style: defaultTextStyle, child: child);
   }
 
@@ -377,9 +387,10 @@ abstract final class _DefaultTextStyles {
     leadingDistribution: .even,
   );
 
-  TextStyle geometryStyleFor(ScriptCategory category) => switch (category) {
-    .englishLike => englishLike,
-    .dense => dense,
-    .tall => tall,
-  };
+  static TextStyle geometryStyleFor(ScriptCategory category) =>
+      switch (category) {
+        .englishLike => englishLike,
+        .dense => dense,
+        .tall => tall,
+      };
 }
