@@ -21,13 +21,16 @@ abstract final class LegacyThemeFactory {
     required ShapeThemeData shapeTheme,
     required StateThemeData stateTheme,
     required TypescaleThemeData typescaleTheme,
+    Color? scaffoldBackgroundColor,
   }) {
+    scaffoldBackgroundColor ??= colorTheme.surface;
     final modalBarrierColor = colorTheme.scrim.withValues(alpha: 0.32);
     return ThemeData(
       colorScheme: colorTheme.toLegacy(),
       visualDensity: .standard,
       splashFactory: InkSparkle.splashFactory,
       textTheme: typescaleTheme.toBaselineTextTheme(),
+      scaffoldBackgroundColor: scaffoldBackgroundColor,
       textSelectionTheme: TextSelectionThemeData(
         selectionColor: colorTheme.primary.withValues(alpha: 0.4),
         cursorColor: colorTheme.primary,
@@ -83,8 +86,10 @@ abstract final class LegacyThemeFactory {
           );
         }),
       ),
-      // ignore: deprecated_member_use
-      progressIndicatorTheme: const ProgressIndicatorThemeData(year2023: false),
+      progressIndicatorTheme: const ProgressIndicatorThemeData(
+        // ignore: deprecated_member_use
+        year2023: false,
+      ),
       tooltipTheme: TooltipThemeData(
         waitDuration: const Duration(milliseconds: 500),
         constraints: const BoxConstraints(minHeight: 24.0),
@@ -141,7 +146,7 @@ abstract final class LegacyThemeFactory {
         year2023: false,
         overlayColor: Colors.transparent,
         padding: .zero,
-        showValueIndicator: ShowValueIndicator.onDrag,
+        showValueIndicator: .onDrag,
         valueIndicatorShape: const _SliderValueIndicatorShapeYear2024(),
         valueIndicatorColor: colorTheme.inverseSurface,
         valueIndicatorTextStyle: typescaleTheme.labelLarge.toTextStyle(
@@ -149,7 +154,7 @@ abstract final class LegacyThemeFactory {
         ),
       ),
       snackBarTheme: SnackBarThemeData(
-        behavior: SnackBarBehavior.floating,
+        behavior: .floating,
         shape: CornersBorder.rounded(
           corners: .all(shapeTheme.corner.extraSmall),
         ),
@@ -218,21 +223,12 @@ abstract final class LegacyThemeFactory {
       ),
       pageTransitionsTheme: PageTransitionsTheme(
         builders: {
-          TargetPlatform.android: FadeForwardsPageTransitionsBuilder(
-            backgroundColor: colorTheme.surfaceContainer,
-          ),
-          TargetPlatform.iOS: FadeForwardsPageTransitionsBuilder(
-            backgroundColor: colorTheme.surfaceContainer,
-          ),
-          TargetPlatform.macOS: FadeForwardsPageTransitionsBuilder(
-            backgroundColor: colorTheme.surfaceContainer,
-          ),
-          TargetPlatform.linux: FadeForwardsPageTransitionsBuilder(
-            backgroundColor: colorTheme.surfaceContainer,
-          ),
-          TargetPlatform.windows: FadeForwardsPageTransitionsBuilder(
-            backgroundColor: colorTheme.surfaceContainer,
-          ),
+          for (final value in TargetPlatform.values)
+            value: switch (value) {
+              _ => FadeForwardsPageTransitionsBuilder(
+                backgroundColor: scaffoldBackgroundColor,
+              ),
+            },
         },
       ),
     );
@@ -248,6 +244,7 @@ abstract final class LegacyThemeFactory {
     LegacyButtonShape shape = .round,
     LegacyButtonColor color = .filled,
     bool? isSelected,
+    MaterialTapTargetSize tapTargetSize = .padded,
     TextStyle? textStyle,
     TextStyle? unselectedTextStyle,
     TextStyle? selectedTextStyle,
@@ -403,7 +400,7 @@ abstract final class LegacyThemeFactory {
       enableFeedback: true,
       iconAlignment: IconAlignment.start,
       mouseCursor: WidgetStateMouseCursor.clickable,
-      tapTargetSize: MaterialTapTargetSize.padded,
+      tapTargetSize: tapTargetSize,
       elevation: const WidgetStatePropertyAll(0.0),
       shadowColor: WidgetStateColor.transparent,
       minimumSize: WidgetStatePropertyAll(Size(minWidth, minHeight)),
@@ -444,6 +441,7 @@ abstract final class LegacyThemeFactory {
     LegacyIconButtonWidth width = .normal,
     LegacyIconButtonColor color = .filled,
     bool? isSelected,
+    MaterialTapTargetSize tapTargetSize = .padded,
     TextStyle? textStyle,
     TextStyle? unselectedTextStyle,
     TextStyle? selectedTextStyle,
@@ -594,7 +592,7 @@ abstract final class LegacyThemeFactory {
       enableFeedback: true,
       iconAlignment: IconAlignment.start,
       mouseCursor: WidgetStateMouseCursor.clickable,
-      tapTargetSize: MaterialTapTargetSize.padded,
+      tapTargetSize: tapTargetSize,
       elevation: const WidgetStatePropertyAll(0.0),
       shadowColor: WidgetStateColor.transparent,
       minimumSize: const WidgetStatePropertyAll(.zero),
@@ -742,9 +740,6 @@ abstract final class LegacyThemeFactory {
 class _SliderValueIndicatorShapeYear2024 extends SliderComponentShape {
   const _SliderValueIndicatorShapeYear2024();
 
-  static const _SliderValueIndicatorPathPainterYear2024 _pathPainter =
-      _SliderValueIndicatorPathPainterYear2024();
-
   @override
   Size getPreferredSize(
     bool isEnabled,
@@ -771,32 +766,24 @@ class _SliderValueIndicatorShapeYear2024 extends SliderComponentShape {
     required double value,
     required double textScaleFactor,
     required Size sizeWithOverflow,
-  }) {
-    final Canvas canvas = context.canvas;
-    final double scale = activationAnimation.value;
-    _pathPainter.paint(
-      parentBox: parentBox,
-      canvas: canvas,
-      center: center,
-      scale: scale,
-      labelPainter: labelPainter,
-      textScaleFactor: textScaleFactor,
-      sizeWithOverflow: sizeWithOverflow,
-      backgroundPaintColor: sliderTheme.valueIndicatorColor!,
-      strokePaintColor: sliderTheme.valueIndicatorStrokeColor,
-    );
-  }
+  }) => _pathPainter.paint(
+    parentBox: parentBox,
+    canvas: context.canvas,
+    center: center,
+    scale: activationAnimation.value,
+    labelPainter: labelPainter,
+    textScaleFactor: textScaleFactor,
+    sizeWithOverflow: sizeWithOverflow,
+    backgroundPaintColor: sliderTheme.valueIndicatorColor!,
+    strokePaintColor: sliderTheme.valueIndicatorStrokeColor,
+  );
+
+  static const _SliderValueIndicatorPathPainterYear2024 _pathPainter =
+      _SliderValueIndicatorPathPainterYear2024();
 }
 
 class _SliderValueIndicatorPathPainterYear2024 {
   const _SliderValueIndicatorPathPainterYear2024();
-
-  static const EdgeInsets _labelPadding = .symmetric(
-    horizontal: 16.0,
-    vertical: 12.0,
-  );
-  static const _minLabelWidth = 16.0;
-  static const _rectYOffset = 12.0;
 
   Size getPreferredSize(TextPainter labelPainter, double textScaleFactor) =>
       Size(
@@ -867,10 +854,9 @@ class _SliderValueIndicatorPathPainterYear2024 {
     required Color backgroundPaintColor,
     Color? strokePaintColor,
   }) {
-    if (scale == 0.0) {
-      // Zero scale essentially means "do not draw anything", so it's safe to just return.
-      return;
-    }
+    // Zero scale essentially means "do not draw anything", so it's safe to just return.
+    if (scale == 0.0) return;
+
     assert(!sizeWithOverflow.isEmpty);
 
     final rectangleWidth = _upperRectangleWidth(labelPainter, scale);
@@ -892,7 +878,9 @@ class _SliderValueIndicatorPathPainterYear2024 {
       rectangleHeight,
     );
 
-    final fillPaint = Paint()..color = backgroundPaintColor;
+    final fillPaint = Paint()
+      ..style = .fill
+      ..color = backgroundPaintColor;
 
     canvas
       ..save()
@@ -907,9 +895,9 @@ class _SliderValueIndicatorPathPainterYear2024 {
     );
     if (strokePaintColor != null) {
       final strokePaint = Paint()
+        ..style = .stroke
         ..color = strokePaintColor
-        ..strokeWidth = 1.0
-        ..style = PaintingStyle.stroke;
+        ..strokeWidth = 1.0;
       canvas.drawRRect(rrect, strokePaint);
     }
 
@@ -919,6 +907,7 @@ class _SliderValueIndicatorPathPainterYear2024 {
     final bottomTipToUpperRectTranslateY =
         -halfRectangleHeight / 2.0 - upperRect.height;
     canvas.translate(0.0, bottomTipToUpperRectTranslateY);
+
     final boxCenter = Offset(horizontalShift, upperRect.height / 2.3);
     final halfLabelPainterOffset = Offset(
       labelPainter.width / 2.0,
@@ -926,6 +915,16 @@ class _SliderValueIndicatorPathPainterYear2024 {
     );
     final labelOffset = boxCenter - halfLabelPainterOffset;
     labelPainter.paint(canvas, labelOffset);
+
     canvas.restore();
   }
+
+  static const EdgeInsets _labelPadding = .symmetric(
+    horizontal: 16.0,
+    vertical: 12.0,
+  );
+
+  static const _minLabelWidth = 16.0;
+
+  static const _rectYOffset = 12.0;
 }
