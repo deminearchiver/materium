@@ -2,6 +2,7 @@ import 'package:background_fetch/background_fetch.dart';
 import 'package:dynamic_color_ffi/dynamic_color_ffi.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter_foreground_task/flutter_foreground_task.dart';
+import 'package:materium/components/custom_app.dart';
 import 'package:materium/flutter.dart';
 import 'package:materium/main.dart';
 import 'package:materium/pages/home.dart';
@@ -23,15 +24,6 @@ class Obtainium extends StatefulWidget {
 }
 
 class _ObtainiumState extends State<Obtainium> {
-  @override
-  void initState() {
-    super.initState();
-    initPlatformState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      requestNonOptionalPermissions();
-    });
-  }
-
   Future<void> requestNonOptionalPermissions() async {
     final NotificationPermission notificationPermission =
         await FlutterForegroundTask.checkNotificationPermission();
@@ -96,17 +88,6 @@ class _ObtainiumState extends State<Obtainium> {
     return null;
   }
 
-  // void onReceiveForegroundServiceData(Object data) {
-  //   print("onReceiveTaskData: $data");
-  // }
-
-  @override
-  void dispose() {
-    // Remove a callback to receive data sent from the TaskHandler.
-    // FlutterForegroundTask.removeTaskDataCallback(onReceiveForegroundServiceData);
-    super.dispose();
-  }
-
   Future<void> initPlatformState() async {
     await BackgroundFetch.configure(
       BackgroundFetchConfig(
@@ -138,71 +119,63 @@ class _ObtainiumState extends State<Obtainium> {
     bool highContrast = false,
   }) {
     final settingsProvider = context.watch<SettingsProvider>();
-    const variant = DynamicSchemeVariant.vibrant;
-    const platform = DynamicSchemePlatform.phone;
-    const specVersion = DynamicSchemeSpecVersion.spec2025;
-    final contrastLevel = highContrast ? 1.0 : 0.0;
-    if (settingsProvider.useMaterialYou) {
-      final provided = DynamicColor.dynamicColorScheme(
-        brightness,
-      )?.toColorTheme();
 
-      final sourceColor = const Color(0xFF6750A4);
+    final sourceColor = settingsProvider.themeColor;
+
+    final contrastLevel = highContrast ? 1.0 : 0.0;
+
+    if (settingsProvider.useMaterialYou) {
       final fallback = ColorThemeData.fromSeed(
         sourceColor: sourceColor,
         brightness: brightness,
         contrastLevel: contrastLevel,
-        variant: variant,
-        platform: platform,
-        specVersion: specVersion,
+        variant: _variant,
+        platform: _platform,
+        specVersion: _specVersion,
       );
 
-      return fallback.merge(provided);
+      final provided = DynamicColor.dynamicColorScheme(
+        brightness,
+      )?.toColorTheme();
 
-      // final sourceColor = switch (widget.dynamicColorSource) {
-      //   AccentColorSource(:final accentColor) => accentColor,
-      //   _ => const Color(0xFF6750A4),
-      // };
-      // final fallback = ColorThemeData.fromSeed(
-      //   sourceColor: sourceColor,
-      //   brightness: brightness,
-      //   contrastLevel: contrastLevel,
-      //   variant: variant,
-      //   platform: platform,
-      //   specVersion: specVersion,
-      // );
-      // final provided = switch (widget.dynamicColorSource) {
-      //   DynamicColorSchemesSource(
-      //     :final dynamicLightColorScheme,
-      //     :final dynamicDarkColorScheme,
-      //   ) =>
-      //     switch (brightness) {
-      //       .light => dynamicLightColorScheme.toColorTheme(),
-      //       .dark => dynamicDarkColorScheme.toColorTheme(),
-      //     },
-      //   DynamicColorSchemeSource(
-      //     brightness: final availableBrightness,
-      //     :final dynamicColorScheme,
-      //   ) =>
-      //     availableBrightness == brightness
-      //         ? dynamicColorScheme.toColorTheme()
-      //         : null,
-      //   _ => null,
-      // };
-      // return fallback.merge(provided);
+      return fallback.merge(provided);
     } else {
       return ColorThemeData.fromSeed(
         sourceColor: settingsProvider.themeColor,
         brightness: brightness,
         contrastLevel: contrastLevel,
-        variant: variant,
-        platform: platform,
-        specVersion: specVersion,
+        variant: _variant,
+        platform: _platform,
+        specVersion: _specVersion,
       );
     }
   }
 
-  Widget _buildColorTheme(BuildContext context, Widget child) {
+  StaticColorsData _createStaticColors({
+    required Brightness brightness,
+    bool highContrast = false,
+  }) {
+    final contrastLevel = highContrast ? 1.0 : 0.0;
+    return StaticColorsData.fallback(
+      brightness: brightness,
+      contrastLevel: contrastLevel,
+      variant: _variant,
+      specVersion: _specVersion,
+      platform: _platform,
+    );
+  }
+
+  Widget _buildTypefaceTheme(BuildContext context, Widget child) =>
+      TypefaceTheme.merge(data: _typography.typeface, child: child);
+
+  Widget _buildReferenceThemes(BuildContext context, Widget child) =>
+      CombiningBuilder(
+        useOuterContext: true,
+        builders: [_buildTypefaceTheme],
+        child: child,
+      );
+
+  Widget _buildColorThemes(BuildContext context, Widget child) {
     final themeMode = context.select<SettingsService, ThemeMode>(
       (settings) => settings.theme.value,
     );
@@ -212,40 +185,68 @@ class _ObtainiumState extends State<Obtainium> {
       .dark => .dark,
     };
     final highContrast = MediaQuery.highContrastOf(context);
+    final colorTheme = _createColorTheme(
+      context: context,
+      brightness: brightness,
+      highContrast: highContrast,
+    );
+    final staticColors = _createStaticColors(
+      brightness: brightness,
+      highContrast: highContrast,
+    );
     return ColorTheme(
-      data: _createColorTheme(
-        context: context,
-        brightness: brightness,
-        highContrast: highContrast,
-      ),
-      child: child,
+      data: colorTheme,
+      child: StaticColors(data: staticColors, child: child),
     );
   }
 
-  Widget _buildTypographyTheme(BuildContext context, Widget child) =>
-      TypographyDefaults.material3Expressive2026.build(context, child);
-
   Widget _buildSpringTheme(BuildContext context, Widget child) =>
-      SpringTheme(data: const SpringThemeData.expressive(), child: child);
+      SpringTheme(data: const .expressive(), child: child);
 
-  Widget _buildAppWrapper({
-    Widget? child,
-    required Widget Function(BuildContext context, Widget? child) builder,
-  }) => CombiningBuilder(
-    builders: [_buildColorTheme, _buildTypographyTheme, _buildSpringTheme],
-    child: Builder(builder: (context) => builder(context, child)),
-  );
+  Widget _buildTypescaleTheme(BuildContext context, Widget child) =>
+      TypescaleTheme.merge(data: _typography.typescale, child: child);
 
-  Widget _buildHomeWrapper(BuildContext context, Widget? child) =>
-      child ?? const SizedBox.shrink();
+  Widget _buildSystemThemes(BuildContext context, Widget child) =>
+      CombiningBuilder(
+        useOuterContext: true,
+        builders: [_buildColorThemes, _buildSpringTheme, _buildTypescaleTheme],
+        child: child,
+      );
 
-  Widget _buildMaterialApp(BuildContext context) {
-    final settingsProvider = context.watch<SettingsProvider>();
+  Widget _buildLegacyThemes(BuildContext context, Widget child) {
+    final colorTheme = ColorTheme.of(context);
     final elevationTheme = ElevationTheme.of(context);
     final shapeTheme = ShapeTheme.of(context);
     final stateTheme = StateTheme.of(context);
     final typescaleTheme = TypescaleTheme.of(context);
-    return MaterialApp(
+
+    final legacyTheme = LegacyThemeFactory.createTheme(
+      colorTheme: colorTheme,
+      elevationTheme: elevationTheme,
+      shapeTheme: shapeTheme,
+      stateTheme: stateTheme,
+      typescaleTheme: typescaleTheme,
+      scaffoldBackgroundColor: colorTheme.surfaceContainer,
+    );
+
+    return Theme(data: legacyTheme, child: child);
+  }
+
+  Widget _buildThemes(BuildContext context, Widget child) => CombiningBuilder(
+    builders: [_buildReferenceThemes, _buildSystemThemes, _buildLegacyThemes],
+    child: child,
+  );
+
+  Widget _buildNavigatorWrapper(BuildContext context, Widget? child) {
+    if (child == null) return const SizedBox.shrink();
+    final localizedLegacyTheme = Theme.of(context);
+    final defaultTextStyle =
+        localizedLegacyTheme.textTheme.bodyLarge ?? const TextStyle();
+    return DefaultTextStyle.merge(style: defaultTextStyle, child: child);
+  }
+
+  Widget _buildApp(BuildContext context) {
+    return RawMaterialApp(
       debugShowCheckedModeBanner: false,
 
       // Localization
@@ -254,60 +255,9 @@ class _ObtainiumState extends State<Obtainium> {
       supportedLocales: context.supportedLocales,
       locale: context.locale,
 
-      // Theming
-      themeMode: switch (settingsProvider.theme) {
-        .system => .system,
-        .light => .light,
-        .dark => .dark,
-      },
-      theme: LegacyThemeFactory.createTheme(
-        colorTheme: _createColorTheme(
-          context: context,
-          brightness: .light,
-          highContrast: false,
-        ),
-        elevationTheme: elevationTheme,
-        shapeTheme: shapeTheme,
-        stateTheme: stateTheme,
-        typescaleTheme: typescaleTheme,
-      ),
-      darkTheme: LegacyThemeFactory.createTheme(
-        colorTheme: _createColorTheme(
-          context: context,
-          brightness: .dark,
-          highContrast: false,
-        ),
-        elevationTheme: elevationTheme,
-        shapeTheme: shapeTheme,
-        stateTheme: stateTheme,
-        typescaleTheme: typescaleTheme,
-      ),
-      highContrastTheme: LegacyThemeFactory.createTheme(
-        colorTheme: _createColorTheme(
-          context: context,
-          brightness: .light,
-          highContrast: true,
-        ),
-        elevationTheme: elevationTheme,
-        shapeTheme: shapeTheme,
-        stateTheme: stateTheme,
-        typescaleTheme: typescaleTheme,
-      ),
-      highContrastDarkTheme: LegacyThemeFactory.createTheme(
-        colorTheme: _createColorTheme(
-          context: context,
-          brightness: .dark,
-          highContrast: true,
-        ),
-        elevationTheme: elevationTheme,
-        shapeTheme: shapeTheme,
-        stateTheme: stateTheme,
-        typescaleTheme: typescaleTheme,
-      ),
-
       // Navigation
       navigatorKey: globalNavigatorKey,
-      builder: _buildHomeWrapper,
+      builder: _buildNavigatorWrapper,
       home: Shortcuts(
         shortcuts: <LogicalKeySet, Intent>{
           LogicalKeySet(LogicalKeyboardKey.select): const ActivateIntent(),
@@ -315,6 +265,26 @@ class _ObtainiumState extends State<Obtainium> {
         child: const HomePage(),
       ),
     );
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    initPlatformState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      requestNonOptionalPermissions();
+    });
+  }
+
+  // void onReceiveForegroundServiceData(Object data) {
+  //   print("onReceiveTaskData: $data");
+  // }
+
+  @override
+  void dispose() {
+    // Remove a callback to receive data sent from the TaskHandler.
+    // FlutterForegroundTask.removeTaskDataCallback(onReceiveForegroundServiceData);
+    super.dispose();
   }
 
   @override
@@ -375,10 +345,45 @@ class _ObtainiumState extends State<Obtainium> {
       notifs.checkLaunchByNotif();
     });
 
-    return WithForegroundTask(
-      child: _buildAppWrapper(
-        builder: (context, child) => _buildMaterialApp(context),
-      ),
-    );
+    final appBuilder = Builder(builder: _buildApp);
+
+    return WithForegroundTask(child: _buildThemes(context, appBuilder));
   }
+
+  static const _variant = DynamicSchemeVariant.vibrant;
+  static const _platform = DynamicSchemePlatform.phone;
+  static const _specVersion = DynamicSchemeSpecVersion.spec2025;
+  static const _typography = TypographyDefaults.material3Expressive2026;
+}
+
+abstract final class _DefaultTextStyles {
+  static const englishLike = TextStyle(
+    debugLabel: "englishLike default 2021",
+    inherit: true,
+    decoration: .none,
+    textBaseline: .alphabetic,
+    leadingDistribution: .even,
+  );
+
+  static const dense = TextStyle(
+    debugLabel: "dense default 2021",
+    inherit: true,
+    decoration: .none,
+    textBaseline: .ideographic,
+    leadingDistribution: .even,
+  );
+
+  static const tall = TextStyle(
+    debugLabel: "tall default 2021",
+    inherit: true,
+    decoration: .none,
+    textBaseline: .alphabetic,
+    leadingDistribution: .even,
+  );
+
+  TextStyle geometryStyleFor(ScriptCategory category) => switch (category) {
+    .englishLike => englishLike,
+    .dense => dense,
+    .tall => tall,
+  };
 }
