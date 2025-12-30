@@ -1,5 +1,5 @@
 define:
-  - &dart-flutter-packages-ref a7beb2490dc10a2171f9177a02ac2aab3a081b69
+  - &dart-flutter-packages-ref f5805c4c01ee9fc12cabfeb6a24bd6e05f23e3cd
 
 name: materium
 description: Get Android app updates straight from the source.
