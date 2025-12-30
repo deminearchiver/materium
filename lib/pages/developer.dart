@@ -3224,66 +3224,6 @@ class _MaterialDemoViewState extends State<_MaterialDemoView> {
                                     shape: const StadiumBorder(),
                                     child: Align.center(
                                       child: Icon(
-                                        Symbols.clock_loader_60_rounded,
-                                        fill: 1.0,
-                                        color: staticColors
-                                            .blue
-                                            .onColorFixedVariant,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                headline: const Text("Progress"),
-                                supportingText: const Text(
-                                  "Determinate loading indicator progress",
-                                ),
-                              ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.fromLTRB(
-                                16.0,
-                                8.0,
-                                16.0,
-                                16.0,
-                              ),
-                              child: ListenableBuilder(
-                                listenable: _progress,
-                                builder: (context, _) => Slider(
-                                  padding: EdgeInsets.zero,
-                                  value: _progress.value,
-                                  onChanged: (value) => _progress.value = value,
-                                  label: (_progress.value * 100.0)
-                                      .toStringAsFixed(0),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 2.0),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                      child: ListItemContainer(
-                        child: Flex.vertical(
-                          crossAxisAlignment: CrossAxisAlignment.stretch,
-                          children: [
-                            ListItemInteraction(
-                              onTap: () async {
-                                await Fluttertoast.showToast(
-                                  msg: "Not yet implemented!",
-                                  toastLength: Toast.LENGTH_SHORT,
-                                );
-                              },
-                              child: ListItemLayout(
-                                leading: SizedBox.square(
-                                  dimension: 40.0,
-                                  child: Material(
-                                    clipBehavior: Clip.antiAlias,
-                                    color: staticColors.blue.colorFixed,
-                                    shape: const StadiumBorder(),
-                                    child: Align.center(
-                                      child: Icon(
                                         Symbols.refresh_rounded,
                                         fill: 1.0,
                                         color: staticColors
@@ -3365,7 +3305,6 @@ class _MaterialDemoViewState extends State<_MaterialDemoView> {
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 16.0),
                       child: ListItemContainer(
-                        isLast: true,
                         child: Flex.vertical(
                           crossAxisAlignment: CrossAxisAlignment.stretch,
                           children: [
@@ -3455,6 +3394,67 @@ class _MaterialDemoViewState extends State<_MaterialDemoView> {
                                       ),
                                     ],
                                   ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 2.0),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                      child: ListItemContainer(
+                        isLast: true,
+                        child: Flex.vertical(
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          children: [
+                            ListItemInteraction(
+                              onTap: () async {
+                                await Fluttertoast.showToast(
+                                  msg: "Not yet implemented!",
+                                  toastLength: Toast.LENGTH_SHORT,
+                                );
+                              },
+                              child: ListItemLayout(
+                                leading: SizedBox.square(
+                                  dimension: 40.0,
+                                  child: Material(
+                                    clipBehavior: Clip.antiAlias,
+                                    color: staticColors.blue.colorFixed,
+                                    shape: const StadiumBorder(),
+                                    child: Align.center(
+                                      child: Icon(
+                                        Symbols.clock_loader_60_rounded,
+                                        fill: 1.0,
+                                        color: staticColors
+                                            .blue
+                                            .onColorFixedVariant,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                headline: const Text("Progress"),
+                                supportingText: const Text(
+                                  "Determinate loading indicator progress",
+                                ),
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.fromLTRB(
+                                16.0,
+                                8.0,
+                                16.0,
+                                16.0,
+                              ),
+                              child: ListenableBuilder(
+                                listenable: _progress,
+                                builder: (context, _) => Slider(
+                                  padding: EdgeInsets.zero,
+                                  value: _progress.value,
+                                  onChanged: (value) => _progress.value = value,
+                                  label: (_progress.value * 100.0)
+                                      .toStringAsFixed(0),
                                 ),
                               ),
                             ),
