@@ -85,6 +85,9 @@ class _DeveloperPageState extends State<DeveloperPage> {
   @override
   Widget build(BuildContext context) {
     final colorTheme = ColorTheme.of(context);
+    final elevationTheme = ElevationTheme.of(context);
+    final shapeTheme = ShapeTheme.of(context);
+    final stateTheme = StateTheme.of(context);
     final typescaleTheme = TypescaleTheme.of(context);
 
     final staticColors = StaticColors.of(context);
@@ -111,11 +114,13 @@ class _DeveloperPageState extends State<DeveloperPage> {
             title: const Text("Developer Options"),
           ),
           ListItemTheme.merge(
-            data: .from(
-              containerColor: .all(colorTheme.surfaceBright),
-              headlineTextStyle: .all(
-                typescaleTheme.titleMediumEmphasized.toTextStyle(),
-              ),
+            data: CustomThemeFactory.createListItemTheme(
+              colorTheme: colorTheme,
+              elevationTheme: elevationTheme,
+              shapeTheme: shapeTheme,
+              stateTheme: stateTheme,
+              typescaleTheme: typescaleTheme,
+              variant: .settings,
             ),
             child: SliverList.list(
               children: [
@@ -168,7 +173,6 @@ class _DeveloperPageState extends State<DeveloperPage> {
                     children: [
                       ListItemContainer(
                         isFirst: true,
-                        containerColor: .all(colorTheme.surfaceBright),
                         child: MergeSemantics(
                           child: ListItemInteraction(
                             onTap: () => Navigator.of(context).push(
@@ -207,7 +211,6 @@ class _DeveloperPageState extends State<DeveloperPage> {
                         ),
                       ),
                       ListItemContainer(
-                        containerColor: .all(colorTheme.surfaceBright),
                         child: MergeSemantics(
                           child: ListItemInteraction(
                             onTap: () => Navigator.of(context).push(
@@ -244,7 +247,6 @@ class _DeveloperPageState extends State<DeveloperPage> {
                         ),
                       ),
                       ListItemContainer(
-                        containerColor: .all(colorTheme.surfaceBright),
                         child: MergeSemantics(
                           child: ListItemInteraction(
                             onTap: () => Navigator.of(context).push(
@@ -281,7 +283,6 @@ class _DeveloperPageState extends State<DeveloperPage> {
                         ),
                       ),
                       ListItemContainer(
-                        containerColor: .all(colorTheme.surfaceBright),
                         child: MergeSemantics(
                           child: ListItemInteraction(
                             onTap: () => Navigator.of(context).push(
@@ -319,7 +320,6 @@ class _DeveloperPageState extends State<DeveloperPage> {
                       ),
                       ListItemContainer(
                         isLast: true,
-                        containerColor: .all(colorTheme.surfaceBright),
                         child: MergeSemantics(
                           child: ListItemInteraction(
                             onTap: () => Navigator.of(context).push(
@@ -2284,6 +2284,7 @@ class _Settings2ViewState extends State<Settings2View> {
   @override
   Widget build(BuildContext context) {
     final colorTheme = ColorTheme.of(context);
+    final elevationTheme = ElevationTheme.of(context);
     final shapeTheme = ShapeTheme.of(context);
     final stateTheme = StateTheme.of(context);
     final typescaleTheme = TypescaleTheme.of(context);
@@ -2313,11 +2314,13 @@ class _Settings2ViewState extends State<Settings2View> {
           // ),
           const SettingsAppBar(),
           ListItemTheme.merge(
-            data: .from(
-              containerColor: .all(colorTheme.surfaceBright),
-              headlineTextStyle: .all(
-                typescaleTheme.titleMediumEmphasized.toTextStyle(),
-              ),
+            data: CustomThemeFactory.createListItemTheme(
+              colorTheme: colorTheme,
+              elevationTheme: elevationTheme,
+              shapeTheme: shapeTheme,
+              stateTheme: stateTheme,
+              typescaleTheme: typescaleTheme,
+              variant: .settings,
             ),
             child: SliverList.list(
               children: [
@@ -2326,7 +2329,6 @@ class _Settings2ViewState extends State<Settings2View> {
                   padding: const EdgeInsets.symmetric(horizontal: 16.0),
                   child: ListItemContainer(
                     isFirst: true,
-                    containerColor: .all(colorTheme.surfaceBright),
                     child: ListItemInteraction(
                       onTap: () {},
                       child: ListItemLayout(
@@ -2360,7 +2362,6 @@ class _Settings2ViewState extends State<Settings2View> {
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 16.0),
                   child: ListItemContainer(
-                    containerColor: .all(colorTheme.surfaceBright),
                     child: ListItemInteraction(
                       onTap: () {},
                       child: ListItemLayout(
@@ -2395,7 +2396,6 @@ class _Settings2ViewState extends State<Settings2View> {
                   padding: const EdgeInsets.symmetric(horizontal: 16.0),
                   child: ListItemContainer(
                     isLast: true,
-                    containerColor: .all(colorTheme.surfaceBright),
                     child: MergeSemantics(
                       child: ListItemInteraction(
                         onTap: () => Navigator.of(context).push(
@@ -2670,11 +2670,13 @@ class _MaterialDemoViewState extends State<_MaterialDemoView> {
                 subtitle: const Text("Design system"),
               ),
               ListItemTheme.merge(
-                data: .from(
-                  containerColor: .all(colorTheme.surfaceBright),
-                  headlineTextStyle: .all(
-                    typescaleTheme.titleMediumEmphasized.toTextStyle(),
-                  ),
+                data: CustomThemeFactory.createListItemTheme(
+                  colorTheme: colorTheme,
+                  elevationTheme: elevationTheme,
+                  shapeTheme: shapeTheme,
+                  stateTheme: stateTheme,
+                  typescaleTheme: typescaleTheme,
+                  variant: .settings,
                 ),
                 child: SliverList.list(
                   children: [

@@ -18,6 +18,7 @@ import 'package:materium/pages/developer.dart';
 import 'package:materium/pages/import_export.dart';
 import 'package:materium/providers/apps_provider.dart';
 import 'package:materium/providers/logs_provider.dart';
+import 'package:materium/providers/settings_new.dart';
 import 'package:materium/providers/settings_provider.dart';
 import 'package:materium/providers/source_provider.dart';
 import 'package:materium/theme/legacy.dart';
@@ -113,6 +114,7 @@ class _SettingsPageState extends State<SettingsPage> {
   @override
   Widget build(BuildContext context) {
     final settingsProvider = context.watch<SettingsProvider>();
+    final settings = context.read<SettingsService>();
     final sourceProvider = SourceProvider();
 
     final colorTheme = ColorTheme.of(context);
@@ -264,11 +266,13 @@ class _SettingsPageState extends State<SettingsPage> {
             padding: const EdgeInsets.fromLTRB(16.0, 0.0, 16.0, 16.0),
             // TODO: fix switches reparenting (add ValueKey or GlobalKey to list items)
             sliver: ListItemTheme.merge(
-              data: .from(
-                containerColor: .all(colorTheme.surfaceBright),
-                headlineTextStyle: .all(
-                  typescaleTheme.titleMediumEmphasized.toTextStyle(),
-                ),
+              data: CustomThemeFactory.createListItemTheme(
+                colorTheme: colorTheme,
+                elevationTheme: elevationTheme,
+                shapeTheme: shapeTheme,
+                stateTheme: stateTheme,
+                typescaleTheme: typescaleTheme,
+                variant: .settings,
               ),
               child: SliverList.list(
                 children: [
@@ -978,53 +982,61 @@ class _SettingsPageState extends State<SettingsPage> {
                     ),
                   ],
                   const SizedBox(height: 16.0),
-                  DropdownMenuFormField<ThemeSettings>(
-                    key: const ValueKey("theme"),
-                    expandedInsets: EdgeInsets.zero,
-                    inputDecorationTheme: const InputDecorationThemeData(
-                      border: UnderlineInputBorder(),
-                      filled: true,
+                  ListenableBuilder(
+                    listenable: settings.theme,
+                    builder: (context, _) => DropdownMenuFormField<ThemeMode>(
+                      key: const ValueKey("theme"),
+                      expandedInsets: EdgeInsets.zero,
+                      inputDecorationTheme: const InputDecorationThemeData(
+                        border: UnderlineInputBorder(),
+                        filled: true,
+                      ),
+                      textStyle: typescaleTheme.titleMediumEmphasized
+                          .toTextStyle(),
+                      label: Text(tr("theme")),
+                      initialSelection: settings.theme.value,
+                      dropdownMenuEntries: [
+                        DropdownMenuEntry(
+                          value: .system,
+                          leadingIcon: const IconLegacy(
+                            Symbols.auto_mode_rounded,
+                          ),
+                          label: tr("followSystem"),
+                        ),
+                        DropdownMenuEntry(
+                          value: .light,
+                          leadingIcon: const IconLegacy(
+                            Symbols.light_mode_rounded,
+                          ),
+                          label: tr("light"),
+                        ),
+                        DropdownMenuEntry(
+                          value: .dark,
+                          leadingIcon: const IconLegacy(
+                            Symbols.dark_mode_rounded,
+                          ),
+                          label: tr("dark"),
+                        ),
+                      ],
+                      onSelected: (value) {
+                        if (value != null) {
+                          settings.theme.value = value;
+                        }
+                      },
                     ),
-                    textStyle: typescaleTheme.titleMediumEmphasized
-                        .toTextStyle(),
-                    label: Text(tr("theme")),
-                    initialSelection: settingsProvider.theme,
-                    dropdownMenuEntries: [
-                      DropdownMenuEntry(
-                        value: ThemeSettings.system,
-                        leadingIcon: const IconLegacy(
-                          Symbols.auto_mode_rounded,
-                        ),
-                        label: tr("followSystem"),
-                      ),
-                      DropdownMenuEntry(
-                        value: ThemeSettings.light,
-                        leadingIcon: const IconLegacy(
-                          Symbols.light_mode_rounded,
-                        ),
-                        label: tr("light"),
-                      ),
-                      DropdownMenuEntry(
-                        value: ThemeSettings.dark,
-                        leadingIcon: const IconLegacy(
-                          Symbols.dark_mode_rounded,
-                        ),
-                        label: tr("dark"),
-                      ),
-                    ],
-                    onSelected: (value) {
-                      if (value != null) {
-                        settingsProvider.theme = value;
-                      }
-                    },
                   ),
                   const SizedBox(height: 4.0),
-                  if (settingsProvider.theme == ThemeSettings.system &&
-                      (DeviceInfo.androidInfo?.version.sdkInt ?? 30) < 29)
-                    Text(
-                      tr('followSystemThemeExplanation'),
-                      style: typescaleTheme.labelSmall.toTextStyle(),
-                    ),
+                  ListenableBuilder(
+                    listenable: settings.theme,
+                    builder: (context, child) =>
+                        settings.theme.value == .system &&
+                            (DeviceInfo.androidInfo?.version.sdkInt ?? 30) < 29
+                        ? Text(
+                            tr('followSystemThemeExplanation'),
+                            style: typescaleTheme.labelSmall.toTextStyle(),
+                          )
+                        : const SizedBox.shrink(),
+                  ),
                   const SizedBox(height: 12.0),
                   Flex.horizontal(
                     mainAxisAlignment: MainAxisAlignment.start,
@@ -1745,12 +1757,13 @@ class _LogsPageState extends State<_LogsPage> {
                             16.0,
                           ),
                           sliver: ListItemTheme.merge(
-                            data: .from(
-                              containerColor: .all(colorTheme.surfaceBright),
-                              headlineTextStyle: .all(
-                                typescaleTheme.titleMediumEmphasized
-                                    .toTextStyle(),
-                              ),
+                            data: CustomThemeFactory.createListItemTheme(
+                              colorTheme: colorTheme,
+                              elevationTheme: elevationTheme,
+                              shapeTheme: shapeTheme,
+                              stateTheme: stateTheme,
+                              typescaleTheme: typescaleTheme,
+                              variant: .settings,
                             ),
                             child: SliverList.builder(
                               itemCount: logs.length,

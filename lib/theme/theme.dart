@@ -143,6 +143,55 @@ class TypographyDefaults with Diagnosticable {
   );
 }
 
+enum CustomListItemVariant { settings, licenses }
+
+abstract final class CustomThemeFactory {
+  static ListItemThemeDataPartial createListItemTheme({
+    required ColorThemeData colorTheme,
+    required ElevationThemeData elevationTheme,
+    required ShapeThemeData shapeTheme,
+    required StateThemeData stateTheme,
+    required TypescaleThemeData typescaleTheme,
+    required CustomListItemVariant variant,
+  }) => switch (variant) {
+    .settings => .from(
+      containerColor: .all(colorTheme.surfaceBright),
+      // stateLayerColor: .all(colorTheme.primary),
+      // leadingIconTheme: .all(.from(color: colorTheme.primary)),
+      // leadingTextStyle: .all(TextStyle(color: colorTheme.primary)),
+      overlineTextStyle: .all(
+        typescaleTheme.labelMedium.toTextStyle(
+          color: colorTheme.onSurfaceVariant,
+        ),
+      ),
+      headlineTextStyle: .all(
+        typescaleTheme.titleMediumEmphasized.toTextStyle(
+          color: colorTheme.onSurface,
+        ),
+      ),
+      supportingTextStyle: .all(
+        typescaleTheme.bodyMedium.toTextStyle(
+          color: colorTheme.onSurfaceVariant,
+        ),
+      ),
+    ),
+    .licenses => .from(
+      // containerColor: .all(colorTheme.surfaceBright),
+      // headlineTextStyle: .all(
+      //   typescaleTheme.titleSmallEmphasized.toTextStyle().copyWith(
+      //     fontFamily: FontFamily.googleSansCode,
+      //     color: colorTheme.onSurface,
+      //   ),
+      // ),
+      // supportingTextStyle: .all(
+      //   typescaleTheme.bodySmall.toTextStyle(
+      //     color: colorTheme.onSurfaceVariant,
+      //   ),
+      // ),
+    ),
+  };
+}
+
 abstract final class MarkdownThemeFactory {
   static MarkdownStyleSheet defaultStylesheetOf(BuildContext context) {
     final colorTheme = ColorTheme.of(context);
