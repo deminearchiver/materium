@@ -12,14 +12,14 @@ const _robotoFlex = FontFamily.robotoFlex;
 
 class TypographyDefaults with Diagnosticable {
   const TypographyDefaults.from({
-    this.typeface = const TypefaceThemeDataPartial.from(),
-    this.typescale = const TypescaleThemeDataPartial.from(),
+    this.typeface = const .from(),
+    this.typescale = const .from(),
   });
 
   // TODO: implement TypographyDefaults.fromPlatform
   factory TypographyDefaults.fromPlatform(TargetPlatform platform) =>
       switch (platform) {
-        _ => const TypographyDefaults.from(),
+        _ => const .from(),
       };
 
   final TypefaceThemeDataPartial typeface;
@@ -85,18 +85,8 @@ class TypographyDefaults with Diagnosticable {
   @override
   int get hashCode => Object.hash(runtimeType, typeface, typescale);
 
-  /// A Material 3 Baseline type scale which uses Roboto and doesn't support
-  /// variable font features.
-  static const TypographyDefaults material3Baseline = .from(
-    typeface: .from(
-      // Roboto was the default typeface for Material 3 Baseline
-      brand: [_roboto],
-      plain: [_roboto],
-    ),
-  );
-
   /// A Material 3 Expressive type scale which uses Roboto Flex.
-  static const TypographyDefaults material3Expressive = .from(
+  static const material3Expressive2025 = TypographyDefaults.from(
     typeface: .from(
       // Material 3 Expressive introduced variable font support
       brand: [_robotoFlex, _roboto],
@@ -108,7 +98,7 @@ class TypographyDefaults with Diagnosticable {
   /// a previously restricted but freshly opened Google brand font.
   ///
   /// It falls back to using Roboto Flex, then Roboto.
-  static const TypographyDefaults material3Expressive2026 = .from(
+  static const material3Expressive2026 = TypographyDefaults.from(
     typeface: .from(
       // The ROND axis is currently only available for Google Sans Flex,
       // making it a no-op for most of the other possibly installed fonts.
@@ -119,36 +109,36 @@ class TypographyDefaults with Diagnosticable {
       plain: [_googleSansFlex, _googleSans, _robotoFlex, _roboto],
     ),
     typescale: .from(
-      displayLarge: TypeStylePartial.from(rond: 0.0),
-      displayMedium: TypeStylePartial.from(rond: 0.0),
-      displaySmall: TypeStylePartial.from(rond: 0.0),
-      headlineLarge: TypeStylePartial.from(rond: 0.0),
-      headlineMedium: TypeStylePartial.from(rond: 0.0),
-      headlineSmall: TypeStylePartial.from(rond: 0.0),
-      titleLarge: TypeStylePartial.from(rond: 0.0),
-      titleMedium: TypeStylePartial.from(rond: 0.0),
-      titleSmall: TypeStylePartial.from(rond: 0.0),
-      bodyLarge: TypeStylePartial.from(rond: 0.0),
-      bodyMedium: TypeStylePartial.from(rond: 0.0),
-      bodySmall: TypeStylePartial.from(rond: 0.0),
-      labelLarge: TypeStylePartial.from(rond: 0.0),
-      labelMedium: TypeStylePartial.from(rond: 0.0),
-      labelSmall: TypeStylePartial.from(rond: 0.0),
-      displayLargeEmphasized: TypeStylePartial.from(rond: 100.0),
-      displayMediumEmphasized: TypeStylePartial.from(rond: 100.0),
-      displaySmallEmphasized: TypeStylePartial.from(rond: 100.0),
-      headlineLargeEmphasized: TypeStylePartial.from(rond: 100.0),
-      headlineMediumEmphasized: TypeStylePartial.from(rond: 100.0),
-      headlineSmallEmphasized: TypeStylePartial.from(rond: 100.0),
-      titleLargeEmphasized: TypeStylePartial.from(rond: 100.0),
-      titleMediumEmphasized: TypeStylePartial.from(rond: 100.0),
-      titleSmallEmphasized: TypeStylePartial.from(rond: 100.0),
-      bodyLargeEmphasized: TypeStylePartial.from(rond: 100.0),
-      bodyMediumEmphasized: TypeStylePartial.from(rond: 100.0),
-      bodySmallEmphasized: TypeStylePartial.from(rond: 100.0),
-      labelLargeEmphasized: TypeStylePartial.from(rond: 100.0),
-      labelMediumEmphasized: TypeStylePartial.from(rond: 100.0),
-      labelSmallEmphasized: TypeStylePartial.from(rond: 100.0),
+      displayLarge: .from(rond: 0.0),
+      displayMedium: .from(rond: 0.0),
+      displaySmall: .from(rond: 0.0),
+      headlineLarge: .from(rond: 0.0),
+      headlineMedium: .from(rond: 0.0),
+      headlineSmall: .from(rond: 0.0),
+      titleLarge: .from(rond: 0.0),
+      titleMedium: .from(rond: 0.0),
+      titleSmall: .from(rond: 0.0),
+      bodyLarge: .from(rond: 0.0),
+      bodyMedium: .from(rond: 0.0),
+      bodySmall: .from(rond: 0.0),
+      labelLarge: .from(rond: 0.0),
+      labelMedium: .from(rond: 0.0),
+      labelSmall: .from(rond: 0.0),
+      displayLargeEmphasized: .from(rond: 100.0),
+      displayMediumEmphasized: .from(rond: 100.0),
+      displaySmallEmphasized: .from(rond: 100.0),
+      headlineLargeEmphasized: .from(rond: 100.0),
+      headlineMediumEmphasized: .from(rond: 100.0),
+      headlineSmallEmphasized: .from(rond: 100.0),
+      titleLargeEmphasized: .from(rond: 100.0),
+      titleMediumEmphasized: .from(rond: 100.0),
+      titleSmallEmphasized: .from(rond: 100.0),
+      bodyLargeEmphasized: .from(rond: 100.0),
+      bodyMediumEmphasized: .from(rond: 100.0),
+      bodySmallEmphasized: .from(rond: 100.0),
+      labelLargeEmphasized: .from(rond: 100.0),
+      labelMediumEmphasized: .from(rond: 100.0),
+      labelSmallEmphasized: .from(rond: 100.0),
     ),
   );
 }
@@ -188,21 +178,91 @@ Color _harmonizeColor(Color designColor, Color sourceColor) =>
     : designColor;
 
 extension on Color {
-  Hct _toHct() => Hct.fromInt(toARGB32());
+  Hct _toHct() => .fromInt(toARGB32());
 
   Color _harmonizeWith(Color sourceColor) => _harmonizeColor(this, sourceColor);
 }
 
-// extension on ColorThemeDataPartial {
-//   Color _harmonizeWithPrimary(Color designColor) {
-//     final sourceColor = primary;
-//     return sourceColor != null
-//         ? designColor._harmonizeWith(sourceColor)
-//         : designColor;
-//   }
-// }
-
 enum ExtendedColorPalette { primary, secondary, tertiary }
+
+enum ExtendedColorRole {
+  color,
+  onColor,
+  colorContainer,
+  onColorContainer,
+  colorFixed,
+  colorFixedDim,
+  onColorFixed,
+  onColorFixedVariant;
+
+  Color resolve(ExtendedColor extendedColor) => switch (this) {
+    .color => extendedColor.color,
+    .onColor => extendedColor.onColor,
+    .colorContainer => extendedColor.colorContainer,
+    .onColorContainer => extendedColor.onColorContainer,
+    .colorFixed => extendedColor.colorFixed,
+    .colorFixedDim => extendedColor.colorFixedDim,
+    .onColorFixed => extendedColor.onColorFixed,
+    .onColorFixedVariant => extendedColor.onColorFixedVariant,
+  };
+}
+
+class ExtendedColorPairing {
+  const ExtendedColorPairing.from({
+    required this.containerColorRole,
+    required this.contentColorRole,
+  });
+
+  final ExtendedColorRole containerColorRole;
+  final ExtendedColorRole contentColorRole;
+
+  Color resolveContainerColor(ExtendedColor extendedColor) =>
+      containerColorRole.resolve(extendedColor);
+  Color resolveContentColor(ExtendedColor extendedColor) =>
+      contentColorRole.resolve(extendedColor);
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      runtimeType == other.runtimeType &&
+          other is ExtendedColorPairing &&
+          containerColorRole == other.containerColorRole &&
+          contentColorRole == other.contentColorRole;
+
+  @override
+  int get hashCode =>
+      Object.hash(runtimeType, containerColorRole, contentColorRole);
+
+  static const normal = ExtendedColorPairing.from(
+    containerColorRole: .color,
+    contentColorRole: .onColor,
+  );
+
+  static const container = ExtendedColorPairing.from(
+    containerColorRole: .colorContainer,
+    contentColorRole: .onColorContainer,
+  );
+
+  static const normalOnFixed = ExtendedColorPairing.from(
+    containerColorRole: .colorFixed,
+    contentColorRole: .onColorFixed,
+  );
+
+  static const normalOnFixedDim = ExtendedColorPairing.from(
+    containerColorRole: .colorFixedDim,
+    contentColorRole: .onColorFixed,
+  );
+
+  static const variantOnFixed = ExtendedColorPairing.from(
+    containerColorRole: .colorFixed,
+    contentColorRole: .onColorFixedVariant,
+  );
+
+  static const variantOnFixedDim = ExtendedColorPairing.from(
+    containerColorRole: .colorFixedDim,
+    contentColorRole: .onColorFixedVariant,
+  );
+}
 
 abstract class ExtendedColor with Diagnosticable {
   const ExtendedColor();
@@ -323,12 +383,19 @@ abstract class ExtendedColor with Diagnosticable {
   };
 
   Color get color;
+
   Color get onColor;
+
   Color get colorContainer;
+
   Color get onColorContainer;
+
   Color get colorFixed;
+
   Color get colorFixedDim;
+
   Color get onColorFixed;
+
   Color get onColorFixedVariant;
 
   ExtendedColor copyWith({
@@ -366,11 +433,24 @@ abstract class ExtendedColor with Diagnosticable {
     onColor: onColor._harmonizeWith(sourceColor),
     colorContainer: colorContainer._harmonizeWith(sourceColor),
     onColorContainer: onColorContainer._harmonizeWith(sourceColor),
+    colorFixed: colorFixed._harmonizeWith(sourceColor),
+    colorFixedDim: colorFixedDim._harmonizeWith(sourceColor),
+    onColorFixed: onColorFixed._harmonizeWith(sourceColor),
+    onColorFixedVariant: onColorFixedVariant._harmonizeWith(sourceColor),
   );
 
-  ExtendedColor harmonizeWithPrimary(ColorThemeDataPartial colorTheme) {
-    final sourceColor = colorTheme.primary;
-    return sourceColor != null ? harmonizeWith(sourceColor) : this;
+  @override
+  // ignore: must_call_super
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    properties
+      ..add(ColorProperty("color", color))
+      ..add(ColorProperty("onColor", onColor))
+      ..add(ColorProperty("colorContainer", colorContainer))
+      ..add(ColorProperty("onColorContainer", onColorContainer))
+      ..add(ColorProperty("colorFixed", colorFixed))
+      ..add(ColorProperty("colorFixedDim", colorFixedDim))
+      ..add(ColorProperty("onColorFixed", onColorFixed))
+      ..add(ColorProperty("onColorFixedVariant", onColorFixedVariant));
   }
 
   @override
@@ -436,86 +516,6 @@ class _ExtendedColor extends ExtendedColor {
 
   @override
   final Color onColorFixedVariant;
-}
-
-abstract class SemanticColorsData with Diagnosticable {
-  const SemanticColorsData();
-
-  const factory SemanticColorsData.from({
-    required ExtendedColor success,
-    required ExtendedColor warning,
-  }) = _SemanticColorsData;
-
-  factory SemanticColorsData.fallback({
-    DynamicSchemeVariant variant = .tonalSpot,
-    required Brightness brightness,
-    DynamicSchemePlatform platform = DynamicScheme.defaultPlatform,
-    double contrastLevel = 0.0,
-    DynamicSchemeSpecVersion? specVersion = DynamicScheme.defaultSpecVersion,
-  }) => SemanticColorsData.from(
-    success: .fromSeed(
-      sourceColor: const Color(0xFF4E7D4D),
-      variant: variant,
-      brightness: brightness,
-      platform: platform,
-      contrastLevel: contrastLevel,
-      specVersion: specVersion,
-      palette: .primary,
-    ),
-    warning: .fromSeed(
-      sourceColor: const Color(0xFFFFC107),
-      variant: variant,
-      brightness: brightness,
-      platform: platform,
-      contrastLevel: contrastLevel,
-      specVersion: specVersion,
-      palette: .primary,
-    ),
-  );
-
-  ExtendedColor get success;
-  ExtendedColor get warning;
-
-  SemanticColorsData copyWith({
-    ExtendedColor? success,
-    ExtendedColor? warning,
-  }) => success != null || warning != null
-      ? .from(
-          success: success ?? this.success,
-          warning: warning ?? this.warning,
-        )
-      : this;
-
-  SemanticColorsData harmonizeWith(Color sourceColor) => .from(
-    success: success.harmonizeWith(sourceColor),
-    warning: warning.harmonizeWith(sourceColor),
-  );
-
-  SemanticColorsData harmonizeWithPrimary(ColorThemeDataPartial colorTheme) {
-    final sourceColor = colorTheme.primary;
-    return sourceColor != null ? harmonizeWith(sourceColor) : this;
-  }
-
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      runtimeType == other.runtimeType &&
-          other is SemanticColorsData &&
-          success == other.success &&
-          warning == other.warning;
-
-  @override
-  int get hashCode => Object.hash(runtimeType, success, warning);
-}
-
-class _SemanticColorsData extends SemanticColorsData {
-  const _SemanticColorsData({required this.success, required this.warning});
-
-  @override
-  final ExtendedColor success;
-
-  @override
-  final ExtendedColor warning;
 }
 
 abstract class StaticColorsData with Diagnosticable {
@@ -655,7 +655,7 @@ abstract class StaticColorsData with Diagnosticable {
         )
       : this;
 
-  StaticColorsData harmonizeWith(Color sourceColor) => .from(
+  StaticColorsData harmonizeWith(Color sourceColor) => copyWith(
     blue: blue.harmonizeWith(sourceColor),
     yellow: yellow.harmonizeWith(sourceColor),
     red: red.harmonizeWith(sourceColor),
@@ -672,9 +672,17 @@ abstract class StaticColorsData with Diagnosticable {
   }
 
   @override
+  // ignore: must_call_super
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
-    // TODO: implement debugFillProperties
-    super.debugFillProperties(properties);
+    properties
+      ..add(DiagnosticsProperty<ExtendedColor>("blue", blue))
+      ..add(DiagnosticsProperty<ExtendedColor>("yellow", yellow))
+      ..add(DiagnosticsProperty<ExtendedColor>("red", red))
+      ..add(DiagnosticsProperty<ExtendedColor>("purple", purple))
+      ..add(DiagnosticsProperty<ExtendedColor>("cyan", cyan))
+      ..add(DiagnosticsProperty<ExtendedColor>("green", green))
+      ..add(DiagnosticsProperty<ExtendedColor>("orange", orange))
+      ..add(DiagnosticsProperty<ExtendedColor>("pink", pink));
   }
 
   @override
@@ -741,3 +749,35 @@ class _StaticColorsData extends StaticColorsData {
   @override
   final ExtendedColor pink;
 }
+
+class StaticColors extends InheritedTheme {
+  const StaticColors({super.key, required this.data, required super.child});
+
+  final StaticColorsData data;
+
+  @override
+  bool updateShouldNotify(StaticColors oldWidget) => data != oldWidget.data;
+
+  @override
+  Widget wrap(BuildContext context, Widget child) =>
+      StaticColors(data: data, child: child);
+
+  static StaticColorsData? maybeOf(BuildContext context) =>
+      context.dependOnInheritedWidgetOfExactType<StaticColors>()?.data;
+
+  static StaticColorsData of(BuildContext context) {
+    final result = maybeOf(context);
+    if (result != null) return result;
+    final colorTheme = ColorTheme.of(context);
+    final highContarst = MediaQuery.highContrastOf(context);
+    return .fallback(
+      brightness: colorTheme.brightness,
+      contrastLevel: highContarst ? 1.0 : 0.0,
+      platform: .phone,
+      variant: .tonalSpot,
+      specVersion: .spec2025,
+    ).harmonizeWith(colorTheme.primary);
+  }
+}
+
+// TODO(deminearchiver): return success (4E7D4D) and warning (FFC107) semantic colors
