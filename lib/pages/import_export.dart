@@ -417,12 +417,7 @@ class _ImportExportPageState extends State<ImportExportPage> {
               return Flex.vertical(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  FilledButton(
-                    onPressed: importInProgress
-                        ? null
-                        : () {
-                            runObtainiumExport(pickOnly: true);
-                          },
+                  FilledButton.icon(
                     style: ButtonStyle(
                       animationDuration: Duration.zero,
                       elevation: const WidgetStatePropertyAll(0.0),
@@ -471,16 +466,23 @@ class _ImportExportPageState extends State<ImportExportPage> {
                                 .toTextStyle(),
                       ),
                     ),
-                    child: Text(
+                    onPressed: importInProgress
+                        ? null
+                        : () {
+                            runObtainiumExport(pickOnly: true);
+                          },
+                    icon: const IconLegacy(
+                      Symbols.folder_open_rounded,
+                      fill: 1.0,
+                      opticalSize: 24.0,
+                    ),
+                    label: Text(
                       tr('pickExportDir'),
                       textAlign: TextAlign.center,
                     ),
                   ),
                   const SizedBox(height: 8.0),
-                  FilledButton(
-                    onPressed: importInProgress || snapshot.data == null
-                        ? null
-                        : runObtainiumExport,
+                  FilledButton.icon(
                     style: ButtonStyle(
                       animationDuration: Duration.zero,
                       elevation: const WidgetStatePropertyAll(0.0),
@@ -518,7 +520,15 @@ class _ImportExportPageState extends State<ImportExportPage> {
                             typescaleTheme.titleMediumEmphasized.toTextStyle(),
                       ),
                     ),
-                    child: Text(
+                    onPressed: importInProgress || snapshot.data == null
+                        ? null
+                        : runObtainiumExport,
+                    icon: const IconLegacy(
+                      Symbols.file_export_rounded,
+                      fill: 1.0,
+                      opticalSize: 24.0,
+                    ),
+                    label: Text(
                       tr('obtainiumExport'),
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
@@ -584,8 +594,7 @@ class _ImportExportPageState extends State<ImportExportPage> {
               ),
             ),
           ),
-          FilledButton(
-            onPressed: importInProgress ? null : runObtainiumImport,
+          FilledButton.icon(
             style: ButtonStyle(
               animationDuration: Duration.zero,
               elevation: const WidgetStatePropertyAll(0.0),
@@ -620,7 +629,13 @@ class _ImportExportPageState extends State<ImportExportPage> {
                 (states) => typescaleTheme.titleMediumEmphasized.toTextStyle(),
               ),
             ),
-            child: Text(
+            onPressed: importInProgress ? null : runObtainiumImport,
+            icon: const IconLegacy(
+              Symbols.file_open_rounded,
+              fill: 1.0,
+              opticalSize: 24.0,
+            ),
+            label: Text(
               tr('obtainiumImport'),
               maxLines: 2,
               overflow: TextOverflow.ellipsis,
@@ -639,7 +654,8 @@ class _ImportExportPageState extends State<ImportExportPage> {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 const SizedBox(height: 8.0 - 4.0),
-                FilledButton(
+                FilledButton.icon(
+                  style: otherImportButtonsStyle,
                   onPressed: importInProgress
                       ? null
                       : () async {
@@ -667,26 +683,40 @@ class _ImportExportPageState extends State<ImportExportPage> {
                             runSourceSearch(searchSource[0]);
                           }
                         },
-                  style: otherImportButtonsStyle,
-                  child: Text(
+                  icon: const IconLegacy(
+                    Symbols.search_rounded,
+                    fill: 1.0,
+                    opticalSize: 20.0,
+                  ),
+                  label: Text(
                     tr('searchX', args: [lowerCaseIfEnglish(tr('source'))]),
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                   ),
                 ),
-                FilledButton(
-                  onPressed: importInProgress ? null : urlListImport,
+                FilledButton.icon(
                   style: otherImportButtonsStyle,
-                  child: Text(
+                  onPressed: importInProgress ? null : urlListImport,
+                  icon: const IconLegacy(
+                    Symbols.add_link_rounded,
+                    fill: 1.0,
+                    opticalSize: 20.0,
+                  ),
+                  label: Text(
                     tr('importFromURLList'),
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                   ),
                 ),
-                FilledButton(
-                  onPressed: importInProgress ? null : runUrlImport,
+                FilledButton.icon(
                   style: otherImportButtonsStyle,
-                  child: Text(
+                  onPressed: importInProgress ? null : runUrlImport,
+                  icon: const IconLegacy(
+                    Symbols.dataset_linked_rounded,
+                    fill: 1.0,
+                    opticalSize: 20.0,
+                  ),
+                  label: Text(
                     tr('importFromURLsInFile'),
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
@@ -698,14 +728,19 @@ class _ImportExportPageState extends State<ImportExportPage> {
             (source) => Flex.vertical(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                FilledButton(
+                FilledButton.icon(
+                  style: otherImportButtonsStyle,
                   onPressed: importInProgress
                       ? null
                       : () {
                           runMassSourceImport(source);
                         },
-                  style: otherImportButtonsStyle,
-                  child: Text(
+                  icon: const IconLegacy(
+                    Symbols.star_rounded,
+                    fill: 1.0,
+                    opticalSize: 20.0,
+                  ),
+                  label: Text(
                     tr('importX', args: [source.name]),
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
