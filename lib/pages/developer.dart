@@ -87,11 +87,7 @@ class _DeveloperPageState extends State<DeveloperPage> {
     final colorTheme = ColorTheme.of(context);
     final typescaleTheme = TypescaleTheme.of(context);
 
-    final staticColors = StaticColorsData.fallback(
-      variant: DynamicSchemeVariant.tonalSpot,
-      brightness: Theme.brightnessOf(context),
-      specVersion: DynamicSchemeSpecVersion.spec2025,
-    ).harmonizeWithPrimary(colorTheme);
+    final staticColors = StaticColors.of(context);
 
     return Scaffold(
       backgroundColor: colorTheme.surfaceContainer,
@@ -2292,11 +2288,7 @@ class _Settings2ViewState extends State<Settings2View> {
     final stateTheme = StateTheme.of(context);
     final typescaleTheme = TypescaleTheme.of(context);
 
-    final staticColors = StaticColorsData.fallback(
-      variant: DynamicSchemeVariant.tonalSpot,
-      brightness: Theme.brightnessOf(context),
-      specVersion: DynamicSchemeSpecVersion.spec2025,
-    ).harmonizeWithPrimary(colorTheme);
+    final staticColors = StaticColors.of(context);
 
     return Scaffold(
       backgroundColor: colorTheme.surfaceContainer,
@@ -2643,11 +2635,7 @@ class _MaterialDemoViewState extends State<_MaterialDemoView> {
     final stateTheme = StateTheme.of(context);
     final typescaleTheme = TypescaleTheme.of(context);
 
-    final staticColors = StaticColorsData.fallback(
-      variant: DynamicSchemeVariant.tonalSpot,
-      brightness: Theme.brightnessOf(context),
-      specVersion: DynamicSchemeSpecVersion.spec2025,
-    ).harmonizeWithPrimary(colorTheme);
+    final staticColors = StaticColors.of(context);
 
     return Scaffold(
       backgroundColor: colorTheme.surfaceContainer,

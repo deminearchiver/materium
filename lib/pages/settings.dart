@@ -121,11 +121,7 @@ class _SettingsPageState extends State<SettingsPage> {
     final stateTheme = StateTheme.of(context);
     final typescaleTheme = TypescaleTheme.of(context);
 
-    final staticColors = StaticColorsData.fallback(
-      variant: DynamicSchemeVariant.tonalSpot,
-      brightness: Theme.brightnessOf(context),
-      specVersion: DynamicSchemeSpecVersion.spec2025,
-    ).harmonizeWithPrimary(colorTheme);
+    final staticColors = StaticColors.of(context);
 
     initUpdateIntervalInterpolator();
     processIntervalSliderValue(settingsProvider.updateIntervalSliderVal);
@@ -1557,11 +1553,7 @@ class _LogsPageState extends State<_LogsPage> {
     final stateTheme = StateTheme.of(context);
     final typescaleTheme = TypescaleTheme.of(context);
 
-    final staticColors = StaticColorsData.fallback(
-      variant: DynamicSchemeVariant.tonalSpot,
-      brightness: Theme.brightnessOf(context),
-      specVersion: DynamicSchemeSpecVersion.spec2025,
-    ).harmonizeWithPrimary(colorTheme);
+    final staticColors = StaticColors.of(context);
 
     final actionButtonStyle = LegacyThemeFactory.createButtonStyle(
       colorTheme: colorTheme,
