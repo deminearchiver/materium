@@ -113,58 +113,6 @@ class _ObtainiumState extends State<Obtainium> {
     if (!mounted) return;
   }
 
-  ColorThemeData _createColorTheme({
-    required BuildContext context,
-    required Brightness brightness,
-    bool highContrast = false,
-  }) {
-    final settingsProvider = context.watch<SettingsProvider>();
-
-    final sourceColor = settingsProvider.themeColor;
-
-    final contrastLevel = highContrast ? 1.0 : 0.0;
-
-    if (settingsProvider.useMaterialYou) {
-      final fallback = ColorThemeData.fromSeed(
-        sourceColor: sourceColor,
-        brightness: brightness,
-        contrastLevel: contrastLevel,
-        variant: _variant,
-        platform: _platform,
-        specVersion: _specVersion,
-      );
-
-      final provided = DynamicColor.dynamicColorScheme(
-        brightness,
-      )?.toColorTheme();
-
-      return fallback.merge(provided);
-    } else {
-      return ColorThemeData.fromSeed(
-        sourceColor: settingsProvider.themeColor,
-        brightness: brightness,
-        contrastLevel: contrastLevel,
-        variant: _variant,
-        platform: _platform,
-        specVersion: _specVersion,
-      );
-    }
-  }
-
-  StaticColorsData _createStaticColors({
-    required Brightness brightness,
-    bool highContrast = false,
-  }) {
-    final contrastLevel = highContrast ? 1.0 : 0.0;
-    return StaticColorsData.fallback(
-      brightness: brightness,
-      contrastLevel: contrastLevel,
-      variant: _variant,
-      specVersion: _specVersion,
-      platform: _platform,
-    );
-  }
-
   Widget _buildTypefaceTheme(BuildContext context, Widget child) =>
       TypefaceTheme.merge(data: _typography.typeface, child: child);
 
@@ -176,6 +124,8 @@ class _ObtainiumState extends State<Obtainium> {
       );
 
   Widget _buildColorThemes(BuildContext context, Widget child) {
+    final settingsProvider = context.watch<SettingsProvider>();
+
     final themeMode = context.select<SettingsService, ThemeMode>(
       (settings) => settings.theme.value,
     );
@@ -185,15 +135,37 @@ class _ObtainiumState extends State<Obtainium> {
       .dark => .dark,
     };
     final highContrast = MediaQuery.highContrastOf(context);
-    final colorTheme = _createColorTheme(
-      context: context,
+
+    final sourceColor = settingsProvider.themeColor;
+
+    final contrastLevel = highContrast ? 1.0 : 0.0;
+
+    final DynamicSchemeVariant variant = settingsProvider.useMaterialYou
+        ? .tonalSpot
+        : .vibrant;
+
+    var colorTheme = ColorThemeData.fromSeed(
+      sourceColor: sourceColor,
       brightness: brightness,
-      highContrast: highContrast,
+      contrastLevel: contrastLevel,
+      variant: variant,
+      platform: _platform,
+      specVersion: _specVersion,
     );
-    final staticColors = _createStaticColors(
+
+    if (settingsProvider.useMaterialYou) {
+      final dynamicColorScheme = DynamicColor.dynamicColorScheme(brightness);
+      colorTheme = colorTheme.merge(dynamicColorScheme?.toColorTheme());
+    }
+
+    final staticColors = StaticColorsData.fallback(
       brightness: brightness,
-      highContrast: highContrast,
+      contrastLevel: contrastLevel,
+      variant: variant,
+      specVersion: _specVersion,
+      platform: _platform,
     );
+
     return ColorTheme(
       data: colorTheme,
       child: StaticColors(data: staticColors, child: child),
@@ -350,7 +322,6 @@ class _ObtainiumState extends State<Obtainium> {
     return WithForegroundTask(child: _buildThemes(context, appBuilder));
   }
 
-  static const _variant = DynamicSchemeVariant.vibrant;
   static const _platform = DynamicSchemePlatform.phone;
   static const _specVersion = DynamicSchemeSpecVersion.spec2025;
   static const _typography = TypographyDefaults.material3Expressive2026;
