@@ -26,7 +26,67 @@ import 'package:materium/theme/theme.dart';
 import 'package:provider/provider.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:shizuku_apk_installer/shizuku_apk_installer.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 import 'package:url_launcher/url_launcher_string.dart';
+
+class SettingsListItemLeading extends StatelessWidget {
+  const SettingsListItemLeading({
+    super.key,
+    this.shrinkWrapHeight = false,
+    this.containerShape,
+    this.containerColor,
+    this.contentColor,
+    required this.child,
+  });
+
+  factory SettingsListItemLeading.fromExtendedColor({
+    required ExtendedColorPairing pairing,
+    required ExtendedColor extendedColor,
+    ShapeBorder? containerShape,
+    Color? containerColor,
+    Color? contentColor,
+    required Widget child,
+  }) => SettingsListItemLeading(
+    containerShape: containerShape,
+    containerColor:
+        containerColor ?? pairing.resolveContainerColor(extendedColor),
+    contentColor: contentColor ?? pairing.resolveContentColor(extendedColor),
+    child: child,
+  );
+
+  final bool shrinkWrapHeight;
+  final ShapeBorder? containerShape;
+  final Color? containerColor;
+  final Color? contentColor;
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: 40.0,
+      height: !shrinkWrapHeight ? 40.0 : null,
+      child: Skeleton.leaf(
+        child: Material(
+          clipBehavior: .antiAlias,
+          borderOnForeground: false,
+          shape: containerShape,
+          color: containerColor,
+          child: DefaultTextStyle.merge(
+            textAlign: .center,
+            maxLines: 1,
+            softWrap: false,
+            overflow: .visible,
+            style: TextStyle(color: contentColor),
+            child: IconTheme.merge(
+              data: .from(opticalSize: 24.0, size: 24.0, color: contentColor),
+              child: Align.center(child: child),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
 
 class SettingsPage extends StatefulWidget {
   const SettingsPage({super.key});
