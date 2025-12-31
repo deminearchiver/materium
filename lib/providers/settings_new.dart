@@ -72,11 +72,16 @@ class SettingsService with ChangeNotifier {
   late final _themeMode = ExternalSettingNotifier<ThemeMode>(
     defaultValue: .system,
     onLoad: () async {
-      final value = await _prefs.getString(_themeModeKey);
-      final ThemeMode? result = switch (value?.toLowerCase()) {
-        "system" => .system,
-        "light" => .light,
-        "dark" => .dark,
+      Object? value;
+      try {
+        value = (await _prefs.getString(_themeModeKey))?.toLowerCase();
+      } on TypeError {
+        value = await _prefs.getInt(_themeModeKey);
+      }
+      final ThemeMode? result = switch (value) {
+        "system" || 0 => .system,
+        "light" || 1 => .light,
+        "dark" || 2 => .dark,
         _ => null,
       };
       return Option.maybe(result);
