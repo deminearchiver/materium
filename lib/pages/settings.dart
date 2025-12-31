@@ -1222,7 +1222,12 @@ class _SettingsPageState extends State<SettingsPage> {
                       isFirst: true,
                       isLast: true,
                       child: ListItemInteraction(
-                        onTap: () {},
+                        onTap: () => Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const _SettingsLanguageView(),
+                          ),
+                        ),
                         child: ListItemLayout(
                           headline: Text(tr("Language")),
                           supportingText: Text(
@@ -1510,6 +1515,28 @@ class _SettingsPageState extends State<SettingsPage> {
             ),
           ),
         ],
+      ),
+    );
+  }
+}
+
+class _SettingsLanguageView extends StatefulWidget {
+  const _SettingsLanguageView({super.key});
+
+  @override
+  State<_SettingsLanguageView> createState() => _SettingsLanguageViewState();
+}
+
+class _SettingsLanguageViewState extends State<_SettingsLanguageView> {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: SafeArea(
+        top: false,
+        bottom: false,
+        child: CustomScrollView(
+          slivers: [CustomAppBar(type: .small, title: Text(tr("language")))],
+        ),
       ),
     );
   }
