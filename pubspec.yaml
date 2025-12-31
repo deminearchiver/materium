@@ -76,12 +76,12 @@ dependencies:
   flutter_typeahead: ^5.2.0
   battery_plus: ^7.0.0
   flutter_charset_detector: ^5.0.0
-  flutter_foreground_task: ^9.1.0
+  flutter_foreground_task: ^9.2.0
   material_symbols_icons: ^4.2892.0
-  flutter_markdown_plus: ^1.0.5
+  flutter_markdown_plus: ^1.0.7
   skeletonizer: ^2.1.2
   super_keyboard: ^0.3.0
-  super_editor: ^0.3.0-dev.46
+  super_editor: ^0.3.0-dev.47
   freezed_annotation: ^3.1.0
   json_annotation: ^4.9.0
   flutter_svg: ^2.2.3
@@ -94,7 +94,7 @@ dependencies:
   talker_flutter: ^5.1.9
   talker_dio_logger: ^5.1.9
   dio: ^5.9.0
-  retrofit: ^4.9.1
+  retrofit: ^4.9.2
   cronet_http: ^1.7.0
   device_info_ffi: ^1.0.3
   dynamic_color_ffi: ^1.0.2
