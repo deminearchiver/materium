@@ -48,4 +48,73 @@ class Translations with BaseTranslations<AppLocale, Translations> {
   }) => Translations(meta: meta ?? this.$meta);
 
   // Translations
+
+  /// en: 'Obtainum'
+  String get obtainium => 'Obtainum';
+
+  /// en: 'Materium'
+  String get materium => 'Materium';
+
+  late final TranslationsSettingsPageEn settingsPage =
+      TranslationsSettingsPageEn.internal(_root);
+  late final TranslationsLicensesPageEn licensesPage =
+      TranslationsLicensesPageEn.internal(_root);
+}
+
+// Path: settingsPage
+class TranslationsSettingsPageEn {
+  TranslationsSettingsPageEn.internal(this._root);
+
+  final Translations _root; // ignore: unused_field
+
+  // Translations
+  late final TranslationsSettingsPageItemsEn items =
+      TranslationsSettingsPageItemsEn.internal(_root);
+}
+
+// Path: licensesPage
+class TranslationsLicensesPageEn {
+  TranslationsLicensesPageEn.internal(this._root);
+
+  final Translations _root; // ignore: unused_field
+
+  // Translations
+
+  /// en: 'Open-source licenses'
+  String get title => 'Open-source licenses';
+
+  /// en: '(zero) {No licenses} (one) {$n license} (other) {$n licenses}'
+  String licenseCount({required num n}) =>
+      (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('en'))(
+        n,
+        zero: 'No licenses',
+        one: '${n} license',
+        other: '${n} licenses',
+      );
+}
+
+// Path: settingsPage.items
+class TranslationsSettingsPageItemsEn {
+  TranslationsSettingsPageItemsEn.internal(this._root);
+
+  final Translations _root; // ignore: unused_field
+
+  // Translations
+  late final TranslationsSettingsPageItemsLicensesEn licenses =
+      TranslationsSettingsPageItemsLicensesEn.internal(_root);
+}
+
+// Path: settingsPage.items.licenses
+class TranslationsSettingsPageItemsLicensesEn {
+  TranslationsSettingsPageItemsLicensesEn.internal(this._root);
+
+  final Translations _root; // ignore: unused_field
+
+  // Translations
+
+  /// en: 'Open-source licenses'
+  String get labelText => 'Open-source licenses';
+
+  /// en: 'View licenses of open-source software'
+  String get supportingText => 'View licenses of open-source software';
 }

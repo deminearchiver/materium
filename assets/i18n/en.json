@@ -1,1 +1,20 @@
-{}
+{
+  "obtainium": "Obtainum",
+  "materium": "Materium",
+  "settingsPage": {
+    "items": {
+      "licenses": {
+        "labelText": "Open-source licenses",
+        "supportingText": "View licenses of open-source software"
+      }
+    }
+  },
+  "licensesPage": {
+    "title": "Open-source licenses",
+    "licenseCount": {
+      "zero": "No licenses",
+      "one": "$n license",
+      "other": "$n licenses"
+    }
+  }
+}
