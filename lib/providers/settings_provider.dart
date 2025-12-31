@@ -84,15 +84,6 @@ class SettingsProvider with ChangeNotifier {
 
   static const String sourceUrl = 'https://github.com/deminearchiver/materium';
 
-  // bool get useSystemFont {
-  //   return prefsWithCache.getBool('useSystemFont') ?? false;
-  // }
-
-  // set useSystemFont(bool useSystemFont) {
-  //   prefsWithCache.setBool('useSystemFont', useSystemFont);
-  //   notifyListeners();
-  // }
-
   bool get useShizuku {
     return prefsWithCache.getBool('useShizuku') ?? false;
   }
@@ -101,45 +92,6 @@ class SettingsProvider with ChangeNotifier {
     prefsWithCache.setBool('useShizuku', useShizuku);
     notifyListeners();
   }
-
-  ThemeSettings get theme {
-    return ThemeSettings.values[prefsWithCache.getInt('theme') ??
-        ThemeSettings.system.index];
-  }
-
-  set theme(ThemeSettings t) {
-    prefsWithCache.setInt('theme', t.index);
-    notifyListeners();
-  }
-
-  Color get themeColor {
-    int? colorCode = prefsWithCache.getInt('themeColor');
-    return (colorCode != null) ? Color(colorCode) : obtainiumThemeColor;
-  }
-
-  set themeColor(Color themeColor) {
-    prefsWithCache.setInt('themeColor', themeColor.toARGB32());
-    notifyListeners();
-  }
-
-  bool get useMaterialYou {
-    return prefsWithCache.getBool('useMaterialYou') ?? true;
-  }
-
-  set useMaterialYou(bool useMaterialYou) {
-    prefsWithCache.setBool('useMaterialYou', useMaterialYou);
-    notifyListeners();
-  }
-
-  // TODO: decide if useBlackTheme shall be reintroduced
-  // bool get useBlackTheme {
-  //   return prefsWithCache.getBool('useBlackTheme') ?? false;
-  // }
-
-  // set useBlackTheme(bool useBlackTheme) {
-  //   prefsWithCache.setBool('useBlackTheme', useBlackTheme);
-  //   notifyListeners();
-  // }
 
   int get updateInterval {
     return prefsWithCache.getInt('updateInterval') ?? 360;
