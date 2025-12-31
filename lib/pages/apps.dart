@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:collection/collection.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:materium/components/custom_list.dart';
 import 'package:materium/components/custom_refresh_indicator.dart';
@@ -17,10 +16,13 @@ import 'package:materium/pages/settings.dart';
 import 'package:materium/providers/apps_provider.dart';
 import 'package:materium/providers/settings_provider.dart';
 import 'package:materium/providers/source_provider.dart';
+import 'package:materium/theme/legacy.dart';
 import 'package:provider/provider.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 import 'package:markdown/markdown.dart' as md;
+
+const _kShowAppsListRedesign = kDebugMode;
 
 class AppsPage extends StatefulWidget {
   const AppsPage({super.key});
@@ -177,6 +179,7 @@ class AppsPageState extends State<AppsPage> with TickerProviderStateMixin {
     var listedApps = appsProvider.getAppValues().toList();
 
     final colorTheme = ColorTheme.of(context);
+    final elevationTheme = ElevationTheme.of(context);
     final shapeTheme = ShapeTheme.of(context);
     final stateTheme = StateTheme.of(context);
     final typescaleTheme = TypescaleTheme.of(context);
@@ -370,9 +373,9 @@ class AppsPageState extends State<AppsPage> with TickerProviderStateMixin {
       listedApps = [...listedApps, ...temp];
     }
 
-    var tempPinned = [];
-    var tempNotPinned = [];
-    for (var a in listedApps) {
+    final tempPinned = <AppInMemory>[];
+    final tempNotPinned = <AppInMemory>[];
+    for (final a in listedApps) {
       if (a.app.pinned) {
         tempPinned.add(a);
       } else {
@@ -382,7 +385,7 @@ class AppsPageState extends State<AppsPage> with TickerProviderStateMixin {
     listedApps = [...tempPinned, ...tempNotPinned];
 
     List<String?> getListedCategories() {
-      var temp = listedApps.map(
+      final temp = listedApps.map(
         (e) => e.app.categories.isNotEmpty ? e.app.categories : [null],
       );
       return temp.isNotEmpty
@@ -401,7 +404,7 @@ class AppsPageState extends State<AppsPage> with TickerProviderStateMixin {
             : -1;
       });
 
-    Set<App> selectedApps = listedApps
+    final selectedApps = listedApps
         .map((e) => e.app)
         .where((a) => selectedAppIds.contains(a.id))
         .toSet();
@@ -445,68 +448,9 @@ class AppsPageState extends State<AppsPage> with TickerProviderStateMixin {
       ];
     }
 
-    Widget getUpdateButton(int appIndex) {
-      return IconButton(
-        visualDensity: VisualDensity.compact,
-        color: colorTheme.primary,
-        tooltip:
-            listedApps[appIndex].app.additionalSettings['trackOnly'] == true
-            ? tr('markUpdated')
-            : tr('update'),
-        onPressed: appsProvider.areDownloadsRunning()
-            ? null
-            : () {
-                appsProvider
-                    .downloadAndInstallLatestApps([
-                      listedApps[appIndex].app.id,
-                    ], globalNavigatorKey.currentContext)
-                    .catchError((e) {
-                      showError(e, context);
-                      return <String>[];
-                    });
-              },
-        icon: listedApps[appIndex].app.additionalSettings['trackOnly'] == true
-            ? const IconLegacy(Symbols.check_circle_rounded, fill: 0)
-            : const IconLegacy(Symbols.install_mobile, fill: 0),
-      );
-    }
-
     Widget getAppIcon(int appIndex) {
       return GestureDetector(
-        child: FutureBuilder(
-          future: appsProvider.updateAppIcon(listedApps[appIndex].app.id),
-          builder: (ctx, val) {
-            return listedApps[appIndex].icon != null
-                ? Image.memory(
-                    listedApps[appIndex].icon!,
-                    gaplessPlayback: true,
-                    opacity: AlwaysStoppedAnimation(
-                      listedApps[appIndex].installedInfo == null ? 0.6 : 1,
-                    ),
-                  )
-                : Flex.horizontal(
-                    mainAxisSize: MainAxisSize.min,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Transform(
-                        alignment: Alignment.center,
-                        transform: Matrix4.rotationZ(0.31),
-                        child: Padding(
-                          padding: const EdgeInsets.all(15),
-                          child: Assets.graphics.iconSmall.image(
-                            color:
-                                Theme.of(context).brightness == Brightness.dark
-                                ? Colors.white.withValues(alpha: 0.4)
-                                : Colors.white.withValues(alpha: 0.3),
-                            colorBlendMode: BlendMode.modulate,
-                            gaplessPlayback: true,
-                          ),
-                        ),
-                      ),
-                    ],
-                  );
-          },
-        ),
+        behavior: .opaque,
         onDoubleTap: () {
           pm.openApp(listedApps[appIndex].app.id);
         },
@@ -520,6 +464,33 @@ class AppsPageState extends State<AppsPage> with TickerProviderStateMixin {
             ),
           );
         },
+        child: FutureBuilder(
+          future: appsProvider.updateAppIcon(listedApps[appIndex].app.id),
+          builder: (ctx, val) => listedApps[appIndex].icon != null
+              ? Image.memory(
+                  listedApps[appIndex].icon!,
+                  gaplessPlayback: true,
+                  opacity: AlwaysStoppedAnimation(
+                    listedApps[appIndex].installedInfo == null ? 0.6 : 1,
+                  ),
+                )
+              : Align.center(
+                  child: SizedBox.square(
+                    dimension: 40.0,
+                    child: Transform(
+                      alignment: Alignment.center,
+                      transform: Matrix4.rotationZ(0.31),
+                      child: Assets.graphics.iconSmall.image(
+                        color: colorTheme.brightness == .dark
+                            ? Colors.white.withValues(alpha: 0.4)
+                            : Colors.white.withValues(alpha: 0.3),
+                        colorBlendMode: .modulate,
+                        gaplessPlayback: true,
+                      ),
+                    ),
+                  ),
+                ),
+        ),
       );
     }
 
@@ -538,75 +509,144 @@ class AppsPageState extends State<AppsPage> with TickerProviderStateMixin {
     }
 
     Widget getSingleAppHorizTile(int index) {
-      var showChangesFn = getChangeLogFn(context, listedApps[index].app);
-      var hasUpdate =
+      final showChangesFn = getChangeLogFn(context, listedApps[index].app);
+
+      final isInstalled = listedApps[index].app.installedVersion != null;
+      final hasUpdate =
           listedApps[index].app.installedVersion != null &&
           listedApps[index].app.installedVersion !=
               listedApps[index].app.latestVersion;
-      final isSelected = selectedAppIds
-          .map((e) => e)
-          .contains(listedApps[index].app.id);
-      Widget trailingRow = Flex.horizontal(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
+      final hasChanges = showChangesFn != null;
+      final isSelected = selectedAppIds.contains(listedApps[index].app.id);
+
+      final versionTextColor = isSelected
+          ? colorTheme.onSecondaryContainer
+          : isInstalled
+          ? colorTheme.onSurface
+          : colorTheme.onSurfaceVariant;
+      final changesTextColor = isSelected
+          ? colorTheme.onSecondaryContainer
+          : isInstalled && hasChanges
+          ? colorTheme.onSurface
+          : colorTheme.onSurfaceVariant;
+
+      final Widget trailingRow = Flex.horizontal(
+        mainAxisSize: .min,
+        mainAxisAlignment: .center,
+        crossAxisAlignment: .stretch,
+        spacing: 8.0,
         children: [
-          hasUpdate ? getUpdateButton(index) : const SizedBox.shrink(),
-          hasUpdate ? const SizedBox(width: 5) : const SizedBox.shrink(),
-          Material(
-            clipBehavior: Clip.antiAlias,
-            shape: CornersBorder.rounded(
-              corners: Corners.all(shapeTheme.corner.medium),
-            ),
-            color: Colors.transparent,
-            child: InkWell(
-              onTap: showChangesFn,
-              overlayColor: WidgetStateLayerColor(
-                color: WidgetStatePropertyAll(
-                  isSelected
-                      ? colorTheme.onSecondaryContainer
-                      : colorTheme.onSurface,
-                ),
-                opacity: stateTheme.stateLayerOpacity,
+          if (hasUpdate)
+            IconButton(
+              style: LegacyThemeFactory.createIconButtonStyle(
+                colorTheme: colorTheme,
+                elevationTheme: elevationTheme,
+                shapeTheme: shapeTheme,
+                stateTheme: stateTheme,
+                size: .medium,
+                shape: .round,
+                width: .narrow,
+                isSelected: isSelected,
+                unselectedContainerColor: colorTheme.secondaryContainer,
+                unselectedIconColor: colorTheme.onSecondaryContainer,
+                selectedContainerColor: colorTheme.primary,
+                selectedIconColor: colorTheme.onPrimary,
+                tapTargetSize: .shrinkWrap,
               ),
-              child: Padding(
-                padding: const EdgeInsets.fromLTRB(12, 0, 12, 0),
-                child: Flex.vertical(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-                    Flex.horizontal(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Container(
-                          constraints: BoxConstraints(
-                            maxWidth: MediaQuery.of(context).size.width / 4,
-                          ),
-                          child: Text(
-                            getVersionText(index),
-                            overflow: TextOverflow.ellipsis,
-                            textAlign: TextAlign.end,
-                            style: isVersionPseudo(listedApps[index].app)
-                                ? const TextStyle(fontStyle: FontStyle.italic)
-                                : null,
-                          ),
-                        ),
-                      ],
-                    ),
-                    Flex.horizontal(
-                      mainAxisSize: MainAxisSize.min,
+              onPressed: appsProvider.areDownloadsRunning()
+                  ? null
+                  : () {
+                      appsProvider
+                          .downloadAndInstallLatestApps([
+                            listedApps[index].app.id,
+                          ], globalNavigatorKey.currentContext)
+                          .catchError((e) {
+                            if (context.mounted) {
+                              showError(e, context);
+                            }
+                            return <String>[];
+                          });
+                    },
+              icon:
+                  listedApps[index].app.additionalSettings["trackOnly"] == true
+                  ? const IconLegacy(Symbols.check_circle_rounded, fill: 1.0)
+                  : const IconLegacy(Symbols.install_mobile, fill: 1.0),
+              tooltip:
+                  listedApps[index].app.additionalSettings["trackOnly"] == true
+                  ? tr("markUpdated")
+                  : tr("update"),
+            ),
+          SizedBox(
+            height: 56.0,
+            child: Material(
+              clipBehavior: .antiAlias,
+              shape: CornersBorder.rounded(
+                corners: Corners.all(shapeTheme.corner.large),
+                // side: isSelected
+                //     ? BorderSide(color: colorTheme.onSecondaryContainer)
+                //     : BorderSide.none,
+              ),
+              color: isSelected
+                  ? colorTheme.secondaryContainer
+                  : isInstalled
+                  ? colorTheme.surfaceContainerHighest
+                  : colorTheme.surfaceContainerHigh,
+              child: InkWell(
+                onTap: showChangesFn,
+                overlayColor: WidgetStateLayerColor(
+                  color: WidgetStatePropertyAll(
+                    isSelected
+                        ? colorTheme.onSecondaryContainer
+                        : colorTheme.onSurface,
+                  ),
+                  opacity: stateTheme.stateLayerOpacity,
+                ),
+                child: Padding(
+                  padding: const .symmetric(horizontal: 12.0),
+                  child: IntrinsicWidth(
+                    child: Flex.vertical(
+                      mainAxisAlignment: .center,
+                      crossAxisAlignment: .stretch,
                       children: [
                         Text(
+                          getVersionText(index),
+                          textAlign: .end,
+                          maxLines: 1,
+                          overflow: .ellipsis,
+                          style:
+                              (isInstalled
+                                      ? typescaleTheme.labelSmallEmphasized
+                                      : typescaleTheme.labelSmall)
+                                  .toTextStyle(color: versionTextColor)
+                                  .copyWith(
+                                    fontStyle:
+                                        isVersionPseudo(listedApps[index].app)
+                                        ? .italic
+                                        : .normal,
+                                  ),
+                        ),
+                        Text(
                           getChangesButtonString(index, showChangesFn != null),
-                          style: TextStyle(
-                            fontStyle: FontStyle.italic,
-                            decoration: showChangesFn != null
-                                ? TextDecoration.underline
-                                : TextDecoration.none,
-                          ),
+                          textAlign: .end,
+                          maxLines: 1,
+                          overflow: .ellipsis,
+                          style:
+                              (isInstalled && hasChanges
+                                      ? typescaleTheme.labelSmallEmphasized
+                                      : typescaleTheme.labelSmall)
+                                  .toTextStyle(color: changesTextColor)
+                                  .copyWith(
+                                    fontStyle: .normal,
+                                    decorationColor: changesTextColor,
+                                    decorationStyle: .solid,
+                                    decoration: hasChanges
+                                        ? TextDecoration.underline
+                                        : TextDecoration.none,
+                                  ),
                         ),
                       ],
                     ),
-                  ],
+                  ),
                 ),
               ),
             ),
@@ -614,16 +654,15 @@ class AppsPageState extends State<AppsPage> with TickerProviderStateMixin {
         ],
       );
 
-      var transparent = Theme.of(
-        context,
-      ).colorScheme.surface.withAlpha(0).toARGB32();
-      List<double> stops = [
+      final transparent = colorTheme.surface.withAlpha(0).toARGB32();
+
+      final stops = <double>[
         ...listedApps[index].app.categories.asMap().entries.map(
           (e) =>
               ((e.key / (listedApps[index].app.categories.length - 1)) -
               0.0001),
         ),
-        1,
+        1.0,
       ];
       if (stops.length == 2) {
         stops[0] = 0.9999;
@@ -633,8 +672,8 @@ class AppsPageState extends State<AppsPage> with TickerProviderStateMixin {
         decoration: BoxDecoration(
           gradient: LinearGradient(
             stops: stops,
-            begin: const Alignment(-1, 0),
-            end: const Alignment(-0.97, 0),
+            begin: const Alignment(-1.0, 0.0),
+            end: const Alignment(-0.97, 0.0),
             colors: [
               ...listedApps[index].app.categories.map(
                 (e) => Color(
@@ -655,43 +694,46 @@ class AppsPageState extends State<AppsPage> with TickerProviderStateMixin {
           onLongPress: () {
             toggleAppSelected(listedApps[index].app);
           },
-          leading: getAppIcon(index),
-
+          leading: SizedBox.square(dimension: 56.0, child: getAppIcon(index)),
           title: Text(
-            maxLines: 1,
             listedApps[index].name,
-            style: typescaleTheme.titleMediumEmphasized
-                .toTextStyle(
-                  color: isSelected
-                      ? colorTheme.onSecondaryContainer
-                      : colorTheme.onSurface,
-                )
-                .copyWith(overflow: TextOverflow.ellipsis),
+            maxLines: 1,
+            overflow: .ellipsis,
+            softWrap: false,
+            style:
+                (isInstalled
+                        ? typescaleTheme.titleMediumEmphasized
+                        : typescaleTheme.titleMedium)
+                    .toTextStyle(
+                      color: isSelected
+                          ? colorTheme.onSecondaryContainer
+                          : colorTheme.onSurface,
+                    ),
           ),
           subtitle: Text(
-            tr('byX', args: [listedApps[index].author]),
+            tr("byX", args: [listedApps[index].author]),
             maxLines: 1,
-            style: typescaleTheme.bodyMedium
-                .toTextStyle(
-                  color: isSelected
-                      ? colorTheme.onSecondaryContainer
-                      : colorTheme.onSurfaceVariant,
-                )
-                .copyWith(overflow: TextOverflow.ellipsis),
+            overflow: .ellipsis,
+            softWrap: false,
+            style: typescaleTheme.bodyMedium.toTextStyle(
+              color: isSelected
+                  ? colorTheme.onSecondaryContainer
+                  : colorTheme.onSurfaceVariant,
+            ),
           ),
           trailing: listedApps[index].downloadProgress != null
               ? SizedBox(
                   child: Text(
                     listedApps[index].downloadProgress! >= 0
                         ? tr(
-                            'percentProgress',
+                            "percentProgress",
                             args: [
                               listedApps[index].downloadProgress!
                                   .toInt()
                                   .toString(),
                             ],
                           )
-                        : tr('installing'),
+                        : tr("installing"),
                     textAlign: (listedApps[index].downloadProgress! >= 0)
                         ? TextAlign.start
                         : TextAlign.end,
@@ -987,60 +1029,79 @@ class AppsPageState extends State<AppsPage> with TickerProviderStateMixin {
         barrierColor: colorTheme.scrim.withValues(alpha: 0.32),
         useRootNavigator: true,
         isDismissible: true,
+
         isScrollControlled: true,
         useSafeArea: true,
         builder: (context) {
+          final padding = MediaQuery.paddingOf(context);
           final colorTheme = ColorTheme.of(context);
-          final listItemContainerColor = colorTheme.surfaceContainerHigh;
-          final iconContainerColor = colorTheme.surfaceContainerLow;
-          final iconColor = colorTheme.onSurfaceVariant;
-          final windowHeightSizeClass = WindowHeightSizeClass.of(context);
           return DraggableScrollableSheet(
             expand: false,
-            shouldCloseOnMinExtent: true,
-            initialChildSize: switch (windowHeightSizeClass) {
-              WindowHeightSizeClass.compact => 1.0,
-              WindowHeightSizeClass.medium => 0.75,
-              WindowHeightSizeClass.expanded => 0.55,
-            },
-            maxChildSize: 1.0,
-            builder: (context, scrollController) => CustomScrollView(
+            builder: (context, scrollController) => SingleChildScrollView(
               controller: scrollController,
-              slivers: [
-                SliverPadding(
-                  padding: const EdgeInsets.fromLTRB(16.0, 0.0, 16.0, 16.0),
-                  sliver: SliverList.list(
+              scrollDirection: .vertical,
+              child: Padding(
+                padding: .fromLTRB(8.0, 0.0, 8.0, 16.0 + padding.bottom),
+                child: ListItemTheme.merge(
+                  data: .from(
+                    containerColor: .all(colorTheme.surfaceContainerLow),
+                  ),
+                  child: Flex.vertical(
+                    mainAxisSize: .min,
+                    crossAxisAlignment: .stretch,
+                    spacing: 2.0,
                     children: [
+                      // for (var i = 0; i < 50; i++)
+                      //   ListItemContainer(
+                      //     isFirst: true,
+                      //     child: ListItemInteraction(
+                      //       onTap: pinSelectedApps,
+                      //       child: ListItemLayout(
+                      //         leading:
+                      //             selectedApps
+                      //                 .where((element) => element.pinned)
+                      //                 .isEmpty
+                      //             ? Icon(
+                      //                 Symbols.keep_rounded,
+                      //                 fill: 1.0,
+                      //                 color: colorTheme.onSurfaceVariant,
+                      //               )
+                      //             : Icon(
+                      //                 Symbols.keep_off_rounded,
+                      //                 fill: 1.0,
+                      //                 color: colorTheme.onSurfaceVariant,
+                      //               ),
+
+                      //         headline: Text(
+                      //           selectedApps
+                      //                   .where((element) => element.pinned)
+                      //                   .isEmpty
+                      //               ? tr("pinToTop")
+                      //               : tr("unpinFromTop"),
+                      //         ),
+                      //       ),
+                      //     ),
+                      //   ),
                       ListItemContainer(
                         isFirst: true,
-                        containerColor: .all(listItemContainerColor),
                         child: ListItemInteraction(
                           onTap: pinSelectedApps,
                           child: ListItemLayout(
-                            leading: SizedBox.square(
-                              dimension: 40.0,
-                              child: Material(
-                                clipBehavior: Clip.antiAlias,
-                                color: iconContainerColor,
-                                shape: const StadiumBorder(),
-                                child: Align.center(
-                                  child:
-                                      selectedApps
-                                          .where((element) => element.pinned)
-                                          .isEmpty
-                                      ? IconLegacy(
-                                          Symbols.keep_rounded,
-                                          fill: 1.0,
-                                          color: colorTheme.onSurfaceVariant,
-                                        )
-                                      : IconLegacy(
-                                          Symbols.keep_off_rounded,
-                                          fill: 1.0,
-                                          color: colorTheme.onSurfaceVariant,
-                                        ),
-                                ),
-                              ),
-                            ),
+                            leading:
+                                selectedApps
+                                    .where((element) => element.pinned)
+                                    .isEmpty
+                                ? Icon(
+                                    Symbols.keep_rounded,
+                                    fill: 1.0,
+                                    color: colorTheme.onSurfaceVariant,
+                                  )
+                                : Icon(
+                                    Symbols.keep_off_rounded,
+                                    fill: 1.0,
+                                    color: colorTheme.onSurfaceVariant,
+                                  ),
+
                             headline: Text(
                               selectedApps
                                       .where((element) => element.pinned)
@@ -1051,9 +1112,7 @@ class AppsPageState extends State<AppsPage> with TickerProviderStateMixin {
                           ),
                         ),
                       ),
-                      const SizedBox(height: 2.0),
                       ListItemContainer(
-                        containerColor: .all(listItemContainerColor),
                         child: ListItemInteraction(
                           onTap: () {
                             String urls = "";
@@ -1070,29 +1129,18 @@ class AppsPageState extends State<AppsPage> with TickerProviderStateMixin {
                             Navigator.of(context).pop();
                           },
                           child: ListItemLayout(
-                            leading: SizedBox.square(
-                              dimension: 40.0,
-                              child: Material(
-                                clipBehavior: Clip.antiAlias,
-                                color: iconContainerColor,
-                                shape: const StadiumBorder(),
-                                child: Align.center(
-                                  child: IconLegacy(
-                                    Symbols.share_rounded,
-                                    fill: 1.0,
-                                    color: colorTheme.onSurfaceVariant,
-                                  ),
-                                ),
-                              ),
+                            leading: Icon(
+                              Symbols.share_rounded,
+                              fill: 1.0,
+                              color: colorTheme.onSurfaceVariant,
                             ),
+
                             headline: Text(tr("shareSelectedAppURLs")),
                           ),
                         ),
                       ),
                       if (selectedApps.isNotEmpty) ...[
-                        const SizedBox(height: 2.0),
                         ListItemContainer(
-                          containerColor: .all(listItemContainerColor),
                           child: ListItemInteraction(
                             onTap: () {
                               String urls = "";
@@ -1108,28 +1156,17 @@ class AppsPageState extends State<AppsPage> with TickerProviderStateMixin {
                               );
                             },
                             child: ListItemLayout(
-                              leading: SizedBox.square(
-                                dimension: 40.0,
-                                child: Material(
-                                  clipBehavior: Clip.antiAlias,
-                                  color: iconContainerColor,
-                                  shape: const StadiumBorder(),
-                                  child: Align.center(
-                                    child: IconLegacy(
-                                      Symbols.share_rounded,
-                                      fill: 1.0,
-                                      color: colorTheme.onSurfaceVariant,
-                                    ),
-                                  ),
-                                ),
+                              leading: Icon(
+                                Symbols.share_rounded,
+                                fill: 1.0,
+                                color: colorTheme.onSurfaceVariant,
                               ),
+
                               headline: Text(tr("shareAppConfigLinks")),
                             ),
                           ),
                         ),
-                        const SizedBox(height: 2.0),
                         ListItemContainer(
-                          containerColor: .all(listItemContainerColor),
                           child: ListItemInteraction(
                             onTap: () {
                               var encoder = const JsonEncoder.withIndent(
@@ -1158,20 +1195,10 @@ class AppsPageState extends State<AppsPage> with TickerProviderStateMixin {
                               );
                             },
                             child: ListItemLayout(
-                              leading: SizedBox.square(
-                                dimension: 40.0,
-                                child: Material(
-                                  clipBehavior: Clip.antiAlias,
-                                  color: iconContainerColor,
-                                  shape: const StadiumBorder(),
-                                  child: Align.center(
-                                    child: IconLegacy(
-                                      Symbols.share_rounded,
-                                      fill: 1.0,
-                                      color: colorTheme.onSurfaceVariant,
-                                    ),
-                                  ),
-                                ),
+                              leading: Icon(
+                                Symbols.share_rounded,
+                                fill: 1.0,
+                                color: colorTheme.onSurfaceVariant,
                               ),
                               headline: Text(
                                 "${tr("share")} - ${tr("obtainiumExport")}",
@@ -1180,9 +1207,7 @@ class AppsPageState extends State<AppsPage> with TickerProviderStateMixin {
                           ),
                         ),
                       ],
-                      const SizedBox(height: 2.0),
                       ListItemContainer(
-                        containerColor: .all(listItemContainerColor),
                         child: ListItemInteraction(
                           onTap: () {
                             appsProvider
@@ -1201,20 +1226,10 @@ class AppsPageState extends State<AppsPage> with TickerProviderStateMixin {
                             Navigator.of(context).pop();
                           },
                           child: ListItemLayout(
-                            leading: SizedBox.square(
-                              dimension: 40.0,
-                              child: Material(
-                                clipBehavior: Clip.antiAlias,
-                                color: iconContainerColor,
-                                shape: const StadiumBorder(),
-                                child: Align.center(
-                                  child: IconLegacy(
-                                    Symbols.download_rounded,
-                                    fill: 1.0,
-                                    color: colorTheme.onSurfaceVariant,
-                                  ),
-                                ),
-                              ),
+                            leading: Icon(
+                              Symbols.download_rounded,
+                              fill: 1.0,
+                              color: colorTheme.onSurfaceVariant,
                             ),
                             headline: Text(
                               tr(
@@ -1225,10 +1240,8 @@ class AppsPageState extends State<AppsPage> with TickerProviderStateMixin {
                           ),
                         ),
                       ),
-                      const SizedBox(height: 2.0),
                       ListItemContainer(
                         isLast: true,
-                        containerColor: .all(listItemContainerColor),
                         child: ListItemInteraction(
                           onTap: () {
                             if (!appsProvider.areDownloadsRunning()) {
@@ -1236,20 +1249,10 @@ class AppsPageState extends State<AppsPage> with TickerProviderStateMixin {
                             }
                           },
                           child: ListItemLayout(
-                            leading: SizedBox.square(
-                              dimension: 40.0,
-                              child: Material(
-                                clipBehavior: Clip.antiAlias,
-                                color: iconContainerColor,
-                                shape: const StadiumBorder(),
-                                child: Align.center(
-                                  child: IconLegacy(
-                                    Symbols.done_all_rounded,
-                                    fill: 1.0,
-                                    color: colorTheme.onSurfaceVariant,
-                                  ),
-                                ),
-                              ),
+                            leading: Icon(
+                              Symbols.done_all_rounded,
+                              fill: 1.0,
+                              color: colorTheme.onSurfaceVariant,
                             ),
                             headline: Text(tr("markSelectedAppsUpdated")),
                           ),
@@ -1258,10 +1261,7 @@ class AppsPageState extends State<AppsPage> with TickerProviderStateMixin {
                     ],
                   ),
                 ),
-                SliverToBoxAdapter(
-                  child: SizedBox(height: MediaQuery.paddingOf(context).bottom),
-                ),
-              ],
+              ),
             ),
           );
         },
@@ -1355,8 +1355,7 @@ class AppsPageState extends State<AppsPage> with TickerProviderStateMixin {
           itemBuilder: (context, index) => getCategoryCollapsibleTile(index),
         );
       }
-      // ignore: dead_code
-      if (kDebugMode) {
+      if (_kShowAppsListRedesign) {
         final pinnedApps = listedApps;
         // final pinnedApps = listedApps
         //     .where((element) => element.app.pinned)
@@ -1364,35 +1363,33 @@ class AppsPageState extends State<AppsPage> with TickerProviderStateMixin {
         // final unpinnedApps = listedApps
         //     .whereNot((element) => element.app.pinned)
         //     .toList(growable: false);
-        const double spacing = 2.0;
-        return SliverList.list(
-          children: [
-            const SizedBox(height: 16.0),
-            ...pinnedApps.mapIndexed((index, e) {
-              final isSelected = selectedAppIds.contains(e.app.id);
-              return Padding(
-                padding: EdgeInsets.fromLTRB(
-                  16.0,
-                  index > 0 ? spacing / 2.0 : 0.0,
-                  16.0,
-                  index < pinnedApps.length - 1 ? spacing / 2.0 : 0.0,
-                ),
-                child: ListItemContainer(
+        return SliverPadding(
+          padding: .fromLTRB(16.0, 4.0, 16.0, 16.0),
+          sliver: ListItemTheme.merge(
+            data: .from(
+              containerColor: .all(colorTheme.surface),
+              headlineTextStyle: .all(
+                typescaleTheme.titleMediumEmphasized.toTextStyle(),
+              ),
+            ),
+            child: SliverList.separated(
+              itemCount: pinnedApps.length,
+              separatorBuilder: (context, index) => const SizedBox(height: 2.0),
+              itemBuilder: (context, index) {
+                final e = pinnedApps[index];
+                final isSelected = selectedAppIds.contains(e.app.id);
+                return ListItemContainer(
                   isFirst: index == 0,
                   isLast: index == pinnedApps.length - 1,
                   containerShape: .all(
                     isSelected
                         ? CornersBorder.rounded(
-                            corners: Corners.all(
-                              shapeTheme.corner.largeIncreased,
-                            ),
+                            corners: Corners.all(shapeTheme.corner.large),
                           )
                         : null,
                   ),
                   containerColor: .all(
-                    isSelected
-                        ? colorTheme.secondaryContainer
-                        : colorTheme.surfaceBright,
+                    isSelected ? colorTheme.secondaryContainer : null,
                   ),
                   child: ListItemInteraction(
                     stateLayerColor: .all(
@@ -1413,15 +1410,21 @@ class AppsPageState extends State<AppsPage> with TickerProviderStateMixin {
                     },
                     onLongPress: () => toggleAppSelected(e.app),
                     child: ListItemLayout(
-                      padding: const EdgeInsets.fromLTRB(
-                        16.0,
-                        12.0,
-                        16.0,
-                        12.0,
-                      ),
                       leading: SizedBox.square(
-                        dimension: 40.0,
-                        child: getAppIcon(index),
+                        dimension: 56.0,
+                        child: Material(
+                          clipBehavior: .antiAlias,
+                          shape: CornersBorder.rounded(
+                            corners: .all(shapeTheme.corner.small),
+                          ),
+                          color: colorTheme.surfaceContainer,
+                          child: Align.center(
+                            child: SizedBox.square(
+                              dimension: 40.0,
+                              child: getAppIcon(index),
+                            ),
+                          ),
+                        ),
                       ),
                       headline: Text(
                         e.name,
@@ -1443,21 +1446,18 @@ class AppsPageState extends State<AppsPage> with TickerProviderStateMixin {
                       ),
                     ),
                   ),
-                ),
-              );
-            }),
-            const SizedBox(height: 16.0),
-          ],
+                );
+              },
+            ),
+          ),
         );
       }
       return SliverPadding(
         padding: const EdgeInsets.symmetric(vertical: 16.0),
         sliver: SliverList.builder(
           itemCount: listedApps.length,
-          itemBuilder: (context, index) => Material(
-            color: Colors.transparent,
-            child: getSingleAppHorizTile(index),
-          ),
+          itemBuilder: (context, index) =>
+              Material.empty(child: getSingleAppHorizTile(index)),
         ),
       );
     }
