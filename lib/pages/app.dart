@@ -796,7 +796,9 @@ class _AppPageState extends State<AppPage> {
 
     return Scaffold(
       extendBody: false,
-      appBar: showAppWebpageFinal ? AppBar() : null,
+      appBar: showAppWebpageFinal
+          ? AppBar(backgroundColor: colorTheme.surfaceContainer)
+          : null,
       backgroundColor: colorTheme.surfaceContainer,
       // TODO: replace with a Loading indicator
       body: CustomRefreshIndicator(
