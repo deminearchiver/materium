@@ -1058,7 +1058,7 @@ class _SettingsPageState extends State<SettingsPage> {
 
                   const SizedBox(height: 16.0),
                   ListenableBuilder(
-                    listenable: settings.theme,
+                    listenable: settings.themeMode,
                     builder: (context, _) => DropdownMenuFormField<ThemeMode>(
                       key: const ValueKey("theme"),
                       expandedInsets: EdgeInsets.zero,
@@ -1069,7 +1069,7 @@ class _SettingsPageState extends State<SettingsPage> {
                       textStyle: typescaleTheme.titleMediumEmphasized
                           .toTextStyle(),
                       label: Text(tr("theme")),
-                      initialSelection: settings.theme.value,
+                      initialSelection: settings.themeMode.value,
                       dropdownMenuEntries: [
                         DropdownMenuEntry(
                           value: .system,
@@ -1095,16 +1095,16 @@ class _SettingsPageState extends State<SettingsPage> {
                       ],
                       onSelected: (value) {
                         if (value != null) {
-                          settings.theme.value = value;
+                          settings.themeMode.value = value;
                         }
                       },
                     ),
                   ),
                   const SizedBox(height: 4.0),
                   ListenableBuilder(
-                    listenable: settings.theme,
+                    listenable: settings.themeMode,
                     builder: (context, child) =>
-                        settings.theme.value == .system &&
+                        settings.themeMode.value == .system &&
                             (DeviceInfo.androidInfo?.version.sdkInt ?? 30) < 29
                         ? Text(
                             tr('followSystemThemeExplanation'),

@@ -135,7 +135,7 @@ class _ObtainiumState extends State<Obtainium> {
       ListenableBuilder(
         listenable: _themeListenable,
         builder: (context, child) {
-          final Brightness brightness = switch (_settings.theme.value) {
+          final Brightness brightness = switch (_settings.themeMode.value) {
             .system => MediaQuery.platformBrightnessOf(context),
             .light => .light,
             .dark => .dark,
@@ -279,7 +279,8 @@ class _ObtainiumState extends State<Obtainium> {
     final newSettings = context.read<SettingsService>();
     if (oldSettings != newSettings) {
       _themeListenable = Listenable.merge([
-        newSettings.theme,
+        newSettings.themeMode,
+        newSettings.themeVariant,
         newSettings.themeColor,
         newSettings.useMaterialYou,
       ]);

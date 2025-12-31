@@ -4,6 +4,50 @@ import 'package:materium/flutter.dart';
 import 'package:materium/providers/settings_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+enum ThemeVariant {
+  system(null),
+  calm(.neutral),
+  pastel(.tonalSpot),
+  juicy(.vibrant),
+  creative(.expressive);
+
+  const ThemeVariant(this.dynamicSchemeVariantOrNull);
+
+  final DynamicSchemeVariant? dynamicSchemeVariantOrNull;
+
+  // TODO(deminearchiver): remove hardcoded value when dynamic color is finished
+  DynamicSchemeVariant get dynamicSchemeVariant =>
+      dynamicSchemeVariantOrNull ?? .tonalSpot;
+
+  static ThemeVariant? fromDynamicSchemeVariant(DynamicSchemeVariant value) =>
+      switch (value) {
+        .neutral => .calm,
+        .tonalSpot => .pastel,
+        .vibrant => .juicy,
+        .expressive => .creative,
+        _ => null,
+      };
+}
+
+enum ThemeContrast {
+  system(null),
+  low(-1.0),
+  normal(0.0),
+  medium(0.5),
+  high(1.0);
+
+  const ThemeContrast(this.contrastLevel);
+
+  final double? contrastLevel;
+
+  static ThemeContrast fromContrastLevel(double value) => switch (value) {
+    < -0.5 => .low,
+    < 0.25 => .normal,
+    < 0.75 => .medium,
+    _ => .high,
+  };
+}
+
 class SettingsService with ChangeNotifier {
   SettingsService._({required SharedPreferencesAsync sharedPreferencesAsync})
     : _prefs = sharedPreferencesAsync {
@@ -25,10 +69,10 @@ class SettingsService with ChangeNotifier {
 
   SettingNotifier<bool> get useShizuku => _useShizuku;
 
-  late final _theme = ExternalSettingNotifier<ThemeMode>(
+  late final _themeMode = ExternalSettingNotifier<ThemeMode>(
     defaultValue: .system,
     onLoad: () async {
-      final value = await _prefs.getString(_themeKey);
+      final value = await _prefs.getString(_themeModeKey);
       final ThemeMode? result = switch (value?.toLowerCase()) {
         "system" => .system,
         "light" => .light,
@@ -38,12 +82,34 @@ class SettingsService with ChangeNotifier {
       return Option.maybe(result);
     },
     onSave: (value) => switch (value) {
-      Some(:final value) => _prefs.setString(_themeKey, value.name),
-      None() => _prefs.remove(_themeKey),
+      Some(:final value) => _prefs.setString(_themeModeKey, value.name),
+      None() => _prefs.remove(_themeModeKey),
     },
   )..addListener(_maybeNotify);
 
-  SettingNotifier<ThemeMode> get theme => _theme;
+  SettingNotifier<ThemeMode> get themeMode => _themeMode;
+
+  late final _themeVariant = ExternalSettingNotifier<ThemeVariant>(
+    defaultValue: .pastel,
+    onLoad: () async {
+      final value = await _prefs.getString(_themeVariantKey);
+      final ThemeVariant? result = switch (value?.toLowerCase()) {
+        "system" => .system,
+        "calm" => .calm,
+        "pastel" => .pastel,
+        "juicy" => .juicy,
+        "creative" => .creative,
+        _ => null,
+      };
+      return Option.maybe(result);
+    },
+    onSave: (value) => switch (value) {
+      Some(:final value) => _prefs.setString(_themeVariantKey, value.name),
+      _ => _prefs.remove(_themeVariantKey),
+    },
+  )..addListener(_maybeNotify);
+
+  SettingNotifier<ThemeVariant> get themeVariant => _themeVariant;
 
   late final _themeColor = ExternalSettingNotifier<Color>(
     defaultValue: obtainiumThemeColor,
@@ -84,7 +150,8 @@ class SettingsService with ChangeNotifier {
 
     // Notify local listeners
     _useShizuku.notify();
-    _theme.notify();
+    _themeMode.notify();
+    _themeVariant.notify();
     _themeColor.notify();
     _useMaterialYou.notify();
 
@@ -97,13 +164,15 @@ class SettingsService with ChangeNotifier {
 
   Future<void> loadOnly({
     bool useShizuku = false,
-    bool theme = false,
+    bool themeMode = false,
+    bool themeVariant = false,
     bool themeColor = false,
     bool useMaterialYou = false,
   }) async {
     final futures = <Future<bool>>[
       if (useShizuku) _useShizuku.load(notify: false),
-      if (theme) _theme.load(notify: false),
+      if (themeMode) _themeMode.load(notify: false),
+      if (themeVariant) _themeVariant.load(notify: false),
       if (themeColor) _themeColor.load(notify: false),
       if (useMaterialYou) _useMaterialYou.load(notify: false),
     ];
@@ -117,20 +186,23 @@ class SettingsService with ChangeNotifier {
 
   Future<void> loadAll() => loadOnly(
     useShizuku: true,
-    theme: true,
+    themeMode: true,
+    themeVariant: true,
     themeColor: true,
     useMaterialYou: true,
   );
 
   Future<void> saveOnly({
     bool useShizuku = false,
-    bool theme = false,
+    bool themeMode = false,
+    bool themeVariant = false,
     bool themeColor = false,
     bool useMaterialYou = false,
   }) async {
     final futures = <Future<void>>[
       if (useShizuku) _useShizuku.save(),
-      if (theme) _theme.save(),
+      if (themeMode) _themeMode.save(),
+      if (themeVariant) _themeVariant.save(),
       if (themeColor) _themeColor.save(),
       if (useMaterialYou) _useMaterialYou.save(),
     ];
@@ -141,13 +213,15 @@ class SettingsService with ChangeNotifier {
 
   Future<void> saveAll() => saveOnly(
     useShizuku: true,
-    theme: true,
+    themeMode: true,
+    themeVariant: true,
     themeColor: true,
     useMaterialYou: true,
   );
 
   static const _useShizukuKey = "useShizuku";
-  static const _themeKey = "theme";
+  static const _themeModeKey = "theme";
+  static const _themeVariantKey = "themeVariant";
   static const _themeColorKey = "themeColor";
   static const _useMaterialYouKey = "useMaterialYou";
 
@@ -157,6 +231,7 @@ class SettingsService with ChangeNotifier {
         options: const SharedPreferencesOptions(),
       ),
     );
+    await instance.loadAll();
     return instance;
   }
 }
