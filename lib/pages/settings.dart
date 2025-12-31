@@ -4,6 +4,7 @@ import 'package:dynamic_color_ffi/dynamic_color_ffi.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flex_color_picker/flex_color_picker.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:material/material_shapes.dart';
 import 'package:materium/components/custom_list.dart';
 import 'package:materium/components/custom_refresh_indicator.dart';
 import 'package:materium/database/database.dart';
@@ -177,6 +178,7 @@ class _SettingsPageState extends State<SettingsPage> {
     final settings = context.read<SettingsService>();
     final sourceProvider = SourceProvider();
 
+    final padding = MediaQuery.paddingOf(context);
     final colorTheme = ColorTheme.of(context);
     final elevationTheme = ElevationTheme.of(context);
     final shapeTheme = ShapeTheme.of(context);
@@ -321,7 +323,9 @@ class _SettingsPageState extends State<SettingsPage> {
             type: showBackButton ? .small : .largeFlexible,
             expandedContainerColor: colorTheme.surfaceContainer,
             collapsedContainerColor: colorTheme.surfaceContainer,
-            collapsedPadding: const .fromSTEB(8.0 + 40.0 + 8.0, 0.0, 16.0, 0.0),
+            collapsedPadding: showBackButton
+                ? const .fromSTEB(8.0 + 40.0 + 8.0, 0.0, 16.0, 0.0)
+                : null,
             leading: showBackButton
                 ? const Padding(
                     padding: .fromSTEB(8.0 - 4.0, 0.0, 8.0 - 4.0, 0.0),
@@ -332,7 +336,7 @@ class _SettingsPageState extends State<SettingsPage> {
             // subtitle: kDebugMode ? const Text("Debug mode") : null,
           ),
           SliverPadding(
-            padding: const EdgeInsets.fromLTRB(16.0, 0.0, 16.0, 16.0),
+            padding: const EdgeInsets.fromLTRB(8.0, 0.0, 8.0, 16.0),
             // TODO: fix switches reparenting (add ValueKey or GlobalKey to list items)
             sliver: ListItemTheme.merge(
               data: CustomThemeFactory.createListItemTheme(
@@ -342,164 +346,164 @@ class _SettingsPageState extends State<SettingsPage> {
                 stateTheme: stateTheme,
                 typescaleTheme: typescaleTheme,
                 variant: .settings,
-              ),
+              ).copyWith(),
               child: SliverList.list(
                 children: [
-                  if (settingsProvider.developerModeV1) ...[
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                      child: Text(
-                        "Experimental",
-                        style: typescaleTheme.labelLarge.toTextStyle(
-                          color: colorTheme.onSurfaceVariant,
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 8.0),
-                    ListItemContainer(
-                      isFirst: true,
-                      child: ListItemInteraction(
-                        onTap: () async {
-                          await Fluttertoast.showToast(
-                            msg: "Not yet implemented!",
-                            toastLength: Toast.LENGTH_SHORT,
-                          );
-                        },
-                        child: ListItemLayout(
-                          leading: SizedBox.square(
-                            dimension: 40.0,
-                            child: Material(
-                              clipBehavior: Clip.antiAlias,
-                              color: staticColors.orange.colorFixed,
-                              shape: const StadiumBorder(),
-                              child: Align.center(
-                                child: Icon(
-                                  Symbols.palette_rounded,
-                                  fill: 1.0,
-                                  color:
-                                      staticColors.orange.onColorFixedVariant,
-                                ),
-                              ),
-                            ),
-                          ),
-                          headline: const Text("Appearance"),
-                          supportingText: const Text(
-                            "User interface preferences",
-                          ),
-                          trailing: const Icon(
-                            Symbols.keyboard_arrow_right_rounded,
-                          ),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 2.0),
-                    ListItemContainer(
-                      child: ListItemInteraction(
-                        onTap: () => Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const ImportExportPage(),
-                          ),
-                        ),
-                        child: ListItemLayout(
-                          leading: SizedBox.square(
-                            dimension: 40.0,
-                            child: Material(
-                              clipBehavior: Clip.antiAlias,
-                              color: staticColors.blue.colorFixed,
-                              shape: const StadiumBorder(),
-                              child: Align.center(
-                                child: Icon(
-                                  Symbols.sync_alt_rounded,
-                                  fill: 1.0,
-                                  color: staticColors.blue.onColorFixedVariant,
-                                ),
-                              ),
-                            ),
-                          ),
-                          headline: const Text("Backup"),
-                          supportingText: const Text(
-                            "Import or export your Obtainium data",
-                          ),
-                          trailing: const Icon(
-                            Symbols.keyboard_arrow_right_rounded,
-                          ),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 2.0),
-                    ListItemContainer(
-                      child: MergeSemantics(
-                        child: ListItemInteraction(
-                          onTap: () => Navigator.of(context).push(
-                            MaterialPageRoute(
-                              builder: (context) => const DeveloperPage(),
-                            ),
-                          ),
-                          child: ListItemLayout(
-                            leading: SizedBox.square(
-                              dimension: 40.0,
-                              child: Material(
-                                clipBehavior: Clip.antiAlias,
-                                color: staticColors.cyan.colorFixed,
-                                shape: const StadiumBorder(),
-                                child: Align.center(
-                                  child: Icon(
-                                    Symbols.developer_mode_rounded,
-                                    fill: 1.0,
-                                    color:
-                                        staticColors.cyan.onColorFixedVariant,
-                                  ),
-                                ),
-                              ),
-                            ),
-                            headline: const Text("Developer options"),
-                            supportingText: const Text(
-                              "Options for developers",
-                            ),
-                            trailing: const Icon(
-                              Symbols.keyboard_arrow_right_rounded,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 2.0),
-                    ListItemContainer(
-                      isLast: true,
-                      child: ListItemInteraction(
-                        onTap: () => Navigator.of(context).push(
-                          MaterialPageRoute(
-                            builder: (context) => const AboutPage(),
-                          ),
-                        ),
-                        child: ListItemLayout(
-                          leading: SizedBox.square(
-                            dimension: 40.0,
-                            child: Material(
-                              clipBehavior: Clip.antiAlias,
-                              color: staticColors.purple.colorFixed,
-                              shape: const StadiumBorder(),
-                              child: Align.center(
-                                child: Icon(
-                                  Symbols.info_rounded,
-                                  fill: 1.0,
-                                  color:
-                                      staticColors.purple.onColorFixedVariant,
-                                ),
-                              ),
-                            ),
-                          ),
-                          headline: const Text("About"),
-                          supportingText: const Text("App version and info"),
-                          trailing: const Icon(
-                            Symbols.keyboard_arrow_right_rounded,
-                          ),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 12.0),
-                  ],
+                  // if (settingsProvider.developerModeV1) ...[
+                  //   Padding(
+                  //     padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                  //     child: Text(
+                  //       "Experimental",
+                  //       style: typescaleTheme.labelLarge.toTextStyle(
+                  //         color: colorTheme.onSurfaceVariant,
+                  //       ),
+                  //     ),
+                  //   ),
+                  //   const SizedBox(height: 8.0),
+                  //   ListItemContainer(
+                  //     isFirst: true,
+                  //     child: ListItemInteraction(
+                  //       onTap: () async {
+                  //         await Fluttertoast.showToast(
+                  //           msg: "Not yet implemented!",
+                  //           toastLength: Toast.LENGTH_SHORT,
+                  //         );
+                  //       },
+                  //       child: ListItemLayout(
+                  //         leading: SizedBox.square(
+                  //           dimension: 40.0,
+                  //           child: Material(
+                  //             clipBehavior: Clip.antiAlias,
+                  //             color: staticColors.orange.colorFixed,
+                  //             shape: const StadiumBorder(),
+                  //             child: Align.center(
+                  //               child: Icon(
+                  //                 Symbols.palette_rounded,
+                  //                 fill: 1.0,
+                  //                 color:
+                  //                     staticColors.orange.onColorFixedVariant,
+                  //               ),
+                  //             ),
+                  //           ),
+                  //         ),
+                  //         headline: const Text("Appearance"),
+                  //         supportingText: const Text(
+                  //           "User interface preferences",
+                  //         ),
+                  //         trailing: const Icon(
+                  //           Symbols.keyboard_arrow_right_rounded,
+                  //         ),
+                  //       ),
+                  //     ),
+                  //   ),
+                  //   const SizedBox(height: 2.0),
+                  //   ListItemContainer(
+                  //     child: ListItemInteraction(
+                  //       onTap: () => Navigator.push(
+                  //         context,
+                  //         MaterialPageRoute(
+                  //           builder: (context) => const ImportExportPage(),
+                  //         ),
+                  //       ),
+                  //       child: ListItemLayout(
+                  //         leading: SizedBox.square(
+                  //           dimension: 40.0,
+                  //           child: Material(
+                  //             clipBehavior: Clip.antiAlias,
+                  //             color: staticColors.blue.colorFixed,
+                  //             shape: const StadiumBorder(),
+                  //             child: Align.center(
+                  //               child: Icon(
+                  //                 Symbols.sync_alt_rounded,
+                  //                 fill: 1.0,
+                  //                 color: staticColors.blue.onColorFixedVariant,
+                  //               ),
+                  //             ),
+                  //           ),
+                  //         ),
+                  //         headline: const Text("Backup"),
+                  //         supportingText: const Text(
+                  //           "Import or export your Obtainium data",
+                  //         ),
+                  //         trailing: const Icon(
+                  //           Symbols.keyboard_arrow_right_rounded,
+                  //         ),
+                  //       ),
+                  //     ),
+                  //   ),
+                  //   const SizedBox(height: 2.0),
+                  //   ListItemContainer(
+                  //     child: MergeSemantics(
+                  //       child: ListItemInteraction(
+                  //         onTap: () => Navigator.of(context).push(
+                  //           MaterialPageRoute(
+                  //             builder: (context) => const DeveloperPage(),
+                  //           ),
+                  //         ),
+                  //         child: ListItemLayout(
+                  //           leading: SizedBox.square(
+                  //             dimension: 40.0,
+                  //             child: Material(
+                  //               clipBehavior: Clip.antiAlias,
+                  //               color: staticColors.cyan.colorFixed,
+                  //               shape: const StadiumBorder(),
+                  //               child: Align.center(
+                  //                 child: Icon(
+                  //                   Symbols.developer_mode_rounded,
+                  //                   fill: 1.0,
+                  //                   color:
+                  //                       staticColors.cyan.onColorFixedVariant,
+                  //                 ),
+                  //               ),
+                  //             ),
+                  //           ),
+                  //           headline: const Text("Developer options"),
+                  //           supportingText: const Text(
+                  //             "Options for developers",
+                  //           ),
+                  //           trailing: const Icon(
+                  //             Symbols.keyboard_arrow_right_rounded,
+                  //           ),
+                  //         ),
+                  //       ),
+                  //     ),
+                  //   ),
+                  //   const SizedBox(height: 2.0),
+                  //   ListItemContainer(
+                  //     isLast: true,
+                  //     child: ListItemInteraction(
+                  //       onTap: () => Navigator.of(context).push(
+                  //         MaterialPageRoute(
+                  //           builder: (context) => const AboutPage(),
+                  //         ),
+                  //       ),
+                  //       child: ListItemLayout(
+                  //         leading: SizedBox.square(
+                  //           dimension: 40.0,
+                  //           child: Material(
+                  //             clipBehavior: Clip.antiAlias,
+                  //             color: staticColors.purple.colorFixed,
+                  //             shape: const StadiumBorder(),
+                  //             child: Align.center(
+                  //               child: Icon(
+                  //                 Symbols.info_rounded,
+                  //                 fill: 1.0,
+                  //                 color:
+                  //                     staticColors.purple.onColorFixedVariant,
+                  //               ),
+                  //             ),
+                  //           ),
+                  //         ),
+                  //         headline: const Text("About"),
+                  //         supportingText: const Text("App version and info"),
+                  //         trailing: const Icon(
+                  //           Symbols.keyboard_arrow_right_rounded,
+                  //         ),
+                  //       ),
+                  //     ),
+                  //   ),
+                  //   const SizedBox(height: 12.0),
+                  // ],
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 16.0),
                     child: Text(
@@ -1396,24 +1400,115 @@ class _SettingsPageState extends State<SettingsPage> {
                   ListItemContainer(
                     key: const ValueKey("developerModeV1"),
                     isLast: true,
-                    child: MergeSemantics(
-                      child: ListItemInteraction(
-                        onTap: () => settingsProvider.developerModeV1 =
-                            !settingsProvider.developerModeV1,
-                        child: ListItemLayout(
-                          padding: const .fromLTRB(16.0, 0.0, 16.0 - 8.0, 0.0),
-                          trailingPadding: const .symmetric(
-                            vertical: (32.0 + 2 * 10.0 - 48.0) / 2.0,
-                          ),
-                          headline: const Text("Developer Mode"),
-                          trailing: ExcludeFocus(
-                            child: Switch(
-                              onCheckedChanged: (value) =>
-                                  settingsProvider.developerModeV1 = value,
-                              checked: settingsProvider.developerModeV1,
+                    child: IntrinsicHeight(
+                      child: Flex.horizontal(
+                        crossAxisAlignment: .stretch,
+                        children: [
+                          Flexible.tight(
+                            child: Builder(
+                              builder: (context) {
+                                final isDisabled =
+                                    !settingsProvider.developerModeV1;
+                                final containerColor = isDisabled
+                                    ? colorTheme.onSurface.withValues(
+                                        alpha: 0.10,
+                                      )
+                                    : null;
+                                final contentColor = isDisabled
+                                    ? colorTheme.onSurface.withValues(
+                                        alpha: 0.38,
+                                      )
+                                    : null;
+                                return Tooltip(
+                                  message: isDisabled
+                                      ? "Developer mode must be enabled"
+                                      : "",
+                                  child: ListItemInteraction(
+                                    stateLayerShape: .all(
+                                      CornersBorder.rounded(
+                                        corners: CornersDirectional.horizontal(
+                                          end: shapeTheme.corner.extraSmall,
+                                        ),
+                                      ),
+                                    ),
+                                    onTap: settingsProvider.developerModeV1
+                                        ? () => Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) =>
+                                                  const DeveloperPage(),
+                                            ),
+                                          )
+                                        : null,
+                                    child: ListItemLayout(
+                                      padding: const .directional(
+                                        start: 16.0,
+                                        end: 12.0,
+                                      ),
+                                      leading:
+                                          SettingsListItemLeading.fromExtendedColor(
+                                            extendedColor: staticColors.purple,
+                                            pairing: .variantOnFixed,
+                                            containerShape:
+                                                RoundedPolygonBorder(
+                                                  polygon: MaterialShapes
+                                                      .pixelCircle,
+                                                ),
+                                            containerColor: containerColor,
+                                            contentColor: contentColor,
+                                            child: const Icon(
+                                              Symbols.developer_mode_rounded,
+                                              fill: 1.0,
+                                            ),
+                                          ),
+                                      headline: Text("For developers"),
+                                      supportingText: Text(
+                                        "If you know, you know",
+                                      ),
+                                      trailing: Icon(
+                                        Symbols.keyboard_arrow_right_rounded,
+                                        color: contentColor,
+                                      ),
+                                    ),
+                                  ),
+                                );
+                              },
                             ),
                           ),
-                        ),
+                          VerticalDivider(
+                            thickness: 1.0,
+                            width: 1.0,
+                            indent: 10.0,
+                            endIndent: 10.0,
+                            color: colorTheme.outlineVariant,
+                          ),
+                          ListItemInteraction(
+                            stateLayerShape: .all(
+                              CornersBorder.rounded(
+                                corners: CornersDirectional.horizontal(
+                                  start: shapeTheme.corner.extraSmall,
+                                ),
+                              ),
+                            ),
+                            onTap: () => settingsProvider.developerModeV1 =
+                                !settingsProvider.developerModeV1,
+                            child: Padding(
+                              padding: const .fromSTEB(
+                                12.0 - 8.0,
+                                (32.0 + 2 * 10.0 - 48.0) / 2.0,
+                                16.0 - 8.0,
+                                (32.0 + 2 * 10.0 - 48.0) / 2.0,
+                              ),
+                              child: ExcludeFocus(
+                                child: Switch(
+                                  onCheckedChanged: (value) =>
+                                      settingsProvider.developerModeV1 = value,
+                                  checked: settingsProvider.developerModeV1,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                   ),
@@ -1523,6 +1618,7 @@ class _SettingsPageState extends State<SettingsPage> {
               ),
             ),
           ),
+          SliverToBoxAdapter(child: SizedBox(height: padding.bottom)),
         ],
       ),
     );
@@ -1713,9 +1809,7 @@ class _LogsPageState extends State<_LogsPage> {
       typescaleTheme: typescaleTheme,
       size: .small,
       shape: .round,
-      color: .filled,
-      isSelected: false,
-      unselectedContainerColor: colorTheme.surfaceContainerHighest,
+      color: .tonal,
     );
 
     return Scaffold(
@@ -1736,24 +1830,23 @@ class _LogsPageState extends State<_LogsPage> {
           child: CustomScrollView(
             slivers: [
               CustomAppBar(
-                leading: const Padding(
-                  padding: EdgeInsets.only(left: 8.0 - 4.0),
-                  child: DeveloperPageBackButton(),
-                ),
-                type: CustomAppBarType.largeFlexible,
-                behavior: CustomAppBarBehavior.duplicate,
+                type: .small,
                 expandedContainerColor: colorTheme.surfaceContainer,
                 collapsedContainerColor: colorTheme.surfaceContainer,
-                collapsedPadding: const EdgeInsets.fromLTRB(
+                collapsedPadding: const .fromSTEB(
                   8.0 + 40.0 + 8.0,
                   0.0,
                   16.0,
                   0.0,
                 ),
+                leading: const Padding(
+                  padding: .fromSTEB(8.0 - 4.0, 0.0, 8.0 - 4.0, 0.0),
+                  child: DeveloperPageBackButton(),
+                ),
                 title: Text(tr("appLogs")),
               ),
               SliverPadding(
-                padding: const EdgeInsets.fromLTRB(16.0, 4.0, 16.0, 0.0),
+                padding: const EdgeInsets.fromLTRB(8.0, 4.0, 8.0, 0.0),
                 sliver: SliverList.list(
                   children: [
                     DropdownMenuFormField<int>(
@@ -1877,12 +1970,7 @@ class _LogsPageState extends State<_LogsPage> {
                   const spacing = 2.0;
                   return logs != null
                       ? SliverPadding(
-                          padding: const EdgeInsetsGeometry.fromLTRB(
-                            16.0,
-                            0.0,
-                            16.0,
-                            16.0,
-                          ),
+                          padding: const .fromLTRB(8.0, 0.0, 8.0, 16.0),
                           sliver: ListItemTheme.merge(
                             data: CustomThemeFactory.createListItemTheme(
                               colorTheme: colorTheme,
@@ -1890,7 +1978,7 @@ class _LogsPageState extends State<_LogsPage> {
                               shapeTheme: shapeTheme,
                               stateTheme: stateTheme,
                               typescaleTheme: typescaleTheme,
-                              variant: .settings,
+                              variant: .logs,
                             ),
                             child: SliverList.builder(
                               itemCount: logs.length,
@@ -1898,43 +1986,30 @@ class _LogsPageState extends State<_LogsPage> {
                                 final log = logs[index];
                                 final isFirst = index == 0;
                                 final isLast = index == logs.length - 1;
+
                                 final icon = switch (log.level) {
-                                  LogLevels.info => const Icon(
+                                  .info => const Icon(
                                     Symbols.info_rounded,
-                                    fill: 1.0,
+                                    fill: 0.0,
                                   ),
-                                  LogLevels.warning => const Icon(
+                                  .warning => const Icon(
                                     Symbols.warning_rounded,
                                     fill: 1.0,
                                   ),
-                                  LogLevels.error => const Icon(
+                                  .error => const Icon(
                                     Symbols.error_rounded,
                                     fill: 1.0,
                                   ),
-                                  LogLevels.debug => const Icon(
+                                  .debug => const Icon(
                                     Symbols.bug_report_rounded,
                                     fill: 1.0,
                                   ),
                                 };
-                                final iconBackgroundColor = switch (log.level) {
-                                  LogLevels.info =>
-                                    staticColors.blue.colorContainer,
-                                  LogLevels.warning =>
-                                    staticColors.yellow.colorContainer,
-                                  LogLevels.error =>
-                                    staticColors.red.colorContainer,
-                                  LogLevels.debug =>
-                                    staticColors.cyan.colorContainer,
-                                };
-                                final iconForegroundColor = switch (log.level) {
-                                  LogLevels.info =>
-                                    staticColors.blue.onColorContainer,
-                                  LogLevels.warning =>
-                                    staticColors.yellow.onColorContainer,
-                                  LogLevels.error =>
-                                    staticColors.red.onColorContainer,
-                                  LogLevels.debug =>
-                                    staticColors.cyan.onColorContainer,
+                                final iconColor = switch (log.level) {
+                                  .info => staticColors.blue.color,
+                                  .warning => staticColors.yellow.color,
+                                  .error => staticColors.red.color,
+                                  .debug => staticColors.cyan.color,
                                 };
 
                                 return KeyedSubtree(
@@ -1959,27 +2034,15 @@ class _LogsPageState extends State<_LogsPage> {
                                             );
                                           },
                                           child: ListItemLayout(
-                                            leading: SizedBox.square(
-                                              dimension: 40.0,
-                                              child: Material(
-                                                clipBehavior: Clip.antiAlias,
-                                                color: iconBackgroundColor,
-                                                shape: const StadiumBorder(),
-                                                child: Align.center(
-                                                  child: IconTheme.merge(
-                                                    data: IconThemeDataPartial.from(
-                                                      color:
-                                                          iconForegroundColor,
-                                                    ),
-                                                    child: icon,
-                                                  ),
-                                                ),
+                                            alignment: .top,
+                                            leading: IconTheme.merge(
+                                              data: IconThemeDataPartial.from(
+                                                color: iconColor,
                                               ),
+                                              child: icon,
                                             ),
+                                            overline: Text("${log.createdAt}"),
                                             headline: Text(log.message),
-                                            supportingText: Text(
-                                              log.createdAt.toString(),
-                                            ),
                                           ),
                                         ),
                                       ),

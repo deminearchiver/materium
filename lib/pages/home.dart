@@ -10,6 +10,7 @@ import 'package:materium/pages/apps.dart';
 import 'package:materium/pages/import_export.dart';
 import 'package:materium/pages/settings.dart';
 import 'package:materium/providers/apps_provider.dart';
+import 'package:materium/providers/settings_new.dart';
 import 'package:materium/providers/settings_provider.dart';
 import 'package:materium/theme/legacy.dart';
 import 'package:provider/provider.dart';
@@ -355,6 +356,8 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    final settings = context.read<SettingsService>();
+    final settingsProvider = context.watch<SettingsProvider>();
     final appsProvider = context.watch<AppsProvider>();
 
     if (!_prevIsLoading &&
@@ -386,12 +389,8 @@ class _HomePageState extends State<HomePage> {
             )
             .widget,
         bottomNavigationBar: NavigationBar(
-          backgroundColor: switch (selectedIndex) {
-            0 => colorTheme.surfaceContainerHigh,
-            1 || 2 || 3 => colorTheme.surfaceContainerHigh,
-            _ => colorTheme.surfaceContainer,
-          },
-          onDestinationSelected: (index) async {
+          backgroundColor: colorTheme.surfaceContainerHigh,
+          onDestinationSelected: (index) {
             HapticFeedback.selectionClick();
             _switchToPage(index);
           },

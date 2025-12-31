@@ -143,7 +143,7 @@ class TypographyDefaults with Diagnosticable {
   );
 }
 
-enum CustomListItemVariant { settings, licenses }
+enum CustomListItemVariant { settings, licenses, logs }
 
 abstract final class CustomThemeFactory {
   static ListItemThemeDataPartial createListItemTheme({
@@ -188,6 +188,19 @@ abstract final class CustomThemeFactory {
       //     color: colorTheme.onSurfaceVariant,
       //   ),
       // ),
+    ),
+    .logs => .from(
+      containerColor: .all(colorTheme.surface),
+      overlineTextStyle: .all(
+        typescaleTheme.labelSmall
+            .mergeWith(font: const [FontFamily.googleSansCode])
+            .toTextStyle(color: colorTheme.onSurfaceVariant),
+      ),
+      headlineTextStyle: .all(
+        typescaleTheme.bodyMedium
+            .mergeWith(font: const [FontFamily.googleSansCode])
+            .toTextStyle(color: colorTheme.onSurface),
+      ),
     ),
   };
 }

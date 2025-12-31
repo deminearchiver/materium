@@ -94,79 +94,39 @@ class _DeveloperPageState extends State<DeveloperPage> {
 
     return Scaffold(
       backgroundColor: colorTheme.surfaceContainer,
-      body: CustomScrollView(
-        slivers: [
-          CustomAppBar(
-            leading: const Padding(
-              padding: EdgeInsets.only(left: 8.0 - 4.0),
-              child: DeveloperPageBackButton(),
+      body: SafeArea(
+        top: false,
+        bottom: false,
+        child: CustomScrollView(
+          slivers: [
+            CustomAppBar(
+              type: .small,
+              expandedContainerColor: colorTheme.surfaceContainer,
+              collapsedContainerColor: colorTheme.surfaceContainer,
+              collapsedPadding: const .fromSTEB(
+                8.0 + 40.0 + 8.0,
+                0.0,
+                16.0,
+                0.0,
+              ),
+              leading: const Padding(
+                padding: .fromSTEB(8.0 - 4.0, 0.0, 8.0 - 4.0, 0.0),
+                child: DeveloperPageBackButton(),
+              ),
+              title: const Text("Developer Options"),
             ),
-            type: CustomAppBarType.largeFlexible,
-            behavior: CustomAppBarBehavior.duplicate,
-            expandedContainerColor: colorTheme.surfaceContainer,
-            collapsedContainerColor: colorTheme.surfaceContainer,
-            collapsedPadding: const EdgeInsets.fromLTRB(
-              8.0 + 40.0 + 8.0,
-              0.0,
-              16.0,
-              0.0,
-            ),
-            title: const Text("Developer Options"),
-          ),
-          ListItemTheme.merge(
-            data: CustomThemeFactory.createListItemTheme(
-              colorTheme: colorTheme,
-              elevationTheme: elevationTheme,
-              shapeTheme: shapeTheme,
-              stateTheme: stateTheme,
-              typescaleTheme: typescaleTheme,
-              variant: .settings,
-            ),
-            child: SliverList.list(
-              children: [
-                // Padding(
-                //   padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                //   child: Flex.vertical(
-                //     children: [
-                //       ListItemContainer(
-                //         isFirst: true,
-                //         child: ConstrainedBox(
-                //           constraints: BoxConstraints(minHeight: 56.0),
-                //           child: Padding(
-                //             padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                //             child: Align.center(
-                //               child: CustomLinearProgressIndicator(
-                //                 progress: _progress,
-                //                 // minHeight: 16.0,
-                //                 // trackGap: 4.0,
-                //                 // borderRadius: BorderRadius.circular(8.0),
-                //               ),
-                //             ),
-                //           ),
-                //         ),
-                //       ),
-                //       const SizedBox(height: 2.0),
-                //       ListItemContainer(
-                //         isLast: true,
-                //         child: ConstrainedBox(
-                //           constraints: BoxConstraints(minHeight: 56.0),
-                //           child: Padding(
-                //             padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                //             child: Align.center(
-                //               child: Slider(
-                //                 onChanged: (value) =>
-                //                     setState(() => _progress = value),
-                //                 value: _progress,
-                //               ),
-                //             ),
-                //           ),
-                //         ),
-                //       ),
-                //     ],
-                //   ),
-                // ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
+            ListItemTheme.merge(
+              data: CustomThemeFactory.createListItemTheme(
+                colorTheme: colorTheme,
+                elevationTheme: elevationTheme,
+                shapeTheme: shapeTheme,
+                stateTheme: stateTheme,
+                typescaleTheme: typescaleTheme,
+                variant: .settings,
+              ),
+              child: SliverToBoxAdapter(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 8.0),
                   child: Flex.vertical(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     spacing: 2.0,
@@ -356,14 +316,14 @@ class _DeveloperPageState extends State<DeveloperPage> {
                           ),
                         ),
                       ),
+                      SizedBox(height: MediaQuery.paddingOf(context).bottom),
                     ],
                   ),
                 ),
-                SizedBox(height: MediaQuery.paddingOf(context).bottom),
-              ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -403,7 +363,6 @@ class _DeveloperAddAppPageState extends State<_DeveloperAddAppPage> {
                     child: DeveloperPageBackButton(),
                   ),
                   type: CustomAppBarType.largeFlexible,
-                  behavior: CustomAppBarBehavior.duplicate,
                   expandedContainerColor: colorTheme.surfaceContainer,
                   collapsedContainerColor: colorTheme.surfaceContainer,
                   collapsedPadding: const EdgeInsets.fromLTRB(
@@ -600,7 +559,6 @@ class _DeveloperMarkdown1PageState extends State<DeveloperMarkdown1Page> {
               child: DeveloperPageBackButton(),
             ),
             type: CustomAppBarType.largeFlexible,
-            behavior: CustomAppBarBehavior.duplicate,
             expandedContainerColor: colorTheme.surfaceContainer,
             collapsedContainerColor: colorTheme.surfaceContainer,
             collapsedPadding: const EdgeInsets.fromLTRB(
@@ -807,7 +765,6 @@ class _DeveloperMarkdown2PageState extends State<DeveloperMarkdown2Page> {
               child: DeveloperPageBackButton(),
             ),
             type: CustomAppBarType.largeFlexible,
-            behavior: CustomAppBarBehavior.duplicate,
             expandedContainerColor: colorTheme.surfaceContainer,
             collapsedContainerColor: colorTheme.surfaceContainer,
             collapsedPadding: const EdgeInsets.fromLTRB(
@@ -2301,7 +2258,6 @@ class _Settings2ViewState extends State<Settings2View> {
           //     child: DeveloperPageBackButton(),
           //   ),
           //   type: CustomAppBarType.largeFlexible,
-          //   behavior: CustomAppBarBehavior.duplicate,
           //   expandedContainerColor: colorTheme.surfaceContainer,
           //   collapsedContainerColor: colorTheme.surfaceContainer,
           //   collapsedPadding: const EdgeInsets.fromLTRB(
@@ -2326,7 +2282,7 @@ class _Settings2ViewState extends State<Settings2View> {
               children: [
                 const SizedBox(height: 16 - 4.0),
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                  padding: const EdgeInsets.symmetric(horizontal: 8.0),
                   child: ListItemContainer(
                     isFirst: true,
                     child: ListItemInteraction(
@@ -2360,7 +2316,7 @@ class _Settings2ViewState extends State<Settings2View> {
                 ),
                 const SizedBox(height: 2.0),
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                  padding: const EdgeInsets.symmetric(horizontal: 8.0),
                   child: ListItemContainer(
                     child: ListItemInteraction(
                       onTap: () {},
@@ -2393,7 +2349,7 @@ class _Settings2ViewState extends State<Settings2View> {
                 ),
                 const SizedBox(height: 2.0),
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                  padding: const EdgeInsets.symmetric(horizontal: 8.0),
                   child: ListItemContainer(
                     isLast: true,
                     child: MergeSemantics(
@@ -2495,7 +2451,6 @@ class _AboutPageState extends State<AboutPage> with TickerProviderStateMixin {
               child: DeveloperPageBackButton(),
             ),
             type: CustomAppBarType.small,
-            behavior: CustomAppBarBehavior.duplicate,
             expandedContainerColor: colorTheme.surfaceContainer,
             collapsedContainerColor: colorTheme.surfaceContainer,
             collapsedPadding: const EdgeInsets.fromLTRB(
@@ -2652,46 +2607,49 @@ class _MaterialDemoViewState extends State<_MaterialDemoView> {
           child: CustomScrollView(
             slivers: [
               CustomAppBar(
-                leading: const Padding(
-                  padding: EdgeInsets.only(left: 8.0 - 4.0),
-                  child: DeveloperPageBackButton(),
-                ),
-                type: CustomAppBarType.largeFlexible,
-                behavior: CustomAppBarBehavior.duplicate,
+                type: .small,
                 expandedContainerColor: colorTheme.surfaceContainer,
                 collapsedContainerColor: colorTheme.surfaceContainer,
-                collapsedPadding: const EdgeInsets.fromLTRB(
+                collapsedPadding: const .fromSTEB(
                   8.0 + 40.0 + 8.0,
                   0.0,
                   16.0,
                   0.0,
                 ),
-                title: const Text("Material 3 Expressive"),
-                subtitle: const Text("Design system"),
-              ),
-              ListItemTheme.merge(
-                data: CustomThemeFactory.createListItemTheme(
-                  colorTheme: colorTheme,
-                  elevationTheme: elevationTheme,
-                  shapeTheme: shapeTheme,
-                  stateTheme: stateTheme,
-                  typescaleTheme: typescaleTheme,
-                  variant: .settings,
+                leading: const Padding(
+                  padding: .fromSTEB(8.0 - 4.0, 0.0, 8.0 - 4.0, 0.0),
+                  child: DeveloperPageBackButton(),
                 ),
-                child: SliverList.list(
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.fromLTRB(32.0, 12.0, 32.0, 8.0),
-                      child: Text(
-                        "Shape",
-                        style: typescaleTheme.labelLarge.toTextStyle(
-                          color: colorTheme.onSurfaceVariant,
+                title: const Text("Material 3 Expressive"),
+              ),
+              SliverPadding(
+                padding: const .symmetric(horizontal: 8.0),
+                sliver: ListItemTheme.merge(
+                  data: CustomThemeFactory.createListItemTheme(
+                    colorTheme: colorTheme,
+                    elevationTheme: elevationTheme,
+                    shapeTheme: shapeTheme,
+                    stateTheme: stateTheme,
+                    typescaleTheme: typescaleTheme,
+                    variant: .settings,
+                  ),
+                  child: SliverList.list(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(
+                          16.0,
+                          0.0,
+                          16.0,
+                          8.0,
+                        ),
+                        child: Text(
+                          "Shape",
+                          style: typescaleTheme.labelLarge.toTextStyle(
+                            color: colorTheme.onSurfaceVariant,
+                          ),
                         ),
                       ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                      child: ListItemContainer(
+                      ListItemContainer(
                         isFirst: true,
                         child: ListItemInteraction(
                           onTap: () => Navigator.push(
@@ -2733,11 +2691,8 @@ class _MaterialDemoViewState extends State<_MaterialDemoView> {
                           ),
                         ),
                       ),
-                    ),
-                    const SizedBox(height: 2.0),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                      child: ListItemContainer(
+                      const SizedBox(height: 2.0),
+                      ListItemContainer(
                         isLast: true,
                         child: ListItemInteraction(
                           onTap: () async {
@@ -2778,19 +2733,22 @@ class _MaterialDemoViewState extends State<_MaterialDemoView> {
                           ),
                         ),
                       ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.fromLTRB(32.0, 12.0, 32.0, 8.0),
-                      child: Text(
-                        "Motion",
-                        style: typescaleTheme.labelLarge.toTextStyle(
-                          color: colorTheme.onSurfaceVariant,
+
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(
+                          16.0,
+                          12.0,
+                          16.0,
+                          8.0,
+                        ),
+                        child: Text(
+                          "Motion",
+                          style: typescaleTheme.labelLarge.toTextStyle(
+                            color: colorTheme.onSurfaceVariant,
+                          ),
                         ),
                       ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                      child: ListItemContainer(
+                      ListItemContainer(
                         isFirst: true,
                         isLast: true,
                         child: Flex.vertical(
@@ -2865,19 +2823,22 @@ class _MaterialDemoViewState extends State<_MaterialDemoView> {
                           ],
                         ),
                       ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.fromLTRB(32.0, 12.0, 32.0, 8.0),
-                      child: Text(
-                        "Basic input",
-                        style: typescaleTheme.labelLarge.toTextStyle(
-                          color: colorTheme.onSurfaceVariant,
+
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(
+                          16.0,
+                          12.0,
+                          16.0,
+                          8.0,
+                        ),
+                        child: Text(
+                          "Basic input",
+                          style: typescaleTheme.labelLarge.toTextStyle(
+                            color: colorTheme.onSurfaceVariant,
+                          ),
                         ),
                       ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                      child: ListItemContainer(
+                      ListItemContainer(
                         isFirst: true,
                         child: MergeSemantics(
                           child: ListItemInteraction(
@@ -2923,11 +2884,8 @@ class _MaterialDemoViewState extends State<_MaterialDemoView> {
                           ),
                         ),
                       ),
-                    ),
-                    const SizedBox(height: 2.0),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                      child: ListItemContainer(
+                      const SizedBox(height: 2.0),
+                      ListItemContainer(
                         isLast: true,
                         child: Flex.vertical(
                           crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -3017,19 +2975,21 @@ class _MaterialDemoViewState extends State<_MaterialDemoView> {
                           ],
                         ),
                       ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.fromLTRB(32.0, 12.0, 32.0, 8.0),
-                      child: Text(
-                        "Loading indicator",
-                        style: typescaleTheme.labelLarge.toTextStyle(
-                          color: colorTheme.onSurfaceVariant,
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(
+                          16.0,
+                          12.0,
+                          16.0,
+                          8.0,
+                        ),
+                        child: Text(
+                          "Loading indicator",
+                          style: typescaleTheme.labelLarge.toTextStyle(
+                            color: colorTheme.onSurfaceVariant,
+                          ),
                         ),
                       ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                      child: ListItemContainer(
+                      ListItemContainer(
                         isFirst: true,
                         child: Flex.vertical(
                           crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -3114,11 +3074,8 @@ class _MaterialDemoViewState extends State<_MaterialDemoView> {
                           ],
                         ),
                       ),
-                    ),
-                    const SizedBox(height: 2.0),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                      child: ListItemContainer(
+                      const SizedBox(height: 2.0),
+                      ListItemContainer(
                         child: Flex.vertical(
                           crossAxisAlignment: CrossAxisAlignment.stretch,
                           children: [
@@ -3202,11 +3159,8 @@ class _MaterialDemoViewState extends State<_MaterialDemoView> {
                           ],
                         ),
                       ),
-                    ),
-                    const SizedBox(height: 2.0),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                      child: ListItemContainer(
+                      const SizedBox(height: 2.0),
+                      ListItemContainer(
                         child: Flex.vertical(
                           crossAxisAlignment: CrossAxisAlignment.stretch,
                           children: [
@@ -3302,11 +3256,8 @@ class _MaterialDemoViewState extends State<_MaterialDemoView> {
                           ],
                         ),
                       ),
-                    ),
-                    const SizedBox(height: 2.0),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                      child: ListItemContainer(
+                      const SizedBox(height: 2.0),
+                      ListItemContainer(
                         child: Flex.vertical(
                           crossAxisAlignment: CrossAxisAlignment.stretch,
                           children: [
@@ -3402,11 +3353,8 @@ class _MaterialDemoViewState extends State<_MaterialDemoView> {
                           ],
                         ),
                       ),
-                    ),
-                    const SizedBox(height: 2.0),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                      child: ListItemContainer(
+                      const SizedBox(height: 2.0),
+                      ListItemContainer(
                         isLast: true,
                         child: Flex.vertical(
                           crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -3463,19 +3411,21 @@ class _MaterialDemoViewState extends State<_MaterialDemoView> {
                           ],
                         ),
                       ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.fromLTRB(32.0, 12.0, 32.0, 8.0),
-                      child: Text(
-                        "Android Design",
-                        style: typescaleTheme.labelLarge.toTextStyle(
-                          color: colorTheme.onSurfaceVariant,
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(
+                          16.0,
+                          12.0,
+                          16.0,
+                          8.0,
+                        ),
+                        child: Text(
+                          "Android Design",
+                          style: typescaleTheme.labelLarge.toTextStyle(
+                            color: colorTheme.onSurfaceVariant,
+                          ),
                         ),
                       ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                      child: ListItemContainer(
+                      ListItemContainer(
                         isFirst: true,
                         isLast: true,
                         containerShape: .all(
@@ -3520,50 +3470,50 @@ class _MaterialDemoViewState extends State<_MaterialDemoView> {
                           ),
                         ),
                       ),
-                    ),
-                    // Builder(
-                    //   builder: (context) {
-                    //     final startCorners = Corners.horizontal(
-                    //       left: shapeTheme.corner.full,
-                    //       right: shapeTheme.corner.extraSmall,
-                    //     );
-                    //     return Flex.horizontal(
-                    //       spacing: 2.0,
-                    //       children: [
-                    //         SizedBox(
-                    //           height: 40.0,
-                    //           child: Material(
-                    //             clipBehavior: .antiAlias,
-                    //             shape: CornersBorder.rounded(
-                    //               corners: startCorners,
-                    //             ),
-                    //             color: colorTheme.secondaryContainer,
-                    //             child: CenterOptically(
-                    //               corners: startCorners,
-                    //               maxOffsets: EdgeInsets.all(double.infinity),
-                    //               child: Padding(
-                    //                 padding: EdgeInsets.symmetric(
-                    //                   horizontal: 16.0,
-                    //                   vertical: 10.0,
-                    //                 ),
-                    //                 child: Text(
-                    //                   "Hello world!",
-                    //                   style: typescaleTheme.labelLarge
-                    //                       .toTextStyle(
-                    //                         color:
-                    //                             colorTheme.onSecondaryContainer,
-                    //                       ),
-                    //                 ),
-                    //               ),
-                    //             ),
-                    //           ),
-                    //         ),
-                    //       ],
-                    //     );
-                    //   },
-                    // ),
-                    const SizedBox(height: 16.0),
-                  ],
+                      // Builder(
+                      //   builder: (context) {
+                      //     final startCorners = Corners.horizontal(
+                      //       left: shapeTheme.corner.full,
+                      //       right: shapeTheme.corner.extraSmall,
+                      //     );
+                      //     return Flex.horizontal(
+                      //       spacing: 2.0,
+                      //       children: [
+                      //         SizedBox(
+                      //           height: 40.0,
+                      //           child: Material(
+                      //             clipBehavior: .antiAlias,
+                      //             shape: CornersBorder.rounded(
+                      //               corners: startCorners,
+                      //             ),
+                      //             color: colorTheme.secondaryContainer,
+                      //             child: CenterOptically(
+                      //               corners: startCorners,
+                      //               maxOffsets: EdgeInsets.all(double.infinity),
+                      //               child: Padding(
+                      //                 padding: EdgeInsets.symmetric(
+                      //                   horizontal: 16.0,
+                      //                   vertical: 10.0,
+                      //                 ),
+                      //                 child: Text(
+                      //                   "Hello world!",
+                      //                   style: typescaleTheme.labelLarge
+                      //                       .toTextStyle(
+                      //                         color:
+                      //                             colorTheme.onSecondaryContainer,
+                      //                       ),
+                      //                 ),
+                      //               ),
+                      //             ),
+                      //           ),
+                      //         ),
+                      //       ],
+                      //     );
+                      //   },
+                      // ),
+                      const SizedBox(height: 16.0),
+                    ],
+                  ),
                 ),
               ),
               SliverToBoxAdapter(child: SizedBox(height: padding.bottom)),
@@ -3813,7 +3763,6 @@ class _ShapeLibraryViewState extends State<_ShapeLibraryView> {
                 child: DeveloperPageBackButton(),
               ),
               type: CustomAppBarType.small,
-              behavior: CustomAppBarBehavior.duplicate,
               expandedContainerColor: colorTheme.surfaceContainer,
               collapsedContainerColor: colorTheme.surfaceContainer,
               collapsedPadding: const EdgeInsets.fromLTRB(

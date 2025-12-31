@@ -183,6 +183,7 @@ class AppsPageState extends State<AppsPage> with TickerProviderStateMixin {
 
     final isRedesignEnabled = settingsProvider.developerModeV1;
 
+    final padding = MediaQuery.paddingOf(context);
     final colorTheme = ColorTheme.of(context);
     final elevationTheme = ElevationTheme.of(context);
     final shapeTheme = ShapeTheme.of(context);
@@ -1362,7 +1363,7 @@ class AppsPageState extends State<AppsPage> with TickerProviderStateMixin {
       }
       if (isRedesignEnabled) {
         return SliverPadding(
-          padding: const .fromLTRB(8.0, 0.0, 8.0, 16.0),
+          padding: const .symmetric(horizontal: 8.0),
           sliver: ListItemTheme.merge(
             data: .from(
               containerColor: .all(colorTheme.surface),
@@ -1852,7 +1853,7 @@ class AppsPageState extends State<AppsPage> with TickerProviderStateMixin {
     // final windowWidthSizeClass = WindowWidthSizeClass.of(context);
     // final isCompact = windowWidthSizeClass <= WindowWidthSizeClass.compact;
 
-    Widget getDockedToolbar() {
+    PreferredSizeWidget getDockedToolbar() {
       final Widget filterButton = IconButton(
         onPressed: isFilterOff
             ? showFilterDialog
@@ -2049,77 +2050,83 @@ class AppsPageState extends State<AppsPage> with TickerProviderStateMixin {
         tooltip: tr("more"),
       );
 
-      return Align.bottomCenter(
-        // TODO(deminearchiver): this prevents hit testing
-        // heightFactor: isRedesignEnabled ? 0.0 : 1.0,
-        heightFactor: 1.0,
-        child: Padding(
-          padding: isRedesignEnabled ? const .all(16.0) : .zero,
-          child: SizedBox(
-            width: isRedesignEnabled ? null : .infinity,
-            height: 64.0,
-            child: Material(
-              clipBehavior: .antiAlias,
-              color: isRedesignEnabled
-                  ? hasSelection
-                        ? colorTheme.primaryContainer
-                        : colorTheme.surfaceContainerHighest
-                  : colorTheme.surfaceContainerHigh,
-              shape: CornersBorder.rounded(
-                corners: .all(
-                  isRedesignEnabled
-                      ? shapeTheme.corner.full
-                      : shapeTheme.corner.none,
+      final EdgeInsetsGeometry margin = isRedesignEnabled
+          ? .fromLTRB(padding.left + 16.0, 16.0, padding.right + 16.0, 16.0)
+          : .zero;
+      const height = 64.0;
+
+      return PreferredSize(
+        preferredSize: Size(.infinity, margin.vertical + height),
+        child: Align.bottomCenter(
+          heightFactor: 1.0,
+          child: Padding(
+            padding: isRedesignEnabled ? margin : .zero,
+            child: SizedBox(
+              width: isRedesignEnabled ? null : .infinity,
+              height: height,
+              child: Material(
+                clipBehavior: .antiAlias,
+                color: isRedesignEnabled
+                    ? hasSelection
+                          ? colorTheme.primaryContainer
+                          : colorTheme.surfaceContainerHighest
+                    : colorTheme.surfaceContainerHigh,
+                shape: CornersBorder.rounded(
+                  corners: .all(
+                    isRedesignEnabled
+                        ? shapeTheme.corner.full
+                        : shapeTheme.corner.none,
+                  ),
                 ),
-              ),
-              elevation: isRedesignEnabled
-                  ? elevationTheme.level3
-                  : elevationTheme.level0,
-              child: Flex.horizontal(
-                mainAxisSize: isRedesignEnabled ? .min : .max,
-                children: isRedesignEnabled
-                    ? [
-                        const SizedBox(width: 12.0 - 4.0),
-                        selectButton,
-                        const SizedBox(width: 12.0 - 4.0 - 4.0),
-                        removeButton,
-                        const SizedBox(width: 12.0 - 4.0),
-                        downloadButton,
-                        const SizedBox(width: 12.0 - 4.0),
-                        categorizeButton,
-                        const SizedBox(width: 12.0 - 4.0 - 4.0),
-                        moreButton,
-                        const SizedBox(width: 12.0 - 4.0),
-                      ]
-                    : [
-                        Flexible.tight(
-                          child: Flex.horizontal(
-                            mainAxisAlignment: .start,
-                            children: [
-                              const SizedBox(width: 16.0),
-                              filterButton,
-                              const SizedBox(width: 12.0),
-                              selectButton,
-                              const SizedBox(width: 12.0),
-                            ],
+                elevation: isRedesignEnabled
+                    ? elevationTheme.level3
+                    : elevationTheme.level0,
+                child: Flex.horizontal(
+                  mainAxisSize: isRedesignEnabled ? .min : .max,
+                  children: isRedesignEnabled
+                      ? [
+                          const SizedBox(width: 12.0 - 4.0),
+                          selectButton,
+                          const SizedBox(width: 12.0 - 4.0 - 4.0),
+                          removeButton,
+                          const SizedBox(width: 12.0 - 4.0),
+                          downloadButton,
+                          const SizedBox(width: 12.0 - 4.0),
+                          categorizeButton,
+                          const SizedBox(width: 12.0 - 4.0 - 4.0),
+                          moreButton,
+                          const SizedBox(width: 12.0 - 4.0),
+                        ]
+                      : [
+                          Flexible.tight(
+                            child: Flex.horizontal(
+                              mainAxisAlignment: .start,
+                              children: [
+                                const SizedBox(width: 16.0),
+                                filterButton,
+                                const SizedBox(width: 12.0),
+                                selectButton,
+                                const SizedBox(width: 12.0),
+                              ],
+                            ),
                           ),
-                        ),
-                        downloadButton,
-                        Flexible.tight(
-                          child: Flex.horizontal(
-                            mainAxisAlignment: .end,
-                            children: [
-                              const SizedBox(width: 12.0 - 4.0),
-                              removeButton,
-                              const SizedBox(width: 12.0 - 4.0 - 4.0),
-                              categorizeButton,
-                              const SizedBox(width: 12.0 - 8.0 - 4.0),
-                              moreButton,
-                              const SizedBox(width: 16.0 - 8.0),
-                            ],
+                          downloadButton,
+                          Flexible.tight(
+                            child: Flex.horizontal(
+                              mainAxisAlignment: .end,
+                              children: [
+                                const SizedBox(width: 12.0 - 4.0),
+                                removeButton,
+                                const SizedBox(width: 12.0 - 4.0 - 4.0),
+                                categorizeButton,
+                                const SizedBox(width: 12.0 - 8.0 - 4.0),
+                                moreButton,
+                                const SizedBox(width: 16.0 - 8.0),
+                              ],
+                            ),
                           ),
-                        ),
-                      ],
+                        ],
+                ),
               ),
             ),
           ),
@@ -2127,27 +2134,28 @@ class AppsPageState extends State<AppsPage> with TickerProviderStateMixin {
       );
     }
 
-    final padding = MediaQuery.paddingOf(context);
+    final toolbar = getDockedToolbar();
 
     return Scaffold(
       backgroundColor: colorTheme.surfaceContainer,
-      body: CustomRefreshIndicator(
-        key: _refreshIndicatorKey,
-        onRefresh: () async {
-          if (kDebugMode) {
-            await Future.delayed(const Duration(seconds: 5));
-          }
-          if (context.mounted) {
-            await refresh();
-          }
-        },
-        edgeOffset: isRedesignEnabled
-            ? padding.top + 64.0
-            : padding.top + 120.0,
-        displacement: 80.0,
-        child: SafeArea(
-          top: false,
-          bottom: false,
+      extendBody: true,
+      body: SafeArea(
+        top: false,
+        bottom: false,
+        child: CustomRefreshIndicator(
+          key: _refreshIndicatorKey,
+          onRefresh: () async {
+            if (kDebugMode) {
+              await Future.delayed(const Duration(seconds: 5));
+            }
+            if (context.mounted) {
+              await refresh();
+            }
+          },
+          edgeOffset: isRedesignEnabled
+              ? padding.top + 64.0
+              : padding.top + 120.0,
+          displacement: 80.0,
           child: Scrollbar(
             controller: scrollController,
             interactive: true,
@@ -2269,15 +2277,16 @@ class AppsPageState extends State<AppsPage> with TickerProviderStateMixin {
                 ] else ...[
                   ...getLoadingWidgets(),
                   getDisplayedList(),
+                  SliverToBoxAdapter(
+                    child: SizedBox(height: toolbar.preferredSize.height),
+                  ),
                 ],
               ],
             ),
           ),
         ),
       ),
-      bottomNavigationBar: appsProvider.apps.isNotEmpty
-          ? getDockedToolbar()
-          : null,
+      bottomNavigationBar: appsProvider.apps.isNotEmpty ? toolbar : null,
     );
   }
 }
