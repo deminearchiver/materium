@@ -1217,6 +1217,22 @@ class _SettingsPageState extends State<SettingsPage> {
                       }
                     },
                   ),
+                  if (kDebugMode)
+                    ListItemContainer(
+                      isFirst: true,
+                      isLast: true,
+                      child: ListItemInteraction(
+                        onTap: () {},
+                        child: ListItemLayout(
+                          headline: Text(tr("Language")),
+                          supportingText: Text(
+                            settingsProvider.forcedLocale?.toString() ??
+                                tr("followSystem"),
+                          ),
+                          trailing: const Icon(Symbols.navigate_next_rounded),
+                        ),
+                      ),
+                    ),
                   const SizedBox(height: 16.0),
                   ListItemContainer(
                     key: const ValueKey("showWebInAppView"),
