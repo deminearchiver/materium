@@ -441,11 +441,19 @@ abstract final class LegacyThemeFactory {
     LegacyIconButtonColor color = .filled,
     bool? isSelected,
     MaterialTapTargetSize tapTargetSize = .padded,
+    LegacyButtonShape? unselectedShape,
+    LegacyButtonShape? selectedShape,
+    Color? disabledContainerColor,
     Color? containerColor,
+    Color? unselectedDisabledContainerColor,
     Color? unselectedContainerColor,
+    Color? selectedDisabledContainerColor,
     Color? selectedContainerColor,
+    Color? disabledIconColor,
     Color? iconColor,
+    Color? unselectedDisabledIconColor,
     Color? unselectedIconColor,
+    Color? selectedDisabledIconColor,
     Color? selectedIconColor,
   }) {
     final isUnselectedNotDefault = isSelected == false;
@@ -498,18 +506,33 @@ abstract final class LegacyThemeFactory {
     };
 
     final corner = isSelectedNotDefault
-        ? switch (shape) {
-            .round => cornerSquare,
-            .square => cornerRound,
+        ? selectedShape != null
+              ? switch (selectedShape) {
+                  .round => cornerRound,
+                  .square => cornerSquare,
+                }
+              : switch (shape) {
+                  .round => cornerSquare,
+                  .square => cornerRound,
+                }
+        : unselectedShape != null
+        ? switch (unselectedShape) {
+            .round => cornerRound,
+            .square => cornerSquare,
           }
         : switch (shape) {
             .round => cornerRound,
             .square => cornerSquare,
           };
 
-    final resolvedDisabledBackgroundColor = colorTheme.onSurface.withValues(
-      alpha: 0.10,
-    );
+    final resolvedDisabledBackgroundColor =
+        switch (isSelected) {
+          null => disabledContainerColor,
+          false => unselectedDisabledContainerColor,
+          true => selectedDisabledContainerColor,
+        } ??
+        colorTheme.onSurface.withValues(alpha: 0.10);
+
     final resolvedBackgroundColor =
         switch (isSelected) {
           null => containerColor,
@@ -532,9 +555,13 @@ abstract final class LegacyThemeFactory {
           .standard => Colors.transparent,
         };
 
-    final resolvedDisabledIconColor = colorTheme.onSurface.withValues(
-      alpha: 0.38,
-    );
+    final resolvedDisabledIconColor =
+        switch (isSelected) {
+          null => disabledIconColor,
+          false => unselectedDisabledIconColor,
+          true => selectedDisabledIconColor,
+        } ??
+        colorTheme.onSurface.withValues(alpha: 0.38);
 
     final resolvedIconColor =
         switch (isSelected) {

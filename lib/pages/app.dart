@@ -399,71 +399,6 @@ class _AppPageState extends State<AppPage> {
                 ),
         ),
         const SizedBox(height: 24),
-        if (kDebugMode) ...[
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16.0),
-            child: ListItemContainer(
-              isFirst: true,
-              child: ListItemInteraction(
-                onTap: () {
-                  if (app?.app.url != null) {
-                    launchUrlString(
-                      app?.app.url ?? "",
-                      mode: LaunchMode.externalApplication,
-                    );
-                  }
-                },
-                onLongPress: () {
-                  Clipboard.setData(ClipboardData(text: app?.app.url ?? ''));
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text(tr("copiedToClipboard"))),
-                  );
-                },
-                child: ListItemLayout(
-                  leading: SizedBox.square(
-                    dimension: 40.0,
-                    child: Material(
-                      clipBehavior: Clip.antiAlias,
-                      shape: CornersBorder.rounded(
-                        corners: Corners.all(shapeTheme.corner.full),
-                      ),
-                      color: colorTheme.primaryFixedDim,
-                      child: Icon(
-                        Symbols.link_rounded,
-                        color: colorTheme.onPrimaryFixedVariant,
-                      ),
-                    ),
-                  ),
-                  headline: Text(app?.app.url ?? "", maxLines: 3),
-                ),
-              ),
-            ),
-          ),
-          const SizedBox(height: 2.0),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16.0),
-            child: ListItemContainer(
-              child: ListItemLayout(
-                leading: SizedBox.square(
-                  dimension: 40.0,
-                  child: Material(
-                    clipBehavior: Clip.antiAlias,
-                    shape: CornersBorder.rounded(
-                      corners: Corners.all(shapeTheme.corner.full),
-                    ),
-                    color: colorTheme.secondaryFixedDim,
-                    child: Icon(
-                      Symbols.package_2_rounded,
-                      fill: 1.0,
-                      color: colorTheme.onSecondaryFixedVariant,
-                    ),
-                  ),
-                ),
-                headline: Text(app?.app.id ?? "", maxLines: 3),
-              ),
-            ),
-          ),
-        ],
         GestureDetector(
           onTap: () {
             if (app?.app.url != null) {
@@ -1114,7 +1049,6 @@ class _AppPageState extends State<AppPage> {
                           ),
                           tooltip: tr("remove"),
                         ),
-                        // ignore: dead_code
                         if (false) ...[
                           const SizedBox(width: 12.0 - 4.0 - 4.0),
                           MenuButtonTheme(

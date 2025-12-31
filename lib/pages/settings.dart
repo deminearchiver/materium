@@ -310,15 +310,24 @@ class _SettingsPageState extends State<SettingsPage> {
       }
     });
 
+    final route = ModalRoute.of(context);
+    final showBackButton = route?.impliesAppBarDismissal ?? false;
+
     return Scaffold(
       backgroundColor: colorTheme.surfaceContainer,
       body: CustomScrollView(
         slivers: <Widget>[
           CustomAppBar(
-            type: CustomAppBarType.largeFlexible,
-            behavior: CustomAppBarBehavior.duplicate,
+            type: showBackButton ? .small : .largeFlexible,
             expandedContainerColor: colorTheme.surfaceContainer,
             collapsedContainerColor: colorTheme.surfaceContainer,
+            collapsedPadding: const .fromSTEB(8.0 + 40.0 + 8.0, 0.0, 16.0, 0.0),
+            leading: showBackButton
+                ? const Padding(
+                    padding: .fromSTEB(8.0 - 4.0, 0.0, 8.0 - 4.0, 0.0),
+                    child: DeveloperPageBackButton(),
+                  )
+                : null,
             title: Text(tr("settings")),
             // subtitle: kDebugMode ? const Text("Debug mode") : null,
           ),

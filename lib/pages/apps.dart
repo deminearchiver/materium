@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:math' as math;
 
 import 'package:easy_localization/easy_localization.dart';
 import 'package:materium/components/custom_list.dart';
@@ -21,8 +22,6 @@ import 'package:provider/provider.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 import 'package:markdown/markdown.dart' as md;
-
-const _kShowAppsListRedesign = kDebugMode;
 
 class AppsPage extends StatefulWidget {
   const AppsPage({super.key});
@@ -107,13 +106,13 @@ void showChangeLogDialog(
   );
 }
 
-Null Function()? getChangeLogFn(BuildContext context, App app) {
-  AppSource appSource = SourceProvider().getSource(
+void Function()? getChangeLogFn(BuildContext context, App app) {
+  final appSource = SourceProvider().getSource(
     app.url,
     overrideSource: app.overrideSource,
   );
-  String? changesUrl = appSource.changeLogPageFromStandardUrl(app.url);
-  String? changeLog = app.changeLog;
+  var changesUrl = appSource.changeLogPageFromStandardUrl(app.url);
+  var changeLog = app.changeLog;
   if (changeLog?.split('\n').length == 1) {
     if (RegExp(
       '(http|ftp|https)://([\\w_-]+(?:(?:\\.[\\w_-]+)+))([\\w.,@?^=%&:/~+#-]*[\\w@?^=%&/~+#-])?',
@@ -136,13 +135,17 @@ Null Function()? getChangeLogFn(BuildContext context, App app) {
 }
 
 class AppsPageState extends State<AppsPage> with TickerProviderStateMixin {
-  AppsFilter filter = AppsFilter();
-  final AppsFilter neutralFilter = AppsFilter();
+  var filter = AppsFilter();
+
+  final neutralFilter = AppsFilter();
+
   var updatesOnlyFilter = AppsFilter(
     includeUptodate: false,
     includeNonInstalled: false,
   );
-  Set<String> selectedAppIds = {};
+
+  var selectedAppIds = <String>{};
+
   DateTime? refreshingSince;
 
   bool clearSelected() {
@@ -170,13 +173,15 @@ class AppsPageState extends State<AppsPage> with TickerProviderStateMixin {
 
   late final ScrollController scrollController = ScrollController();
 
-  var sourceProvider = SourceProvider();
+  final sourceProvider = SourceProvider();
 
   @override
   Widget build(BuildContext context) {
-    var appsProvider = context.watch<AppsProvider>();
-    var settingsProvider = context.watch<SettingsProvider>();
+    final appsProvider = context.watch<AppsProvider>();
+    final settingsProvider = context.watch<SettingsProvider>();
     var listedApps = appsProvider.getAppValues().toList();
+
+    final isRedesignEnabled = settingsProvider.developerModeV1;
 
     final colorTheme = ColorTheme.of(context);
     final elevationTheme = ElevationTheme.of(context);
@@ -1355,16 +1360,9 @@ class AppsPageState extends State<AppsPage> with TickerProviderStateMixin {
           itemBuilder: (context, index) => getCategoryCollapsibleTile(index),
         );
       }
-      if (_kShowAppsListRedesign) {
-        final pinnedApps = listedApps;
-        // final pinnedApps = listedApps
-        //     .where((element) => element.app.pinned)
-        //     .toList(growable: false);
-        // final unpinnedApps = listedApps
-        //     .whereNot((element) => element.app.pinned)
-        //     .toList(growable: false);
+      if (isRedesignEnabled) {
         return SliverPadding(
-          padding: .fromLTRB(16.0, 4.0, 16.0, 16.0),
+          padding: const .fromLTRB(8.0, 0.0, 8.0, 16.0),
           sliver: ListItemTheme.merge(
             data: .from(
               containerColor: .all(colorTheme.surface),
@@ -1373,75 +1371,458 @@ class AppsPageState extends State<AppsPage> with TickerProviderStateMixin {
               ),
             ),
             child: SliverList.separated(
-              itemCount: pinnedApps.length,
+              itemCount: listedApps.length,
               separatorBuilder: (context, index) => const SizedBox(height: 2.0),
               itemBuilder: (context, index) {
-                final e = pinnedApps[index];
-                final isSelected = selectedAppIds.contains(e.app.id);
-                return ListItemContainer(
-                  isFirst: index == 0,
-                  isLast: index == pinnedApps.length - 1,
-                  containerShape: .all(
-                    isSelected
-                        ? CornersBorder.rounded(
-                            corners: Corners.all(shapeTheme.corner.large),
-                          )
-                        : null,
+                final item = listedApps[index];
+
+                final showChanges = getChangeLogFn(context, item.app);
+
+                final installedVersion = item.app.installedVersion;
+                final progress = item.downloadProgress;
+
+                final isInstalled = installedVersion != null;
+                final hasUpdate =
+                    isInstalled && installedVersion != item.app.latestVersion;
+                final isSelected = selectedAppIds.contains(item.app.id);
+
+                final Widget updateButton = IconButton(
+                  style: LegacyThemeFactory.createIconButtonStyle(
+                    colorTheme: colorTheme,
+                    elevationTheme: elevationTheme,
+                    shapeTheme: shapeTheme,
+                    stateTheme: stateTheme,
+                    size: .small,
+                    shape: .round,
+                    color: .tonal,
+                    width: .wide,
                   ),
-                  containerColor: .all(
-                    isSelected ? colorTheme.secondaryContainer : null,
+                  onPressed: !appsProvider.areDownloadsRunning()
+                      ? () {
+                          appsProvider
+                              .downloadAndInstallLatestApps([
+                                item.app.id,
+                              ], globalNavigatorKey.currentContext)
+                              .catchError((e) {
+                                if (context.mounted) {
+                                  showError(e, context);
+                                }
+                                return <String>[];
+                              });
+                        }
+                      : null,
+                  icon: item.app.additionalSettings["trackOnly"] == true
+                      ? const IconLegacy(
+                          Symbols.check_circle_rounded,
+                          fill: 1.0,
+                        )
+                      : const IconLegacy(Symbols.install_mobile, fill: 1.0),
+                  tooltip: item.app.additionalSettings["trackOnly"] == true
+                      ? tr("markUpdated")
+                      : tr("update"),
+                );
+
+                final Widget overflowButton = MenuTheme(
+                  data: LegacyThemeFactory.createMenuTheme(
+                    colorTheme: colorTheme,
+                    elevationTheme: elevationTheme,
+                    shapeTheme: shapeTheme,
+                    variant: .vibrant,
                   ),
-                  child: ListItemInteraction(
-                    stateLayerColor: .all(
-                      isSelected
-                          ? colorTheme.onSecondaryContainer
-                          : colorTheme.onSurface,
+                  child: MenuButtonTheme(
+                    data: LegacyThemeFactory.createMenuButtonTheme(
+                      colorTheme: colorTheme,
+                      elevationTheme: elevationTheme,
+                      shapeTheme: shapeTheme,
+                      stateTheme: stateTheme,
+                      typescaleTheme: typescaleTheme,
+                      variant: .vibrant,
                     ),
-                    onTap: () {
-                      if (selectedAppIds.isNotEmpty) {
-                        toggleAppSelected(e.app);
-                      } else {
-                        Navigator.of(context).push(
-                          MaterialPageRoute(
-                            builder: (context) => AppPage(appId: e.app.id),
+                    child: MenuAnchor(
+                      consumeOutsideTap: true,
+                      crossAxisUnconstrained: false,
+                      menuChildren: [
+                        MenuItemButton(
+                          onPressed: () => toggleAppSelected(item.app),
+                          leadingIcon: isSelected
+                              ? const IconLegacy(
+                                  Symbols.cancel_rounded,
+                                  fill: 1.0,
+                                )
+                              : const IconLegacy(
+                                  Symbols.check_box_rounded,
+                                  fill: 1.0,
+                                ),
+                          child: isSelected
+                              ? const Text("Deselect")
+                              : const Text("Select"),
+                        ),
+                        if (hasUpdate && selectedAppIds.isNotEmpty)
+                          MenuItemButton(
+                            onPressed: !appsProvider.areDownloadsRunning()
+                                ? () {
+                                    appsProvider
+                                        .downloadAndInstallLatestApps([
+                                          item.app.id,
+                                        ], globalNavigatorKey.currentContext)
+                                        .catchError((e) {
+                                          if (context.mounted) {
+                                            showError(e, context);
+                                          }
+                                          return <String>[];
+                                        });
+                                  }
+                                : null,
+                            leadingIcon:
+                                item.app.additionalSettings["trackOnly"] == true
+                                ? const IconLegacy(
+                                    Symbols.check_circle_rounded,
+                                    fill: 1.0,
+                                  )
+                                : const IconLegacy(
+                                    Symbols.install_mobile,
+                                    fill: 1.0,
+                                  ),
+                            child: Text(
+                              item.app.additionalSettings["trackOnly"] == true
+                                  ? tr("markUpdated")
+                                  : tr("update"),
+                            ),
                           ),
-                        );
-                      }
-                    },
-                    onLongPress: () => toggleAppSelected(e.app),
-                    child: ListItemLayout(
-                      leading: SizedBox.square(
-                        dimension: 56.0,
-                        child: Material(
-                          clipBehavior: .antiAlias,
-                          shape: CornersBorder.rounded(
-                            corners: .all(shapeTheme.corner.small),
+                        MenuItemButton(
+                          onPressed: showChanges,
+                          leadingIcon: const IconLegacy(
+                            Symbols.menu_book_rounded,
+                            fill: 1.0,
                           ),
-                          color: colorTheme.surfaceContainer,
-                          child: Align.center(
-                            child: SizedBox.square(
-                              dimension: 40.0,
-                              child: getAppIcon(index),
+                          child: const Text("View changelog"),
+                        ),
+                        if (selectedAppIds.isNotEmpty)
+                          MenuItemButton(
+                            onPressed: () => Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (context) =>
+                                    AppPage(appId: item.app.id),
+                              ),
+                            ),
+                            leadingIcon: const IconLegacy(
+                              Symbols.edit_rounded,
+                              fill: 1.0,
+                            ),
+                            child: const Text("Edit"),
+                          ),
+                        MenuItemButton(
+                          onPressed: () => appsProvider.removeAppsWithModal(
+                            context,
+                            [item.app],
+                          ),
+                          leadingIcon: const IconLegacy(
+                            Symbols.delete_rounded,
+                            fill: 1.0,
+                          ),
+                          child: Text(tr("remove")),
+                        ),
+                      ],
+                      builder: (context, controller, child) => IconButton(
+                        style: LegacyThemeFactory.createIconButtonStyle(
+                          colorTheme: colorTheme,
+                          elevationTheme: elevationTheme,
+                          shapeTheme: shapeTheme,
+                          stateTheme: stateTheme,
+                          size: .small,
+                          shape: .round,
+                          color: .standard,
+                          width: .narrow,
+                          containerColor: isSelected
+                              ? Colors.transparent
+                              : colorTheme.surfaceContainer,
+                          iconColor: isSelected
+                              ? colorTheme.onSecondaryContainer
+                              : colorTheme.onSurfaceVariant,
+                        ),
+                        onPressed: () {
+                          if (controller.isOpen) {
+                            controller.close();
+                          } else {
+                            controller.open();
+                          }
+                        },
+                        icon: const IconLegacy(Symbols.more_vert_rounded),
+                      ),
+                    ),
+                  ),
+                );
+
+                final Widget checkbox = Checkbox.biState(
+                  onCheckedChanged: (value) => toggleAppSelected(item.app),
+                  checked: isSelected,
+                );
+
+                final duration = const DurationThemeData.fallback().medium2;
+                final easing = const EasingThemeData.fallback().standard;
+
+                return KeyedSubtree(
+                  key: ValueKey(index),
+                  child: ListItemContainer(
+                    isFirst: index == 0,
+                    isLast: index == listedApps.length - 1,
+                    containerShape: .all(
+                      isSelected
+                          ? CornersBorder.rounded(
+                              corners: Corners.all(shapeTheme.corner.large),
+                            )
+                          : null,
+                    ),
+                    containerColor: .all(
+                      isSelected ? colorTheme.secondaryContainer : null,
+                    ),
+                    child: ListItemInteraction(
+                      stateLayerColor: .all(
+                        isSelected
+                            ? colorTheme.onSecondaryContainer
+                            : colorTheme.onSurface,
+                      ),
+                      onTap: () {
+                        if (selectedAppIds.isNotEmpty) {
+                          toggleAppSelected(item.app);
+                        } else {
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) => AppPage(appId: item.app.id),
+                            ),
+                          );
+                        }
+                      },
+                      onLongPress: () => toggleAppSelected(item.app),
+                      child: ListItemLayout(
+                        padding: const .directional(start: 16.0, end: 0.0),
+                        leading: ExcludeFocus(
+                          child: SizedBox.square(
+                            dimension: 56.0,
+                            child: TweenAnimationBuilder<double>(
+                              tween: Tween<double>(
+                                end: progress != null ? 1.0 : 0.0,
+                              ),
+                              duration: duration,
+                              curve: easing,
+                              builder: (context, value, child) => Material(
+                                clipBehavior: .antiAlias,
+                                shape: ShapeBorder.lerp(
+                                  CornersBorder.rounded(
+                                    corners: .all(shapeTheme.corner.small),
+                                  ),
+                                  CornersBorder.rounded(
+                                    corners: .all(shapeTheme.corner.full),
+                                  ),
+                                  value,
+                                )!,
+                                color: isSelected
+                                    ? colorTheme.secondaryContainer
+                                    : colorTheme.surfaceContainer,
+                                child: child!,
+                              ),
+                              child: Stack(
+                                fit: .expand,
+                                children: [
+                                  FutureBuilder(
+                                    future: appsProvider
+                                        .updateAppIcon(item.app.id)
+                                        .then((_) => item.icon),
+                                    builder: (context, snapshot) {
+                                      final bytes = snapshot.data;
+                                      return TweenAnimationBuilder<double>(
+                                        tween: Tween<double>(
+                                          end: progress != null ? 1.0 : 0.0,
+                                        ),
+                                        duration: duration,
+                                        curve: easing,
+                                        builder: (context, value, _) {
+                                          final size = lerpDouble(
+                                            40.0,
+                                            28.0,
+                                            value,
+                                          );
+                                          return Align.center(
+                                            child: bytes != null
+                                                ? SizedBox.square(
+                                                    dimension: size,
+                                                    child: Image.memory(
+                                                      bytes,
+                                                      gaplessPlayback: true,
+                                                      fit: .contain,
+                                                    ),
+                                                  )
+                                                : Icon(
+                                                    Symbols
+                                                        .broken_image_rounded,
+                                                    opticalSize: size,
+                                                    size: size,
+                                                    color: isSelected
+                                                        ? colorTheme
+                                                              .onSecondaryContainer
+                                                        : colorTheme
+                                                              .onSurfaceVariant,
+                                                  ),
+                                          );
+                                        },
+                                      );
+                                    },
+                                  ),
+                                  InkWell(
+                                    overlayColor: WidgetStateLayerColor(
+                                      color: WidgetStatePropertyAll(
+                                        isSelected
+                                            ? colorTheme.onSecondaryContainer
+                                            : colorTheme.onSurface,
+                                      ),
+                                      opacity: stateTheme.stateLayerOpacity,
+                                    ),
+                                    onDoubleTap: () {
+                                      pm.openApp(item.app.id);
+                                    },
+                                    onLongPress: () {
+                                      Navigator.of(context).push(
+                                        MaterialPageRoute(
+                                          builder: (context) => AppPage(
+                                            appId: item.app.id,
+                                            showOppositeOfPreferredView: true,
+                                          ),
+                                        ),
+                                      );
+                                    },
+                                  ),
+                                  TweenAnimationBuilder<double>(
+                                    tween: Tween<double>(
+                                      end: progress != null ? 1.0 : 0.0,
+                                    ),
+                                    duration: duration,
+                                    curve: easing,
+                                    builder: (context, value, _) => value > 0.0
+                                        ? CircularProgressIndicator(
+                                            padding: const .all(0.0),
+                                            strokeWidth: lerpDouble(
+                                              0.0,
+                                              4.0,
+                                              value,
+                                            ),
+                                            value:
+                                                progress != null &&
+                                                    progress >= 0.0
+                                                ? progress
+                                                : null,
+                                          )
+                                        : const SizedBox.shrink(),
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
                         ),
-                      ),
-                      headline: Text(
-                        e.name,
-                        maxLines: 1,
-                        style: TextStyle(
-                          color: isSelected
-                              ? colorTheme.onSecondaryContainer
-                              : null,
+                        overline: Text(
+                          tr("byX", args: [item.author]),
+                          maxLines: 1,
+                          overflow: .ellipsis,
+                          softWrap: false,
+                          style: TextStyle(
+                            color: isSelected
+                                ? colorTheme.onSecondaryContainer
+                                : null,
+                          ),
                         ),
-                      ),
-                      supportingText: Text(
-                        tr("byX", args: [e.author]),
-                        maxLines: 1,
-                        style: TextStyle(
-                          color: isSelected
-                              ? colorTheme.onSecondaryContainer
-                              : null,
+                        headline: Text(
+                          item.name,
+                          maxLines: 1,
+                          overflow: .ellipsis,
+                          softWrap: false,
+                          style:
+                              (isInstalled
+                                      ? typescaleTheme.titleMediumEmphasized
+                                      : typescaleTheme.titleMedium)
+                                  .toTextStyle(
+                                    color: isSelected
+                                        ? colorTheme.onSecondaryContainer
+                                        : colorTheme.onSurface,
+                                  ),
+                        ),
+                        supportingText: Text(
+                          installedVersion != null
+                              ? hasUpdate
+                                    ? "$installedVersion → ${item.app.latestVersion}"
+                                    : installedVersion
+                              : tr("notInstalled"),
+                          style: typescaleTheme.bodySmall
+                              .toTextStyle()
+                              .copyWith(
+                                fontFamily: installedVersion != null
+                                    ? FontFamily.googleSansCode
+                                    : null,
+                                color: isSelected
+                                    ? colorTheme.onSecondaryContainer
+                                    : hasUpdate
+                                    ? colorTheme.onSurface
+                                    : colorTheme.onSurfaceVariant,
+                              ),
+                        ),
+                        trailing: Flex.horizontal(
+                          children: [
+                            TweenAnimationBuilder<double>(
+                              tween: Tween<double>(
+                                end: hasUpdate && selectedAppIds.isEmpty
+                                    ? 1.0
+                                    : 0.0,
+                              ),
+                              duration: duration,
+                              curve: easing,
+                              builder: (context, value, child) => Visibility(
+                                visible: value > 0.0,
+                                child: Opacity(
+                                  opacity: value,
+                                  child: Align.center(
+                                    widthFactor: value,
+                                    child: child!,
+                                  ),
+                                ),
+                              ),
+                              child: Padding(
+                                padding: const .directional(end: 12.0 - 8.0),
+                                child: updateButton,
+                              ),
+                            ),
+                            overflowButton,
+                            TweenAnimationBuilder<double>(
+                              tween: Tween<double>(
+                                end: selectedAppIds.isNotEmpty ? 1.0 : 0.0,
+                              ),
+                              duration: duration,
+                              curve: easing,
+                              builder: (context, value, child) => Visibility(
+                                visible: value > 0.0,
+                                child: Opacity(
+                                  opacity: value,
+                                  child: Align.centerStart(
+                                    widthFactor: value,
+                                    child: child!,
+                                  ),
+                                ),
+                              ),
+
+                              child: checkbox,
+                            ),
+                            TweenAnimationBuilder<double>(
+                              tween: Tween<double>(
+                                end: selectedAppIds.isNotEmpty ? 1.0 : 0.0,
+                              ),
+                              duration: duration,
+                              curve: easing,
+                              builder: (context, value, _) => SizedBox(
+                                width: lerpDouble(
+                                  16.0 - 8.0,
+                                  16.0 - 4.0,
+                                  value,
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
                       ),
                     ),
@@ -1507,48 +1888,33 @@ class AppsPageState extends State<AppsPage> with TickerProviderStateMixin {
           isFilterOff ? Symbols.search_rounded : Symbols.search_off_rounded,
         ),
         tooltip: isFilterOff
-            ? tr('filterApps')
-            : '${tr('filter')} - ${tr('remove')}',
+            ? tr("filterApps")
+            : "${tr("filter")} - ${tr("remove")}",
       );
+
       final Widget selectButton = IconButton(
+        style: LegacyThemeFactory.createIconButtonStyle(
+          colorTheme: colorTheme,
+          elevationTheme: elevationTheme,
+          shapeTheme: shapeTheme,
+          stateTheme: stateTheme,
+          size: .small,
+          shape: isRedesignEnabled ? .square : .round,
+          color: .filled,
+          width: isRedesignEnabled ? .normal : .wide,
+          isSelected: hasSelection,
+          unselectedContainerColor: Colors.transparent,
+          unselectedIconColor: colorTheme.onSurfaceVariant,
+          selectedContainerColor: isRedesignEnabled
+              ? colorTheme.primaryContainer
+              : colorTheme.surfaceBright,
+          selectedIconColor: isRedesignEnabled
+              ? colorTheme.onPrimaryContainer
+              : colorTheme.primary,
+        ),
         onPressed: () => hasSelection
             ? clearSelected()
             : selectThese(listedApps.map((e) => e.app).toList()),
-        style: ButtonStyle(
-          padding: const WidgetStatePropertyAll(EdgeInsets.zero),
-          minimumSize: const WidgetStatePropertyAll(Size.zero),
-          maximumSize: const WidgetStatePropertyAll(Size.infinite),
-          fixedSize: const WidgetStatePropertyAll(Size(52.0, 40.0)),
-          shape: WidgetStatePropertyAll(
-            CornersBorder.rounded(
-              corners: Corners.all(
-                hasSelection
-                    ? shapeTheme.corner.medium
-                    : shapeTheme.corner.full,
-              ),
-            ),
-          ),
-          overlayColor: WidgetStateLayerColor(
-            color: WidgetStatePropertyAll(
-              hasSelection ? colorTheme.primary : colorTheme.onSurfaceVariant,
-            ),
-            opacity: stateTheme.stateLayerOpacity,
-          ),
-          backgroundColor: WidgetStateProperty.resolveWith(
-            (states) => hasSelection
-                ? states.contains(WidgetState.disabled) && !hasSelection
-                      ? colorTheme.onSurface.withValues(alpha: 0.1)
-                      : colorTheme.surfaceBright
-                : Colors.transparent,
-          ),
-          iconColor: WidgetStateProperty.resolveWith(
-            (states) => states.contains(WidgetState.disabled)
-                ? colorTheme.onSurface.withValues(alpha: 0.38)
-                : hasSelection
-                ? colorTheme.primary
-                : colorTheme.onSurfaceVariant,
-          ),
-        ),
         icon: hasSelection
             ? const IconLegacy(Symbols.deselect_rounded)
             : const IconLegacy(Symbols.select_all_rounded),
@@ -1557,47 +1923,65 @@ class AppsPageState extends State<AppsPage> with TickerProviderStateMixin {
             : listedApps.length.toString(),
       );
       final Widget downloadButton = IconButton(
+        style: isRedesignEnabled
+            ? LegacyThemeFactory.createIconButtonStyle(
+                colorTheme: colorTheme,
+                elevationTheme: elevationTheme,
+                shapeTheme: shapeTheme,
+                stateTheme: stateTheme,
+                size: .small,
+                color: .filled,
+                width: .wide,
+                isSelected: hasSelection,
+                unselectedShape: .round,
+                unselectedContainerColor: colorTheme.secondaryContainer,
+                unselectedIconColor: colorTheme.onSecondaryContainer,
+                selectedShape: .round,
+                selectedDisabledContainerColor: colorTheme.onPrimaryContainer
+                    .withValues(alpha: 0.10),
+                selectedContainerColor: colorTheme.surfaceContainer,
+                selectedDisabledIconColor: colorTheme.onPrimaryContainer
+                    .withValues(alpha: 0.38),
+                selectedIconColor: colorTheme.onSurface,
+              )
+            : LegacyThemeFactory.createIconButtonStyle(
+                colorTheme: colorTheme,
+                elevationTheme: elevationTheme,
+                shapeTheme: shapeTheme,
+                stateTheme: stateTheme,
+                size: .small,
+                shape: .round,
+                color: .filled,
+                width: .wide,
+              ),
         onPressed: getMassObtainFunction(),
-        style: ButtonStyle(
-          padding: const WidgetStatePropertyAll(EdgeInsets.zero),
-          minimumSize: const WidgetStatePropertyAll(Size.zero),
-          maximumSize: const WidgetStatePropertyAll(Size.infinite),
-          // TODO: decide which style to use
-          // fixedSize: const WidgetStatePropertyAll(
-          //   Size(48.0, 48.0),
-          // ),
-          // shape: WidgetStatePropertyAll(
-          //   CornersBorder.rounded(
-          //     corners: Corners.all(
-          //       shapeTheme.corner.large,
-          //     ),
-          //   ),
-          // ),
-          fixedSize: const WidgetStatePropertyAll(Size(52.0, 40.0)),
-          shape: WidgetStatePropertyAll(
-            CornersBorder.rounded(corners: Corners.all(shapeTheme.corner.full)),
-          ),
-          overlayColor: WidgetStateLayerColor(
-            color: WidgetStatePropertyAll(colorTheme.onPrimary),
-            opacity: stateTheme.stateLayerOpacity,
-          ),
-          backgroundColor: WidgetStateProperty.resolveWith(
-            (states) => states.contains(WidgetState.disabled)
-                ? colorTheme.onSurface.withValues(alpha: 0.1)
-                : colorTheme.primary,
-          ),
-          iconColor: WidgetStateProperty.resolveWith(
-            (states) => states.contains(WidgetState.disabled)
-                ? colorTheme.onSurface.withValues(alpha: 0.38)
-                : colorTheme.onPrimary,
-          ),
-        ),
         icon: const IconLegacy(Symbols.download_rounded),
         tooltip: hasSelection
-            ? tr('installUpdateSelectedApps')
-            : tr('installUpdateApps'),
+            ? tr("installUpdateSelectedApps")
+            : tr("installUpdateApps"),
       );
-      final removeButton = IconButton(
+
+      final Widget removeButton = IconButton(
+        style: LegacyThemeFactory.createIconButtonStyle(
+          colorTheme: colorTheme,
+          elevationTheme: elevationTheme,
+          shapeTheme: shapeTheme,
+          stateTheme: stateTheme,
+          size: .small,
+          shape: isRedesignEnabled ? .square : .round,
+          color: .standard,
+          width: .normal,
+          isSelected: hasSelection,
+          unselectedDisabledContainerColor: Colors.transparent,
+          unselectedContainerColor: Colors.transparent,
+          unselectedIconColor: colorTheme.onSurfaceVariant,
+          selectedContainerColor: isRedesignEnabled
+              ? colorTheme.primaryContainer
+              : colorTheme.surfaceBright,
+          selectedIconColor: isRedesignEnabled
+              ? colorTheme.onPrimaryContainer
+              : colorTheme.error,
+        ),
         onPressed: hasSelection
             ? () {
                 appsProvider.removeAppsWithModal(
@@ -1606,190 +1990,138 @@ class AppsPageState extends State<AppsPage> with TickerProviderStateMixin {
                 );
               }
             : null,
-        style: ButtonStyle(
-          padding: const WidgetStatePropertyAll(EdgeInsets.zero),
-          minimumSize: const WidgetStatePropertyAll(Size.zero),
-          maximumSize: const WidgetStatePropertyAll(Size.infinite),
-          fixedSize: const WidgetStatePropertyAll(Size(40.0, 40.0)),
-          shape: WidgetStatePropertyAll(
-            CornersBorder.rounded(
-              corners: Corners.all(shapeTheme.corner.medium),
-            ),
-          ),
-          overlayColor: WidgetStateLayerColor(
-            color: WidgetStatePropertyAll(
-              hasSelection ? colorTheme.error : colorTheme.onSurfaceVariant,
-            ),
-            opacity: stateTheme.stateLayerOpacity,
-          ),
-          backgroundColor: WidgetStateProperty.resolveWith(
-            (states) => hasSelection
-                ? states.contains(WidgetState.disabled) && !hasSelection
-                      ? colorTheme.onSurface.withValues(alpha: 0.1)
-                      : colorTheme.surfaceBright
-                : Colors.transparent,
-          ),
-          iconColor: WidgetStateProperty.resolveWith(
-            (states) => states.contains(WidgetState.disabled)
-                ? colorTheme.onSurface.withValues(alpha: 0.38)
-                : hasSelection
-                ? colorTheme.error
-                : colorTheme.onSurfaceVariant,
-          ),
-        ),
+
         icon: const IconLegacy(Symbols.delete_rounded, fill: 0.0),
-        tooltip: tr('removeSelectedApps'),
+        tooltip: tr("removeSelectedApps"),
       );
+
       final Widget categorizeButton = IconButton(
+        style: LegacyThemeFactory.createIconButtonStyle(
+          colorTheme: colorTheme,
+          elevationTheme: elevationTheme,
+          shapeTheme: shapeTheme,
+          stateTheme: stateTheme,
+          size: .small,
+          shape: isRedesignEnabled ? .square : .round,
+          color: .standard,
+          width: .normal,
+          isSelected: hasSelection,
+          unselectedDisabledContainerColor: Colors.transparent,
+          unselectedContainerColor: Colors.transparent,
+          unselectedIconColor: colorTheme.onSurfaceVariant,
+          selectedContainerColor: isRedesignEnabled
+              ? colorTheme.primaryContainer
+              : colorTheme.surfaceBright,
+          selectedIconColor: isRedesignEnabled
+              ? colorTheme.onPrimaryContainer
+              : colorTheme.onSurfaceVariant,
+        ),
         onPressed: hasSelection ? launchCategorizeDialog() : null,
-        style: ButtonStyle(
-          padding: const WidgetStatePropertyAll(EdgeInsets.zero),
-          minimumSize: const WidgetStatePropertyAll(Size.zero),
-          maximumSize: const WidgetStatePropertyAll(Size.infinite),
-          fixedSize: const WidgetStatePropertyAll(Size(40.0, 40.0)),
-          shape: WidgetStatePropertyAll(
-            CornersBorder.rounded(
-              corners: Corners.all(shapeTheme.corner.medium),
-            ),
-          ),
-          overlayColor: WidgetStateLayerColor(
-            color: WidgetStatePropertyAll(colorTheme.onSurfaceVariant),
-            opacity: stateTheme.stateLayerOpacity,
-          ),
-          backgroundColor: WidgetStateProperty.resolveWith(
-            (states) => hasSelection
-                ? states.contains(WidgetState.disabled) && !hasSelection
-                      ? colorTheme.onSurface.withValues(alpha: 0.1)
-                      : colorTheme.surfaceBright
-                : Colors.transparent,
-          ),
-          iconColor: WidgetStateProperty.resolveWith(
-            (states) => states.contains(WidgetState.disabled)
-                ? colorTheme.onSurface.withValues(alpha: 0.38)
-                : colorTheme.onSurfaceVariant,
-          ),
-        ),
         icon: const IconLegacy(Symbols.category_rounded, fill: 1.0),
-        tooltip: tr('categorize'),
+        tooltip: tr("categorize"),
       );
+
       final Widget moreButton = IconButton(
-        onPressed: hasSelection ? showMoreOptionsDialog : null,
-        style: ButtonStyle(
-          padding: const WidgetStatePropertyAll(EdgeInsets.zero),
-          minimumSize: const WidgetStatePropertyAll(Size.zero),
-          maximumSize: const WidgetStatePropertyAll(Size.infinite),
-          fixedSize: const WidgetStatePropertyAll(Size(32.0, 40.0)),
-          shape: WidgetStatePropertyAll(
-            CornersBorder.rounded(corners: Corners.all(shapeTheme.corner.full)),
-          ),
-          overlayColor: WidgetStateLayerColor(
-            color: WidgetStatePropertyAll(colorTheme.onSurfaceVariant),
-            opacity: stateTheme.stateLayerOpacity,
-          ),
-          backgroundColor: WidgetStateProperty.resolveWith(
-            (states) => hasSelection
-                ? states.contains(WidgetState.disabled) && !hasSelection
-                      ? colorTheme.onSurface.withValues(alpha: 0.1)
-                      : colorTheme.surfaceBright
-                : Colors.transparent,
-          ),
-          iconColor: WidgetStateProperty.resolveWith(
-            (states) => states.contains(WidgetState.disabled)
-                ? colorTheme.onSurface.withValues(alpha: 0.38)
-                : colorTheme.onSurfaceVariant,
-          ),
+        style: LegacyThemeFactory.createIconButtonStyle(
+          colorTheme: colorTheme,
+          elevationTheme: elevationTheme,
+          shapeTheme: shapeTheme,
+          stateTheme: stateTheme,
+          size: .small,
+          shape: .square,
+          color: .standard,
+          width: isRedesignEnabled ? .normal : .narrow,
+          isSelected: hasSelection,
+          unselectedDisabledContainerColor: Colors.transparent,
+          unselectedContainerColor: Colors.transparent,
+          unselectedIconColor: colorTheme.onSurfaceVariant,
+          selectedContainerColor: isRedesignEnabled
+              ? colorTheme.primaryContainer
+              : colorTheme.surfaceBright,
+          selectedIconColor: isRedesignEnabled
+              ? colorTheme.onPrimaryContainer
+              : colorTheme.onSurfaceVariant,
         ),
-        icon: const IconLegacy(Symbols.more_vert_rounded),
-        tooltip: tr('more'),
+        onPressed: hasSelection ? showMoreOptionsDialog : null,
+        icon: isRedesignEnabled
+            ? const IconLegacy(Symbols.more_horiz_rounded)
+            : const IconLegacy(Symbols.more_vert_rounded),
+        tooltip: tr("more"),
       );
+
       return Align.bottomCenter(
+        // TODO(deminearchiver): this prevents hit testing
+        // heightFactor: isRedesignEnabled ? 0.0 : 1.0,
         heightFactor: 1.0,
-        child: SizedBox(
-          width: double.infinity,
-          height: 64.0,
-          child: Material(
-            clipBehavior: Clip.antiAlias,
-            color: colorTheme.surfaceContainerHigh,
-            shape: CornersBorder.rounded(
-              corners: Corners.vertical(
-                // TODO: consider the following design choice:
-                // top: shapeTheme.corner.extraLarge,
-                top: shapeTheme.corner.none,
-                bottom: shapeTheme.corner.none,
+        child: Padding(
+          padding: isRedesignEnabled ? const .all(16.0) : .zero,
+          child: SizedBox(
+            width: isRedesignEnabled ? null : .infinity,
+            height: 64.0,
+            child: Material(
+              clipBehavior: .antiAlias,
+              color: isRedesignEnabled
+                  ? hasSelection
+                        ? colorTheme.primaryContainer
+                        : colorTheme.surfaceContainerHighest
+                  : colorTheme.surfaceContainerHigh,
+              shape: CornersBorder.rounded(
+                corners: .all(
+                  isRedesignEnabled
+                      ? shapeTheme.corner.full
+                      : shapeTheme.corner.none,
+                ),
+              ),
+              elevation: isRedesignEnabled
+                  ? elevationTheme.level3
+                  : elevationTheme.level0,
+              child: Flex.horizontal(
+                mainAxisSize: isRedesignEnabled ? .min : .max,
+                children: isRedesignEnabled
+                    ? [
+                        const SizedBox(width: 12.0 - 4.0),
+                        selectButton,
+                        const SizedBox(width: 12.0 - 4.0 - 4.0),
+                        removeButton,
+                        const SizedBox(width: 12.0 - 4.0),
+                        downloadButton,
+                        const SizedBox(width: 12.0 - 4.0),
+                        categorizeButton,
+                        const SizedBox(width: 12.0 - 4.0 - 4.0),
+                        moreButton,
+                        const SizedBox(width: 12.0 - 4.0),
+                      ]
+                    : [
+                        Flexible.tight(
+                          child: Flex.horizontal(
+                            mainAxisAlignment: .start,
+                            children: [
+                              const SizedBox(width: 16.0),
+                              filterButton,
+                              const SizedBox(width: 12.0),
+                              selectButton,
+                              const SizedBox(width: 12.0),
+                            ],
+                          ),
+                        ),
+                        downloadButton,
+                        Flexible.tight(
+                          child: Flex.horizontal(
+                            mainAxisAlignment: .end,
+                            children: [
+                              const SizedBox(width: 12.0 - 4.0),
+                              removeButton,
+                              const SizedBox(width: 12.0 - 4.0 - 4.0),
+                              categorizeButton,
+                              const SizedBox(width: 12.0 - 8.0 - 4.0),
+                              moreButton,
+                              const SizedBox(width: 16.0 - 8.0),
+                            ],
+                          ),
+                        ),
+                      ],
               ),
             ),
-            // TODO: improve compact layout (it's not production ready)
-            child: false
-                // ignore: dead_code
-                ? Flex.horizontal(
-                    children: [
-                      Flexible.tight(
-                        flex: 4,
-                        child: Padding(
-                          padding: const EdgeInsets.only(left: 16.0),
-                          child: Flex.horizontal(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              filterButton,
-                              const Flexible.space(),
-                              selectButton,
-                            ],
-                          ),
-                        ),
-                      ),
-                      Flexible.tight(
-                        flex: 3,
-                        child: Align.center(child: downloadButton),
-                      ),
-                      Flexible.tight(
-                        flex: 4,
-                        child: Padding(
-                          padding: const EdgeInsets.only(right: 16.0 - 8.0),
-                          child: Flex.horizontal(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              removeButton,
-                              const Flexible.space(),
-                              categorizeButton,
-                              const Flexible.space(),
-                              moreButton,
-                            ],
-                          ),
-                        ),
-                      ),
-                    ],
-                  )
-                : Flex.horizontal(
-                    children: [
-                      Flexible.tight(
-                        child: Flex.horizontal(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            const SizedBox(width: 16.0),
-                            filterButton,
-                            const SizedBox(width: 12.0),
-                            selectButton,
-                            const SizedBox(width: 12.0),
-                          ],
-                        ),
-                      ),
-                      downloadButton,
-                      Flexible.tight(
-                        child: Flex.horizontal(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            const SizedBox(width: 12.0 - 4.0),
-                            removeButton,
-                            const SizedBox(width: 12.0 - 4.0 - 4.0),
-                            categorizeButton,
-                            const SizedBox(width: 12.0 - 8.0 - 4.0),
-                            moreButton,
-                            const SizedBox(width: 16.0 - 8.0),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
           ),
         ),
       );
@@ -1809,51 +2141,137 @@ class AppsPageState extends State<AppsPage> with TickerProviderStateMixin {
             await refresh();
           }
         },
-        edgeOffset: padding.top + 120.0,
+        edgeOffset: isRedesignEnabled
+            ? padding.top + 64.0
+            : padding.top + 120.0,
         displacement: 80.0,
-        child: Scrollbar(
-          controller: scrollController,
-          interactive: true,
-          child: CustomScrollView(
-            physics: const AlwaysScrollableScrollPhysics(),
+        child: SafeArea(
+          top: false,
+          bottom: false,
+          child: Scrollbar(
             controller: scrollController,
-            slivers: <Widget>[
-              // if (!kDebugMode)
-              CustomAppBar(
-                type: CustomAppBarType.largeFlexible,
-                behavior: CustomAppBarBehavior.duplicate,
-                expandedContainerColor: colorTheme.surfaceContainer,
-                collapsedContainerColor: colorTheme.surfaceContainer,
-                title: Text(tr("appsString")),
-              ),
-              // TODO: either finish CustomScrollbar3 or use nested_scroll_view_plus
-              // ignore: dead_code
-              if (kCustomScrollbarVisible) ...[
-                SliverScrollbar(
-                  sliver: SliverMainAxisGroup(
-                    // slivers: [...getLoadingWidgets(), getDisplayedList()],
-                    slivers: [
-                      SliverList.builder(
-                        itemCount: 100,
-                        itemBuilder: (context, index) =>
-                            ListTile(title: Text("Item ${index + 1}")),
+            interactive: true,
+            child: CustomScrollView(
+              physics: const AlwaysScrollableScrollPhysics(),
+              controller: scrollController,
+              slivers: <Widget>[
+                isRedesignEnabled
+                    ? CustomAppBar(
+                        type: .small,
+                        expandedContainerColor: colorTheme.surfaceContainer,
+                        collapsedContainerColor: colorTheme.surfaceContainer,
+                        collapsedTitleTextStyle: typescaleTheme
+                            .titleLargeEmphasized
+                            .toTextStyle(),
+
+                        collapsedPadding: const .symmetric(
+                          horizontal: 8.0 + 52.0 + 8.0,
+                        ),
+                        leading: Padding(
+                          padding: const .fromSTEB(8.0, 0.0, 8.0, 0.0),
+                          child: IconButton(
+                            style: LegacyThemeFactory.createIconButtonStyle(
+                              colorTheme: colorTheme,
+                              elevationTheme: elevationTheme,
+                              shapeTheme: shapeTheme,
+                              stateTheme: stateTheme,
+                              color: .standard,
+                              width: .wide,
+                              isSelected: !isFilterOff,
+                              unselectedContainerColor:
+                                  colorTheme.surfaceContainerHighest,
+                              unselectedIconColor: colorTheme.onSurfaceVariant,
+                              selectedContainerColor:
+                                  colorTheme.tertiaryContainer,
+                              selectedIconColor: colorTheme.onTertiaryContainer,
+                            ),
+                            onPressed: isFilterOff
+                                ? showFilterDialog
+                                : () {
+                                    setState(() {
+                                      filter = AppsFilter();
+                                    });
+                                  },
+                            icon: IconLegacy(
+                              isFilterOff
+                                  ? Symbols.search_rounded
+                                  : Symbols.search_off_rounded,
+                            ),
+                            tooltip: isFilterOff
+                                ? tr('filterApps')
+                                : '${tr('filter')} - ${tr('remove')}',
+                          ),
+                        ),
+                        title: const Text(
+                          "Materium",
+                          textAlign: .center,
+                          maxLines: 1,
+                          overflow: .ellipsis,
+                          softWrap: false,
+                        ),
+                        trailing: Padding(
+                          padding: const .fromSTEB(8.0, 0.0, 8.0, 0.0),
+                          child: IconButton(
+                            style: LegacyThemeFactory.createIconButtonStyle(
+                              colorTheme: colorTheme,
+                              elevationTheme: elevationTheme,
+                              shapeTheme: shapeTheme,
+                              stateTheme: stateTheme,
+                              color: .standard,
+                              width: .wide,
+                              containerColor:
+                                  colorTheme.surfaceContainerHighest,
+                              iconColor: colorTheme.onSurfaceVariant,
+                            ),
+                            onPressed: () => Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => const SettingsPage(),
+                              ),
+                            ),
+                            icon: const IconLegacy(
+                              Symbols.settings_rounded,
+                              fill: 1.0,
+                            ),
+                            tooltip: tr("settings"),
+                          ),
+                        ),
+                      )
+                    : CustomAppBar(
+                        type: CustomAppBarType.largeFlexible,
+                        behavior: CustomAppBarBehavior.duplicate,
+                        expandedContainerColor: colorTheme.surfaceContainer,
+                        collapsedContainerColor: colorTheme.surfaceContainer,
+                        title: Text(tr("appsString")),
                       ),
-                    ],
+                // TODO: either finish CustomScrollbar3 or use nested_scroll_view_plus
+                if (kCustomScrollbarVisible) ...[
+                  SliverScrollbar(
+                    sliver: SliverMainAxisGroup(
+                      // slivers: [...getLoadingWidgets(), getDisplayedList()],
+                      slivers: [
+                        SliverList.builder(
+                          itemCount: 100,
+                          itemBuilder: (context, index) =>
+                              ListTile(title: Text("Item ${index + 1}")),
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-                SliverToBoxAdapter(
-                  child: Container(
-                    color: Colors.green,
-                    width: double.infinity,
-                    height: 128.0,
-                    child: Align.center(child: Text("Another one")),
+                  SliverToBoxAdapter(
+                    child: Container(
+                      color: Colors.green,
+                      width: double.infinity,
+                      height: 128.0,
+                      child: Align.center(child: Text("Another one")),
+                    ),
                   ),
-                ),
-              ] else ...[
-                ...getLoadingWidgets(),
-                getDisplayedList(),
+                ] else ...[
+                  ...getLoadingWidgets(),
+                  getDisplayedList(),
+                ],
               ],
-            ],
+            ),
           ),
         ),
       ),
