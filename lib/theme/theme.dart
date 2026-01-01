@@ -206,12 +206,13 @@ abstract final class CustomThemeFactory {
 }
 
 abstract final class MarkdownThemeFactory {
-  static MarkdownStyleSheet defaultStylesheetOf(BuildContext context) {
-    final colorTheme = ColorTheme.of(context);
-    final typescaleTheme = TypescaleTheme.of(context);
+  static MarkdownStyleSheet defaultStylesheetOf({
+    required ColorThemeData colorTheme,
+    required TypescaleThemeData typescaleTheme,
+  }) {
     return MarkdownStyleSheet(
       p: typescaleTheme.bodyMedium.toTextStyle(color: colorTheme.onSurface),
-      a: TextStyle(color: colorTheme.primary),
+      a: TextStyle(color: colorTheme.tertiary),
       h3: typescaleTheme.headlineSmall.toTextStyle(color: colorTheme.onSurface),
       em: const TextStyle(fontStyle: FontStyle.italic),
       strong: const TextStyle(fontWeight: FontWeight.bold),

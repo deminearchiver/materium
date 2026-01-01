@@ -58,6 +58,17 @@ class SettingsService with ChangeNotifier {
 
   final SharedPreferencesAsync _prefs;
 
+  late final _developerMode = ExternalSettingNotifier<bool>(
+    defaultValue: false,
+    onLoad: () async => Option.maybe(await _prefs.getBool(_developerModeKey)),
+    onSave: (value) => switch (value) {
+      Some(:final value) => _prefs.setBool(_developerModeKey, value),
+      None() => _prefs.remove(_developerModeKey),
+    },
+  )..addListener(_maybeNotify);
+
+  SettingNotifier<bool> get developerMode => _developerMode;
+
   late final _useShizuku = ExternalSettingNotifier<bool>(
     defaultValue: false,
     onLoad: () async => Option.maybe(await _prefs.getBool(_useShizukuKey)),
@@ -154,6 +165,7 @@ class SettingsService with ChangeNotifier {
     _isNotifyingAllListeners = true;
 
     // Notify local listeners
+    _developerMode.notify();
     _useShizuku.notify();
     _themeMode.notify();
     _themeVariant.notify();
@@ -168,6 +180,7 @@ class SettingsService with ChangeNotifier {
   }
 
   Future<void> loadOnly({
+    bool developerMode = false,
     bool useShizuku = false,
     bool themeMode = false,
     bool themeVariant = false,
@@ -175,6 +188,7 @@ class SettingsService with ChangeNotifier {
     bool useMaterialYou = false,
   }) async {
     final futures = <Future<bool>>[
+      if (developerMode) _developerMode.load(notify: false),
       if (useShizuku) _useShizuku.load(notify: false),
       if (themeMode) _themeMode.load(notify: false),
       if (themeVariant) _themeVariant.load(notify: false),
@@ -190,6 +204,7 @@ class SettingsService with ChangeNotifier {
   }
 
   Future<void> loadAll() => loadOnly(
+    developerMode: true,
     useShizuku: true,
     themeMode: true,
     themeVariant: true,
@@ -198,6 +213,7 @@ class SettingsService with ChangeNotifier {
   );
 
   Future<void> saveOnly({
+    bool developerMode = false,
     bool useShizuku = false,
     bool themeMode = false,
     bool themeVariant = false,
@@ -205,6 +221,7 @@ class SettingsService with ChangeNotifier {
     bool useMaterialYou = false,
   }) async {
     final futures = <Future<void>>[
+      if (developerMode) _developerMode.save(),
       if (useShizuku) _useShizuku.save(),
       if (themeMode) _themeMode.save(),
       if (themeVariant) _themeVariant.save(),
@@ -217,6 +234,7 @@ class SettingsService with ChangeNotifier {
   }
 
   Future<void> saveAll() => saveOnly(
+    developerMode: true,
     useShizuku: true,
     themeMode: true,
     themeVariant: true,
@@ -224,6 +242,7 @@ class SettingsService with ChangeNotifier {
     useMaterialYou: true,
   );
 
+  static const _developerModeKey = "developerMode";
   static const _useShizukuKey = "useShizuku";
   static const _themeModeKey = "theme";
   static const _themeVariantKey = "themeVariant";

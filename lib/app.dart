@@ -275,6 +275,18 @@ class _ObtainiumState extends State<Obtainium> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
+
+    final legacyLocale = context.locale;
+    final parsedLocale = AppLocaleUtils.parseLocaleParts(
+      languageCode: legacyLocale.languageCode,
+      countryCode: legacyLocale.countryCode,
+      scriptCode: legacyLocale.scriptCode,
+    );
+
+    if (LocaleSettings.currentLocale != parsedLocale) {
+      LocaleSettings.setLocaleSync(parsedLocale);
+    }
+
     final oldSettings = _settingsOrNull;
     final newSettings = context.read<SettingsService>();
     if (oldSettings != newSettings) {

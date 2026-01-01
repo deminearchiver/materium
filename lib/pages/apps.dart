@@ -15,6 +15,7 @@ import 'package:materium/main.dart';
 import 'package:materium/pages/app.dart';
 import 'package:materium/pages/settings.dart';
 import 'package:materium/providers/apps_provider.dart';
+import 'package:materium/providers/settings_new.dart';
 import 'package:materium/providers/settings_provider.dart';
 import 'package:materium/providers/source_provider.dart';
 import 'package:materium/theme/legacy.dart';
@@ -181,7 +182,9 @@ class AppsPageState extends State<AppsPage> with TickerProviderStateMixin {
     final settingsProvider = context.watch<SettingsProvider>();
     var listedApps = appsProvider.getAppValues().toList();
 
-    final isRedesignEnabled = settingsProvider.developerModeV1;
+    final isRedesignEnabled = context.select<SettingsService, bool>(
+      (settings) => settings.developerMode.value,
+    );
 
     final padding = MediaQuery.paddingOf(context);
     final colorTheme = ColorTheme.of(context);
@@ -1600,38 +1603,40 @@ class AppsPageState extends State<AppsPage> with TickerProviderStateMixin {
                         leading: ExcludeFocus(
                           child: SizedBox.square(
                             dimension: 56.0,
-                            child: TweenAnimationBuilder<double>(
-                              tween: Tween<double>(
-                                end: progress != null ? 1.0 : 0.0,
-                              ),
-                              duration: duration,
-                              curve: easing,
-                              builder: (context, value, child) => Material(
-                                clipBehavior: .antiAlias,
-                                shape: ShapeBorder.lerp(
-                                  CornersBorder.rounded(
-                                    corners: .all(shapeTheme.corner.small),
+                            child: FutureBuilder(
+                              future: appsProvider
+                                  .updateAppIcon(item.app.id)
+                                  .then((_) => item.icon),
+                              builder: (context, snapshot) {
+                                final bytes = snapshot.data;
+                                return TweenAnimationBuilder<double>(
+                                  tween: Tween<double>(
+                                    end: progress != null ? 1.0 : 0.0,
                                   ),
-                                  CornersBorder.rounded(
-                                    corners: .all(shapeTheme.corner.full),
+                                  duration: duration,
+                                  curve: easing,
+                                  builder: (context, value, child) => Material(
+                                    clipBehavior: .antiAlias,
+                                    shape: ShapeBorder.lerp(
+                                      CornersBorder.rounded(
+                                        corners: .all(shapeTheme.corner.small),
+                                      ),
+                                      CornersBorder.rounded(
+                                        corners: .all(shapeTheme.corner.full),
+                                      ),
+                                      value,
+                                    )!,
+                                    color: isSelected
+                                        ? bytes != null
+                                              ? colorTheme.secondaryContainer
+                                              : Colors.transparent
+                                        : colorTheme.surfaceContainer,
+                                    child: child!,
                                   ),
-                                  value,
-                                )!,
-                                color: isSelected
-                                    ? colorTheme.secondaryContainer
-                                    : colorTheme.surfaceContainer,
-                                child: child!,
-                              ),
-                              child: Stack(
-                                fit: .expand,
-                                children: [
-                                  FutureBuilder(
-                                    future: appsProvider
-                                        .updateAppIcon(item.app.id)
-                                        .then((_) => item.icon),
-                                    builder: (context, snapshot) {
-                                      final bytes = snapshot.data;
-                                      return TweenAnimationBuilder<double>(
+                                  child: Stack(
+                                    fit: .expand,
+                                    children: [
+                                      TweenAnimationBuilder<double>(
                                         tween: Tween<double>(
                                           end: progress != null ? 1.0 : 0.0,
                                         ),
@@ -1666,56 +1671,59 @@ class AppsPageState extends State<AppsPage> with TickerProviderStateMixin {
                                                   ),
                                           );
                                         },
-                                      );
-                                    },
-                                  ),
-                                  InkWell(
-                                    overlayColor: WidgetStateLayerColor(
-                                      color: WidgetStatePropertyAll(
-                                        isSelected
-                                            ? colorTheme.onSecondaryContainer
-                                            : colorTheme.onSurface,
                                       ),
-                                      opacity: stateTheme.stateLayerOpacity,
-                                    ),
-                                    onDoubleTap: () {
-                                      pm.openApp(item.app.id);
-                                    },
-                                    onLongPress: () {
-                                      Navigator.of(context).push(
-                                        MaterialPageRoute(
-                                          builder: (context) => AppPage(
-                                            appId: item.app.id,
-                                            showOppositeOfPreferredView: true,
+                                      InkWell(
+                                        overlayColor: WidgetStateLayerColor(
+                                          color: WidgetStatePropertyAll(
+                                            isSelected
+                                                ? colorTheme
+                                                      .onSecondaryContainer
+                                                : colorTheme.onSurface,
                                           ),
+                                          opacity: stateTheme.stateLayerOpacity,
                                         ),
-                                      );
-                                    },
-                                  ),
-                                  TweenAnimationBuilder<double>(
-                                    tween: Tween<double>(
-                                      end: progress != null ? 1.0 : 0.0,
-                                    ),
-                                    duration: duration,
-                                    curve: easing,
-                                    builder: (context, value, _) => value > 0.0
-                                        ? CircularProgressIndicator(
-                                            padding: const .all(0.0),
-                                            strokeWidth: lerpDouble(
-                                              0.0,
-                                              4.0,
-                                              value,
+                                        onDoubleTap: () {
+                                          pm.openApp(item.app.id);
+                                        },
+                                        onLongPress: () {
+                                          Navigator.of(context).push(
+                                            MaterialPageRoute(
+                                              builder: (context) => AppPage(
+                                                appId: item.app.id,
+                                                showOppositeOfPreferredView:
+                                                    true,
+                                              ),
                                             ),
-                                            value:
-                                                progress != null &&
-                                                    progress >= 0.0
-                                                ? progress
-                                                : null,
-                                          )
-                                        : const SizedBox.shrink(),
+                                          );
+                                        },
+                                      ),
+                                      TweenAnimationBuilder<double>(
+                                        tween: Tween<double>(
+                                          end: progress != null ? 1.0 : 0.0,
+                                        ),
+                                        duration: duration,
+                                        curve: easing,
+                                        builder: (context, value, _) =>
+                                            value > 0.0
+                                            ? CircularProgressIndicator(
+                                                padding: const .all(0.0),
+                                                strokeWidth: lerpDouble(
+                                                  0.0,
+                                                  4.0,
+                                                  value,
+                                                ),
+                                                value:
+                                                    progress != null &&
+                                                        progress >= 0.0
+                                                    ? progress
+                                                    : null,
+                                              )
+                                            : const SizedBox.shrink(),
+                                      ),
+                                    ],
                                   ),
-                                ],
-                              ),
+                                );
+                              },
                             ),
                           ),
                         ),

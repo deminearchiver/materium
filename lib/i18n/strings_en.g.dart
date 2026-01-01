@@ -55,21 +55,10 @@ class Translations with BaseTranslations<AppLocale, Translations> {
   /// en: 'Materium'
   String get materium => 'Materium';
 
-  late final TranslationsSettingsPageEn settingsPage =
-      TranslationsSettingsPageEn.internal(_root);
   late final TranslationsLicensesPageEn licensesPage =
       TranslationsLicensesPageEn.internal(_root);
-}
-
-// Path: settingsPage
-class TranslationsSettingsPageEn {
-  TranslationsSettingsPageEn.internal(this._root);
-
-  final Translations _root; // ignore: unused_field
-
-  // Translations
-  late final TranslationsSettingsPageItemsEn items =
-      TranslationsSettingsPageItemsEn.internal(_root);
+  late final TranslationsSettingsPageEn settingsPage =
+      TranslationsSettingsPageEn.internal(_root);
 }
 
 // Path: licensesPage
@@ -93,6 +82,32 @@ class TranslationsLicensesPageEn {
       );
 }
 
+// Path: settingsPage
+class TranslationsSettingsPageEn {
+  TranslationsSettingsPageEn.internal(this._root);
+
+  final Translations _root; // ignore: unused_field
+
+  // Translations
+  late final TranslationsSettingsPageSectionsEn sections =
+      TranslationsSettingsPageSectionsEn.internal(_root);
+  late final TranslationsSettingsPageItemsEn items =
+      TranslationsSettingsPageItemsEn.internal(_root);
+}
+
+// Path: settingsPage.sections
+class TranslationsSettingsPageSectionsEn {
+  TranslationsSettingsPageSectionsEn.internal(this._root);
+
+  final Translations _root; // ignore: unused_field
+
+  // Translations
+  late final TranslationsSettingsPageSectionsOtherEn other =
+      TranslationsSettingsPageSectionsOtherEn.internal(_root);
+  late final TranslationsSettingsPageSectionsTroubleshootingEn troubleshooting =
+      TranslationsSettingsPageSectionsTroubleshootingEn.internal(_root);
+}
+
 // Path: settingsPage.items
 class TranslationsSettingsPageItemsEn {
   TranslationsSettingsPageItemsEn.internal(this._root);
@@ -102,6 +117,36 @@ class TranslationsSettingsPageItemsEn {
   // Translations
   late final TranslationsSettingsPageItemsLicensesEn licenses =
       TranslationsSettingsPageItemsLicensesEn.internal(_root);
+  late final TranslationsSettingsPageItemsAboutEn about =
+      TranslationsSettingsPageItemsAboutEn.internal(_root);
+  late final TranslationsSettingsPageItemsHelpEn help =
+      TranslationsSettingsPageItemsHelpEn.internal(_root);
+  late final TranslationsSettingsPageItemsDeveloperModeEn developerMode =
+      TranslationsSettingsPageItemsDeveloperModeEn.internal(_root);
+}
+
+// Path: settingsPage.sections.other
+class TranslationsSettingsPageSectionsOtherEn {
+  TranslationsSettingsPageSectionsOtherEn.internal(this._root);
+
+  final Translations _root; // ignore: unused_field
+
+  // Translations
+
+  /// en: 'Other'
+  String get label => 'Other';
+}
+
+// Path: settingsPage.sections.troubleshooting
+class TranslationsSettingsPageSectionsTroubleshootingEn {
+  TranslationsSettingsPageSectionsTroubleshootingEn.internal(this._root);
+
+  final Translations _root; // ignore: unused_field
+
+  // Translations
+
+  /// en: 'Troubleshooting'
+  String get label => 'Troubleshooting';
 }
 
 // Path: settingsPage.items.licenses
@@ -117,4 +162,52 @@ class TranslationsSettingsPageItemsLicensesEn {
 
   /// en: 'View licenses of open-source software'
   String get supportingText => 'View licenses of open-source software';
+}
+
+// Path: settingsPage.items.about
+class TranslationsSettingsPageItemsAboutEn {
+  TranslationsSettingsPageItemsAboutEn.internal(this._root);
+
+  final Translations _root; // ignore: unused_field
+
+  // Translations
+
+  /// en: 'About Materium'
+  String get label => 'About Materium';
+
+  /// en: 'Information, socials and contributors'
+  String get description => 'Information, socials and contributors';
+}
+
+// Path: settingsPage.items.help
+class TranslationsSettingsPageItemsHelpEn {
+  TranslationsSettingsPageItemsHelpEn.internal(this._root);
+
+  final Translations _root; // ignore: unused_field
+
+  // Translations
+
+  /// en: 'Help & support'
+  String get label => 'Help & support';
+
+  /// en: 'Get help, report a bug or request a feature'
+  String get description => 'Get help, report a bug or request a feature';
+}
+
+// Path: settingsPage.items.developerMode
+class TranslationsSettingsPageItemsDeveloperModeEn {
+  TranslationsSettingsPageItemsDeveloperModeEn.internal(this._root);
+
+  final Translations _root; // ignore: unused_field
+
+  // Translations
+
+  /// en: 'For developers'
+  String get label => 'For developers';
+
+  /// en: 'If you know, you know'
+  String get description => 'If you know, you know';
+
+  /// en: 'Developer must be enabled'
+  String get disabledTooltip => 'Developer must be enabled';
 }

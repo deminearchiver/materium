@@ -14,6 +14,8 @@ enum LegacyIconButtonWidth { narrow, normal, wide }
 
 enum LegacyIconButtonColor { filled, tonal, outlined, standard }
 
+enum LegacyTextFieldType { filled, outlined }
+
 abstract final class LegacyThemeFactory {
   static ThemeData createTheme({
     required ColorThemeData colorTheme,

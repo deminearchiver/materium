@@ -189,7 +189,7 @@ void main() async {
         path: localeDir,
         fallbackLocale: fallbackLocale,
         useOnlyLangCode: false,
-        child: const Obtainium(),
+        child: TranslationProvider(child: const Obtainium()),
       ),
     ),
   );

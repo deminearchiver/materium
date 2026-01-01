@@ -78,7 +78,7 @@ export 'package:material/material.dart';
 export 'assets/assets.gen.dart';
 export 'assets/fonts.dart';
 export 'assets/fonts.gen.dart';
-export 'i18n/strings.g.dart';
+export 'i18n/i18n.dart';
 
 // Shared utilities
 

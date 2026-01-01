@@ -68,9 +68,6 @@ class SettingsProvider with ChangeNotifier {
   Future<void> reload() async {
     await _prefsWithCache.reloadCache();
     _defaultAppDir = (await getAppStorageDir()).path;
-
-    _developerModeV1 = prefsWithCache.getBool("developerModeV1") ?? kDebugMode;
-
     notifyListeners();
   }
 
@@ -536,14 +533,5 @@ class SettingsProvider with ChangeNotifier {
   set useFGService(bool val) {
     prefsWithCache.setBool('useFGService', val);
     notifyListeners();
-  }
-
-  bool _developerModeV1 = kDebugMode;
-  bool get developerModeV1 => _developerModeV1;
-  set developerModeV1(bool value) {
-    if (_developerModeV1 == value) return;
-    _developerModeV1 = value;
-    notifyListeners();
-    prefsWithCache.setBool("developerModeV1", value);
   }
 }

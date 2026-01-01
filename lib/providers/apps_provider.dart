@@ -2341,6 +2341,7 @@ Future<void> bgUpdateCheck(String taskId, Map<String, dynamic>? params) async {
   await EasyLocalization.ensureInitialized();
   await loadTranslations();
 
+  await LogsProvider.ensureInitialized(runDefaultClear: false);
   final logs = LogsProvider.instance;
   NotificationsProvider notificationsProvider = NotificationsProvider();
   AppsProvider appsProvider = AppsProvider(isBg: true);
