@@ -147,8 +147,9 @@ class _ObtainiumState extends State<Obtainium> {
           final contrastLevel = highContrast ? 1.0 : 0.0;
 
           final DynamicSchemeVariant variant = _settings.useMaterialYou.value
-              ? .tonalSpot
-              : .vibrant;
+              // ? .tonalSpot
+              ? _settings.themeVariant.value.dynamicSchemeVariant
+              : _settings.themeVariant.value.dynamicSchemeVariant;
 
           var colorTheme = ColorThemeData.fromSeed(
             sourceColor: sourceColor,

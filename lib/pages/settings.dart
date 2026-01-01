@@ -1,7 +1,7 @@
 import 'package:device_info_ffi/device_info_ffi.dart';
 import 'package:drift/drift.dart';
 import 'package:dynamic_color_ffi/dynamic_color_ffi.dart';
-import 'package:easy_localization/easy_localization.dart';
+import 'package:easy_localization/easy_localization.dart' hide TextDirection;
 import 'package:flex_color_picker/flex_color_picker.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:material/material_shapes.dart';
@@ -1144,6 +1144,60 @@ class _SettingsPageState extends State<SettingsPage> {
                   ),
                   const SizedBox(height: 16.0),
                   KeyedSubtree(
+                    key: const ValueKey("language"),
+                    child: Selector<SettingsProvider, Locale?>(
+                      selector: (context, settingsProvider) =>
+                          settingsProvider.forcedLocale,
+                      builder: (context, forcedLocale, _) {
+                        final isSelected = forcedLocale != null;
+                        return DropdownMenuFormField<Outer<Locale?>>(
+                          inputDecorationTheme: InputDecorationThemeData(
+                            contentPadding: const .symmetric(
+                              horizontal: 16.0,
+                              vertical: 10.0,
+                            ),
+                            border: CornersInputBorder.rounded(
+                              corners: .all(shapeTheme.corner.large),
+                            ),
+                            filled: true,
+                            fillColor: isSelected
+                                ? colorTheme.secondaryContainer
+                                : colorTheme.surface,
+                          ),
+                          expandedInsets: .zero,
+                          label: Text(tr("language")),
+                          enableFilter: true,
+                          enableSearch: true,
+                          requestFocusOnTap: true,
+                          initialSelection: Outer(forcedLocale),
+                          dropdownMenuEntries: [
+                            DropdownMenuEntry(
+                              value: const Outer(null),
+                              label: tr("followSystem"),
+                            ),
+                            ...supportedLocales.map(
+                              (e) => DropdownMenuEntry(
+                                value: Outer(e.key),
+                                label: e.value,
+                              ),
+                            ),
+                          ],
+                          onSelected: (value) {
+                            if (value == null) return;
+                            final resolvedValue = value.inner;
+                            settingsProvider.forcedLocale = resolvedValue;
+                            if (resolvedValue != null) {
+                              context.setLocale(resolvedValue);
+                            } else {
+                              settingsProvider.resetLocaleSafe(context);
+                            }
+                          },
+                        );
+                      },
+                    ),
+                  ),
+                  const SizedBox(height: 16.0),
+                  KeyedSubtree(
                     key: const ValueKey("useMaterialYou"),
                     child: ValueListenableBuilder(
                       valueListenable: settings.useMaterialYou,
@@ -1221,7 +1275,6 @@ class _SettingsPageState extends State<SettingsPage> {
                           child: ListItemTheme.merge(
                             data: unselectedListItemTheme,
                             child: ListItemContainer(
-                              isLast: true,
                               child: ListItemInteraction(
                                 onTap: !isDisabled ? selectColor : null,
                                 child: ValueListenableBuilder(
@@ -1258,215 +1311,250 @@ class _SettingsPageState extends State<SettingsPage> {
                       },
                     ),
                   ),
-                  const SizedBox(height: 16.0),
-                  Material(
-                    clipBehavior: .antiAlias,
-                    shape: CornersBorder.rounded(
-                      corners: .all(shapeTheme.corner.large),
-                    ),
-                    color: colorTheme.surface,
-                    child: Padding(
-                      padding: const .all(16.0),
-                      child: Flex.vertical(
-                        mainAxisSize: .min,
-                        crossAxisAlignment: .stretch,
-                        children: [
-                          DropdownMenuFormField<Outer<Locale?>>(
-                            key: const ValueKey("language"),
-                            expandedInsets: .zero,
-                            inputDecorationTheme:
-                                const InputDecorationThemeData(
-                                  // border: UnderlineInputBorder(),
-                                  // filled: true,
-                                  border: OutlineInputBorder(),
+                  const SizedBox(height: 2.0),
+                  Flex.horizontal(
+                    spacing: 2.0,
+                    children: [
+                      Flexible.tight(
+                        child: ValueListenableBuilder(
+                          valueListenable: settings.themeMode,
+                          builder: (context, themeMode, _) {
+                            final isSelected = themeMode != .system;
+                            return DropdownMenuFormField<ThemeMode>(
+                              key: const ValueKey("themeMode"),
+                              inputDecorationTheme: InputDecorationThemeData(
+                                contentPadding: const .symmetric(
+                                  horizontal: 16.0,
+                                  vertical: 10.0,
                                 ),
-                            label: Text(tr("language")),
-                            enableFilter: true,
-                            enableSearch: true,
-                            requestFocusOnTap: true,
-                            initialSelection: Outer(
-                              settingsProvider.forcedLocale,
-                            ),
-                            dropdownMenuEntries: [
-                              DropdownMenuEntry(
-                                value: const Outer(null),
-                                label: tr("followSystem"),
-                              ),
-                              ...supportedLocales.map(
-                                (e) => DropdownMenuEntry(
-                                  value: Outer(e.key),
-                                  label: e.value,
+                                border: CornersInputBorder.rounded(
+                                  corners: isSelected
+                                      ? .all(shapeTheme.corner.large)
+                                      : .directional(
+                                          topStart:
+                                              shapeTheme.corner.extraSmall,
+                                          topEnd: shapeTheme.corner.extraSmall,
+                                          bottomStart: shapeTheme.corner.large,
+                                          bottomEnd:
+                                              shapeTheme.corner.extraSmall,
+                                        ),
                                 ),
+                                filled: true,
+                                fillColor: isSelected
+                                    ? colorTheme.secondaryContainer
+                                    : colorTheme.surface,
                               ),
-                            ],
-                            onSelected: (value) {
-                              final resolvedValue = value?.inner;
-                              settingsProvider.forcedLocale = resolvedValue;
-                              if (resolvedValue != null) {
-                                context.setLocale(resolvedValue);
-                              } else {
-                                settingsProvider.resetLocaleSafe(context);
-                              }
-                            },
-                          ),
-                          const SizedBox(height: 16.0),
-                          ListenableBuilder(
-                            listenable: settings.themeMode,
-                            builder: (context, _) =>
-                                DropdownMenuFormField<ThemeMode>(
-                                  key: const ValueKey("theme"),
-                                  expandedInsets: .zero,
-                                  inputDecorationTheme:
-                                      const InputDecorationThemeData(
-                                        border: OutlineInputBorder(),
-                                      ),
-                                  textStyle: typescaleTheme
-                                      .titleMediumEmphasized
-                                      .toTextStyle(),
-                                  label: Text(tr("theme")),
-                                  initialSelection: settings.themeMode.value,
-                                  dropdownMenuEntries: [
-                                    DropdownMenuEntry(
-                                      value: .system,
-                                      leadingIcon: const IconLegacy(
-                                        Symbols.auto_mode_rounded,
-                                      ),
-                                      label: tr("followSystem"),
-                                    ),
-                                    DropdownMenuEntry(
-                                      value: .light,
-                                      leadingIcon: const IconLegacy(
-                                        Symbols.light_mode_rounded,
-                                      ),
-                                      label: tr("light"),
-                                    ),
-                                    DropdownMenuEntry(
-                                      value: .dark,
-                                      leadingIcon: const IconLegacy(
-                                        Symbols.dark_mode_rounded,
-                                      ),
-                                      label: tr("dark"),
-                                    ),
-                                  ],
-                                  onSelected: (value) {
-                                    if (value != null) {
-                                      settings.themeMode.value = value;
-                                    }
-                                  },
+                              expandedInsets: .zero,
+                              textStyle: typescaleTheme.titleMediumEmphasized
+                                  .toTextStyle(),
+                              label: Text(tr("theme")),
+                              initialSelection: themeMode,
+                              dropdownMenuEntries: [
+                                DropdownMenuEntry(
+                                  value: .system,
+                                  leadingIcon: const IconLegacy(
+                                    Symbols.auto_mode_rounded,
+                                  ),
+                                  label: tr("followSystem"),
                                 ),
-                          ),
-                          // ListenableBuilder(
-                          //   listenable: settings.themeMode,
-                          //   builder: (context, child) =>
-                          //       settings.themeMode.value == .system &&
-                          //           (DeviceInfo.androidInfo?.version.sdkInt ??
-                          //                   30) <
-                          //               29
-                          //       ? Text(
-                          //           tr('followSystemThemeExplanation'),
-                          //           style: typescaleTheme.labelSmall
-                          //               .toTextStyle(),
-                          //         )
-                          //       : const SizedBox.shrink(),
-                          // ),
-                          const SizedBox(height: 16.0),
-                          Flex.horizontal(
-                            mainAxisAlignment: .start,
-                            crossAxisAlignment: .start,
-                            children: [
-                              Flexible.tight(
-                                key: const ValueKey("appSortBy"),
-                                child:
-                                    DropdownMenuFormField<SortColumnSettings>(
-                                      expandedInsets: .zero,
-                                      inputDecorationTheme:
-                                          const InputDecorationThemeData(
-                                            border: OutlineInputBorder(),
-                                          ),
-                                      label: Text(tr("appSortBy")),
-                                      initialSelection:
-                                          settingsProvider.sortColumn,
-                                      dropdownMenuEntries: [
-                                        DropdownMenuEntry(
-                                          value: .authorName,
-                                          label: tr("authorName"),
-                                        ),
-                                        DropdownMenuEntry(
-                                          value: .nameAuthor,
-                                          label: tr("nameAuthor"),
-                                        ),
-                                        DropdownMenuEntry(
-                                          value: .added,
-                                          label: tr("asAdded"),
-                                        ),
-                                        DropdownMenuEntry(
-                                          value: .releaseDate,
-                                          label: tr("releaseDate"),
-                                        ),
-                                      ],
-                                      onSelected: (value) {
-                                        if (value != null) {
-                                          settingsProvider.sortColumn = value;
-                                        }
-                                      },
-                                    ),
-                              ),
-                              const SizedBox(width: 16),
-                              Flexible.tight(
-                                key: const ValueKey("appSortOrder"),
-                                child: DropdownMenuFormField<SortOrderSettings>(
-                                  expandedInsets: .zero,
-                                  inputDecorationTheme:
-                                      const InputDecorationThemeData(
-                                        border: OutlineInputBorder(),
-                                      ),
-                                  label: Text(tr("appSortOrder")),
-                                  initialSelection: settingsProvider.sortOrder,
-                                  dropdownMenuEntries: [
-                                    DropdownMenuEntry(
-                                      value: .ascending,
-                                      label: tr("ascending"),
-                                    ),
-                                    DropdownMenuEntry(
-                                      value: .descending,
-                                      label: tr("descending"),
-                                    ),
-                                  ],
-                                  onSelected: (value) {
-                                    if (value != null) {
-                                      settingsProvider.sortOrder = value;
-                                    }
-                                  },
+                                DropdownMenuEntry(
+                                  value: .light,
+                                  leadingIcon: const IconLegacy(
+                                    Symbols.light_mode_rounded,
+                                  ),
+                                  label: tr("light"),
                                 ),
-                              ),
-                            ],
-                          ),
-                        ],
+                                DropdownMenuEntry(
+                                  value: .dark,
+                                  leadingIcon: const IconLegacy(
+                                    Symbols.dark_mode_rounded,
+                                  ),
+                                  label: tr("dark"),
+                                ),
+                              ],
+                              onSelected: (value) {
+                                if (value != null) {
+                                  settings.themeMode.value = value;
+                                }
+                              },
+                            );
+                          },
+                        ),
                       ),
-                    ),
+                      Flexible.tight(
+                        child: ValueListenableBuilder(
+                          valueListenable: settings.themeVariant,
+                          builder: (context, themeVariant, _) {
+                            final isSelected =
+                                themeVariant.dynamicSchemeVariant !=
+                                ThemeVariant.system.dynamicSchemeVariant;
+                            return DropdownMenuFormField<ThemeVariant>(
+                              key: const ValueKey("themeVariant"),
+                              inputDecorationTheme: InputDecorationThemeData(
+                                contentPadding: const .symmetric(
+                                  horizontal: 16.0,
+                                  vertical: 10.0,
+                                ),
+                                border: CornersInputBorder.rounded(
+                                  corners: isSelected
+                                      ? .all(shapeTheme.corner.large)
+                                      : .directional(
+                                          topStart:
+                                              shapeTheme.corner.extraSmall,
+                                          topEnd: shapeTheme.corner.extraSmall,
+                                          bottomStart:
+                                              shapeTheme.corner.extraSmall,
+                                          bottomEnd: shapeTheme.corner.large,
+                                        ),
+                                ),
+                                filled: true,
+                                fillColor: isSelected
+                                    ? colorTheme.secondaryContainer
+                                    : colorTheme.surface,
+                              ),
+                              expandedInsets: .zero,
+                              textStyle: typescaleTheme.titleMediumEmphasized
+                                  .toTextStyle(),
+                              label: Text("Color scheme"),
+                              initialSelection: themeVariant,
+                              dropdownMenuEntries: [
+                                DropdownMenuEntry(
+                                  value: .calm,
+                                  leadingIcon: const IconLegacy(
+                                    Symbols.moon_stars_rounded,
+                                    fill: 1.0,
+                                  ),
+                                  label: "Calm",
+                                ),
+                                DropdownMenuEntry(
+                                  value: .pastel,
+                                  leadingIcon: const IconLegacy(
+                                    Symbols.brush_rounded,
+                                    fill: 1.0,
+                                  ),
+                                  label: "Pastel",
+                                ),
+                                DropdownMenuEntry(
+                                  value: .juicy,
+                                  leadingIcon: const IconLegacy(
+                                    Symbols.nutrition_rounded,
+                                    fill: 1.0,
+                                  ),
+                                  label: "Juicy",
+                                ),
+                                DropdownMenuEntry(
+                                  value: .creative,
+                                  leadingIcon: const IconLegacy(
+                                    Symbols.draw_abstract_rounded,
+                                    fill: 1.0,
+                                  ),
+                                  label: "Creative",
+                                ),
+                              ],
+                              onSelected: (value) {
+                                if (value != null) {
+                                  settings.themeVariant.value = value;
+                                }
+                              },
+                            );
+                          },
+                        ),
+                      ),
+                    ],
                   ),
-                  // if (kDebugMode)
-                  //   ListItemContainer(
-                  //     isFirst: true,
-                  //     isLast: true,
-                  //     child: ListItemInteraction(
-                  //       onTap: () => Navigator.push(
-                  //         context,
-                  //         MaterialPageRoute(
-                  //           builder: (context) => const _SettingsLanguageView(),
-                  //         ),
-                  //       ),
-                  //       child: ListItemLayout(
-                  //         headline: Text(tr("Language")),
-                  //         supportingText: Text(
-                  //           settingsProvider.forcedLocale?.toString() ??
-                  //               tr("followSystem"),
-                  //         ),
-                  //         trailing: const Icon(Symbols.navigate_next_rounded),
-                  //       ),
-                  //     ),
-                  //   ),
                   const SizedBox(height: 16.0),
+                  Flex.horizontal(
+                    spacing: 2.0,
+                    children: [
+                      Flexible.tight(
+                        key: const ValueKey("appSortBy"),
+                        child: DropdownMenuFormField<SortColumnSettings>(
+                          inputDecorationTheme: InputDecorationThemeData(
+                            contentPadding: const .symmetric(
+                              horizontal: 16.0,
+                              vertical: 10.0,
+                            ),
+                            border: CornersInputBorder.rounded(
+                              corners: .directional(
+                                topStart: shapeTheme.corner.large,
+                                topEnd: shapeTheme.corner.extraSmall,
+                                bottomStart: shapeTheme.corner.extraSmall,
+                                bottomEnd: shapeTheme.corner.extraSmall,
+                              ),
+                            ),
+                            filled: true,
+                            fillColor: colorTheme.surface,
+                          ),
+                          expandedInsets: .zero,
+                          label: Text(tr("appSortBy")),
+                          initialSelection: settingsProvider.sortColumn,
+                          dropdownMenuEntries: [
+                            DropdownMenuEntry(
+                              value: .authorName,
+                              label: tr("authorName"),
+                            ),
+                            DropdownMenuEntry(
+                              value: .nameAuthor,
+                              label: tr("nameAuthor"),
+                            ),
+                            DropdownMenuEntry(
+                              value: .added,
+                              label: tr("asAdded"),
+                            ),
+                            DropdownMenuEntry(
+                              value: .releaseDate,
+                              label: tr("releaseDate"),
+                            ),
+                          ],
+                          onSelected: (value) {
+                            if (value != null) {
+                              settingsProvider.sortColumn = value;
+                            }
+                          },
+                        ),
+                      ),
+                      Flexible.tight(
+                        key: const ValueKey("appSortOrder"),
+                        child: DropdownMenuFormField<SortOrderSettings>(
+                          inputDecorationTheme: InputDecorationThemeData(
+                            contentPadding: const .symmetric(
+                              horizontal: 16.0,
+                              vertical: 10.0,
+                            ),
+                            border: CornersInputBorder.rounded(
+                              corners: .directional(
+                                topStart: shapeTheme.corner.extraSmall,
+                                topEnd: shapeTheme.corner.large,
+                                bottomStart: shapeTheme.corner.extraSmall,
+                                bottomEnd: shapeTheme.corner.extraSmall,
+                              ),
+                            ),
+                            filled: true,
+                            fillColor: colorTheme.surface,
+                          ),
+                          expandedInsets: .zero,
+                          label: Text(tr("appSortOrder")),
+                          initialSelection: settingsProvider.sortOrder,
+                          dropdownMenuEntries: [
+                            DropdownMenuEntry(
+                              value: .ascending,
+                              label: tr("ascending"),
+                            ),
+                            DropdownMenuEntry(
+                              value: .descending,
+                              label: tr("descending"),
+                            ),
+                          ],
+                          onSelected: (value) {
+                            if (value != null) {
+                              settingsProvider.sortOrder = value;
+                            }
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 2.0),
                   KeyedSubtree(
                     key: const ValueKey("showAppWebpage"),
                     child: Selector<SettingsProvider, bool>(
@@ -1478,7 +1566,6 @@ class _SettingsPageState extends State<SettingsPage> {
                                 ? selectedListItemTheme
                                 : unselectedListItemTheme,
                             child: ListItemContainer(
-                              isFirst: true,
                               child: MergeSemantics(
                                 child: ListItemInteraction(
                                   onTap: () => settingsProvider.showAppWebpage =
@@ -2470,4 +2557,94 @@ class _LogsPageState extends State<_LogsPage> {
       ),
     );
   }
+}
+
+class CornersInputBorder extends InputBorder {
+  const CornersInputBorder({
+    super.borderSide = .none,
+    required this.delegate,
+    this.corners = .none,
+  });
+
+  const CornersInputBorder.rounded({
+    super.borderSide = .none,
+    this.corners = .none,
+  }) : delegate = .rounded;
+
+  const CornersInputBorder.cut({super.borderSide = .none, this.corners = .none})
+    : delegate = .cut;
+
+  const CornersInputBorder.superellipse({
+    super.borderSide = .none,
+    this.corners = .none,
+  }) : delegate = .superellipse;
+
+  final CornersBorderDelegate delegate;
+  final CornersGeometry corners;
+
+  @override
+  CornersInputBorder scale(double t) => CornersInputBorder(
+    borderSide: borderSide.scale(t),
+    delegate: delegate.scale(t),
+    corners: corners * t,
+  );
+
+  @override
+  CornersInputBorder copyWith({
+    BorderSide? borderSide,
+    CornersBorderDelegate? delegate,
+    CornersGeometry? corners,
+  }) => CornersInputBorder(
+    borderSide: borderSide ?? this.borderSide,
+    delegate: delegate ?? this.delegate,
+    corners: corners ?? this.corners,
+  );
+
+  @override
+  bool get isOutline => false;
+
+  @override
+  EdgeInsetsGeometry get dimensions => .all(borderSide.width);
+
+  @override
+  Path getInnerPath(Rect rect, {TextDirection? textDirection}) =>
+      delegate.getInnerPath(
+        rect: rect,
+        side: borderSide,
+        borderRadius: corners.resolve(textDirection).toBorderRadius(rect.size),
+      );
+  @override
+  Path getOuterPath(Rect rect, {TextDirection? textDirection}) =>
+      delegate.getOuterPath(
+        rect: rect,
+        side: borderSide,
+        borderRadius: corners.resolve(textDirection).toBorderRadius(rect.size),
+      );
+
+  @override
+  void paint(
+    Canvas canvas,
+    Rect rect, {
+    double? gapStart,
+    double gapExtent = 0.0,
+    double gapPercentage = 0.0,
+    TextDirection? textDirection,
+  }) {}
+
+  @override
+  String toString() =>
+      "${objectRuntimeType(this, "CornersInputBorder")}"
+      "(borderSide: $borderSide, delegate: $delegate, corners: $corners)";
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      runtimeType == other.runtimeType &&
+          other is CornersInputBorder &&
+          borderSide == other.borderSide &&
+          delegate == other.delegate &&
+          corners == other.corners;
+
+  @override
+  int get hashCode => Object.hash(runtimeType, borderSide, delegate, corners);
 }
