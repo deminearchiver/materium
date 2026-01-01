@@ -12,6 +12,7 @@ import 'package:materium/components/generated_form.dart';
 import 'package:materium/components/generated_form_modal.dart';
 import 'package:materium/custom_errors.dart';
 import 'package:materium/main.dart';
+import 'package:materium/pages/add_app.dart';
 import 'package:materium/pages/app.dart';
 import 'package:materium/pages/settings.dart';
 import 'package:materium/providers/apps_provider.dart';
@@ -1861,7 +1862,7 @@ class AppsPageState extends State<AppsPage> with TickerProviderStateMixin {
     // final windowWidthSizeClass = WindowWidthSizeClass.of(context);
     // final isCompact = windowWidthSizeClass <= WindowWidthSizeClass.compact;
 
-    PreferredSizeWidget getDockedToolbar() {
+    PreferredSizeWidget getDockedOrFloatingToolbar() {
       final Widget filterButton = IconButton(
         onPressed: isFilterOff
             ? showFilterDialog
@@ -2058,10 +2059,101 @@ class AppsPageState extends State<AppsPage> with TickerProviderStateMixin {
         tooltip: tr("more"),
       );
 
+      final floatingActionButton = IconButton(
+        style: LegacyThemeFactory.createIconButtonStyle(
+          colorTheme: colorTheme,
+          elevationTheme: elevationTheme,
+          shapeTheme: shapeTheme,
+          stateTheme: stateTheme,
+          size: .medium,
+          shape: .square,
+          color: .tonal,
+          width: .normal,
+          containerColor: colorTheme.primaryContainer,
+          iconColor: colorTheme.onPrimaryContainer,
+          containerElevation: elevationTheme.level3,
+        ),
+        onPressed: () => Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => const AddAppPage()),
+        ),
+        icon: const IconLegacy(Symbols.add_rounded),
+        tooltip: tr("addApp"),
+      );
+
       final EdgeInsetsGeometry margin = isRedesignEnabled
           ? .fromLTRB(padding.left + 16.0, 16.0, padding.right + 16.0, 16.0)
           : .zero;
       const height = 64.0;
+
+      final toolbar = SizedBox(
+        width: isRedesignEnabled ? null : .infinity,
+        height: height,
+        child: Material(
+          clipBehavior: .antiAlias,
+          color: isRedesignEnabled
+              ? hasSelection
+                    ? colorTheme.primaryContainer
+                    : colorTheme.surfaceContainerHighest
+              : colorTheme.surfaceContainerHigh,
+          shape: CornersBorder.rounded(
+            corners: .all(
+              isRedesignEnabled
+                  ? shapeTheme.corner.full
+                  : shapeTheme.corner.none,
+            ),
+          ),
+          elevation: isRedesignEnabled
+              ? elevationTheme.level3
+              : elevationTheme.level0,
+          child: Flex.horizontal(
+            mainAxisSize: isRedesignEnabled ? .min : .max,
+            children: isRedesignEnabled
+                ? [
+                    const SizedBox(width: 12.0 - 4.0),
+                    selectButton,
+                    const SizedBox(width: 12.0 - 4.0 - 4.0),
+                    removeButton,
+                    const SizedBox(width: 12.0 - 4.0),
+                    downloadButton,
+                    const SizedBox(width: 12.0 - 4.0),
+                    categorizeButton,
+                    const SizedBox(width: 12.0 - 4.0 - 4.0),
+                    moreButton,
+                    const SizedBox(width: 12.0 - 4.0),
+                  ]
+                : [
+                    Flexible.tight(
+                      child: Flex.horizontal(
+                        mainAxisAlignment: .start,
+                        children: [
+                          const SizedBox(width: 16.0),
+                          filterButton,
+                          const SizedBox(width: 12.0),
+                          selectButton,
+                          const SizedBox(width: 12.0),
+                        ],
+                      ),
+                    ),
+                    downloadButton,
+                    Flexible.tight(
+                      child: Flex.horizontal(
+                        mainAxisAlignment: .end,
+                        children: [
+                          const SizedBox(width: 12.0 - 4.0),
+                          removeButton,
+                          const SizedBox(width: 12.0 - 4.0 - 4.0),
+                          categorizeButton,
+                          const SizedBox(width: 12.0 - 8.0 - 4.0),
+                          moreButton,
+                          const SizedBox(width: 16.0 - 8.0),
+                        ],
+                      ),
+                    ),
+                  ],
+          ),
+        ),
+      );
 
       return PreferredSize(
         preferredSize: Size(.infinity, margin.vertical + height),
@@ -2069,80 +2161,48 @@ class AppsPageState extends State<AppsPage> with TickerProviderStateMixin {
           heightFactor: 1.0,
           child: Padding(
             padding: isRedesignEnabled ? margin : .zero,
-            child: SizedBox(
-              width: isRedesignEnabled ? null : .infinity,
-              height: height,
-              child: Material(
-                clipBehavior: .antiAlias,
-                color: isRedesignEnabled
-                    ? hasSelection
-                          ? colorTheme.primaryContainer
-                          : colorTheme.surfaceContainerHighest
-                    : colorTheme.surfaceContainerHigh,
-                shape: CornersBorder.rounded(
-                  corners: .all(
-                    isRedesignEnabled
-                        ? shapeTheme.corner.full
-                        : shapeTheme.corner.none,
-                  ),
-                ),
-                elevation: isRedesignEnabled
-                    ? elevationTheme.level3
-                    : elevationTheme.level0,
-                child: Flex.horizontal(
-                  mainAxisSize: isRedesignEnabled ? .min : .max,
-                  children: isRedesignEnabled
-                      ? [
-                          const SizedBox(width: 12.0 - 4.0),
-                          selectButton,
-                          const SizedBox(width: 12.0 - 4.0 - 4.0),
-                          removeButton,
-                          const SizedBox(width: 12.0 - 4.0),
-                          downloadButton,
-                          const SizedBox(width: 12.0 - 4.0),
-                          categorizeButton,
-                          const SizedBox(width: 12.0 - 4.0 - 4.0),
-                          moreButton,
-                          const SizedBox(width: 12.0 - 4.0),
-                        ]
-                      : [
-                          Flexible.tight(
-                            child: Flex.horizontal(
-                              mainAxisAlignment: .start,
-                              children: [
-                                const SizedBox(width: 16.0),
-                                filterButton,
-                                const SizedBox(width: 12.0),
-                                selectButton,
-                                const SizedBox(width: 12.0),
-                              ],
+            child: isRedesignEnabled
+                ? Flex.horizontal(
+                    mainAxisSize: .max,
+                    mainAxisAlignment: .center,
+                    crossAxisAlignment: .center,
+                    children: [
+                      toolbar,
+                      TweenAnimationBuilder<double>(
+                        tween: Tween<double>(
+                          end: selectedAppIds.isEmpty ? 1.0 : 0.0,
+                        ),
+                        duration: const DurationThemeData.fallback().long2,
+                        curve: const EasingThemeData.fallback().emphasized,
+                        builder: (context, value, child) => Visibility(
+                          visible: value > 0.0,
+                          child: Opacity(
+                            opacity: value,
+                            child: Align.centerStart(
+                              widthFactor: value,
+                              heightFactor: 1.0,
+                              child: Transform.scale(
+                                scale: value,
+                                alignment: AlignmentDirectional.centerStart,
+                                child: child!,
+                              ),
                             ),
                           ),
-                          downloadButton,
-                          Flexible.tight(
-                            child: Flex.horizontal(
-                              mainAxisAlignment: .end,
-                              children: [
-                                const SizedBox(width: 12.0 - 4.0),
-                                removeButton,
-                                const SizedBox(width: 12.0 - 4.0 - 4.0),
-                                categorizeButton,
-                                const SizedBox(width: 12.0 - 8.0 - 4.0),
-                                moreButton,
-                                const SizedBox(width: 16.0 - 8.0),
-                              ],
-                            ),
-                          ),
-                        ],
-                ),
-              ),
-            ),
+                        ),
+                        child: Padding(
+                          padding: const .directional(start: 8.0),
+                          child: floatingActionButton,
+                        ),
+                      ),
+                    ],
+                  )
+                : toolbar,
           ),
         ),
       );
     }
 
-    final toolbar = getDockedToolbar();
+    final toolbar = getDockedOrFloatingToolbar();
 
     return Scaffold(
       backgroundColor: colorTheme.surfaceContainer,

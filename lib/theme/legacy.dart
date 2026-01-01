@@ -451,6 +451,8 @@ abstract final class LegacyThemeFactory {
     Color? unselectedContainerColor,
     Color? selectedDisabledContainerColor,
     Color? selectedContainerColor,
+    double? disabledContainerElevation,
+    double? containerElevation,
     Color? disabledIconColor,
     Color? iconColor,
     Color? unselectedDisabledIconColor,
@@ -535,6 +537,17 @@ abstract final class LegacyThemeFactory {
         } ??
         colorTheme.onSurface.withValues(alpha: 0.10);
 
+    final resolvedDisabledElevation =
+        switch (isSelected) {
+          _ => disabledContainerElevation,
+        } ??
+        elevationTheme.level0;
+    final resolvedElevation =
+        switch (isSelected) {
+          _ => containerElevation,
+        } ??
+        elevationTheme.level0;
+
     final resolvedBackgroundColor =
         switch (isSelected) {
           null => containerColor,
@@ -618,8 +631,12 @@ abstract final class LegacyThemeFactory {
       iconAlignment: IconAlignment.start,
       mouseCursor: WidgetStateMouseCursor.clickable,
       tapTargetSize: tapTargetSize,
-      elevation: const WidgetStatePropertyAll(0.0),
-      shadowColor: WidgetStateColor.transparent,
+      elevation: WidgetStateProperty.resolveWith(
+        (states) => states.contains(WidgetState.disabled)
+            ? resolvedDisabledElevation
+            : resolvedElevation,
+      ),
+      shadowColor: WidgetStatePropertyAll(colorTheme.shadow),
       minimumSize: const WidgetStatePropertyAll(.zero),
       fixedSize: WidgetStatePropertyAll(Size(resolvedWidth, resolvedHeight)),
       maximumSize: const WidgetStatePropertyAll(.infinite),
