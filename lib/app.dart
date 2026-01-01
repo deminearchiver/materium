@@ -309,15 +309,27 @@ class _ObtainiumState extends State<Obtainium> {
 
   @override
   Widget build(BuildContext context) {
-    final settingsProvider = context.watch<SettingsProvider>();
     final appsProvider = context.read<AppsProvider>();
     final logs = LogsProvider.instance;
     final notifs = context.read<NotificationsProvider>();
-    if (settingsProvider.updateInterval == 0) {
+
+    final updateInterval = context.select<SettingsProvider, int>(
+      (settingsProvider) => settingsProvider.updateInterval,
+    );
+
+    final useFGService = context.select<SettingsProvider, bool>(
+      (settingsProvider) => settingsProvider.useFGService,
+    );
+
+    final forcedLocale = context.select<SettingsProvider, Locale?>(
+      (settingsProvider) => settingsProvider.forcedLocale,
+    );
+
+    if (updateInterval == 0) {
       stopForegroundService();
       BackgroundFetch.stop();
     } else {
-      if (settingsProvider.useFGService) {
+      if (useFGService) {
         BackgroundFetch.stop();
         startForegroundService(false);
       } else {
@@ -325,7 +337,9 @@ class _ObtainiumState extends State<Obtainium> {
         BackgroundFetch.start();
       }
     }
-    final isFirstRun = settingsProvider.checkAndFlipFirstRun();
+    final isFirstRun = context.select<SettingsProvider, bool>(
+      (settingsProvider) => settingsProvider.checkAndFlipFirstRun(),
+    );
     if (isFirstRun) {
       logs.add("This is the first ever run of Materium.");
 
@@ -355,9 +369,8 @@ class _ObtainiumState extends State<Obtainium> {
       });
 
       if (!supportedLocales.map((e) => e.key).contains(context.locale) ||
-          (settingsProvider.forcedLocale == null &&
-              context.deviceLocale != context.locale)) {
-        settingsProvider.resetLocaleSafe(context);
+          (forcedLocale == null && context.deviceLocale != context.locale)) {
+        context.read<SettingsProvider>().resetLocaleSafe(context);
       }
     }
 

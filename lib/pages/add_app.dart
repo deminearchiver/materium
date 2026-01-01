@@ -99,15 +99,21 @@ class AddAppPageState extends State<AddAppPage> {
 
   @override
   Widget build(BuildContext context) {
-    AppsProvider appsProvider = context.read<AppsProvider>();
-    SettingsProvider settingsProvider = context.watch<SettingsProvider>();
-    NotificationsProvider notificationsProvider = context
-        .read<NotificationsProvider>();
+    final appsProvider = context.read<AppsProvider>();
+    final notificationsProvider = context.read<NotificationsProvider>();
 
     final colorTheme = ColorTheme.of(context);
     final shapeTheme = ShapeTheme.of(context);
     final stateTheme = StateTheme.of(context);
     final typescaleTheme = TypescaleTheme.of(context);
+
+    final hideTrackOnlyWarning = context.select<SettingsProvider, bool>(
+      (settingsProvider) => settingsProvider.hideTrackOnlyWarning,
+    );
+
+    final searchDeselected = context.select<SettingsProvider, List<String>>(
+      (settingsProvider) => settingsProvider.searchDeselected,
+    );
 
     bool doingSomething = gettingAppInfo || searching;
 
@@ -116,8 +122,7 @@ class AddAppPageState extends State<AddAppPage> {
       bool ignoreHideSetting = false,
     }) async {
       var useTrackOnly = userPickedTrackOnly || pickedSource!.enforceTrackOnly;
-      if (useTrackOnly &&
-          (!settingsProvider.hideTrackOnlyWarning || ignoreHideSetting)) {
+      if (useTrackOnly && (!hideTrackOnlyWarning || ignoreHideSetting)) {
         var values = await showDialog(
           context: context,
           builder: (ctx) {
@@ -137,8 +142,9 @@ class AddAppPageState extends State<AddAppPage> {
             );
           },
         );
-        if (values != null) {
-          settingsProvider.hideTrackOnlyWarning = values['hide'] == true;
+        if (context.mounted && values != null) {
+          context.read<SettingsProvider>().hideTrackOnlyWarning =
+              values["hide"] == true;
         }
         return useTrackOnly && values != null;
       } else {
@@ -382,12 +388,12 @@ class AddAppPageState extends State<AddAppPage> {
       setState(() {
         searching = true;
       });
-      var sourceStrings = <String, List<String>>{};
+      final sourceStrings = <String, List<String>>{};
       sourceProvider.sources.where((e) => e.canSearch).forEach((s) {
         sourceStrings[s.name] = [s.name];
       });
       try {
-        var searchSources =
+        final searchSources =
             await showDialog<List<String>?>(
               context: context,
               builder: (ctx) {
@@ -400,16 +406,17 @@ class AddAppPageState extends State<AddAppPage> {
                   selectedByDefault: true,
                   onlyOneSelectionAllowed: false,
                   titlesAreLinks: false,
-                  deselectThese: settingsProvider.searchDeselected,
+                  deselectThese: searchDeselected,
                 );
               },
             ) ??
             [];
+        if (!context.mounted) return;
         if (searchSources.isNotEmpty) {
-          settingsProvider.searchDeselected = sourceStrings.keys
+          context.read<SettingsProvider>().searchDeselected = sourceStrings.keys
               .where((s) => !searchSources.contains(s))
               .toList();
-          List<MapEntry<String, Map<String, List<String>>>?>
+          final List<MapEntry<String, Map<String, List<String>>>?>
           results = (await Future.wait(
             sourceProvider.sources
                 .where((e) => searchSources.contains(e.name))
@@ -480,16 +487,16 @@ class AddAppPageState extends State<AddAppPage> {
           )).where((a) => a != null).toList();
 
           // Interleave results instead of simple reduce
-          Map<String, MapEntry<String, List<String>>> res = {};
+          final res = <String, MapEntry<String, List<String>>>{};
           var si = 0;
           var done = false;
           while (!done) {
             done = true;
-            for (var r in results) {
-              var sourceName = r!.key;
+            for (final r in results) {
+              final sourceName = r!.key;
               if (r.value.length > si) {
                 done = false;
-                var singleRes = r.value.entries.elementAt(si);
+                final singleRes = r.value.entries.elementAt(si);
                 res[singleRes.key] = MapEntry(sourceName, singleRes.value);
               }
             }
@@ -499,8 +506,8 @@ class AddAppPageState extends State<AddAppPage> {
             throw ObtainiumError(tr('noResults'));
           }
           if (!context.mounted) return;
-          List<String>? selectedUrls = res.isEmpty
-              ? []
+          final selectedUrls = res.isEmpty
+              ? <String>[]
               : await showDialog<List<String>?>(
                   context: context,
                   builder: (ctx) {
@@ -512,7 +519,7 @@ class AddAppPageState extends State<AddAppPage> {
                   },
                 );
           if (selectedUrls != null && selectedUrls.isNotEmpty) {
-            var sourceName = res[selectedUrls[0]]?.key;
+            final sourceName = res[selectedUrls[0]]?.key;
             changeUserInput(
               selectedUrls[0],
               true,

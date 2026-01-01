@@ -65,19 +65,25 @@ class _AppPageState extends State<AppPage> {
 
   @override
   Widget build(BuildContext context) {
-    var appsProvider = context.watch<AppsProvider>();
-    var settingsProvider = context.watch<SettingsProvider>();
+    final appsProvider = context.watch<AppsProvider>();
 
     final colorTheme = ColorTheme.of(context);
     final shapeTheme = ShapeTheme.of(context);
     final stateTheme = StateTheme.of(context);
     final typescaleTheme = TypescaleTheme.of(context);
 
-    var showAppWebpageFinal =
-        (settingsProvider.showAppWebpage &&
-            !widget.showOppositeOfPreferredView) ||
-        (!settingsProvider.showAppWebpage &&
-            widget.showOppositeOfPreferredView);
+    final showAppWebpage = context.select<SettingsProvider, bool>(
+      (settingsProvider) => settingsProvider.showAppWebpage,
+    );
+
+    final checkUpdateOnDetailPage = context.select<SettingsProvider, bool>(
+      (settingsProvider) => settingsProvider.checkUpdateOnDetailPage,
+    );
+
+    final showAppWebpageFinal =
+        (showAppWebpage && !widget.showOppositeOfPreferredView) ||
+        (!showAppWebpage && widget.showOppositeOfPreferredView);
+
     Future<void> getUpdate(String id, {bool resetVersion = false}) async {
       try {
         setState(() {
@@ -105,11 +111,11 @@ class _AppPageState extends State<AppPage> {
       }
     }
 
-    bool areDownloadsRunning = appsProvider.areDownloadsRunning();
+    final areDownloadsRunning = appsProvider.areDownloadsRunning();
 
-    var sourceProvider = SourceProvider();
-    AppInMemory? app = appsProvider.apps[widget.appId]?.deepCopy();
-    var source = app != null
+    final sourceProvider = SourceProvider();
+    final app = appsProvider.apps[widget.appId]?.deepCopy();
+    final source = app != null
         ? sourceProvider.getSource(
             app.app.url,
             overrideSource: app.app.overrideSource,
@@ -118,16 +124,16 @@ class _AppPageState extends State<AppPage> {
     if (!areDownloadsRunning &&
         prevApp == null &&
         app != null &&
-        settingsProvider.checkUpdateOnDetailPage) {
+        checkUpdateOnDetailPage) {
       prevApp = app;
       getUpdate(app.app.id);
     }
-    var trackOnly = app?.app.additionalSettings['trackOnly'] == true;
+    final trackOnly = app?.app.additionalSettings['trackOnly'] == true;
 
-    bool isVersionDetectionStandard =
+    final isVersionDetectionStandard =
         app?.app.additionalSettings['versionDetection'] == true;
 
-    bool installedVersionIsEstimate = app?.app != null
+    final installedVersionIsEstimate = app?.app != null
         ? isVersionPseudo(app!.app)
         : false;
 
@@ -137,9 +143,9 @@ class _AppPageState extends State<AppPage> {
     }
 
     Widget getInfoColumn() {
-      String versionLines = '';
-      bool installed = app?.app.installedVersion != null;
-      bool upToDate = app?.app.installedVersion == app?.app.latestVersion;
+      var versionLines = '';
+      final installed = app?.app.installedVersion != null;
+      final upToDate = app?.app.installedVersion == app?.app.latestVersion;
       if (installed) {
         versionLines = '${app?.app.installedVersion} ${tr('installed')}';
         if (upToDate) {
@@ -169,7 +175,7 @@ class _AppPageState extends State<AppPage> {
         infoLines =
             '$infoLines\n${app?.app.apkUrls.length == 1 ? app?.app.apkUrls[0].key : plural('apk', app?.app.apkUrls.length ?? 0)}';
       }
-      var changeLogFn = app != null ? getChangeLogFn(context, app.app) : null;
+      final changeLogFn = app != null ? getChangeLogFn(context, app.app) : null;
       return Flex.vertical(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.stretch,

@@ -357,7 +357,6 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     final settings = context.read<SettingsService>();
-    final settingsProvider = context.watch<SettingsProvider>();
     final appsProvider = context.watch<AppsProvider>();
 
     if (!_prevIsLoading &&
