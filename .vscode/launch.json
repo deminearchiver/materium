@@ -2,7 +2,7 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "materium (debug mode)",
+      "name": "Materium (debug mode)",
       "request": "launch",
       "type": "dart",
       "flutterMode": "debug",
@@ -10,7 +10,7 @@
       "program": "lib/main.dart"
     },
     {
-      "name": "materium (profile mode)",
+      "name": "Materium (profile mode)",
       "request": "launch",
       "type": "dart",
       "flutterMode": "profile",
@@ -18,7 +18,7 @@
       "program": "lib/main.dart"
     },
     {
-      "name": "materium (release mode)",
+      "name": "Materium (release mode)",
       "request": "launch",
       "type": "dart",
       "flutterMode": "release",
