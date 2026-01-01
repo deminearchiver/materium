@@ -1716,7 +1716,11 @@ class AppsPageState extends State<AppsPage> with TickerProviderStateMixin {
                                                 value:
                                                     progress != null &&
                                                         progress >= 0.0
-                                                    ? progress
+                                                    ? clampDouble(
+                                                        progress / 100.0,
+                                                        0.0,
+                                                        1.0,
+                                                      )
                                                     : null,
                                               )
                                             : const SizedBox.shrink(),
