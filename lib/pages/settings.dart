@@ -352,133 +352,647 @@ class _SettingsPageState extends State<SettingsPage> {
 
     return Scaffold(
       backgroundColor: colorTheme.surfaceContainer,
-      body: CustomScrollView(
-        slivers: <Widget>[
-          ValueListenableBuilder(
-            valueListenable: settings.developerMode,
-            builder: (context, developerMode, _) => CustomAppBar(
-              type: developerMode || showBackButton ? .small : .largeFlexible,
-              expandedContainerColor: colorTheme.surfaceContainer,
-              collapsedContainerColor: colorTheme.surfaceContainer,
-              collapsedPadding: showBackButton
-                  ? const .fromSTEB(8.0 + 40.0 + 8.0, 0.0, 16.0, 0.0)
-                  : null,
-              leading: showBackButton
-                  ? const Padding(
-                      padding: .fromSTEB(8.0 - 4.0, 0.0, 8.0 - 4.0, 0.0),
-                      child: DeveloperPageBackButton(),
-                    )
-                  : null,
-              title: Text(
-                tr("settings"),
-                textAlign: developerMode && !showBackButton ? .center : .start,
+      body: SafeArea(
+        top: false,
+        bottom: false,
+        child: CustomScrollView(
+          slivers: <Widget>[
+            ValueListenableBuilder(
+              valueListenable: settings.developerMode,
+              builder: (context, developerMode, _) => CustomAppBar(
+                type: developerMode || showBackButton ? .small : .largeFlexible,
+                expandedContainerColor: colorTheme.surfaceContainer,
+                collapsedContainerColor: colorTheme.surfaceContainer,
+                collapsedPadding: showBackButton
+                    ? const .fromSTEB(8.0 + 40.0 + 8.0, 0.0, 16.0, 0.0)
+                    : null,
+                leading: showBackButton
+                    ? const Padding(
+                        padding: .fromSTEB(8.0 - 4.0, 0.0, 8.0 - 4.0, 0.0),
+                        child: DeveloperPageBackButton(),
+                      )
+                    : null,
+                title: Text(
+                  tr("settings"),
+                  textAlign: developerMode && !showBackButton
+                      ? .center
+                      : .start,
+                ),
               ),
             ),
-          ),
-          SliverPadding(
-            padding: .fromLTRB(8.0, showBackButton ? 0.0 : 4.0, 8.0, 16.0),
-            // TODO: fix switches reparenting (add ValueKey or GlobalKey to list items)
-            sliver: SliverList.list(
-              children: [
-                KeyedSubtree(
-                  key: const ValueKey("updateIntervalSliderVal"),
-                  child: Selector<SettingsProvider, double>(
-                    selector: (context, settingsProvider) =>
-                        settingsProvider.updateIntervalSliderVal,
-                    builder: (context, updateIntervalSliderVal, _) {
-                      final isSelected = updateIntervalSliderVal > 0.0;
-                      final activeIndicatorColor = isSelected
-                          ? colorTheme.primary
-                          : colorTheme.primary;
-                      final trackColor = isSelected
-                          ? colorTheme.surfaceContainer
-                          // ? colorTheme.onSecondaryContainer.withValues(
-                          //     alpha: 0.38,
-                          //   )
-                          : colorTheme.secondaryContainer;
-                      return ListItemTheme.merge(
-                        data: isSelected
-                            ? selectedListItemTheme
-                            : unselectedListItemTheme,
-                        child: ListItemContainer(
-                          isFirst: true,
+            SliverPadding(
+              padding: .fromLTRB(8.0, showBackButton ? 0.0 : 4.0, 8.0, 16.0),
+              // TODO: fix switches reparenting (add ValueKey or GlobalKey to list items)
+              sliver: SliverList.list(
+                children: [
+                  KeyedSubtree(
+                    key: const ValueKey("updateIntervalSliderVal"),
+                    child: Selector<SettingsProvider, double>(
+                      selector: (context, settingsProvider) =>
+                          settingsProvider.updateIntervalSliderVal,
+                      builder: (context, updateIntervalSliderVal, _) {
+                        final isSelected = updateIntervalSliderVal > 0.0;
+                        final activeIndicatorColor = isSelected
+                            ? colorTheme.primary
+                            : colorTheme.primary;
+                        final trackColor = isSelected
+                            ? colorTheme.surfaceContainer
+                            // ? colorTheme.onSecondaryContainer.withValues(
+                            //     alpha: 0.38,
+                            //   )
+                            : colorTheme.secondaryContainer;
+                        return ListItemTheme.merge(
+                          data: isSelected
+                              ? selectedListItemTheme
+                              : unselectedListItemTheme,
+                          child: ListItemContainer(
+                            isFirst: true,
+                            child: Flex.vertical(
+                              crossAxisAlignment: CrossAxisAlignment.stretch,
+                              children: [
+                                ListItemLayout(
+                                  headline: Text(tr("bgUpdateCheckInterval")),
+                                  supportingText: Visibility.maintain(
+                                    visible: showIntervalLabel,
+                                    child: Text(
+                                      updateIntervalLabel,
+                                      maxLines: 1,
+                                    ),
+                                  ),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.fromLTRB(
+                                    16.0,
+                                    0.0,
+                                    16.0,
+                                    12.0,
+                                  ),
+                                  child: SliderTheme(
+                                    data: SliderTheme.of(context).copyWith(
+                                      activeTrackColor: activeIndicatorColor,
+                                      thumbColor: activeIndicatorColor,
+                                      inactiveTrackColor: trackColor,
+                                    ),
+                                    child: Slider(
+                                      value: updateIntervalSliderVal,
+                                      max: updateIntervalNodes.length
+                                          .toDouble(),
+                                      divisions:
+                                          updateIntervalNodes.length * 20,
+                                      label: updateIntervalLabel,
+                                      onChanged: (value) {
+                                        settingsProvider
+                                                .updateIntervalSliderVal =
+                                            value;
+                                        setState(
+                                          () =>
+                                              processIntervalSliderValue(value),
+                                        );
+                                      },
+                                      onChangeStart: (value) => setState(
+                                        () => showIntervalLabel = false,
+                                      ),
+                                      onChangeEnd: (value) {
+                                        settingsProvider.updateInterval =
+                                            updateInterval;
+                                        setState(
+                                          () => showIntervalLabel = true,
+                                        );
+                                      },
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                  if ((settingsProvider.updateInterval > 0) &&
+                      (((DeviceInfo.androidInfo?.version.sdkInt ?? 0) >= 30) ||
+                          settingsProvider.useShizuku))
+                    Flex.vertical(
+                      mainAxisSize: .min,
+                      crossAxisAlignment: .stretch,
+                      children: [
+                        const SizedBox(height: 2.0),
+                        KeyedSubtree(
+                          key: const ValueKey("useFGService"),
+                          child: Selector<SettingsProvider, bool>(
+                            selector: (context, settingsProvider) =>
+                                settingsProvider.useFGService,
+                            builder: (context, useFGService, _) =>
+                                ListItemTheme.merge(
+                                  data: useFGService
+                                      ? selectedListItemTheme
+                                      : unselectedListItemTheme,
+                                  child: ListItemContainer(
+                                    child: MergeSemantics(
+                                      child: ListItemInteraction(
+                                        onTap: () =>
+                                            settingsProvider.useFGService =
+                                                !useFGService,
+                                        child: ListItemLayout(
+                                          padding: const .fromLTRB(
+                                            16.0,
+                                            0.0,
+                                            16.0 - 8.0,
+                                            0.0,
+                                          ),
+                                          trailingPadding: const .symmetric(
+                                            vertical:
+                                                (32.0 + 2 * 10.0 - 48.0) / 2.0,
+                                          ),
+                                          headline: Text(
+                                            tr("foregroundServiceExplanation"),
+                                          ),
+                                          trailing: ExcludeFocus(
+                                            child: Switch(
+                                              onCheckedChanged: (value) =>
+                                                  settingsProvider
+                                                          .useFGService =
+                                                      value,
+                                              checked: useFGService,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                          ),
+                        ),
+                        const SizedBox(height: 2.0),
+                        KeyedSubtree(
+                          key: const ValueKey("enableBackgroundUpdates"),
+                          child: Selector<SettingsProvider, bool>(
+                            selector: (context, settingsProvider) =>
+                                settingsProvider.enableBackgroundUpdates,
+                            builder: (context, enableBackgroundUpdates, _) =>
+                                ListItemTheme.merge(
+                                  data: enableBackgroundUpdates
+                                      ? selectedListItemTheme
+                                      : unselectedListItemTheme,
+                                  child: ListItemContainer(
+                                    child: Flex.vertical(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        MergeSemantics(
+                                          child: ListItemInteraction(
+                                            onTap: () =>
+                                                settingsProvider
+                                                        .enableBackgroundUpdates =
+                                                    !enableBackgroundUpdates,
+                                            child: ListItemLayout(
+                                              padding: const .fromLTRB(
+                                                16.0,
+                                                0.0,
+                                                16.0 - 8.0,
+                                                0.0,
+                                              ),
+                                              trailingPadding: const .symmetric(
+                                                vertical:
+                                                    (32.0 + 2 * 10.0 - 48.0) /
+                                                    2.0,
+                                              ),
+                                              headline: Text(
+                                                tr("enableBackgroundUpdates"),
+                                              ),
+                                              trailing: ExcludeFocus(
+                                                child: Switch(
+                                                  onCheckedChanged: (value) =>
+                                                      settingsProvider
+                                                              .enableBackgroundUpdates =
+                                                          value,
+                                                  checked:
+                                                      enableBackgroundUpdates,
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                        Padding(
+                                          padding: const EdgeInsets.fromLTRB(
+                                            16.0,
+                                            0.0,
+                                            16.0,
+                                            12.0,
+                                          ),
+                                          child: DefaultTextStyle(
+                                            style: TypescaleTheme.of(context)
+                                                .bodyMedium
+                                                .toTextStyle(
+                                                  color: colorTheme
+                                                      .onSurfaceVariant,
+                                                ),
+                                            child: Flex.vertical(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              spacing: 8.0,
+                                              children: [
+                                                Text(
+                                                  tr(
+                                                    'backgroundUpdateReqsExplanation',
+                                                  ),
+                                                ),
+                                                Text(
+                                                  tr(
+                                                    'backgroundUpdateLimitsExplanation',
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                          ),
+                        ),
+                        Selector<SettingsProvider, bool>(
+                          selector: (context, settingsProvider) =>
+                              settingsProvider.enableBackgroundUpdates,
+                          builder: (context, enableBackgroundUpdates, child) =>
+                              enableBackgroundUpdates
+                              ? child!
+                              : const SizedBox.shrink(),
                           child: Flex.vertical(
-                            crossAxisAlignment: CrossAxisAlignment.stretch,
                             children: [
-                              ListItemLayout(
-                                headline: Text(tr("bgUpdateCheckInterval")),
-                                supportingText: Visibility.maintain(
-                                  visible: showIntervalLabel,
-                                  child: Text(updateIntervalLabel, maxLines: 1),
+                              const SizedBox(height: 2.0),
+                              KeyedSubtree(
+                                key: const ValueKey("bgUpdatesOnWiFiOnly"),
+                                child: Selector<SettingsProvider, bool>(
+                                  selector: (context, settingsProvider) =>
+                                      settingsProvider.bgUpdatesOnWiFiOnly,
+                                  builder: (context, bgUpdatesOnWiFiOnly, _) =>
+                                      ListItemTheme.merge(
+                                        data: bgUpdatesOnWiFiOnly
+                                            ? selectedListItemTheme
+                                            : unselectedListItemTheme,
+                                        child: ListItemContainer(
+                                          child: MergeSemantics(
+                                            child: ListItemInteraction(
+                                              onTap: () =>
+                                                  settingsProvider
+                                                          .bgUpdatesOnWiFiOnly =
+                                                      !bgUpdatesOnWiFiOnly,
+                                              child: ListItemLayout(
+                                                padding: const .fromLTRB(
+                                                  16.0,
+                                                  0.0,
+                                                  16.0 - 8.0,
+                                                  0.0,
+                                                ),
+                                                trailingPadding:
+                                                    const .symmetric(
+                                                      vertical:
+                                                          (32.0 +
+                                                              2 * 10.0 -
+                                                              48.0) /
+                                                          2.0,
+                                                    ),
+                                                headline: Text(
+                                                  tr("bgUpdatesOnWiFiOnly"),
+                                                ),
+                                                trailing: ExcludeFocus(
+                                                  child: Switch(
+                                                    onCheckedChanged: (value) =>
+                                                        settingsProvider
+                                                                .bgUpdatesOnWiFiOnly =
+                                                            value,
+                                                    checked:
+                                                        bgUpdatesOnWiFiOnly,
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
                                 ),
                               ),
-                              Padding(
-                                padding: const EdgeInsets.fromLTRB(
-                                  16.0,
-                                  0.0,
-                                  16.0,
-                                  12.0,
+                              const SizedBox(height: 2.0),
+                              KeyedSubtree(
+                                key: const ValueKey(
+                                  "bgUpdatesWhileChargingOnly",
                                 ),
-                                child: SliderTheme(
-                                  data: SliderTheme.of(context).copyWith(
-                                    activeTrackColor: activeIndicatorColor,
-                                    thumbColor: activeIndicatorColor,
-                                    inactiveTrackColor: trackColor,
-                                  ),
-                                  child: Slider(
-                                    value: updateIntervalSliderVal,
-                                    max: updateIntervalNodes.length.toDouble(),
-                                    divisions: updateIntervalNodes.length * 20,
-                                    label: updateIntervalLabel,
-                                    onChanged: (value) {
-                                      settingsProvider.updateIntervalSliderVal =
-                                          value;
-                                      setState(
-                                        () => processIntervalSliderValue(value),
-                                      );
-                                    },
-                                    onChangeStart: (value) => setState(
-                                      () => showIntervalLabel = false,
-                                    ),
-                                    onChangeEnd: (value) {
-                                      settingsProvider.updateInterval =
-                                          updateInterval;
-                                      setState(() => showIntervalLabel = true);
-                                    },
-                                  ),
+                                child: Selector<SettingsProvider, bool>(
+                                  selector: (context, settingsProvider) =>
+                                      settingsProvider
+                                          .bgUpdatesWhileChargingOnly,
+                                  builder:
+                                      (
+                                        context,
+                                        bgUpdatesWhileChargingOnly,
+                                        _,
+                                      ) => ListItemTheme.merge(
+                                        data: bgUpdatesWhileChargingOnly
+                                            ? selectedListItemTheme
+                                            : unselectedListItemTheme,
+                                        child: ListItemContainer(
+                                          child: MergeSemantics(
+                                            child: ListItemInteraction(
+                                              onTap: () =>
+                                                  settingsProvider
+                                                          .bgUpdatesWhileChargingOnly =
+                                                      !bgUpdatesWhileChargingOnly,
+                                              child: ListItemLayout(
+                                                padding: const .fromLTRB(
+                                                  16.0,
+                                                  0.0,
+                                                  16.0 - 8.0,
+                                                  0.0,
+                                                ),
+                                                trailingPadding:
+                                                    const .symmetric(
+                                                      vertical:
+                                                          (32.0 +
+                                                              2 * 10.0 -
+                                                              48.0) /
+                                                          2.0,
+                                                    ),
+                                                headline: Text(
+                                                  tr(
+                                                    "bgUpdatesWhileChargingOnly",
+                                                  ),
+                                                ),
+                                                trailing: ExcludeFocus(
+                                                  child: Switch(
+                                                    onCheckedChanged: (value) =>
+                                                        settingsProvider
+                                                                .bgUpdatesWhileChargingOnly =
+                                                            value,
+                                                    checked:
+                                                        bgUpdatesWhileChargingOnly,
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
                                 ),
                               ),
                             ],
                           ),
                         ),
-                      );
-                    },
+                      ],
+                    ),
+                  const SizedBox(height: 2.0),
+                  KeyedSubtree(
+                    key: const ValueKey("checkOnStart"),
+                    child: Selector<SettingsProvider, bool>(
+                      selector: (context, settingsProvider) =>
+                          settingsProvider.checkOnStart,
+                      builder: (context, checkOnStart, _) =>
+                          ListItemTheme.merge(
+                            data: checkOnStart
+                                ? selectedListItemTheme
+                                : unselectedListItemTheme,
+                            child: ListItemContainer(
+                              child: MergeSemantics(
+                                child: ListItemInteraction(
+                                  onTap: () => settingsProvider.checkOnStart =
+                                      !checkOnStart,
+                                  child: ListItemLayout(
+                                    padding: const .fromLTRB(
+                                      16.0,
+                                      0.0,
+                                      16.0 - 8.0,
+                                      0.0,
+                                    ),
+                                    trailingPadding: const .symmetric(
+                                      vertical: (32.0 + 2 * 10.0 - 48.0) / 2.0,
+                                    ),
+                                    headline: Text(tr("checkOnStart")),
+                                    trailing: ExcludeFocus(
+                                      child: Switch(
+                                        onCheckedChanged: (value) =>
+                                            settingsProvider.checkOnStart =
+                                                value,
+                                        checked: checkOnStart,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                    ),
                   ),
-                ),
-                if ((settingsProvider.updateInterval > 0) &&
-                    (((DeviceInfo.androidInfo?.version.sdkInt ?? 0) >= 30) ||
-                        settingsProvider.useShizuku))
-                  Flex.vertical(
-                    mainAxisSize: .min,
-                    crossAxisAlignment: .stretch,
-                    children: [
-                      const SizedBox(height: 2.0),
-                      KeyedSubtree(
-                        key: const ValueKey("useFGService"),
-                        child: Selector<SettingsProvider, bool>(
-                          selector: (context, settingsProvider) =>
-                              settingsProvider.useFGService,
-                          builder: (context, useFGService, _) =>
-                              ListItemTheme.merge(
-                                data: useFGService
-                                    ? selectedListItemTheme
-                                    : unselectedListItemTheme,
-                                child: ListItemContainer(
-                                  child: MergeSemantics(
+                  const SizedBox(height: 2.0),
+                  KeyedSubtree(
+                    key: const ValueKey("checkUpdateOnDetailPage"),
+                    child: Selector<SettingsProvider, bool>(
+                      selector: (context, settingsProvider) =>
+                          settingsProvider.checkUpdateOnDetailPage,
+                      builder: (context, checkUpdateOnDetailPage, _) =>
+                          ListItemTheme.merge(
+                            data: checkUpdateOnDetailPage
+                                ? selectedListItemTheme
+                                : unselectedListItemTheme,
+                            child: ListItemContainer(
+                              child: MergeSemantics(
+                                child: ListItemInteraction(
+                                  onTap: () =>
+                                      settingsProvider.checkUpdateOnDetailPage =
+                                          !checkUpdateOnDetailPage,
+                                  child: ListItemLayout(
+                                    padding: const .fromLTRB(
+                                      16.0,
+                                      0.0,
+                                      16.0 - 8.0,
+                                      0.0,
+                                    ),
+                                    trailingPadding: const .symmetric(
+                                      vertical: (32.0 + 2 * 10.0 - 48.0) / 2.0,
+                                    ),
+                                    headline: Text(
+                                      tr("checkUpdateOnDetailPage"),
+                                    ),
+                                    trailing: ExcludeFocus(
+                                      child: Switch(
+                                        onCheckedChanged: (value) =>
+                                            settingsProvider
+                                                    .checkUpdateOnDetailPage =
+                                                value,
+                                        checked: checkUpdateOnDetailPage,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                    ),
+                  ),
+                  const SizedBox(height: 2.0),
+                  KeyedSubtree(
+                    key: const ValueKey("onlyCheckInstalledOrTrackOnlyApps"),
+                    child: Selector<SettingsProvider, bool>(
+                      selector: (context, settingsProvider) =>
+                          settingsProvider.onlyCheckInstalledOrTrackOnlyApps,
+                      builder:
+                          (
+                            context,
+                            onlyCheckInstalledOrTrackOnlyApps,
+                            _,
+                          ) => ListItemTheme.merge(
+                            data: onlyCheckInstalledOrTrackOnlyApps
+                                ? selectedListItemTheme
+                                : unselectedListItemTheme,
+                            child: ListItemContainer(
+                              child: MergeSemantics(
+                                child: ListItemInteraction(
+                                  onTap: () =>
+                                      settingsProvider
+                                              .onlyCheckInstalledOrTrackOnlyApps =
+                                          !onlyCheckInstalledOrTrackOnlyApps,
+                                  child: ListItemLayout(
+                                    padding: const .fromLTRB(
+                                      16.0,
+                                      0.0,
+                                      16.0 - 8.0,
+                                      0.0,
+                                    ),
+                                    trailingPadding: const .symmetric(
+                                      vertical: (32.0 + 2 * 10.0 - 48.0) / 2.0,
+                                    ),
+                                    headline: Text(
+                                      tr("onlyCheckInstalledOrTrackOnlyApps"),
+                                    ),
+                                    trailing: ExcludeFocus(
+                                      child: Switch(
+                                        onCheckedChanged: (value) =>
+                                            settingsProvider
+                                                    .onlyCheckInstalledOrTrackOnlyApps =
+                                                value,
+                                        checked:
+                                            onlyCheckInstalledOrTrackOnlyApps,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                    ),
+                  ),
+                  const SizedBox(height: 2.0),
+                  KeyedSubtree(
+                    key: const ValueKey("removeOnExternalUninstall"),
+                    child: Selector<SettingsProvider, bool>(
+                      selector: (context, settingsProvider) =>
+                          settingsProvider.removeOnExternalUninstall,
+                      builder: (context, removeOnExternalUninstall, _) =>
+                          ListItemTheme.merge(
+                            data: removeOnExternalUninstall
+                                ? selectedListItemTheme
+                                : unselectedListItemTheme,
+                            child: ListItemContainer(
+                              child: ListItemInteraction(
+                                onTap: () =>
+                                    settingsProvider.removeOnExternalUninstall =
+                                        !removeOnExternalUninstall,
+                                child: ListItemLayout(
+                                  padding: const .fromLTRB(
+                                    16.0,
+                                    0.0,
+                                    16.0 - 8.0,
+                                    0.0,
+                                  ),
+                                  trailingPadding: const .symmetric(
+                                    vertical: (32.0 + 2 * 10.0 - 48.0) / 2.0,
+                                  ),
+                                  headline: Text(
+                                    tr("removeOnExternalUninstall"),
+                                  ),
+                                  trailing: ExcludeFocus(
+                                    child: Switch(
+                                      onCheckedChanged: (value) =>
+                                          settingsProvider
+                                                  .removeOnExternalUninstall =
+                                              value,
+                                      checked: removeOnExternalUninstall,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                    ),
+                  ),
+                  const SizedBox(height: 2.0),
+                  KeyedSubtree(
+                    key: const ValueKey("parallelDownloads"),
+                    child: Selector<SettingsProvider, bool>(
+                      selector: (context, settingsProvider) =>
+                          settingsProvider.parallelDownloads,
+                      builder: (context, parallelDownloads, _) =>
+                          ListItemTheme.merge(
+                            data: parallelDownloads
+                                ? selectedListItemTheme
+                                : unselectedListItemTheme,
+                            child: ListItemContainer(
+                              child: MergeSemantics(
+                                child: ListItemInteraction(
+                                  onTap: () =>
+                                      settingsProvider.parallelDownloads =
+                                          !parallelDownloads,
+                                  child: ListItemLayout(
+                                    padding: const .fromLTRB(
+                                      16.0,
+                                      0.0,
+                                      16.0 - 8.0,
+                                      0.0,
+                                    ),
+                                    trailingPadding: const .symmetric(
+                                      vertical: (32.0 + 2 * 10.0 - 48.0) / 2.0,
+                                    ),
+                                    headline: Text(tr("parallelDownloads")),
+                                    trailing: ExcludeFocus(
+                                      child: Switch(
+                                        onCheckedChanged: (value) =>
+                                            settingsProvider.parallelDownloads =
+                                                value,
+                                        checked: parallelDownloads,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                    ),
+                  ),
+                  const SizedBox(height: 2.0),
+                  KeyedSubtree(
+                    key: const ValueKey("beforeNewInstallsShareToAppVerifier"),
+                    child: Selector<SettingsProvider, bool>(
+                      selector: (context, settingsProvider) =>
+                          settingsProvider.beforeNewInstallsShareToAppVerifier,
+                      builder:
+                          (
+                            context,
+                            beforeNewInstallsShareToAppVerifier,
+                            _,
+                          ) => ListItemTheme.merge(
+                            data: beforeNewInstallsShareToAppVerifier
+                                ? selectedListItemTheme
+                                : unselectedListItemTheme,
+                            child: ListItemContainer(
+                              child: Flex.vertical(
+                                crossAxisAlignment: CrossAxisAlignment.stretch,
+                                children: [
+                                  MergeSemantics(
                                     child: ListItemInteraction(
                                       onTap: () =>
-                                          settingsProvider.useFGService =
-                                              !useFGService,
+                                          settingsProvider
+                                                  .beforeNewInstallsShareToAppVerifier =
+                                              !beforeNewInstallsShareToAppVerifier,
                                       child: ListItemLayout(
                                         padding: const .fromLTRB(
                                           16.0,
@@ -491,650 +1005,55 @@ class _SettingsPageState extends State<SettingsPage> {
                                               (32.0 + 2 * 10.0 - 48.0) / 2.0,
                                         ),
                                         headline: Text(
-                                          tr("foregroundServiceExplanation"),
+                                          tr(
+                                            "beforeNewInstallsShareToAppVerifier",
+                                          ),
                                         ),
                                         trailing: ExcludeFocus(
                                           child: Switch(
                                             onCheckedChanged: (value) =>
-                                                settingsProvider.useFGService =
+                                                settingsProvider
+                                                        .beforeNewInstallsShareToAppVerifier =
                                                     value,
-                                            checked: useFGService,
+                                            checked:
+                                                beforeNewInstallsShareToAppVerifier,
                                           ),
                                         ),
                                       ),
                                     ),
                                   ),
-                                ),
-                              ),
-                        ),
-                      ),
-                      const SizedBox(height: 2.0),
-                      KeyedSubtree(
-                        key: const ValueKey("enableBackgroundUpdates"),
-                        child: Selector<SettingsProvider, bool>(
-                          selector: (context, settingsProvider) =>
-                              settingsProvider.enableBackgroundUpdates,
-                          builder: (context, enableBackgroundUpdates, _) =>
-                              ListItemTheme.merge(
-                                data: enableBackgroundUpdates
-                                    ? selectedListItemTheme
-                                    : unselectedListItemTheme,
-                                child: ListItemContainer(
-                                  child: Flex.vertical(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      MergeSemantics(
-                                        child: ListItemInteraction(
-                                          onTap: () =>
-                                              settingsProvider
-                                                      .enableBackgroundUpdates =
-                                                  !enableBackgroundUpdates,
-                                          child: ListItemLayout(
-                                            padding: const .fromLTRB(
-                                              16.0,
-                                              0.0,
-                                              16.0 - 8.0,
-                                              0.0,
-                                            ),
-                                            trailingPadding: const .symmetric(
-                                              vertical:
-                                                  (32.0 + 2 * 10.0 - 48.0) /
-                                                  2.0,
-                                            ),
-                                            headline: Text(
-                                              tr("enableBackgroundUpdates"),
-                                            ),
-                                            trailing: ExcludeFocus(
-                                              child: Switch(
-                                                onCheckedChanged: (value) =>
-                                                    settingsProvider
-                                                            .enableBackgroundUpdates =
-                                                        value,
-                                                checked:
-                                                    enableBackgroundUpdates,
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                      Padding(
-                                        padding: const EdgeInsets.fromLTRB(
-                                          16.0,
-                                          0.0,
-                                          16.0,
-                                          12.0,
-                                        ),
-                                        child: DefaultTextStyle(
-                                          style: TypescaleTheme.of(context)
-                                              .bodyMedium
-                                              .toTextStyle(
-                                                color:
-                                                    colorTheme.onSurfaceVariant,
-                                              ),
-                                          child: Flex.vertical(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            spacing: 8.0,
-                                            children: [
-                                              Text(
-                                                tr(
-                                                  'backgroundUpdateReqsExplanation',
-                                                ),
-                                              ),
-                                              Text(
-                                                tr(
-                                                  'backgroundUpdateLimitsExplanation',
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                        ),
-                      ),
-                      Selector<SettingsProvider, bool>(
-                        selector: (context, settingsProvider) =>
-                            settingsProvider.enableBackgroundUpdates,
-                        builder: (context, enableBackgroundUpdates, child) =>
-                            enableBackgroundUpdates
-                            ? child!
-                            : const SizedBox.shrink(),
-                        child: Flex.vertical(
-                          children: [
-                            const SizedBox(height: 2.0),
-                            KeyedSubtree(
-                              key: const ValueKey("bgUpdatesOnWiFiOnly"),
-                              child: Selector<SettingsProvider, bool>(
-                                selector: (context, settingsProvider) =>
-                                    settingsProvider.bgUpdatesOnWiFiOnly,
-                                builder: (context, bgUpdatesOnWiFiOnly, _) =>
-                                    ListItemTheme.merge(
-                                      data: bgUpdatesOnWiFiOnly
-                                          ? selectedListItemTheme
-                                          : unselectedListItemTheme,
-                                      child: ListItemContainer(
-                                        child: MergeSemantics(
-                                          child: ListItemInteraction(
-                                            onTap: () =>
-                                                settingsProvider
-                                                        .bgUpdatesOnWiFiOnly =
-                                                    !bgUpdatesOnWiFiOnly,
-                                            child: ListItemLayout(
-                                              padding: const .fromLTRB(
-                                                16.0,
-                                                0.0,
-                                                16.0 - 8.0,
-                                                0.0,
-                                              ),
-                                              trailingPadding: const .symmetric(
-                                                vertical:
-                                                    (32.0 + 2 * 10.0 - 48.0) /
-                                                    2.0,
-                                              ),
-                                              headline: Text(
-                                                tr("bgUpdatesOnWiFiOnly"),
-                                              ),
-                                              trailing: ExcludeFocus(
-                                                child: Switch(
-                                                  onCheckedChanged: (value) =>
-                                                      settingsProvider
-                                                              .bgUpdatesOnWiFiOnly =
-                                                          value,
-                                                  checked: bgUpdatesOnWiFiOnly,
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                      ),
+                                  ListItemInteraction(
+                                    onTap: () => launchUrlString(
+                                      "https://github.com/soupslurpr/AppVerifier",
+                                      mode: LaunchMode.externalApplication,
                                     ),
-                              ),
-                            ),
-                            const SizedBox(height: 2.0),
-                            KeyedSubtree(
-                              key: const ValueKey("bgUpdatesWhileChargingOnly"),
-                              child: Selector<SettingsProvider, bool>(
-                                selector: (context, settingsProvider) =>
-                                    settingsProvider.bgUpdatesWhileChargingOnly,
-                                builder:
-                                    (
-                                      context,
-                                      bgUpdatesWhileChargingOnly,
-                                      _,
-                                    ) => ListItemTheme.merge(
-                                      data: bgUpdatesWhileChargingOnly
-                                          ? selectedListItemTheme
-                                          : unselectedListItemTheme,
-                                      child: ListItemContainer(
-                                        child: MergeSemantics(
-                                          child: ListItemInteraction(
-                                            onTap: () =>
-                                                settingsProvider
-                                                        .bgUpdatesWhileChargingOnly =
-                                                    !bgUpdatesWhileChargingOnly,
-                                            child: ListItemLayout(
-                                              padding: const .fromLTRB(
-                                                16.0,
-                                                0.0,
-                                                16.0 - 8.0,
-                                                0.0,
-                                              ),
-                                              trailingPadding: const .symmetric(
-                                                vertical:
-                                                    (32.0 + 2 * 10.0 - 48.0) /
-                                                    2.0,
-                                              ),
-                                              headline: Text(
-                                                tr(
-                                                  "bgUpdatesWhileChargingOnly",
-                                                ),
-                                              ),
-                                              trailing: ExcludeFocus(
-                                                child: Switch(
-                                                  onCheckedChanged: (value) =>
-                                                      settingsProvider
-                                                              .bgUpdatesWhileChargingOnly =
-                                                          value,
-                                                  checked:
-                                                      bgUpdatesWhileChargingOnly,
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                const SizedBox(height: 2.0),
-                KeyedSubtree(
-                  key: const ValueKey("checkOnStart"),
-                  child: Selector<SettingsProvider, bool>(
-                    selector: (context, settingsProvider) =>
-                        settingsProvider.checkOnStart,
-                    builder: (context, checkOnStart, _) => ListItemTheme.merge(
-                      data: checkOnStart
-                          ? selectedListItemTheme
-                          : unselectedListItemTheme,
-                      child: ListItemContainer(
-                        child: MergeSemantics(
-                          child: ListItemInteraction(
-                            onTap: () =>
-                                settingsProvider.checkOnStart = !checkOnStart,
-                            child: ListItemLayout(
-                              padding: const .fromLTRB(
-                                16.0,
-                                0.0,
-                                16.0 - 8.0,
-                                0.0,
-                              ),
-                              trailingPadding: const .symmetric(
-                                vertical: (32.0 + 2 * 10.0 - 48.0) / 2.0,
-                              ),
-                              headline: Text(tr("checkOnStart")),
-                              trailing: ExcludeFocus(
-                                child: Switch(
-                                  onCheckedChanged: (value) =>
-                                      settingsProvider.checkOnStart = value,
-                                  checked: checkOnStart,
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 2.0),
-                KeyedSubtree(
-                  key: const ValueKey("checkUpdateOnDetailPage"),
-                  child: Selector<SettingsProvider, bool>(
-                    selector: (context, settingsProvider) =>
-                        settingsProvider.checkUpdateOnDetailPage,
-                    builder: (context, checkUpdateOnDetailPage, _) =>
-                        ListItemTheme.merge(
-                          data: checkUpdateOnDetailPage
-                              ? selectedListItemTheme
-                              : unselectedListItemTheme,
-                          child: ListItemContainer(
-                            child: MergeSemantics(
-                              child: ListItemInteraction(
-                                onTap: () =>
-                                    settingsProvider.checkUpdateOnDetailPage =
-                                        !checkUpdateOnDetailPage,
-                                child: ListItemLayout(
-                                  padding: const .fromLTRB(
-                                    16.0,
-                                    0.0,
-                                    16.0 - 8.0,
-                                    0.0,
-                                  ),
-                                  trailingPadding: const .symmetric(
-                                    vertical: (32.0 + 2 * 10.0 - 48.0) / 2.0,
-                                  ),
-                                  headline: Text(tr("checkUpdateOnDetailPage")),
-                                  trailing: ExcludeFocus(
-                                    child: Switch(
-                                      onCheckedChanged: (value) =>
-                                          settingsProvider
-                                                  .checkUpdateOnDetailPage =
-                                              value,
-                                      checked: checkUpdateOnDetailPage,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                  ),
-                ),
-                const SizedBox(height: 2.0),
-                KeyedSubtree(
-                  key: const ValueKey("onlyCheckInstalledOrTrackOnlyApps"),
-                  child: Selector<SettingsProvider, bool>(
-                    selector: (context, settingsProvider) =>
-                        settingsProvider.onlyCheckInstalledOrTrackOnlyApps,
-                    builder: (context, onlyCheckInstalledOrTrackOnlyApps, _) =>
-                        ListItemTheme.merge(
-                          data: onlyCheckInstalledOrTrackOnlyApps
-                              ? selectedListItemTheme
-                              : unselectedListItemTheme,
-                          child: ListItemContainer(
-                            child: MergeSemantics(
-                              child: ListItemInteraction(
-                                onTap: () =>
-                                    settingsProvider
-                                            .onlyCheckInstalledOrTrackOnlyApps =
-                                        !onlyCheckInstalledOrTrackOnlyApps,
-                                child: ListItemLayout(
-                                  padding: const .fromLTRB(
-                                    16.0,
-                                    0.0,
-                                    16.0 - 8.0,
-                                    0.0,
-                                  ),
-                                  trailingPadding: const .symmetric(
-                                    vertical: (32.0 + 2 * 10.0 - 48.0) / 2.0,
-                                  ),
-                                  headline: Text(
-                                    tr("onlyCheckInstalledOrTrackOnlyApps"),
-                                  ),
-                                  trailing: ExcludeFocus(
-                                    child: Switch(
-                                      onCheckedChanged: (value) =>
-                                          settingsProvider
-                                                  .onlyCheckInstalledOrTrackOnlyApps =
-                                              value,
-                                      checked:
-                                          onlyCheckInstalledOrTrackOnlyApps,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                  ),
-                ),
-                const SizedBox(height: 2.0),
-                KeyedSubtree(
-                  key: const ValueKey("removeOnExternalUninstall"),
-                  child: Selector<SettingsProvider, bool>(
-                    selector: (context, settingsProvider) =>
-                        settingsProvider.removeOnExternalUninstall,
-                    builder: (context, removeOnExternalUninstall, _) =>
-                        ListItemTheme.merge(
-                          data: removeOnExternalUninstall
-                              ? selectedListItemTheme
-                              : unselectedListItemTheme,
-                          child: ListItemContainer(
-                            child: ListItemInteraction(
-                              onTap: () =>
-                                  settingsProvider.removeOnExternalUninstall =
-                                      !removeOnExternalUninstall,
-                              child: ListItemLayout(
-                                padding: const .fromLTRB(
-                                  16.0,
-                                  0.0,
-                                  16.0 - 8.0,
-                                  0.0,
-                                ),
-                                trailingPadding: const .symmetric(
-                                  vertical: (32.0 + 2 * 10.0 - 48.0) / 2.0,
-                                ),
-                                headline: Text(tr("removeOnExternalUninstall")),
-                                trailing: ExcludeFocus(
-                                  child: Switch(
-                                    onCheckedChanged: (value) =>
-                                        settingsProvider
-                                                .removeOnExternalUninstall =
-                                            value,
-                                    checked: removeOnExternalUninstall,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                  ),
-                ),
-                const SizedBox(height: 2.0),
-                KeyedSubtree(
-                  key: const ValueKey("parallelDownloads"),
-                  child: Selector<SettingsProvider, bool>(
-                    selector: (context, settingsProvider) =>
-                        settingsProvider.parallelDownloads,
-                    builder: (context, parallelDownloads, _) =>
-                        ListItemTheme.merge(
-                          data: parallelDownloads
-                              ? selectedListItemTheme
-                              : unselectedListItemTheme,
-                          child: ListItemContainer(
-                            child: MergeSemantics(
-                              child: ListItemInteraction(
-                                onTap: () =>
-                                    settingsProvider.parallelDownloads =
-                                        !parallelDownloads,
-                                child: ListItemLayout(
-                                  padding: const .fromLTRB(
-                                    16.0,
-                                    0.0,
-                                    16.0 - 8.0,
-                                    0.0,
-                                  ),
-                                  trailingPadding: const .symmetric(
-                                    vertical: (32.0 + 2 * 10.0 - 48.0) / 2.0,
-                                  ),
-                                  headline: Text(tr("parallelDownloads")),
-                                  trailing: ExcludeFocus(
-                                    child: Switch(
-                                      onCheckedChanged: (value) =>
-                                          settingsProvider.parallelDownloads =
-                                              value,
-                                      checked: parallelDownloads,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                  ),
-                ),
-                const SizedBox(height: 2.0),
-                KeyedSubtree(
-                  key: const ValueKey("beforeNewInstallsShareToAppVerifier"),
-                  child: Selector<SettingsProvider, bool>(
-                    selector: (context, settingsProvider) =>
-                        settingsProvider.beforeNewInstallsShareToAppVerifier,
-                    builder:
-                        (
-                          context,
-                          beforeNewInstallsShareToAppVerifier,
-                          _,
-                        ) => ListItemTheme.merge(
-                          data: beforeNewInstallsShareToAppVerifier
-                              ? selectedListItemTheme
-                              : unselectedListItemTheme,
-                          child: ListItemContainer(
-                            child: Flex.vertical(
-                              crossAxisAlignment: CrossAxisAlignment.stretch,
-                              children: [
-                                MergeSemantics(
-                                  child: ListItemInteraction(
-                                    onTap: () =>
-                                        settingsProvider
-                                                .beforeNewInstallsShareToAppVerifier =
-                                            !beforeNewInstallsShareToAppVerifier,
                                     child: ListItemLayout(
-                                      padding: const .fromLTRB(
-                                        16.0,
-                                        0.0,
-                                        16.0 - 8.0,
-                                        0.0,
+                                      leading: const Icon(
+                                        Symbols.open_in_new_rounded,
                                       ),
-                                      trailingPadding: const .symmetric(
-                                        vertical:
-                                            (32.0 + 2 * 10.0 - 48.0) / 2.0,
-                                      ),
-                                      headline: Text(
-                                        tr(
-                                          "beforeNewInstallsShareToAppVerifier",
-                                        ),
-                                      ),
-                                      trailing: ExcludeFocus(
-                                        child: Switch(
-                                          onCheckedChanged: (value) =>
-                                              settingsProvider
-                                                      .beforeNewInstallsShareToAppVerifier =
-                                                  value,
-                                          checked:
-                                              beforeNewInstallsShareToAppVerifier,
-                                        ),
-                                      ),
+                                      supportingText: Text(tr("about")),
                                     ),
                                   ),
-                                ),
-                                ListItemInteraction(
-                                  onTap: () => launchUrlString(
-                                    "https://github.com/soupslurpr/AppVerifier",
-                                    mode: LaunchMode.externalApplication,
-                                  ),
-                                  child: ListItemLayout(
-                                    leading: const Icon(
-                                      Symbols.open_in_new_rounded,
-                                    ),
-                                    supportingText: Text(tr("about")),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                  ),
-                ),
-                const SizedBox(height: 2.0),
-                KeyedSubtree(
-                  key: const ValueKey("useShizuku"),
-                  child: Selector<SettingsProvider, bool>(
-                    selector: (context, settingsProvider) =>
-                        settingsProvider.useShizuku,
-                    builder: (context, useShizuku, _) => ListItemTheme.merge(
-                      data: useShizuku
-                          ? selectedListItemTheme
-                          : unselectedListItemTheme,
-                      child: ListItemContainer(
-                        child: MergeSemantics(
-                          child: ListItemInteraction(
-                            onTap: () => onUseShizukuChanged(!useShizuku),
-                            child: ListItemLayout(
-                              padding: const .fromLTRB(
-                                16.0,
-                                0.0,
-                                16.0 - 8.0,
-                                0.0,
-                              ),
-                              trailingPadding: const .symmetric(
-                                vertical: (32.0 + 2 * 10.0 - 48.0) / 2.0,
-                              ),
-                              headline: Text(tr("useShizuku")),
-                              trailing: ExcludeFocus(
-                                child: Switch(
-                                  onCheckedChanged: onUseShizukuChanged,
-                                  checked: useShizuku,
-                                ),
+                                ],
                               ),
                             ),
                           ),
-                        ),
-                      ),
                     ),
                   ),
-                ),
-                const SizedBox(height: 2.0),
-                KeyedSubtree(
-                  key: const ValueKey("shizukuPretendToBeGooglePlay"),
-                  child: Selector<SettingsProvider, bool>(
-                    selector: (context, settingsProvider) =>
-                        settingsProvider.shizukuPretendToBeGooglePlay,
-                    builder: (context, shizukuPretendToBeGooglePlay, _) =>
-                        ListItemTheme.merge(
-                          data: shizukuPretendToBeGooglePlay
-                              ? selectedListItemTheme
-                              : unselectedListItemTheme,
-                          child: ListItemContainer(
-                            isLast: true,
-                            child: MergeSemantics(
-                              child: ListItemInteraction(
-                                onTap: () =>
-                                    settingsProvider
-                                            .shizukuPretendToBeGooglePlay =
-                                        !shizukuPretendToBeGooglePlay,
-                                child: ListItemLayout(
-                                  padding: const .fromLTRB(
-                                    16.0,
-                                    0.0,
-                                    16.0 - 8.0,
-                                    0.0,
-                                  ),
-                                  trailingPadding: const .symmetric(
-                                    vertical: (32.0 + 2 * 10.0 - 48.0) / 2.0,
-                                  ),
-                                  headline: Text(
-                                    tr("shizukuPretendToBeGooglePlay"),
-                                  ),
-                                  trailing: ExcludeFocus(
-                                    child: Switch(
-                                      onCheckedChanged: (value) =>
-                                          settingsProvider
-                                                  .shizukuPretendToBeGooglePlay =
-                                              value,
-                                      checked: shizukuPretendToBeGooglePlay,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                  ),
-                ),
-                const SizedBox(height: 16.0),
-                Material(
-                  clipBehavior: .antiAlias,
-                  shape: CornersBorder.rounded(
-                    corners: .all(shapeTheme.corner.large),
-                  ),
-                  color: colorTheme.surface,
-                  child: Padding(
-                    padding: const .all(16.0),
-                    child: Flex.vertical(
-                      mainAxisSize: .min,
-                      crossAxisAlignment: .stretch,
-                      children: sourceSpecificFields.toList(),
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 16.0),
-                KeyedSubtree(
-                  key: const ValueKey("useMaterialYou"),
-                  child: ValueListenableBuilder(
-                    valueListenable: settings.useMaterialYou,
-                    builder: (context, useMaterialYou, _) {
-                      final isDisabled =
-                          !DynamicColor.isDynamicColorAvailable();
-                      useMaterialYou = useMaterialYou && !isDisabled;
-                      final containerColor = isDisabled
-                          ? disabledContainerColor
-                          : null;
-                      final contentColor = isDisabled
-                          ? disabledContentColor
-                          : null;
-                      final textStyle = TextStyle(color: contentColor);
-                      return ListItemTheme.merge(
-                        data: useMaterialYou
+                  const SizedBox(height: 2.0),
+                  KeyedSubtree(
+                    key: const ValueKey("useShizuku"),
+                    child: Selector<SettingsProvider, bool>(
+                      selector: (context, settingsProvider) =>
+                          settingsProvider.useShizuku,
+                      builder: (context, useShizuku, _) => ListItemTheme.merge(
+                        data: useShizuku
                             ? selectedListItemTheme
                             : unselectedListItemTheme,
                         child: ListItemContainer(
-                          isFirst: true,
                           child: MergeSemantics(
                             child: ListItemInteraction(
-                              onTap: !isDisabled
-                                  ? () => settings.useMaterialYou.value =
-                                        !useMaterialYou
-                                  : null,
+                              onTap: () => onUseShizukuChanged(!useShizuku),
                               child: ListItemLayout(
                                 padding: const .fromLTRB(
                                   16.0,
@@ -1145,385 +1064,112 @@ class _SettingsPageState extends State<SettingsPage> {
                                 trailingPadding: const .symmetric(
                                   vertical: (32.0 + 2 * 10.0 - 48.0) / 2.0,
                                 ),
-                                headline: Text(
-                                  tr("useMaterialYou"),
-                                  style: textStyle,
-                                ),
+                                headline: Text(tr("useShizuku")),
                                 trailing: ExcludeFocus(
                                   child: Switch(
-                                    onCheckedChanged: !isDisabled
-                                        ? settings.useMaterialYou.setValue
-                                        : null,
-                                    checked: useMaterialYou,
+                                    onCheckedChanged: onUseShizukuChanged,
+                                    checked: useShizuku,
                                   ),
                                 ),
                               ),
                             ),
                           ),
                         ),
-                      );
-                    },
-                  ),
-                ),
-                KeyedSubtree(
-                  key: const ValueKey("selectColor"),
-                  child: ValueListenableBuilder(
-                    valueListenable: settings.useMaterialYou,
-                    builder: (context, useMaterialYou, _) {
-                      useMaterialYou =
-                          useMaterialYou &&
-                          DynamicColor.isDynamicColorAvailable();
-                      final isDisabled = useMaterialYou;
-                      final containerColor = isDisabled
-                          ? disabledContainerColor
-                          : null;
-                      final contentColor = isDisabled
-                          ? disabledContentColor
-                          : null;
-                      final textStyle = TextStyle(color: contentColor);
-                      return Padding(
-                        padding: const .only(top: 2.0),
-                        child: ListItemTheme.merge(
-                          data: unselectedListItemTheme,
-                          child: ListItemContainer(
-                            isLast: true,
-                            child: ListItemInteraction(
-                              onTap: !isDisabled ? selectColor : null,
-                              child: ValueListenableBuilder(
-                                valueListenable: settings.themeColor,
-                                builder: (context, themeColor, _) => ListItemLayout(
-                                  headline: Text(
-                                    tr(
-                                      "selectX",
-                                      args: [tr("colour").toLowerCase()],
-                                    ),
-                                    style: textStyle,
-                                  ),
-                                  supportingText: Text(
-                                    "${ColorTools.nameThatColor(themeColor)} "
-                                    "(${ColorTools.materialNameAndCode(themeColor, colorSwatchNameMap: colorsNameMap)})",
-                                    style: textStyle,
-                                  ),
-                                  trailing: ColorIndicator(
-                                    width: 40,
-                                    height: 40,
-                                    borderRadius: 20,
-                                    color: containerColor ?? themeColor,
-                                    onSelectFocus: false,
-                                    onSelect: !isDisabled ? selectColor : null,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                      );
-                    },
-                  ),
-                ),
-                const SizedBox(height: 16.0),
-                Material(
-                  clipBehavior: .antiAlias,
-                  shape: CornersBorder.rounded(
-                    corners: .all(shapeTheme.corner.large),
-                  ),
-                  color: colorTheme.surface,
-                  child: Padding(
-                    padding: const .all(16.0),
-                    child: Flex.vertical(
-                      mainAxisSize: .min,
-                      crossAxisAlignment: .stretch,
-                      children: [
-                        DropdownMenuFormField<Outer<Locale?>>(
-                          key: const ValueKey("language"),
-                          expandedInsets: .zero,
-                          inputDecorationTheme: const InputDecorationThemeData(
-                            // border: UnderlineInputBorder(),
-                            // filled: true,
-                            border: OutlineInputBorder(),
-                          ),
-                          label: Text(tr("language")),
-                          enableFilter: true,
-                          enableSearch: true,
-                          requestFocusOnTap: true,
-                          initialSelection: Outer(
-                            settingsProvider.forcedLocale,
-                          ),
-                          dropdownMenuEntries: [
-                            DropdownMenuEntry(
-                              value: const Outer(null),
-                              label: tr("followSystem"),
-                            ),
-                            ...supportedLocales.map(
-                              (e) => DropdownMenuEntry(
-                                value: Outer(e.key),
-                                label: e.value,
-                              ),
-                            ),
-                          ],
-                          onSelected: (value) {
-                            final resolvedValue = value?.inner;
-                            settingsProvider.forcedLocale = resolvedValue;
-                            if (resolvedValue != null) {
-                              context.setLocale(resolvedValue);
-                            } else {
-                              settingsProvider.resetLocaleSafe(context);
-                            }
-                          },
-                        ),
-                        const SizedBox(height: 16.0),
-                        ListenableBuilder(
-                          listenable: settings.themeMode,
-                          builder: (context, _) =>
-                              DropdownMenuFormField<ThemeMode>(
-                                key: const ValueKey("theme"),
-                                expandedInsets: .zero,
-                                inputDecorationTheme:
-                                    const InputDecorationThemeData(
-                                      border: OutlineInputBorder(),
-                                    ),
-                                textStyle: typescaleTheme.titleMediumEmphasized
-                                    .toTextStyle(),
-                                label: Text(tr("theme")),
-                                initialSelection: settings.themeMode.value,
-                                dropdownMenuEntries: [
-                                  DropdownMenuEntry(
-                                    value: .system,
-                                    leadingIcon: const IconLegacy(
-                                      Symbols.auto_mode_rounded,
-                                    ),
-                                    label: tr("followSystem"),
-                                  ),
-                                  DropdownMenuEntry(
-                                    value: .light,
-                                    leadingIcon: const IconLegacy(
-                                      Symbols.light_mode_rounded,
-                                    ),
-                                    label: tr("light"),
-                                  ),
-                                  DropdownMenuEntry(
-                                    value: .dark,
-                                    leadingIcon: const IconLegacy(
-                                      Symbols.dark_mode_rounded,
-                                    ),
-                                    label: tr("dark"),
-                                  ),
-                                ],
-                                onSelected: (value) {
-                                  if (value != null) {
-                                    settings.themeMode.value = value;
-                                  }
-                                },
-                              ),
-                        ),
-                        // ListenableBuilder(
-                        //   listenable: settings.themeMode,
-                        //   builder: (context, child) =>
-                        //       settings.themeMode.value == .system &&
-                        //           (DeviceInfo.androidInfo?.version.sdkInt ??
-                        //                   30) <
-                        //               29
-                        //       ? Text(
-                        //           tr('followSystemThemeExplanation'),
-                        //           style: typescaleTheme.labelSmall
-                        //               .toTextStyle(),
-                        //         )
-                        //       : const SizedBox.shrink(),
-                        // ),
-                        const SizedBox(height: 16.0),
-                        Flex.horizontal(
-                          mainAxisAlignment: .start,
-                          crossAxisAlignment: .start,
-                          children: [
-                            Flexible.tight(
-                              key: const ValueKey("appSortBy"),
-                              child: DropdownMenuFormField<SortColumnSettings>(
-                                expandedInsets: .zero,
-                                inputDecorationTheme:
-                                    const InputDecorationThemeData(
-                                      border: OutlineInputBorder(),
-                                    ),
-                                label: Text(tr("appSortBy")),
-                                initialSelection: settingsProvider.sortColumn,
-                                dropdownMenuEntries: [
-                                  DropdownMenuEntry(
-                                    value: .authorName,
-                                    label: tr("authorName"),
-                                  ),
-                                  DropdownMenuEntry(
-                                    value: .nameAuthor,
-                                    label: tr("nameAuthor"),
-                                  ),
-                                  DropdownMenuEntry(
-                                    value: .added,
-                                    label: tr("asAdded"),
-                                  ),
-                                  DropdownMenuEntry(
-                                    value: .releaseDate,
-                                    label: tr("releaseDate"),
-                                  ),
-                                ],
-                                onSelected: (value) {
-                                  if (value != null) {
-                                    settingsProvider.sortColumn = value;
-                                  }
-                                },
-                              ),
-                            ),
-                            const SizedBox(width: 16),
-                            Flexible.tight(
-                              key: const ValueKey("appSortOrder"),
-                              child: DropdownMenuFormField<SortOrderSettings>(
-                                expandedInsets: .zero,
-                                inputDecorationTheme:
-                                    const InputDecorationThemeData(
-                                      border: OutlineInputBorder(),
-                                    ),
-                                label: Text(tr("appSortOrder")),
-                                initialSelection: settingsProvider.sortOrder,
-                                dropdownMenuEntries: [
-                                  DropdownMenuEntry(
-                                    value: .ascending,
-                                    label: tr("ascending"),
-                                  ),
-                                  DropdownMenuEntry(
-                                    value: .descending,
-                                    label: tr("descending"),
-                                  ),
-                                ],
-                                onSelected: (value) {
-                                  if (value != null) {
-                                    settingsProvider.sortOrder = value;
-                                  }
-                                },
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
+                      ),
                     ),
                   ),
-                ),
-                // if (kDebugMode)
-                //   ListItemContainer(
-                //     isFirst: true,
-                //     isLast: true,
-                //     child: ListItemInteraction(
-                //       onTap: () => Navigator.push(
-                //         context,
-                //         MaterialPageRoute(
-                //           builder: (context) => const _SettingsLanguageView(),
-                //         ),
-                //       ),
-                //       child: ListItemLayout(
-                //         headline: Text(tr("Language")),
-                //         supportingText: Text(
-                //           settingsProvider.forcedLocale?.toString() ??
-                //               tr("followSystem"),
-                //         ),
-                //         trailing: const Icon(Symbols.navigate_next_rounded),
-                //       ),
-                //     ),
-                //   ),
-                const SizedBox(height: 16.0),
-                KeyedSubtree(
-                  key: const ValueKey("showAppWebpage"),
-                  child: Selector<SettingsProvider, bool>(
-                    selector: (context, settingsProvider) =>
-                        settingsProvider.showAppWebpage,
-                    builder: (context, showAppWebpage, _) =>
-                        ListItemTheme.merge(
-                          data: showAppWebpage
+                  const SizedBox(height: 2.0),
+                  KeyedSubtree(
+                    key: const ValueKey("shizukuPretendToBeGooglePlay"),
+                    child: Selector<SettingsProvider, bool>(
+                      selector: (context, settingsProvider) =>
+                          settingsProvider.shizukuPretendToBeGooglePlay,
+                      builder: (context, shizukuPretendToBeGooglePlay, _) =>
+                          ListItemTheme.merge(
+                            data: shizukuPretendToBeGooglePlay
+                                ? selectedListItemTheme
+                                : unselectedListItemTheme,
+                            child: ListItemContainer(
+                              isLast: true,
+                              child: MergeSemantics(
+                                child: ListItemInteraction(
+                                  onTap: () =>
+                                      settingsProvider
+                                              .shizukuPretendToBeGooglePlay =
+                                          !shizukuPretendToBeGooglePlay,
+                                  child: ListItemLayout(
+                                    padding: const .fromLTRB(
+                                      16.0,
+                                      0.0,
+                                      16.0 - 8.0,
+                                      0.0,
+                                    ),
+                                    trailingPadding: const .symmetric(
+                                      vertical: (32.0 + 2 * 10.0 - 48.0) / 2.0,
+                                    ),
+                                    headline: Text(
+                                      tr("shizukuPretendToBeGooglePlay"),
+                                    ),
+                                    trailing: ExcludeFocus(
+                                      child: Switch(
+                                        onCheckedChanged: (value) =>
+                                            settingsProvider
+                                                    .shizukuPretendToBeGooglePlay =
+                                                value,
+                                        checked: shizukuPretendToBeGooglePlay,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                    ),
+                  ),
+                  const SizedBox(height: 16.0),
+                  Material(
+                    clipBehavior: .antiAlias,
+                    shape: CornersBorder.rounded(
+                      corners: .all(shapeTheme.corner.large),
+                    ),
+                    color: colorTheme.surface,
+                    child: Padding(
+                      padding: const .all(16.0),
+                      child: Flex.vertical(
+                        mainAxisSize: .min,
+                        crossAxisAlignment: .stretch,
+                        children: sourceSpecificFields.toList(),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 16.0),
+                  KeyedSubtree(
+                    key: const ValueKey("useMaterialYou"),
+                    child: ValueListenableBuilder(
+                      valueListenable: settings.useMaterialYou,
+                      builder: (context, useMaterialYou, _) {
+                        final isDisabled =
+                            !DynamicColor.isDynamicColorAvailable();
+                        useMaterialYou = useMaterialYou && !isDisabled;
+                        final containerColor = isDisabled
+                            ? disabledContainerColor
+                            : null;
+                        final contentColor = isDisabled
+                            ? disabledContentColor
+                            : null;
+                        final textStyle = TextStyle(color: contentColor);
+                        return ListItemTheme.merge(
+                          data: useMaterialYou
                               ? selectedListItemTheme
                               : unselectedListItemTheme,
                           child: ListItemContainer(
                             isFirst: true,
                             child: MergeSemantics(
                               child: ListItemInteraction(
-                                onTap: () => settingsProvider.showAppWebpage =
-                                    !showAppWebpage,
-                                child: ListItemLayout(
-                                  padding: const .fromLTRB(
-                                    16.0,
-                                    0.0,
-                                    16.0 - 8.0,
-                                    0.0,
-                                  ),
-                                  trailingPadding: const .symmetric(
-                                    vertical: (32.0 + 2 * 10.0 - 48.0) / 2.0,
-                                  ),
-                                  headline: Text(tr("showWebInAppView")),
-                                  trailing: ExcludeFocus(
-                                    child: Switch(
-                                      onCheckedChanged: (value) =>
-                                          settingsProvider.showAppWebpage =
-                                              value,
-                                      checked: showAppWebpage,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                  ),
-                ),
-                const SizedBox(height: 2.0),
-                KeyedSubtree(
-                  key: const ValueKey("pinUpdates"),
-                  child: Selector<SettingsProvider, bool>(
-                    selector: (context, settingsProvider) =>
-                        settingsProvider.pinUpdates,
-                    builder: (context, pinUpdates, _) => ListItemTheme.merge(
-                      data: pinUpdates
-                          ? selectedListItemTheme
-                          : unselectedListItemTheme,
-                      child: ListItemContainer(
-                        child: MergeSemantics(
-                          child: ListItemInteraction(
-                            onTap: () =>
-                                settingsProvider.pinUpdates = !pinUpdates,
-                            child: ListItemLayout(
-                              padding: const .fromLTRB(
-                                16.0,
-                                0.0,
-                                16.0 - 8.0,
-                                0.0,
-                              ),
-                              trailingPadding: const .symmetric(
-                                vertical: (32.0 + 2 * 10.0 - 48.0) / 2.0,
-                              ),
-                              headline: Text(tr("pinUpdates")),
-                              trailing: ExcludeFocus(
-                                child: Switch(
-                                  onCheckedChanged: (value) =>
-                                      settingsProvider.pinUpdates = value,
-                                  checked: pinUpdates,
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 2.0),
-                KeyedSubtree(
-                  key: const ValueKey("buryNonInstalled"),
-                  child: Selector<SettingsProvider, bool>(
-                    selector: (context, settingsProvider) =>
-                        settingsProvider.buryNonInstalled,
-                    builder: (context, buryNonInstalled, _) =>
-                        ListItemTheme.merge(
-                          data: buryNonInstalled
-                              ? selectedListItemTheme
-                              : unselectedListItemTheme,
-                          child: ListItemContainer(
-                            child: MergeSemantics(
-                              child: ListItemInteraction(
-                                onTap: () => settingsProvider.buryNonInstalled =
-                                    !buryNonInstalled,
+                                onTap: !isDisabled
+                                    ? () => settings.useMaterialYou.value =
+                                          !useMaterialYou
+                                    : null,
                                 child: ListItemLayout(
                                   padding: const .fromLTRB(
                                     16.0,
@@ -1535,453 +1181,858 @@ class _SettingsPageState extends State<SettingsPage> {
                                     vertical: (32.0 + 2 * 10.0 - 48.0) / 2.0,
                                   ),
                                   headline: Text(
-                                    tr("moveNonInstalledAppsToBottom"),
+                                    tr("useMaterialYou"),
+                                    style: textStyle,
                                   ),
                                   trailing: ExcludeFocus(
                                     child: Switch(
-                                      onCheckedChanged: (value) =>
-                                          settingsProvider.buryNonInstalled =
-                                              value,
-                                      checked: buryNonInstalled,
+                                      onCheckedChanged: !isDisabled
+                                          ? settings.useMaterialYou.setValue
+                                          : null,
+                                      checked: useMaterialYou,
                                     ),
                                   ),
                                 ),
                               ),
                             ),
                           ),
-                        ),
+                        );
+                      },
+                    ),
                   ),
-                ),
-                const SizedBox(height: 2.0),
-                KeyedSubtree(
-                  key: const ValueKey("groupByCategory"),
-                  child: Selector<SettingsProvider, bool>(
-                    selector: (context, settingsProvider) =>
-                        settingsProvider.groupByCategory,
-                    builder: (context, groupByCategory, _) =>
-                        ListItemTheme.merge(
-                          data: groupByCategory
-                              ? selectedListItemTheme
-                              : unselectedListItemTheme,
-                          child: ListItemContainer(
-                            child: MergeSemantics(
+                  KeyedSubtree(
+                    key: const ValueKey("selectColor"),
+                    child: ValueListenableBuilder(
+                      valueListenable: settings.useMaterialYou,
+                      builder: (context, useMaterialYou, _) {
+                        useMaterialYou =
+                            useMaterialYou &&
+                            DynamicColor.isDynamicColorAvailable();
+                        final isDisabled = useMaterialYou;
+                        final containerColor = isDisabled
+                            ? disabledContainerColor
+                            : null;
+                        final contentColor = isDisabled
+                            ? disabledContentColor
+                            : null;
+                        final textStyle = TextStyle(color: contentColor);
+                        return Padding(
+                          padding: const .only(top: 2.0),
+                          child: ListItemTheme.merge(
+                            data: unselectedListItemTheme,
+                            child: ListItemContainer(
+                              isLast: true,
                               child: ListItemInteraction(
-                                onTap: () => settingsProvider.groupByCategory =
-                                    !groupByCategory,
-                                child: ListItemLayout(
-                                  padding: const .fromLTRB(
-                                    16.0,
-                                    0.0,
-                                    16.0 - 8.0,
-                                    0.0,
-                                  ),
-                                  trailingPadding: const .symmetric(
-                                    vertical: (32.0 + 2 * 10.0 - 48.0) / 2.0,
-                                  ),
-                                  headline: Text(tr("groupByCategory")),
-                                  trailing: ExcludeFocus(
-                                    child: Switch(
-                                      onCheckedChanged: (value) =>
-                                          settingsProvider.groupByCategory =
-                                              value,
-                                      checked: groupByCategory,
+                                onTap: !isDisabled ? selectColor : null,
+                                child: ValueListenableBuilder(
+                                  valueListenable: settings.themeColor,
+                                  builder: (context, themeColor, _) => ListItemLayout(
+                                    headline: Text(
+                                      tr(
+                                        "selectX",
+                                        args: [tr("colour").toLowerCase()],
+                                      ),
+                                      style: textStyle,
+                                    ),
+                                    supportingText: Text(
+                                      "${ColorTools.nameThatColor(themeColor)} "
+                                      "(${ColorTools.materialNameAndCode(themeColor, colorSwatchNameMap: colorsNameMap)})",
+                                      style: textStyle,
+                                    ),
+                                    trailing: ColorIndicator(
+                                      width: 40,
+                                      height: 40,
+                                      borderRadius: 20,
+                                      color: containerColor ?? themeColor,
+                                      onSelectFocus: false,
+                                      onSelect: !isDisabled
+                                          ? selectColor
+                                          : null,
                                     ),
                                   ),
                                 ),
                               ),
                             ),
                           ),
-                        ),
+                        );
+                      },
+                    ),
                   ),
-                ),
-                const SizedBox(height: 2.0),
-                KeyedSubtree(
-                  key: const ValueKey("hideTrackOnlyWarning"),
-                  child: Selector<SettingsProvider, bool>(
-                    selector: (context, settingsProvider) =>
-                        settingsProvider.hideTrackOnlyWarning,
-                    builder: (context, hideTrackOnlyWarning, _) =>
-                        ListItemTheme.merge(
-                          data: settingsProvider.hideTrackOnlyWarning
-                              ? selectedListItemTheme
-                              : unselectedListItemTheme,
-                          child: ListItemContainer(
-                            child: MergeSemantics(
-                              child: ListItemInteraction(
-                                onTap: () =>
-                                    settingsProvider.hideTrackOnlyWarning =
-                                        !hideTrackOnlyWarning,
-                                child: ListItemLayout(
-                                  padding: const .fromLTRB(
-                                    16.0,
-                                    0.0,
-                                    16.0 - 8.0,
-                                    0.0,
-                                  ),
-                                  trailingPadding: const .symmetric(
-                                    vertical: (32.0 + 2 * 10.0 - 48.0) / 2.0,
-                                  ),
-                                  headline: Text(
-                                    tr("dontShowTrackOnlyWarnings"),
-                                  ),
-                                  trailing: ExcludeFocus(
-                                    child: Switch(
-                                      onCheckedChanged: (value) =>
-                                          settingsProvider
-                                                  .hideTrackOnlyWarning =
-                                              value,
-                                      checked: hideTrackOnlyWarning,
-                                    ),
-                                  ),
+                  const SizedBox(height: 16.0),
+                  Material(
+                    clipBehavior: .antiAlias,
+                    shape: CornersBorder.rounded(
+                      corners: .all(shapeTheme.corner.large),
+                    ),
+                    color: colorTheme.surface,
+                    child: Padding(
+                      padding: const .all(16.0),
+                      child: Flex.vertical(
+                        mainAxisSize: .min,
+                        crossAxisAlignment: .stretch,
+                        children: [
+                          DropdownMenuFormField<Outer<Locale?>>(
+                            key: const ValueKey("language"),
+                            expandedInsets: .zero,
+                            inputDecorationTheme:
+                                const InputDecorationThemeData(
+                                  // border: UnderlineInputBorder(),
+                                  // filled: true,
+                                  border: OutlineInputBorder(),
+                                ),
+                            label: Text(tr("language")),
+                            enableFilter: true,
+                            enableSearch: true,
+                            requestFocusOnTap: true,
+                            initialSelection: Outer(
+                              settingsProvider.forcedLocale,
+                            ),
+                            dropdownMenuEntries: [
+                              DropdownMenuEntry(
+                                value: const Outer(null),
+                                label: tr("followSystem"),
+                              ),
+                              ...supportedLocales.map(
+                                (e) => DropdownMenuEntry(
+                                  value: Outer(e.key),
+                                  label: e.value,
                                 ),
                               ),
-                            ),
+                            ],
+                            onSelected: (value) {
+                              final resolvedValue = value?.inner;
+                              settingsProvider.forcedLocale = resolvedValue;
+                              if (resolvedValue != null) {
+                                context.setLocale(resolvedValue);
+                              } else {
+                                settingsProvider.resetLocaleSafe(context);
+                              }
+                            },
                           ),
-                        ),
-                  ),
-                ),
-                const SizedBox(height: 2.0),
-                KeyedSubtree(
-                  key: const ValueKey("hideAPKOriginWarning"),
-                  child: Selector<SettingsProvider, bool>(
-                    selector: (context, settingsProvider) =>
-                        settingsProvider.hideAPKOriginWarning,
-                    builder: (context, hideAPKOriginWarning, _) =>
-                        ListItemTheme.merge(
-                          data: hideAPKOriginWarning
-                              ? selectedListItemTheme
-                              : unselectedListItemTheme,
-                          child: ListItemContainer(
-                            isLast: true,
-                            child: MergeSemantics(
-                              child: ListItemInteraction(
-                                onTap: () =>
-                                    settingsProvider.hideAPKOriginWarning =
-                                        !hideAPKOriginWarning,
-                                child: ListItemLayout(
-                                  padding: const .fromLTRB(
-                                    16.0,
-                                    0.0,
-                                    16.0 - 8.0,
-                                    0.0,
-                                  ),
-                                  trailingPadding: const .symmetric(
-                                    vertical: (32.0 + 2 * 10.0 - 48.0) / 2.0,
-                                  ),
-                                  headline: Text(
-                                    tr("dontShowAPKOriginWarnings"),
-                                  ),
-                                  trailing: ExcludeFocus(
-                                    child: Switch(
-                                      onCheckedChanged: (value) =>
-                                          settingsProvider
-                                                  .hideAPKOriginWarning =
-                                              value,
-                                      checked: hideAPKOriginWarning,
+                          const SizedBox(height: 16.0),
+                          ListenableBuilder(
+                            listenable: settings.themeMode,
+                            builder: (context, _) =>
+                                DropdownMenuFormField<ThemeMode>(
+                                  key: const ValueKey("theme"),
+                                  expandedInsets: .zero,
+                                  inputDecorationTheme:
+                                      const InputDecorationThemeData(
+                                        border: OutlineInputBorder(),
+                                      ),
+                                  textStyle: typescaleTheme
+                                      .titleMediumEmphasized
+                                      .toTextStyle(),
+                                  label: Text(tr("theme")),
+                                  initialSelection: settings.themeMode.value,
+                                  dropdownMenuEntries: [
+                                    DropdownMenuEntry(
+                                      value: .system,
+                                      leadingIcon: const IconLegacy(
+                                        Symbols.auto_mode_rounded,
+                                      ),
+                                      label: tr("followSystem"),
                                     ),
-                                  ),
+                                    DropdownMenuEntry(
+                                      value: .light,
+                                      leadingIcon: const IconLegacy(
+                                        Symbols.light_mode_rounded,
+                                      ),
+                                      label: tr("light"),
+                                    ),
+                                    DropdownMenuEntry(
+                                      value: .dark,
+                                      leadingIcon: const IconLegacy(
+                                        Symbols.dark_mode_rounded,
+                                      ),
+                                      label: tr("dark"),
+                                    ),
+                                  ],
+                                  onSelected: (value) {
+                                    if (value != null) {
+                                      settings.themeMode.value = value;
+                                    }
+                                  },
                                 ),
-                              ),
-                            ),
                           ),
-                        ),
-                  ),
-                ),
-                const SizedBox(height: 16.0),
-                const CategoryEditorSelector(showLabelWhenNotEmpty: false),
-                const SizedBox(height: 16.0),
-                KeyedSubtree(
-                  key: const ValueKey("appSource"),
-                  child: ListItemTheme.merge(
-                    data: unselectedListItemTheme,
-                    child: ListItemContainer(
-                      isFirst: true,
-                      child: ListItemInteraction(
-                        onTap: () => launchUrlString(
-                          SettingsProvider.sourceUrl,
-                          mode: LaunchMode.externalApplication,
-                        ),
-                        child: ListItemLayout(
-                          leading: const Icon(Symbols.code_rounded),
-                          headline: Text(tr("appSource")),
-                          trailing: const Icon(
-                            Symbols.keyboard_arrow_right_rounded,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 2.0),
-                KeyedSubtree(
-                  key: const ValueKey("wiki"),
-                  child: ListItemTheme.merge(
-                    data: unselectedListItemTheme,
-                    child: ListItemContainer(
-                      child: ListItemInteraction(
-                        onTap: () => launchUrlString(
-                          "https://wiki.obtainium.imranr.dev/",
-                          mode: LaunchMode.externalApplication,
-                        ),
-                        child: ListItemLayout(
-                          leading: const Icon(Symbols.help_rounded, fill: 1.0),
-                          headline: Text(tr("wiki")),
-                          trailing: const Icon(
-                            Symbols.keyboard_arrow_right_rounded,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 2.0),
-                KeyedSubtree(
-                  key: const ValueKey("crowdsourcedConfigs"),
-                  child: ListItemTheme.merge(
-                    data: unselectedListItemTheme,
-                    child: ListItemContainer(
-                      child: ListItemInteraction(
-                        onTap: () => launchUrlString(
-                          "https://apps.obtainium.imranr.dev/",
-                          mode: LaunchMode.externalApplication,
-                        ),
-                        child: ListItemLayout(
-                          leading: const Icon(Symbols.apps_rounded),
-                          headline: Text(tr("crowdsourcedConfigsLabel")),
-                          trailing: const Icon(
-                            Symbols.keyboard_arrow_right_rounded,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 2.0),
-                KeyedSubtree(
-                  key: const ValueKey("appLogs"),
-                  child: ListItemTheme.merge(
-                    data: unselectedListItemTheme,
-                    child: ListItemContainer(
-                      isLast: true,
-                      child: ListItemInteraction(
-                        onTap: () => Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const _LogsPage(),
-                          ),
-                        ),
-                        child: ListItemLayout(
-                          leading: const Icon(
-                            Symbols.bug_report_rounded,
-                            fill: 1.0,
-                          ),
-                          headline: Text(tr("appLogs")),
-                          trailing: const Icon(
-                            Symbols.keyboard_arrow_right_rounded,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-          SliverPadding(
-            padding: const .symmetric(horizontal: 8.0),
-            sliver: ListItemTheme.merge(
-              data: CustomThemeFactory.createListItemTheme(
-                colorTheme: colorTheme,
-                elevationTheme: elevationTheme,
-                shapeTheme: shapeTheme,
-                stateTheme: stateTheme,
-                typescaleTheme: typescaleTheme,
-                variant: .settings,
-              ),
-              child: SliverList.list(
-                children: [
-                  // ListItemContainer(
-                  //   isFirst: true,
-                  //   child: ListItemInteraction(
-                  //     onTap: () {},
-                  //     child: ListItemLayout(
-                  //       leading: SettingsListItemLeading.fromExtendedColor(
-                  //         extendedColor: staticColors.red,
-                  //         pairing: _defaultPairing,
-                  //         containerShape: RoundedPolygonBorder(
-                  //           polygon: MaterialShapes.circle,
-                  //         ),
-                  //         child: const Icon(Symbols.info_rounded, fill: 1.0),
-                  //       ),
-                  //       headline: Text("About Materium"),
-                  //       supportingText: Text(
-                  //         "Information, socials and contributors",
-                  //       ),
-                  //       trailing: const Icon(
-                  //         Symbols.keyboard_arrow_right_rounded,
-                  //       ),
-                  //     ),
-                  //   ),
-                  // ),
-                  // const SizedBox(height: 2.0),
-                  // ListItemContainer(
-                  //   child: ListItemInteraction(
-                  //     onTap: () {},
-                  //     child: ListItemLayout(
-                  //       leading: SettingsListItemLeading.fromExtendedColor(
-                  //         extendedColor: staticColors.red,
-                  //         pairing: _defaultPairing,
-                  //         containerShape: RoundedPolygonBorder(
-                  //           polygon: MaterialShapes.clover8Leaf,
-                  //         ),
-                  //         child: const Icon(Symbols.support_rounded, fill: 1.0),
-                  //       ),
-                  //       headline: Text("Help & support"),
-                  //       supportingText: Text(
-                  //         "Get help, report a bug or request a feature",
-                  //       ),
-                  //       trailing: const Icon(
-                  //         Symbols.keyboard_arrow_right_rounded,
-                  //       ),
-                  //     ),
-                  //   ),
-                  // ),
-                  // const SizedBox(height: 16.0),
-                  ValueListenableBuilder(
-                    key: const ValueKey("developerMode"),
-                    valueListenable: settings.developerMode,
-                    builder: (context, developerMode, _) {
-                      final isDisabled = !developerMode;
-                      final containerColor = isDisabled
-                          ? disabledContainerColor
-                          : null;
-                      final contentColor = isDisabled
-                          ? disabledContentColor
-                          : null;
-                      return ListItemContainer(
-                        isFirst: true,
-                        isLast: true,
-                        child: IntrinsicHeight(
-                          child: Flex.horizontal(
-                            crossAxisAlignment: .stretch,
+                          // ListenableBuilder(
+                          //   listenable: settings.themeMode,
+                          //   builder: (context, child) =>
+                          //       settings.themeMode.value == .system &&
+                          //           (DeviceInfo.androidInfo?.version.sdkInt ??
+                          //                   30) <
+                          //               29
+                          //       ? Text(
+                          //           tr('followSystemThemeExplanation'),
+                          //           style: typescaleTheme.labelSmall
+                          //               .toTextStyle(),
+                          //         )
+                          //       : const SizedBox.shrink(),
+                          // ),
+                          const SizedBox(height: 16.0),
+                          Flex.horizontal(
+                            mainAxisAlignment: .start,
+                            crossAxisAlignment: .start,
                             children: [
                               Flexible.tight(
-                                child: Tooltip(
-                                  message: isDisabled
-                                      ? t
-                                            .settingsPage
-                                            .items
-                                            .developerMode
-                                            .disabledTooltip
-                                      : "",
-                                  child: ListItemInteraction(
-                                    stateLayerShape: .all(
-                                      CornersBorder.rounded(
-                                        corners: CornersDirectional.horizontal(
-                                          end: shapeTheme.corner.extraSmall,
-                                        ),
-                                      ),
-                                    ),
-                                    onTap: developerMode
-                                        ? () => Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                              builder: (context) =>
-                                                  const DeveloperPage(),
-                                            ),
-                                          )
-                                        : null,
-                                    child: ListItemLayout(
-                                      padding: const .directional(
-                                        start: 16.0,
-                                        end: 12.0,
-                                      ),
-                                      leading:
-                                          SettingsListItemLeading.fromExtendedColor(
-                                            extendedColor: staticColors.purple,
-                                            pairing: _defaultPairing,
-                                            containerShape:
-                                                RoundedPolygonBorder(
-                                                  polygon: MaterialShapes
-                                                      .pixelCircle,
-                                                ),
-                                            containerColor: containerColor,
-                                            contentColor: contentColor,
-                                            child: const Icon(
-                                              Symbols.developer_mode_rounded,
-                                              fill: 1.0,
-                                            ),
+                                key: const ValueKey("appSortBy"),
+                                child:
+                                    DropdownMenuFormField<SortColumnSettings>(
+                                      expandedInsets: .zero,
+                                      inputDecorationTheme:
+                                          const InputDecorationThemeData(
+                                            border: OutlineInputBorder(),
                                           ),
-                                      headline: Text(
-                                        t
-                                            .settingsPage
-                                            .items
-                                            .developerMode
-                                            .label,
-                                        style: TextStyle(color: contentColor),
-                                      ),
-                                      supportingText: Text(
-                                        t
-                                            .settingsPage
-                                            .items
-                                            .developerMode
-                                            .description,
-                                        style: TextStyle(color: contentColor),
-                                      ),
-                                      trailing: Icon(
-                                        Symbols.keyboard_arrow_right_rounded,
-                                        color: contentColor,
-                                      ),
+                                      label: Text(tr("appSortBy")),
+                                      initialSelection:
+                                          settingsProvider.sortColumn,
+                                      dropdownMenuEntries: [
+                                        DropdownMenuEntry(
+                                          value: .authorName,
+                                          label: tr("authorName"),
+                                        ),
+                                        DropdownMenuEntry(
+                                          value: .nameAuthor,
+                                          label: tr("nameAuthor"),
+                                        ),
+                                        DropdownMenuEntry(
+                                          value: .added,
+                                          label: tr("asAdded"),
+                                        ),
+                                        DropdownMenuEntry(
+                                          value: .releaseDate,
+                                          label: tr("releaseDate"),
+                                        ),
+                                      ],
+                                      onSelected: (value) {
+                                        if (value != null) {
+                                          settingsProvider.sortColumn = value;
+                                        }
+                                      },
                                     ),
-                                  ),
-                                ),
                               ),
-                              VerticalDivider(
-                                thickness: 1.0,
-                                width: 1.0,
-                                indent: 10.0,
-                                endIndent: 10.0,
-                                color: colorTheme.outlineVariant,
-                              ),
-                              ListItemInteraction(
-                                stateLayerShape: .all(
-                                  CornersBorder.rounded(
-                                    corners: CornersDirectional.horizontal(
-                                      start: shapeTheme.corner.extraSmall,
+                              const SizedBox(width: 16),
+                              Flexible.tight(
+                                key: const ValueKey("appSortOrder"),
+                                child: DropdownMenuFormField<SortOrderSettings>(
+                                  expandedInsets: .zero,
+                                  inputDecorationTheme:
+                                      const InputDecorationThemeData(
+                                        border: OutlineInputBorder(),
+                                      ),
+                                  label: Text(tr("appSortOrder")),
+                                  initialSelection: settingsProvider.sortOrder,
+                                  dropdownMenuEntries: [
+                                    DropdownMenuEntry(
+                                      value: .ascending,
+                                      label: tr("ascending"),
                                     ),
-                                  ),
-                                ),
-                                onTap: () => settings.developerMode.value =
-                                    !developerMode,
-                                child: Padding(
-                                  padding: const .fromSTEB(
-                                    12.0 - 8.0,
-                                    (32.0 + 2 * 10.0 - 48.0) / 2.0,
-                                    16.0 - 8.0,
-                                    (32.0 + 2 * 10.0 - 48.0) / 2.0,
-                                  ),
-                                  child: ExcludeFocus(
-                                    child: Switch(
-                                      onCheckedChanged:
-                                          settings.developerMode.setValue,
-                                      checked: developerMode,
+                                    DropdownMenuEntry(
+                                      value: .descending,
+                                      label: tr("descending"),
                                     ),
-                                  ),
+                                  ],
+                                  onSelected: (value) {
+                                    if (value != null) {
+                                      settingsProvider.sortOrder = value;
+                                    }
+                                  },
                                 ),
                               ),
                             ],
                           ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  // if (kDebugMode)
+                  //   ListItemContainer(
+                  //     isFirst: true,
+                  //     isLast: true,
+                  //     child: ListItemInteraction(
+                  //       onTap: () => Navigator.push(
+                  //         context,
+                  //         MaterialPageRoute(
+                  //           builder: (context) => const _SettingsLanguageView(),
+                  //         ),
+                  //       ),
+                  //       child: ListItemLayout(
+                  //         headline: Text(tr("Language")),
+                  //         supportingText: Text(
+                  //           settingsProvider.forcedLocale?.toString() ??
+                  //               tr("followSystem"),
+                  //         ),
+                  //         trailing: const Icon(Symbols.navigate_next_rounded),
+                  //       ),
+                  //     ),
+                  //   ),
+                  const SizedBox(height: 16.0),
+                  KeyedSubtree(
+                    key: const ValueKey("showAppWebpage"),
+                    child: Selector<SettingsProvider, bool>(
+                      selector: (context, settingsProvider) =>
+                          settingsProvider.showAppWebpage,
+                      builder: (context, showAppWebpage, _) =>
+                          ListItemTheme.merge(
+                            data: showAppWebpage
+                                ? selectedListItemTheme
+                                : unselectedListItemTheme,
+                            child: ListItemContainer(
+                              isFirst: true,
+                              child: MergeSemantics(
+                                child: ListItemInteraction(
+                                  onTap: () => settingsProvider.showAppWebpage =
+                                      !showAppWebpage,
+                                  child: ListItemLayout(
+                                    padding: const .fromLTRB(
+                                      16.0,
+                                      0.0,
+                                      16.0 - 8.0,
+                                      0.0,
+                                    ),
+                                    trailingPadding: const .symmetric(
+                                      vertical: (32.0 + 2 * 10.0 - 48.0) / 2.0,
+                                    ),
+                                    headline: Text(tr("showWebInAppView")),
+                                    trailing: ExcludeFocus(
+                                      child: Switch(
+                                        onCheckedChanged: (value) =>
+                                            settingsProvider.showAppWebpage =
+                                                value,
+                                        checked: showAppWebpage,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                    ),
+                  ),
+                  const SizedBox(height: 2.0),
+                  KeyedSubtree(
+                    key: const ValueKey("pinUpdates"),
+                    child: Selector<SettingsProvider, bool>(
+                      selector: (context, settingsProvider) =>
+                          settingsProvider.pinUpdates,
+                      builder: (context, pinUpdates, _) => ListItemTheme.merge(
+                        data: pinUpdates
+                            ? selectedListItemTheme
+                            : unselectedListItemTheme,
+                        child: ListItemContainer(
+                          child: MergeSemantics(
+                            child: ListItemInteraction(
+                              onTap: () =>
+                                  settingsProvider.pinUpdates = !pinUpdates,
+                              child: ListItemLayout(
+                                padding: const .fromLTRB(
+                                  16.0,
+                                  0.0,
+                                  16.0 - 8.0,
+                                  0.0,
+                                ),
+                                trailingPadding: const .symmetric(
+                                  vertical: (32.0 + 2 * 10.0 - 48.0) / 2.0,
+                                ),
+                                headline: Text(tr("pinUpdates")),
+                                trailing: ExcludeFocus(
+                                  child: Switch(
+                                    onCheckedChanged: (value) =>
+                                        settingsProvider.pinUpdates = value,
+                                    checked: pinUpdates,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
                         ),
-                      );
-                    },
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 2.0),
+                  KeyedSubtree(
+                    key: const ValueKey("buryNonInstalled"),
+                    child: Selector<SettingsProvider, bool>(
+                      selector: (context, settingsProvider) =>
+                          settingsProvider.buryNonInstalled,
+                      builder: (context, buryNonInstalled, _) =>
+                          ListItemTheme.merge(
+                            data: buryNonInstalled
+                                ? selectedListItemTheme
+                                : unselectedListItemTheme,
+                            child: ListItemContainer(
+                              child: MergeSemantics(
+                                child: ListItemInteraction(
+                                  onTap: () =>
+                                      settingsProvider.buryNonInstalled =
+                                          !buryNonInstalled,
+                                  child: ListItemLayout(
+                                    padding: const .fromLTRB(
+                                      16.0,
+                                      0.0,
+                                      16.0 - 8.0,
+                                      0.0,
+                                    ),
+                                    trailingPadding: const .symmetric(
+                                      vertical: (32.0 + 2 * 10.0 - 48.0) / 2.0,
+                                    ),
+                                    headline: Text(
+                                      tr("moveNonInstalledAppsToBottom"),
+                                    ),
+                                    trailing: ExcludeFocus(
+                                      child: Switch(
+                                        onCheckedChanged: (value) =>
+                                            settingsProvider.buryNonInstalled =
+                                                value,
+                                        checked: buryNonInstalled,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                    ),
+                  ),
+                  const SizedBox(height: 2.0),
+                  KeyedSubtree(
+                    key: const ValueKey("groupByCategory"),
+                    child: Selector<SettingsProvider, bool>(
+                      selector: (context, settingsProvider) =>
+                          settingsProvider.groupByCategory,
+                      builder: (context, groupByCategory, _) =>
+                          ListItemTheme.merge(
+                            data: groupByCategory
+                                ? selectedListItemTheme
+                                : unselectedListItemTheme,
+                            child: ListItemContainer(
+                              child: MergeSemantics(
+                                child: ListItemInteraction(
+                                  onTap: () =>
+                                      settingsProvider.groupByCategory =
+                                          !groupByCategory,
+                                  child: ListItemLayout(
+                                    padding: const .fromLTRB(
+                                      16.0,
+                                      0.0,
+                                      16.0 - 8.0,
+                                      0.0,
+                                    ),
+                                    trailingPadding: const .symmetric(
+                                      vertical: (32.0 + 2 * 10.0 - 48.0) / 2.0,
+                                    ),
+                                    headline: Text(tr("groupByCategory")),
+                                    trailing: ExcludeFocus(
+                                      child: Switch(
+                                        onCheckedChanged: (value) =>
+                                            settingsProvider.groupByCategory =
+                                                value,
+                                        checked: groupByCategory,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                    ),
+                  ),
+                  const SizedBox(height: 2.0),
+                  KeyedSubtree(
+                    key: const ValueKey("hideTrackOnlyWarning"),
+                    child: Selector<SettingsProvider, bool>(
+                      selector: (context, settingsProvider) =>
+                          settingsProvider.hideTrackOnlyWarning,
+                      builder: (context, hideTrackOnlyWarning, _) =>
+                          ListItemTheme.merge(
+                            data: settingsProvider.hideTrackOnlyWarning
+                                ? selectedListItemTheme
+                                : unselectedListItemTheme,
+                            child: ListItemContainer(
+                              child: MergeSemantics(
+                                child: ListItemInteraction(
+                                  onTap: () =>
+                                      settingsProvider.hideTrackOnlyWarning =
+                                          !hideTrackOnlyWarning,
+                                  child: ListItemLayout(
+                                    padding: const .fromLTRB(
+                                      16.0,
+                                      0.0,
+                                      16.0 - 8.0,
+                                      0.0,
+                                    ),
+                                    trailingPadding: const .symmetric(
+                                      vertical: (32.0 + 2 * 10.0 - 48.0) / 2.0,
+                                    ),
+                                    headline: Text(
+                                      tr("dontShowTrackOnlyWarnings"),
+                                    ),
+                                    trailing: ExcludeFocus(
+                                      child: Switch(
+                                        onCheckedChanged: (value) =>
+                                            settingsProvider
+                                                    .hideTrackOnlyWarning =
+                                                value,
+                                        checked: hideTrackOnlyWarning,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                    ),
+                  ),
+                  const SizedBox(height: 2.0),
+                  KeyedSubtree(
+                    key: const ValueKey("hideAPKOriginWarning"),
+                    child: Selector<SettingsProvider, bool>(
+                      selector: (context, settingsProvider) =>
+                          settingsProvider.hideAPKOriginWarning,
+                      builder: (context, hideAPKOriginWarning, _) =>
+                          ListItemTheme.merge(
+                            data: hideAPKOriginWarning
+                                ? selectedListItemTheme
+                                : unselectedListItemTheme,
+                            child: ListItemContainer(
+                              isLast: true,
+                              child: MergeSemantics(
+                                child: ListItemInteraction(
+                                  onTap: () =>
+                                      settingsProvider.hideAPKOriginWarning =
+                                          !hideAPKOriginWarning,
+                                  child: ListItemLayout(
+                                    padding: const .fromLTRB(
+                                      16.0,
+                                      0.0,
+                                      16.0 - 8.0,
+                                      0.0,
+                                    ),
+                                    trailingPadding: const .symmetric(
+                                      vertical: (32.0 + 2 * 10.0 - 48.0) / 2.0,
+                                    ),
+                                    headline: Text(
+                                      tr("dontShowAPKOriginWarnings"),
+                                    ),
+                                    trailing: ExcludeFocus(
+                                      child: Switch(
+                                        onCheckedChanged: (value) =>
+                                            settingsProvider
+                                                    .hideAPKOriginWarning =
+                                                value,
+                                        checked: hideAPKOriginWarning,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                    ),
                   ),
                   const SizedBox(height: 16.0),
+                  const CategoryEditorSelector(showLabelWhenNotEmpty: false),
+                  const SizedBox(height: 16.0),
+                  KeyedSubtree(
+                    key: const ValueKey("appSource"),
+                    child: ListItemTheme.merge(
+                      data: unselectedListItemTheme,
+                      child: ListItemContainer(
+                        isFirst: true,
+                        child: ListItemInteraction(
+                          onTap: () => launchUrlString(
+                            SettingsProvider.sourceUrl,
+                            mode: LaunchMode.externalApplication,
+                          ),
+                          child: ListItemLayout(
+                            leading: const Icon(Symbols.code_rounded),
+                            headline: Text(tr("appSource")),
+                            trailing: const Icon(
+                              Symbols.keyboard_arrow_right_rounded,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 2.0),
+                  KeyedSubtree(
+                    key: const ValueKey("wiki"),
+                    child: ListItemTheme.merge(
+                      data: unselectedListItemTheme,
+                      child: ListItemContainer(
+                        child: ListItemInteraction(
+                          onTap: () => launchUrlString(
+                            "https://wiki.obtainium.imranr.dev/",
+                            mode: LaunchMode.externalApplication,
+                          ),
+                          child: ListItemLayout(
+                            leading: const Icon(
+                              Symbols.help_rounded,
+                              fill: 1.0,
+                            ),
+                            headline: Text(tr("wiki")),
+                            trailing: const Icon(
+                              Symbols.keyboard_arrow_right_rounded,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 2.0),
+                  KeyedSubtree(
+                    key: const ValueKey("crowdsourcedConfigs"),
+                    child: ListItemTheme.merge(
+                      data: unselectedListItemTheme,
+                      child: ListItemContainer(
+                        child: ListItemInteraction(
+                          onTap: () => launchUrlString(
+                            "https://apps.obtainium.imranr.dev/",
+                            mode: LaunchMode.externalApplication,
+                          ),
+                          child: ListItemLayout(
+                            leading: const Icon(Symbols.apps_rounded),
+                            headline: Text(tr("crowdsourcedConfigsLabel")),
+                            trailing: const Icon(
+                              Symbols.keyboard_arrow_right_rounded,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 2.0),
+                  KeyedSubtree(
+                    key: const ValueKey("appLogs"),
+                    child: ListItemTheme.merge(
+                      data: unselectedListItemTheme,
+                      child: ListItemContainer(
+                        isLast: true,
+                        child: ListItemInteraction(
+                          onTap: () => Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const _LogsPage(),
+                            ),
+                          ),
+                          child: ListItemLayout(
+                            leading: const Icon(
+                              Symbols.bug_report_rounded,
+                              fill: 1.0,
+                            ),
+                            headline: Text(tr("appLogs")),
+                            trailing: const Icon(
+                              Symbols.keyboard_arrow_right_rounded,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
                 ],
               ),
             ),
-          ),
-          SliverToBoxAdapter(child: SizedBox(height: padding.bottom)),
-        ],
+            SliverPadding(
+              padding: const .symmetric(horizontal: 8.0),
+              sliver: ListItemTheme.merge(
+                data: CustomThemeFactory.createListItemTheme(
+                  colorTheme: colorTheme,
+                  elevationTheme: elevationTheme,
+                  shapeTheme: shapeTheme,
+                  stateTheme: stateTheme,
+                  typescaleTheme: typescaleTheme,
+                  variant: .settings,
+                ),
+                child: SliverList.list(
+                  children: [
+                    // ListItemContainer(
+                    //   isFirst: true,
+                    //   child: ListItemInteraction(
+                    //     onTap: () {},
+                    //     child: ListItemLayout(
+                    //       leading: SettingsListItemLeading.fromExtendedColor(
+                    //         extendedColor: staticColors.red,
+                    //         pairing: _defaultPairing,
+                    //         containerShape: RoundedPolygonBorder(
+                    //           polygon: MaterialShapes.circle,
+                    //         ),
+                    //         child: const Icon(Symbols.info_rounded, fill: 1.0),
+                    //       ),
+                    //       headline: Text("About Materium"),
+                    //       supportingText: Text(
+                    //         "Information, socials and contributors",
+                    //       ),
+                    //       trailing: const Icon(
+                    //         Symbols.keyboard_arrow_right_rounded,
+                    //       ),
+                    //     ),
+                    //   ),
+                    // ),
+                    // const SizedBox(height: 2.0),
+                    // ListItemContainer(
+                    //   child: ListItemInteraction(
+                    //     onTap: () {},
+                    //     child: ListItemLayout(
+                    //       leading: SettingsListItemLeading.fromExtendedColor(
+                    //         extendedColor: staticColors.red,
+                    //         pairing: _defaultPairing,
+                    //         containerShape: RoundedPolygonBorder(
+                    //           polygon: MaterialShapes.clover8Leaf,
+                    //         ),
+                    //         child: const Icon(Symbols.support_rounded, fill: 1.0),
+                    //       ),
+                    //       headline: Text("Help & support"),
+                    //       supportingText: Text(
+                    //         "Get help, report a bug or request a feature",
+                    //       ),
+                    //       trailing: const Icon(
+                    //         Symbols.keyboard_arrow_right_rounded,
+                    //       ),
+                    //     ),
+                    //   ),
+                    // ),
+                    // const SizedBox(height: 16.0),
+                    ValueListenableBuilder(
+                      key: const ValueKey("developerMode"),
+                      valueListenable: settings.developerMode,
+                      builder: (context, developerMode, _) {
+                        final isDisabled = !developerMode;
+                        final containerColor = isDisabled
+                            ? disabledContainerColor
+                            : null;
+                        final contentColor = isDisabled
+                            ? disabledContentColor
+                            : null;
+                        return ListItemContainer(
+                          isFirst: true,
+                          isLast: true,
+                          child: IntrinsicHeight(
+                            child: Flex.horizontal(
+                              crossAxisAlignment: .stretch,
+                              children: [
+                                Flexible.tight(
+                                  child: Tooltip(
+                                    message: isDisabled
+                                        ? t
+                                              .settingsPage
+                                              .items
+                                              .developerMode
+                                              .disabledTooltip
+                                        : "",
+                                    child: ListItemInteraction(
+                                      stateLayerShape: .all(
+                                        CornersBorder.rounded(
+                                          corners:
+                                              CornersDirectional.horizontal(
+                                                end: shapeTheme
+                                                    .corner
+                                                    .extraSmall,
+                                              ),
+                                        ),
+                                      ),
+                                      onTap: developerMode
+                                          ? () => Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) =>
+                                                    const DeveloperPage(),
+                                              ),
+                                            )
+                                          : null,
+                                      child: ListItemLayout(
+                                        padding: const .directional(
+                                          start: 16.0,
+                                          end: 12.0,
+                                        ),
+                                        leading:
+                                            SettingsListItemLeading.fromExtendedColor(
+                                              extendedColor:
+                                                  staticColors.purple,
+                                              pairing: _defaultPairing,
+                                              containerShape:
+                                                  RoundedPolygonBorder(
+                                                    polygon: MaterialShapes
+                                                        .pixelCircle,
+                                                  ),
+                                              containerColor: containerColor,
+                                              contentColor: contentColor,
+                                              child: const Icon(
+                                                Symbols.developer_mode_rounded,
+                                                fill: 1.0,
+                                              ),
+                                            ),
+                                        headline: Text(
+                                          t
+                                              .settingsPage
+                                              .items
+                                              .developerMode
+                                              .label,
+                                          style: TextStyle(color: contentColor),
+                                        ),
+                                        supportingText: Text(
+                                          t
+                                              .settingsPage
+                                              .items
+                                              .developerMode
+                                              .description,
+                                          style: TextStyle(color: contentColor),
+                                        ),
+                                        trailing: Icon(
+                                          Symbols.keyboard_arrow_right_rounded,
+                                          color: contentColor,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                VerticalDivider(
+                                  thickness: 1.0,
+                                  width: 1.0,
+                                  indent: 10.0,
+                                  endIndent: 10.0,
+                                  color: colorTheme.outlineVariant,
+                                ),
+                                ListItemInteraction(
+                                  stateLayerShape: .all(
+                                    CornersBorder.rounded(
+                                      corners: CornersDirectional.horizontal(
+                                        start: shapeTheme.corner.extraSmall,
+                                      ),
+                                    ),
+                                  ),
+                                  onTap: () => settings.developerMode.value =
+                                      !developerMode,
+                                  child: Padding(
+                                    padding: const .fromSTEB(
+                                      12.0 - 8.0,
+                                      (32.0 + 2 * 10.0 - 48.0) / 2.0,
+                                      16.0 - 8.0,
+                                      (32.0 + 2 * 10.0 - 48.0) / 2.0,
+                                    ),
+                                    child: ExcludeFocus(
+                                      child: Switch(
+                                        onCheckedChanged:
+                                            settings.developerMode.setValue,
+                                        checked: developerMode,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                    const SizedBox(height: 16.0),
+                  ],
+                ),
+              ),
+            ),
+            SliverToBoxAdapter(child: SizedBox(height: padding.bottom)),
+          ],
+        ),
       ),
     );
   }

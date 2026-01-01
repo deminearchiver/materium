@@ -35,6 +35,8 @@ class _ImportExportPageState extends State<ImportExportPage> {
     final settingsProvider = context.watch<SettingsProvider>();
     final settings = context.read<SettingsService>();
 
+    final padding = MediaQuery.paddingOf(context);
+
     final showBackButton =
         ModalRoute.of(context)?.impliesAppBarDismissal ?? false;
 
@@ -771,7 +773,17 @@ class _ImportExportPageState extends State<ImportExportPage> {
 
     return Scaffold(
       backgroundColor: colorTheme.surfaceContainer,
-      body: CustomScrollView(slivers: [getSliverAppBar(), getSliverList()]),
+      body: SafeArea(
+        top: false,
+        bottom: false,
+        child: CustomScrollView(
+          slivers: [
+            getSliverAppBar(),
+            getSliverList(),
+            SliverToBoxAdapter(child: SizedBox(height: padding.bottom)),
+          ],
+        ),
+      ),
     );
   }
 }
