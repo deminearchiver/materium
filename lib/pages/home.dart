@@ -359,6 +359,10 @@ class _HomePageState extends State<HomePage> {
     final settings = context.read<SettingsService>();
     final appsProvider = context.watch<AppsProvider>();
 
+    final isRedesignEnabled = context.select<SettingsService, bool>(
+      (settings) => settings.developerMode.value,
+    );
+
     if (!_prevIsLoading &&
         _prevAppCount >= 0 &&
         appsProvider.apps.length > _prevAppCount &&
@@ -388,7 +392,9 @@ class _HomePageState extends State<HomePage> {
             )
             .widget,
         bottomNavigationBar: NavigationBar(
-          backgroundColor: colorTheme.surfaceContainerHigh,
+          backgroundColor: isRedesignEnabled
+              ? colorTheme.surfaceContainer
+              : colorTheme.surfaceContainerHigh,
           onDestinationSelected: (index) {
             HapticFeedback.selectionClick();
             _switchToPage(index);

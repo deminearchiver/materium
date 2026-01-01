@@ -15,6 +15,7 @@ import 'package:materium/providers/settings_new.dart';
 import 'package:materium/providers/settings_provider.dart';
 import 'package:materium/providers/source_provider.dart';
 import 'package:provider/provider.dart';
+import 'package:super_keyboard/super_keyboard.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
 class AddAppPage extends StatefulWidget {
@@ -899,63 +900,104 @@ class AddAppPageState extends State<AddAppPage> {
       ),
     );
 
-    return Scaffold(
-      backgroundColor: colorTheme.surfaceContainer,
-      bottomNavigationBar: pickedSource == null ? getSourcesListWidget() : null,
-      body: CustomScrollView(
-        shrinkWrap: true,
-        slivers: <Widget>[
-          ValueListenableBuilder(
-            valueListenable: settings.developerMode,
-            builder: (context, developerMode, _) => CustomAppBar(
-              type: developerMode || showBackButton ? .small : .largeFlexible,
-              expandedContainerColor: colorTheme.surfaceContainer,
-              collapsedContainerColor: colorTheme.surfaceContainer,
-              collapsedPadding: showBackButton
-                  ? const .fromSTEB(8.0 + 40.0 + 8.0, 0.0, 16.0, 0.0)
-                  : null,
-              leading: showBackButton
-                  ? const Padding(
-                      padding: .fromSTEB(8.0 - 4.0, 0.0, 8.0 - 4.0, 0.0),
-                      child: DeveloperPageBackButton(),
-                    )
-                  : null,
-              title: Text(
-                tr("addApp"),
-                textAlign: developerMode && !showBackButton ? .center : .start,
-              ),
-            ),
-          ),
-          SliverToBoxAdapter(
-            child: Padding(
-              padding: const EdgeInsets.all(16),
-              child: Flex.vertical(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  getUrlInputRow(),
-                  const SizedBox(height: 16),
-                  if (pickedSource != null) getHTMLSourceOverrideDropdown(),
-                  if (shouldShowSearchBar()) getSearchBarRow(),
-                  if (pickedSource != null)
-                    FutureBuilder(
-                      builder: (ctx, val) {
-                        return val.data != null && val.data!.isNotEmpty
-                            ? Text(
-                                val.data!,
-                                style: typescaleTheme.bodySmall.toTextStyle(),
-                              )
-                            : const SizedBox();
-                      },
-                      future: pickedSource?.getSourceNote(),
+    final padding = MediaQuery.paddingOf(context);
+
+    return SuperKeyboardBuilder(
+      builder: (context, mobileGeometry) {
+        debugPrint(
+          "${mobileGeometry.bottomPadding} ${mobileGeometry.keyboardHeight}",
+        );
+        return Scaffold(
+          resizeToAvoidBottomInset: false,
+          backgroundColor: colorTheme.surfaceContainer,
+          bottomNavigationBar: pickedSource == null
+              ? Padding(
+                  padding: .fromLTRB(
+                    padding.left,
+                    0.0,
+                    padding.right,
+                    padding.bottom,
+                  ),
+                  child: getSourcesListWidget(),
+                )
+              : null,
+          body: SafeArea(
+            top: false,
+            bottom: false,
+            child: CustomScrollView(
+              slivers: <Widget>[
+                ValueListenableBuilder(
+                  valueListenable: settings.developerMode,
+                  builder: (context, developerMode, _) => CustomAppBar(
+                    type: developerMode || showBackButton
+                        ? .small
+                        : .largeFlexible,
+                    expandedContainerColor: colorTheme.surfaceContainer,
+                    collapsedContainerColor: colorTheme.surfaceContainer,
+                    collapsedPadding: showBackButton
+                        ? const .fromSTEB(8.0 + 40.0 + 8.0, 0.0, 16.0, 0.0)
+                        : null,
+                    leading: showBackButton
+                        ? const Padding(
+                            padding: .fromSTEB(8.0 - 4.0, 0.0, 8.0 - 4.0, 0.0),
+                            child: DeveloperPageBackButton(),
+                          )
+                        : null,
+                    title: Text(
+                      tr("addApp"),
+                      textAlign: developerMode && !showBackButton
+                          ? .center
+                          : .start,
                     ),
-                  if (pickedSource != null) getAdditionalOptsCol(),
-                ],
-              ),
+                  ),
+                ),
+                SliverToBoxAdapter(
+                  child: Padding(
+                    padding: const .fromLTRB(8.0, 0.0, 8.0, 8.0),
+                    child: Material(
+                      clipBehavior: .antiAlias,
+                      shape: CornersBorder.rounded(
+                        corners: .all(shapeTheme.corner.large),
+                      ),
+                      color: colorTheme.surface,
+                      child: Padding(
+                        padding: const EdgeInsets.all(16),
+                        child: Flex.vertical(
+                          mainAxisSize: MainAxisSize.min,
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          children: [
+                            getUrlInputRow(),
+                            const SizedBox(height: 16),
+                            if (pickedSource != null)
+                              getHTMLSourceOverrideDropdown(),
+                            if (shouldShowSearchBar()) getSearchBarRow(),
+                            if (pickedSource != null)
+                              FutureBuilder(
+                                builder: (ctx, val) {
+                                  return val.data != null &&
+                                          val.data!.isNotEmpty
+                                      ? Text(
+                                          val.data!,
+                                          style: typescaleTheme.bodySmall
+                                              .toTextStyle(),
+                                        )
+                                      : const SizedBox();
+                                },
+                                future: pickedSource?.getSourceNote(),
+                              ),
+                            if (pickedSource != null) getAdditionalOptsCol(),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                SliverToBoxAdapter(child: SizedBox(height: padding.bottom)),
+              ],
             ),
           ),
-        ],
-      ),
+        );
+      },
     );
   }
 }
