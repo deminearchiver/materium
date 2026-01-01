@@ -6,10 +6,12 @@ import 'package:materium/components/generated_form_modal.dart';
 import 'package:materium/custom_errors.dart';
 import 'package:materium/main.dart';
 import 'package:materium/pages/app.dart';
+import 'package:materium/pages/developer.dart';
 import 'package:materium/pages/import_export.dart';
 import 'package:materium/pages/settings.dart';
 import 'package:materium/providers/apps_provider.dart';
 import 'package:materium/providers/notifications_provider.dart';
+import 'package:materium/providers/settings_new.dart';
 import 'package:materium/providers/settings_provider.dart';
 import 'package:materium/providers/source_provider.dart';
 import 'package:provider/provider.dart';
@@ -99,8 +101,12 @@ class AddAppPageState extends State<AddAppPage> {
 
   @override
   Widget build(BuildContext context) {
+    final settings = context.read<SettingsService>();
     final appsProvider = context.read<AppsProvider>();
     final notificationsProvider = context.read<NotificationsProvider>();
+
+    final showBackButton =
+        ModalRoute.of(context)?.impliesAppBarDismissal ?? false;
 
     final colorTheme = ColorTheme.of(context);
     final shapeTheme = ShapeTheme.of(context);
@@ -899,12 +905,26 @@ class AddAppPageState extends State<AddAppPage> {
       body: CustomScrollView(
         shrinkWrap: true,
         slivers: <Widget>[
-          CustomAppBar(
-            type: CustomAppBarType.largeFlexible,
-            behavior: CustomAppBarBehavior.duplicate,
-            expandedContainerColor: colorTheme.surfaceContainer,
-            collapsedContainerColor: colorTheme.surfaceContainer,
-            title: Text(tr("addApp")),
+          ValueListenableBuilder(
+            valueListenable: settings.developerMode,
+            builder: (context, developerMode, _) => CustomAppBar(
+              type: developerMode || showBackButton ? .small : .largeFlexible,
+              expandedContainerColor: colorTheme.surfaceContainer,
+              collapsedContainerColor: colorTheme.surfaceContainer,
+              collapsedPadding: showBackButton
+                  ? const .fromSTEB(8.0 + 40.0 + 8.0, 0.0, 16.0, 0.0)
+                  : null,
+              leading: showBackButton
+                  ? const Padding(
+                      padding: .fromSTEB(8.0 - 4.0, 0.0, 8.0 - 4.0, 0.0),
+                      child: DeveloperPageBackButton(),
+                    )
+                  : null,
+              title: Text(
+                tr("addApp"),
+                textAlign: developerMode && !showBackButton ? .center : .start,
+              ),
+            ),
           ),
           SliverToBoxAdapter(
             child: Padding(

@@ -317,8 +317,8 @@ class _SettingsPageState extends State<SettingsPage> {
       }
     });
 
-    final route = ModalRoute.of(context);
-    final showBackButton = route?.impliesAppBarDismissal ?? false;
+    final showBackButton =
+        ModalRoute.of(context)?.impliesAppBarDismissal ?? false;
 
     final disabledContainerColor = colorTheme.onSurface.withValues(alpha: 0.10);
     final disabledContentColor = colorTheme.onSurface.withValues(alpha: 0.38);
@@ -354,21 +354,26 @@ class _SettingsPageState extends State<SettingsPage> {
       backgroundColor: colorTheme.surfaceContainer,
       body: CustomScrollView(
         slivers: <Widget>[
-          CustomAppBar(
-            type: showBackButton ? .small : .largeFlexible,
-            expandedContainerColor: colorTheme.surfaceContainer,
-            collapsedContainerColor: colorTheme.surfaceContainer,
-            collapsedPadding: showBackButton
-                ? const .fromSTEB(8.0 + 40.0 + 8.0, 0.0, 16.0, 0.0)
-                : null,
-            leading: showBackButton
-                ? const Padding(
-                    padding: .fromSTEB(8.0 - 4.0, 0.0, 8.0 - 4.0, 0.0),
-                    child: DeveloperPageBackButton(),
-                  )
-                : null,
-            title: Text(tr("settings")),
-            // subtitle: kDebugMode ? const Text("Debug mode") : null,
+          ValueListenableBuilder(
+            valueListenable: settings.developerMode,
+            builder: (context, developerMode, _) => CustomAppBar(
+              type: developerMode || showBackButton ? .small : .largeFlexible,
+              expandedContainerColor: colorTheme.surfaceContainer,
+              collapsedContainerColor: colorTheme.surfaceContainer,
+              collapsedPadding: showBackButton
+                  ? const .fromSTEB(8.0 + 40.0 + 8.0, 0.0, 16.0, 0.0)
+                  : null,
+              leading: showBackButton
+                  ? const Padding(
+                      padding: .fromSTEB(8.0 - 4.0, 0.0, 8.0 - 4.0, 0.0),
+                      child: DeveloperPageBackButton(),
+                    )
+                  : null,
+              title: Text(
+                tr("settings"),
+                textAlign: developerMode && !showBackButton ? .center : .start,
+              ),
+            ),
           ),
           SliverPadding(
             padding: .fromLTRB(8.0, showBackButton ? 0.0 : 4.0, 8.0, 16.0),

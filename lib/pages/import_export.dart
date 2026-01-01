@@ -10,6 +10,7 @@ import 'package:materium/components/generated_form_modal.dart';
 import 'package:materium/custom_errors.dart';
 import 'package:materium/pages/developer.dart';
 import 'package:materium/providers/apps_provider.dart';
+import 'package:materium/providers/settings_new.dart';
 import 'package:materium/providers/settings_provider.dart';
 import 'package:materium/providers/source_provider.dart';
 import 'package:materium/theme/legacy.dart';
@@ -32,8 +33,10 @@ class _ImportExportPageState extends State<ImportExportPage> {
     final sourceProvider = SourceProvider();
     final appsProvider = context.watch<AppsProvider>();
     final settingsProvider = context.watch<SettingsProvider>();
+    final settings = context.read<SettingsService>();
 
-    final canPop = ModalRoute.canPopOf(context) ?? false;
+    final showBackButton =
+        ModalRoute.of(context)?.impliesAppBarDismissal ?? false;
 
     final colorTheme = ColorTheme.of(context);
     final elevationTheme = ElevationTheme.of(context);
@@ -365,21 +368,26 @@ class _ImportExportPageState extends State<ImportExportPage> {
       sourceStrings[s.name] = [s.name];
     });
 
-    Widget getSliverAppBar() => CustomAppBar(
-      type: CustomAppBarType.largeFlexible,
-      behavior: CustomAppBarBehavior.duplicate,
-      expandedContainerColor: colorTheme.surfaceContainer,
-      collapsedContainerColor: colorTheme.surfaceContainer,
-      collapsedPadding: canPop
-          ? const EdgeInsets.fromLTRB(8.0 + 40.0 + 8.0, 0.0, 16.0, 0.0)
-          : null,
-      leading: canPop
-          ? const Padding(
-              padding: EdgeInsets.only(left: 8.0 - 4.0),
-              child: DeveloperPageBackButton(),
-            )
-          : null,
-      title: Text(tr("importExport")),
+    Widget getSliverAppBar() => ValueListenableBuilder(
+      valueListenable: settings.developerMode,
+      builder: (context, developerMode, _) => CustomAppBar(
+        type: developerMode || showBackButton ? .small : .largeFlexible,
+        expandedContainerColor: colorTheme.surfaceContainer,
+        collapsedContainerColor: colorTheme.surfaceContainer,
+        collapsedPadding: showBackButton
+            ? const .fromSTEB(8.0 + 40.0 + 8.0, 0.0, 16.0, 0.0)
+            : null,
+        leading: showBackButton
+            ? const Padding(
+                padding: .fromSTEB(8.0 - 4.0, 0.0, 8.0 - 4.0, 0.0),
+                child: DeveloperPageBackButton(),
+              )
+            : null,
+        title: Text(
+          tr("importExport"),
+          textAlign: developerMode && !showBackButton ? .center : .start,
+        ),
+      ),
     );
 
     final otherImportButtonsStyle = LegacyThemeFactory.createButtonStyle(

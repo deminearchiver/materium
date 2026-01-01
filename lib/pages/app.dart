@@ -8,6 +8,7 @@ import 'package:materium/components/generated_form_modal.dart';
 import 'package:materium/custom_errors.dart';
 import 'package:materium/main.dart';
 import 'package:materium/pages/apps.dart';
+import 'package:materium/pages/developer.dart';
 import 'package:materium/pages/settings.dart';
 import 'package:materium/providers/apps_provider.dart';
 import 'package:materium/providers/settings_provider.dart';
@@ -66,6 +67,9 @@ class _AppPageState extends State<AppPage> {
   @override
   Widget build(BuildContext context) {
     final appsProvider = context.watch<AppsProvider>();
+
+    final showBackButton =
+        ModalRoute.of(context)?.impliesAppBarDismissal ?? false;
 
     final colorTheme = ColorTheme.of(context);
     final shapeTheme = ShapeTheme.of(context);
@@ -758,53 +762,18 @@ class _AppPageState extends State<AppPage> {
             : CustomScrollView(
                 slivers: [
                   CustomAppBar(
-                    type: CustomAppBarType.small,
-                    behavior: CustomAppBarBehavior.duplicate,
+                    type: .small,
                     expandedContainerColor: colorTheme.surfaceContainer,
                     collapsedContainerColor: colorTheme.surfaceContainer,
-                    leading: Padding(
-                      padding: const EdgeInsets.only(left: 16.0 - 4.0),
-                      child: IconButton(
-                        onPressed: () => Navigator.of(context).pop(),
-                        style: ButtonStyle(
-                          elevation: const WidgetStatePropertyAll(0.0),
-                          shadowColor: WidgetStateColor.transparent,
-                          minimumSize: const WidgetStatePropertyAll(Size.zero),
-                          fixedSize: const WidgetStatePropertyAll(
-                            Size(40.0, 40.0),
-                          ),
-                          maximumSize: const WidgetStatePropertyAll(
-                            Size.infinite,
-                          ),
-                          padding: const WidgetStatePropertyAll(
-                            EdgeInsets.zero,
-                          ),
-                          iconSize: const WidgetStatePropertyAll(24.0),
-                          shape: WidgetStatePropertyAll(
-                            CornersBorder.rounded(
-                              corners: Corners.all(shapeTheme.corner.full),
-                            ),
-                          ),
-                          overlayColor: WidgetStateLayerColor(
-                            color: WidgetStatePropertyAll(
-                              colorTheme.onSurfaceVariant,
-                            ),
-                            opacity: stateTheme.stateLayerOpacity,
-                          ),
-                          backgroundColor: WidgetStateProperty.resolveWith(
-                            (states) => states.contains(WidgetState.disabled)
-                                ? colorTheme.onSurface.withValues(alpha: 0.1)
-                                : colorTheme.surfaceContainerHighest,
-                          ),
-                          iconColor: WidgetStateProperty.resolveWith(
-                            (states) => states.contains(WidgetState.disabled)
-                                ? colorTheme.onSurface.withValues(alpha: 0.38)
-                                : colorTheme.onSurfaceVariant,
-                          ),
-                        ),
-                        icon: const IconLegacy(Symbols.arrow_back_rounded),
-                      ),
-                    ),
+                    collapsedPadding: showBackButton
+                        ? const .fromSTEB(8.0 + 40.0 + 8.0, 0.0, 16.0, 0.0)
+                        : null,
+                    leading: showBackButton
+                        ? const Padding(
+                            padding: .fromSTEB(8.0 - 4.0, 0.0, 8.0 - 4.0, 0.0),
+                            child: DeveloperPageBackButton(),
+                          )
+                        : null,
                   ),
                   SliverToBoxAdapter(
                     child: Flex.vertical(children: [getFullInfoColumn()]),
