@@ -194,6 +194,9 @@ class AppsPageState extends State<AppsPage> with TickerProviderStateMixin {
     final stateTheme = StateTheme.of(context);
     final typescaleTheme = TypescaleTheme.of(context);
 
+    final listItemDuration = const DurationThemeData.fallback().medium2;
+    final listItemEasing = const EasingThemeData.fallback().standard;
+
     Future<List<App>> refresh() {
       HapticFeedback.lightImpact();
       setState(() {
@@ -1563,9 +1566,6 @@ class AppsPageState extends State<AppsPage> with TickerProviderStateMixin {
                   checked: isSelected,
                 );
 
-                final duration = const DurationThemeData.fallback().medium2;
-                final easing = const EasingThemeData.fallback().standard;
-
                 return KeyedSubtree(
                   key: ValueKey(index),
                   child: ListItemContainer(
@@ -1614,8 +1614,8 @@ class AppsPageState extends State<AppsPage> with TickerProviderStateMixin {
                                   tween: Tween<double>(
                                     end: progress != null ? 1.0 : 0.0,
                                   ),
-                                  duration: duration,
-                                  curve: easing,
+                                  duration: listItemDuration,
+                                  curve: listItemEasing,
                                   builder: (context, value, child) => Material(
                                     clipBehavior: .antiAlias,
                                     shape: ShapeBorder.lerp(
@@ -1641,8 +1641,8 @@ class AppsPageState extends State<AppsPage> with TickerProviderStateMixin {
                                         tween: Tween<double>(
                                           end: progress != null ? 1.0 : 0.0,
                                         ),
-                                        duration: duration,
-                                        curve: easing,
+                                        duration: listItemDuration,
+                                        curve: listItemEasing,
                                         builder: (context, value, _) {
                                           final size = lerpDouble(
                                             40.0,
@@ -1702,8 +1702,8 @@ class AppsPageState extends State<AppsPage> with TickerProviderStateMixin {
                                         tween: Tween<double>(
                                           end: progress != null ? 1.0 : 0.0,
                                         ),
-                                        duration: duration,
-                                        curve: easing,
+                                        duration: listItemDuration,
+                                        curve: listItemEasing,
                                         builder: (context, value, _) =>
                                             value > 0.0
                                             ? CircularProgressIndicator(
@@ -1781,15 +1781,19 @@ class AppsPageState extends State<AppsPage> with TickerProviderStateMixin {
                                     ? 1.0
                                     : 0.0,
                               ),
-                              duration: duration,
-                              curve: easing,
+                              duration: listItemDuration,
+                              curve: listItemEasing,
                               builder: (context, value, child) => Visibility(
                                 visible: value > 0.0,
                                 child: Opacity(
                                   opacity: value,
-                                  child: Align.center(
+                                  child: Align.centerEnd(
                                     widthFactor: value,
-                                    child: child!,
+                                    child: Transform.scale(
+                                      scale: value,
+                                      alignment: AlignmentDirectional.centerEnd,
+                                      child: child!,
+                                    ),
                                   ),
                                 ),
                               ),
@@ -1803,8 +1807,8 @@ class AppsPageState extends State<AppsPage> with TickerProviderStateMixin {
                               tween: Tween<double>(
                                 end: selectedAppIds.isNotEmpty ? 1.0 : 0.0,
                               ),
-                              duration: duration,
-                              curve: easing,
+                              duration: listItemDuration,
+                              curve: listItemEasing,
                               builder: (context, value, child) => Visibility(
                                 visible: value > 0.0,
                                 child: Opacity(
@@ -1822,8 +1826,8 @@ class AppsPageState extends State<AppsPage> with TickerProviderStateMixin {
                               tween: Tween<double>(
                                 end: selectedAppIds.isNotEmpty ? 1.0 : 0.0,
                               ),
-                              duration: duration,
-                              curve: easing,
+                              duration: listItemDuration,
+                              curve: listItemEasing,
                               builder: (context, value, _) => SizedBox(
                                 width: lerpDouble(
                                   16.0 - 8.0,
@@ -2086,7 +2090,12 @@ class AppsPageState extends State<AppsPage> with TickerProviderStateMixin {
       );
 
       final EdgeInsetsGeometry margin = isRedesignEnabled
-          ? .fromLTRB(padding.left + 16.0, 16.0, padding.right + 16.0, 16.0)
+          ? .fromLTRB(
+              padding.left + 16.0,
+              16.0,
+              padding.right + 16.0,
+              padding.bottom + 16.0,
+            )
           : .zero;
       const height = 64.0;
 
@@ -2182,12 +2191,12 @@ class AppsPageState extends State<AppsPage> with TickerProviderStateMixin {
                           visible: value > 0.0,
                           child: Opacity(
                             opacity: value,
-                            child: Align.centerStart(
+                            child: Align.center(
                               widthFactor: value,
                               heightFactor: 1.0,
                               child: Transform.scale(
                                 scale: value,
-                                alignment: AlignmentDirectional.centerStart,
+                                alignment: AlignmentDirectional.center,
                                 child: child!,
                               ),
                             ),

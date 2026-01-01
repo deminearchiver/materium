@@ -377,7 +377,9 @@ class _HomePageState extends State<HomePage> {
     _prevAppCount = appsProvider.apps.length;
     _prevIsLoading = appsProvider.loadingApps;
 
-    final selectedIndex = _selectedIndexHistory.isEmpty
+    final selectedIndex = isRedesignEnabled
+        ? 0
+        : _selectedIndexHistory.isEmpty
         ? 0
         : _selectedIndexHistory.last;
 
@@ -386,22 +388,28 @@ class _HomePageState extends State<HomePage> {
       onPopInvokedWithResult: (didPop, result) {},
       child: Scaffold(
         backgroundColor: colorTheme.surfaceContainer,
-        body: pages
-            .elementAt(
-              _selectedIndexHistory.isEmpty ? 0 : _selectedIndexHistory.last,
-            )
-            .widget,
-        bottomNavigationBar: NavigationBar(
-          backgroundColor: isRedesignEnabled
-              ? colorTheme.surfaceContainer
-              : colorTheme.surfaceContainerHigh,
-          onDestinationSelected: (index) {
-            HapticFeedback.selectionClick();
-            _switchToPage(index);
-          },
-          selectedIndex: selectedIndex,
-          destinations: pages.map((e) => e.destination).toList(),
-        ),
+        body: isRedesignEnabled
+            ? pages.first.widget
+            : pages
+                  .elementAt(
+                    _selectedIndexHistory.isEmpty
+                        ? 0
+                        : _selectedIndexHistory.last,
+                  )
+                  .widget,
+        bottomNavigationBar: !isRedesignEnabled
+            ? NavigationBar(
+                backgroundColor: isRedesignEnabled
+                    ? colorTheme.surfaceContainer
+                    : colorTheme.surfaceContainerHigh,
+                onDestinationSelected: (index) {
+                  HapticFeedback.selectionClick();
+                  _switchToPage(index);
+                },
+                selectedIndex: selectedIndex,
+                destinations: pages.map((e) => e.destination).toList(),
+              )
+            : null,
       ),
     );
   }

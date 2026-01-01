@@ -381,7 +381,7 @@ class _SettingsPageState extends State<SettingsPage> {
               ),
             ),
             SliverPadding(
-              padding: .fromLTRB(8.0, showBackButton ? 0.0 : 4.0, 8.0, 16.0),
+              padding: .fromLTRB(8.0, showBackButton ? 0.0 : 4.0, 8.0, 0.0),
               // TODO: fix switches reparenting (add ValueKey or GlobalKey to list items)
               sliver: SliverList.list(
                 children: [
@@ -1272,287 +1272,321 @@ class _SettingsPageState extends State<SettingsPage> {
                         final textStyle = TextStyle(color: contentColor);
                         return Padding(
                           padding: const .only(top: 2.0),
-                          child: ListItemTheme.merge(
-                            data: unselectedListItemTheme,
-                            child: ListItemContainer(
-                              child: ListItemInteraction(
-                                onTap: !isDisabled ? selectColor : null,
-                                child: ValueListenableBuilder(
-                                  valueListenable: settings.themeColor,
-                                  builder: (context, themeColor, _) => ListItemLayout(
-                                    headline: Text(
-                                      tr(
-                                        "selectX",
-                                        args: [tr("colour").toLowerCase()],
+                          child: ValueListenableBuilder(
+                            valueListenable: settings.themeColor,
+                            builder: (context, themeColor, _) {
+                              final isSelected =
+                                  themeColor != obtainiumThemeColor;
+                              return ListItemTheme.merge(
+                                data: !isDisabled && isSelected
+                                    ? selectedListItemTheme
+                                    : unselectedListItemTheme,
+                                child: ListItemContainer(
+                                  child: ListItemInteraction(
+                                    onTap: !isDisabled ? selectColor : null,
+                                    child: ListItemLayout(
+                                      headline: Text(
+                                        tr(
+                                          "selectX",
+                                          args: [tr("colour").toLowerCase()],
+                                        ),
+                                        style: textStyle,
                                       ),
-                                      style: textStyle,
-                                    ),
-                                    supportingText: Text(
-                                      "${ColorTools.nameThatColor(themeColor)} "
-                                      "(${ColorTools.materialNameAndCode(themeColor, colorSwatchNameMap: colorsNameMap)})",
-                                      style: textStyle,
-                                    ),
-                                    trailing: ColorIndicator(
-                                      width: 40,
-                                      height: 40,
-                                      borderRadius: 20,
-                                      color: containerColor ?? themeColor,
-                                      onSelectFocus: false,
-                                      onSelect: !isDisabled
-                                          ? selectColor
-                                          : null,
+                                      supportingText: Text(
+                                        "${ColorTools.nameThatColor(themeColor)} "
+                                        "(${ColorTools.materialNameAndCode(themeColor, colorSwatchNameMap: colorsNameMap)})",
+                                        style: textStyle,
+                                      ),
+                                      trailing: ColorIndicator(
+                                        width: 40,
+                                        height: 40,
+                                        borderRadius: 20,
+                                        color: containerColor ?? themeColor,
+                                        onSelectFocus: false,
+                                        onSelect: !isDisabled
+                                            ? selectColor
+                                            : null,
+                                      ),
                                     ),
                                   ),
                                 ),
-                              ),
-                            ),
+                              );
+                            },
                           ),
                         );
                       },
                     ),
                   ),
                   const SizedBox(height: 2.0),
-                  Flex.horizontal(
-                    spacing: 2.0,
-                    children: [
-                      Flexible.tight(
-                        child: ValueListenableBuilder(
-                          valueListenable: settings.themeMode,
-                          builder: (context, themeMode, _) {
-                            final isSelected = themeMode != .system;
-                            return DropdownMenuFormField<ThemeMode>(
-                              key: const ValueKey("themeMode"),
-                              inputDecorationTheme: InputDecorationThemeData(
-                                contentPadding: const .symmetric(
-                                  horizontal: 16.0,
-                                  vertical: 10.0,
-                                ),
-                                border: CornersInputBorder.rounded(
-                                  corners: isSelected
-                                      ? .all(shapeTheme.corner.large)
-                                      : .directional(
-                                          topStart:
-                                              shapeTheme.corner.extraSmall,
-                                          topEnd: shapeTheme.corner.extraSmall,
-                                          bottomStart: shapeTheme.corner.large,
-                                          bottomEnd:
-                                              shapeTheme.corner.extraSmall,
+                  KeyedSubtree(
+                    key: const ValueKey("themeModeAndVariant"),
+                    child: Flex.horizontal(
+                      spacing: 2.0,
+                      children: [
+                        KeyedSubtree(
+                          key: const ValueKey("themeMode"),
+                          child: Flexible.tight(
+                            child: ValueListenableBuilder(
+                              valueListenable: settings.themeMode,
+                              builder: (context, themeMode, _) {
+                                final isSelected = themeMode != .system;
+                                return DropdownMenuFormField<ThemeMode>(
+                                  inputDecorationTheme:
+                                      InputDecorationThemeData(
+                                        contentPadding: const .symmetric(
+                                          horizontal: 16.0,
+                                          vertical: 10.0,
                                         ),
-                                ),
-                                filled: true,
-                                fillColor: isSelected
-                                    ? colorTheme.secondaryContainer
-                                    : colorTheme.surface,
-                              ),
-                              expandedInsets: .zero,
-                              textStyle: typescaleTheme.titleMediumEmphasized
-                                  .toTextStyle(),
-                              label: Text(tr("theme")),
-                              initialSelection: themeMode,
-                              dropdownMenuEntries: [
-                                DropdownMenuEntry(
-                                  value: .system,
-                                  leadingIcon: const IconLegacy(
-                                    Symbols.auto_mode_rounded,
-                                  ),
-                                  label: tr("followSystem"),
-                                ),
-                                DropdownMenuEntry(
-                                  value: .light,
-                                  leadingIcon: const IconLegacy(
-                                    Symbols.light_mode_rounded,
-                                  ),
-                                  label: tr("light"),
-                                ),
-                                DropdownMenuEntry(
-                                  value: .dark,
-                                  leadingIcon: const IconLegacy(
-                                    Symbols.dark_mode_rounded,
-                                  ),
-                                  label: tr("dark"),
-                                ),
-                              ],
-                              onSelected: (value) {
-                                if (value != null) {
-                                  settings.themeMode.value = value;
-                                }
-                              },
-                            );
-                          },
-                        ),
-                      ),
-                      Flexible.tight(
-                        child: ValueListenableBuilder(
-                          valueListenable: settings.themeVariant,
-                          builder: (context, themeVariant, _) {
-                            final isSelected =
-                                themeVariant.dynamicSchemeVariant !=
-                                ThemeVariant.system.dynamicSchemeVariant;
-                            return DropdownMenuFormField<ThemeVariant>(
-                              key: const ValueKey("themeVariant"),
-                              inputDecorationTheme: InputDecorationThemeData(
-                                contentPadding: const .symmetric(
-                                  horizontal: 16.0,
-                                  vertical: 10.0,
-                                ),
-                                border: CornersInputBorder.rounded(
-                                  corners: isSelected
-                                      ? .all(shapeTheme.corner.large)
-                                      : .directional(
-                                          topStart:
-                                              shapeTheme.corner.extraSmall,
-                                          topEnd: shapeTheme.corner.extraSmall,
-                                          bottomStart:
-                                              shapeTheme.corner.extraSmall,
-                                          bottomEnd: shapeTheme.corner.large,
+                                        border: CornersInputBorder.rounded(
+                                          corners: isSelected
+                                              ? .all(shapeTheme.corner.large)
+                                              : .directional(
+                                                  topStart: shapeTheme
+                                                      .corner
+                                                      .extraSmall,
+                                                  topEnd: shapeTheme
+                                                      .corner
+                                                      .extraSmall,
+                                                  bottomStart:
+                                                      shapeTheme.corner.large,
+                                                  bottomEnd: shapeTheme
+                                                      .corner
+                                                      .extraSmall,
+                                                ),
                                         ),
-                                ),
-                                filled: true,
-                                fillColor: isSelected
-                                    ? colorTheme.secondaryContainer
-                                    : colorTheme.surface,
-                              ),
-                              expandedInsets: .zero,
-                              textStyle: typescaleTheme.titleMediumEmphasized
-                                  .toTextStyle(),
-                              label: Text("Color scheme"),
-                              initialSelection: themeVariant,
-                              dropdownMenuEntries: [
-                                DropdownMenuEntry(
-                                  value: .calm,
-                                  leadingIcon: const IconLegacy(
-                                    Symbols.moon_stars_rounded,
-                                    fill: 1.0,
-                                  ),
-                                  label: "Calm",
-                                ),
-                                DropdownMenuEntry(
-                                  value: .pastel,
-                                  leadingIcon: const IconLegacy(
-                                    Symbols.brush_rounded,
-                                    fill: 1.0,
-                                  ),
-                                  label: "Pastel",
-                                ),
-                                DropdownMenuEntry(
-                                  value: .juicy,
-                                  leadingIcon: const IconLegacy(
-                                    Symbols.nutrition_rounded,
-                                    fill: 1.0,
-                                  ),
-                                  label: "Juicy",
-                                ),
-                                DropdownMenuEntry(
-                                  value: .creative,
-                                  leadingIcon: const IconLegacy(
-                                    Symbols.draw_abstract_rounded,
-                                    fill: 1.0,
-                                  ),
-                                  label: "Creative",
-                                ),
-                              ],
-                              onSelected: (value) {
-                                if (value != null) {
-                                  settings.themeVariant.value = value;
-                                }
+                                        filled: true,
+                                        fillColor: isSelected
+                                            ? colorTheme.secondaryContainer
+                                            : colorTheme.surface,
+                                      ),
+                                  expandedInsets: .zero,
+                                  textStyle: typescaleTheme
+                                      .titleMediumEmphasized
+                                      .toTextStyle(),
+                                  label: Text(tr("theme")),
+                                  initialSelection: themeMode,
+                                  dropdownMenuEntries: [
+                                    DropdownMenuEntry(
+                                      value: .system,
+                                      leadingIcon: const IconLegacy(
+                                        Symbols.auto_mode_rounded,
+                                      ),
+                                      label: tr("followSystem"),
+                                    ),
+                                    DropdownMenuEntry(
+                                      value: .light,
+                                      leadingIcon: const IconLegacy(
+                                        Symbols.light_mode_rounded,
+                                      ),
+                                      label: tr("light"),
+                                    ),
+                                    DropdownMenuEntry(
+                                      value: .dark,
+                                      leadingIcon: const IconLegacy(
+                                        Symbols.dark_mode_rounded,
+                                      ),
+                                      label: tr("dark"),
+                                    ),
+                                  ],
+                                  onSelected: (value) {
+                                    if (value != null) {
+                                      settings.themeMode.value = value;
+                                    }
+                                  },
+                                );
                               },
-                            );
-                          },
+                            ),
+                          ),
                         ),
-                      ),
-                    ],
+                        KeyedSubtree(
+                          key: const ValueKey("themeVariant"),
+                          child: Flexible.tight(
+                            child: ValueListenableBuilder(
+                              valueListenable: settings.themeVariant,
+                              builder: (context, themeVariant, _) {
+                                final isSelected =
+                                    themeVariant.dynamicSchemeVariant !=
+                                    ThemeVariant.system.dynamicSchemeVariant;
+                                return DropdownMenuFormField<ThemeVariant>(
+                                  inputDecorationTheme:
+                                      InputDecorationThemeData(
+                                        contentPadding: const .symmetric(
+                                          horizontal: 16.0,
+                                          vertical: 10.0,
+                                        ),
+                                        border: CornersInputBorder.rounded(
+                                          corners: isSelected
+                                              ? .all(shapeTheme.corner.large)
+                                              : .directional(
+                                                  topStart: shapeTheme
+                                                      .corner
+                                                      .extraSmall,
+                                                  topEnd: shapeTheme
+                                                      .corner
+                                                      .extraSmall,
+                                                  bottomStart: shapeTheme
+                                                      .corner
+                                                      .extraSmall,
+                                                  bottomEnd:
+                                                      shapeTheme.corner.large,
+                                                ),
+                                        ),
+                                        filled: true,
+                                        fillColor: isSelected
+                                            ? colorTheme.secondaryContainer
+                                            : colorTheme.surface,
+                                      ),
+                                  expandedInsets: .zero,
+                                  textStyle: typescaleTheme
+                                      .titleMediumEmphasized
+                                      .toTextStyle(),
+                                  label: Text("Color scheme"),
+                                  initialSelection: themeVariant,
+                                  dropdownMenuEntries: [
+                                    DropdownMenuEntry(
+                                      value: .calm,
+                                      leadingIcon: const IconLegacy(
+                                        Symbols.moon_stars_rounded,
+                                        fill: 1.0,
+                                      ),
+                                      label: "Calm",
+                                    ),
+                                    DropdownMenuEntry(
+                                      value: .pastel,
+                                      leadingIcon: const IconLegacy(
+                                        Symbols.brush_rounded,
+                                        fill: 1.0,
+                                      ),
+                                      label: "Pastel",
+                                    ),
+                                    DropdownMenuEntry(
+                                      value: .juicy,
+                                      leadingIcon: const IconLegacy(
+                                        Symbols.nutrition_rounded,
+                                        fill: 1.0,
+                                      ),
+                                      label: "Juicy",
+                                    ),
+                                    DropdownMenuEntry(
+                                      value: .creative,
+                                      leadingIcon: const IconLegacy(
+                                        Symbols.draw_abstract_rounded,
+                                        fill: 1.0,
+                                      ),
+                                      label: "Creative",
+                                    ),
+                                  ],
+                                  onSelected: (value) {
+                                    if (value != null) {
+                                      settings.themeVariant.value = value;
+                                    }
+                                  },
+                                );
+                              },
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                   const SizedBox(height: 16.0),
-                  Flex.horizontal(
-                    spacing: 2.0,
-                    children: [
-                      Flexible.tight(
-                        key: const ValueKey("appSortBy"),
-                        child: DropdownMenuFormField<SortColumnSettings>(
-                          inputDecorationTheme: InputDecorationThemeData(
-                            contentPadding: const .symmetric(
-                              horizontal: 16.0,
-                              vertical: 10.0,
-                            ),
-                            border: CornersInputBorder.rounded(
-                              corners: .directional(
-                                topStart: shapeTheme.corner.large,
-                                topEnd: shapeTheme.corner.extraSmall,
-                                bottomStart: shapeTheme.corner.extraSmall,
-                                bottomEnd: shapeTheme.corner.extraSmall,
+                  KeyedSubtree(
+                    key: const ValueKey("sortColumnAndOrder"),
+                    child: Flex.horizontal(
+                      spacing: 2.0,
+                      children: [
+                        KeyedSubtree(
+                          key: const ValueKey("sortColumn"),
+                          child: Flexible.tight(
+                            child: DropdownMenuFormField<SortColumnSettings>(
+                              inputDecorationTheme: InputDecorationThemeData(
+                                contentPadding: const .symmetric(
+                                  horizontal: 16.0,
+                                  vertical: 10.0,
+                                ),
+                                border: CornersInputBorder.rounded(
+                                  corners: .directional(
+                                    topStart: shapeTheme.corner.large,
+                                    topEnd: shapeTheme.corner.extraSmall,
+                                    bottomStart: shapeTheme.corner.extraSmall,
+                                    bottomEnd: shapeTheme.corner.extraSmall,
+                                  ),
+                                ),
+                                filled: true,
+                                fillColor: colorTheme.surface,
                               ),
+                              expandedInsets: .zero,
+                              label: Text(tr("appSortBy")),
+                              initialSelection: settingsProvider.sortColumn,
+                              dropdownMenuEntries: [
+                                DropdownMenuEntry(
+                                  value: .authorName,
+                                  label: tr("authorName"),
+                                ),
+                                DropdownMenuEntry(
+                                  value: .nameAuthor,
+                                  label: tr("nameAuthor"),
+                                ),
+                                DropdownMenuEntry(
+                                  value: .added,
+                                  label: tr("asAdded"),
+                                ),
+                                DropdownMenuEntry(
+                                  value: .releaseDate,
+                                  label: tr("releaseDate"),
+                                ),
+                              ],
+                              onSelected: (value) {
+                                if (value != null) {
+                                  settingsProvider.sortColumn = value;
+                                }
+                              },
                             ),
-                            filled: true,
-                            fillColor: colorTheme.surface,
                           ),
-                          expandedInsets: .zero,
-                          label: Text(tr("appSortBy")),
-                          initialSelection: settingsProvider.sortColumn,
-                          dropdownMenuEntries: [
-                            DropdownMenuEntry(
-                              value: .authorName,
-                              label: tr("authorName"),
-                            ),
-                            DropdownMenuEntry(
-                              value: .nameAuthor,
-                              label: tr("nameAuthor"),
-                            ),
-                            DropdownMenuEntry(
-                              value: .added,
-                              label: tr("asAdded"),
-                            ),
-                            DropdownMenuEntry(
-                              value: .releaseDate,
-                              label: tr("releaseDate"),
-                            ),
-                          ],
-                          onSelected: (value) {
-                            if (value != null) {
-                              settingsProvider.sortColumn = value;
-                            }
-                          },
                         ),
-                      ),
-                      Flexible.tight(
-                        key: const ValueKey("appSortOrder"),
-                        child: DropdownMenuFormField<SortOrderSettings>(
-                          inputDecorationTheme: InputDecorationThemeData(
-                            contentPadding: const .symmetric(
-                              horizontal: 16.0,
-                              vertical: 10.0,
-                            ),
-                            border: CornersInputBorder.rounded(
-                              corners: .directional(
-                                topStart: shapeTheme.corner.extraSmall,
-                                topEnd: shapeTheme.corner.large,
-                                bottomStart: shapeTheme.corner.extraSmall,
-                                bottomEnd: shapeTheme.corner.extraSmall,
+                        KeyedSubtree(
+                          key: const ValueKey("sortOrder"),
+                          child: Flexible.tight(
+                            child: DropdownMenuFormField<SortOrderSettings>(
+                              inputDecorationTheme: InputDecorationThemeData(
+                                contentPadding: const .symmetric(
+                                  horizontal: 16.0,
+                                  vertical: 10.0,
+                                ),
+                                border: CornersInputBorder.rounded(
+                                  corners: .directional(
+                                    topStart: shapeTheme.corner.extraSmall,
+                                    topEnd: shapeTheme.corner.large,
+                                    bottomStart: shapeTheme.corner.extraSmall,
+                                    bottomEnd: shapeTheme.corner.extraSmall,
+                                  ),
+                                ),
+                                filled: true,
+                                fillColor: colorTheme.surface,
                               ),
+                              expandedInsets: .zero,
+                              label: Text(tr("appSortOrder")),
+                              initialSelection: settingsProvider.sortOrder,
+                              dropdownMenuEntries: [
+                                DropdownMenuEntry(
+                                  value: .ascending,
+                                  label: tr("ascending"),
+                                ),
+                                DropdownMenuEntry(
+                                  value: .descending,
+                                  label: tr("descending"),
+                                ),
+                              ],
+                              onSelected: (value) {
+                                if (value != null) {
+                                  settingsProvider.sortOrder = value;
+                                }
+                              },
                             ),
-                            filled: true,
-                            fillColor: colorTheme.surface,
                           ),
-                          expandedInsets: .zero,
-                          label: Text(tr("appSortOrder")),
-                          initialSelection: settingsProvider.sortOrder,
-                          dropdownMenuEntries: [
-                            DropdownMenuEntry(
-                              value: .ascending,
-                              label: tr("ascending"),
-                            ),
-                            DropdownMenuEntry(
-                              value: .descending,
-                              label: tr("descending"),
-                            ),
-                          ],
-                          onSelected: (value) {
-                            if (value != null) {
-                              settingsProvider.sortOrder = value;
-                            }
-                          },
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                   const SizedBox(height: 2.0),
                   KeyedSubtree(
@@ -1818,7 +1852,21 @@ class _SettingsPageState extends State<SettingsPage> {
                     ),
                   ),
                   const SizedBox(height: 16.0),
-                  const CategoryEditorSelector(showLabelWhenNotEmpty: false),
+                  Material(
+                    clipBehavior: .antiAlias,
+                    shape: CornersBorder.rounded(
+                      corners: .all(shapeTheme.corner.large),
+                    ),
+                    color: colorTheme.surface,
+                    child: const Padding(
+                      padding: .all(16.0),
+                      child: CategoryEditorSelector(
+                        showLabelWhenNotEmpty: false,
+                        singleSelect: true,
+                        alignment: .start,
+                      ),
+                    ),
+                  ),
                   const SizedBox(height: 16.0),
                   KeyedSubtree(
                     key: const ValueKey("appSource"),
@@ -1895,7 +1943,6 @@ class _SettingsPageState extends State<SettingsPage> {
                     child: ListItemTheme.merge(
                       data: unselectedListItemTheme,
                       child: ListItemContainer(
-                        isLast: true,
                         child: ListItemInteraction(
                           onTap: () => Navigator.push(
                             context,
@@ -1917,6 +1964,37 @@ class _SettingsPageState extends State<SettingsPage> {
                       ),
                     ),
                   ),
+                  const SizedBox(height: 2.0),
+                  KeyedSubtree(
+                    key: const ValueKey("importExport"),
+                    child: ListItemTheme.merge(
+                      data: unselectedListItemTheme,
+                      child: ListItemContainer(
+                        isLast: true,
+                        child: ListItemInteraction(
+                          onTap: () => Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const ImportExportPage(),
+                            ),
+                          ),
+                          child: ListItemLayout(
+                            leading: const Icon(
+                              Symbols.swap_vert_rounded,
+                              fill: 1.0,
+                            ),
+                            headline: Text(tr("importExport")),
+                            trailing: const Icon(
+                              Symbols.keyboard_arrow_right_rounded,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 16.0),
+                  const Divider(indent: 16.0, endIndent: 16.0, height: 0.0),
+                  const SizedBox(height: 16.0),
                 ],
               ),
             ),
@@ -1993,7 +2071,7 @@ class _SettingsPageState extends State<SettingsPage> {
                             : null;
                         return ListItemContainer(
                           isFirst: true,
-                          isLast: true,
+                          isLast: !developerMode,
                           child: IntrinsicHeight(
                             child: Flex.horizontal(
                               crossAxisAlignment: .stretch,
@@ -2111,6 +2189,43 @@ class _SettingsPageState extends State<SettingsPage> {
                           ),
                         );
                       },
+                    ),
+                    ValueListenableBuilder(
+                      valueListenable: settings.developerMode,
+                      builder: (context, developerMode, child) => developerMode
+                          ? Padding(
+                              padding: const .only(top: 2.0),
+                              child: child,
+                            )
+                          : const SizedBox.shrink(),
+                      child: ListItemContainer(
+                        isLast: true,
+                        child: ListItemInteraction(
+                          onTap: () => Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const ImportExportPage(),
+                            ),
+                          ),
+                          child: ListItemLayout(
+                            leading: SettingsListItemLeading.fromExtendedColor(
+                              extendedColor: staticColors.purple,
+                              pairing: _defaultPairing,
+                              containerShape: RoundedPolygonBorder(
+                                polygon: MaterialShapes.pill,
+                              ),
+                              child: const Icon(
+                                Symbols.swap_vert_rounded,
+                                fill: 1.0,
+                              ),
+                            ),
+                            headline: Text(tr("importExport")),
+                            trailing: const Icon(
+                              Symbols.keyboard_arrow_right_rounded,
+                            ),
+                          ),
+                        ),
+                      ),
                     ),
                     const SizedBox(height: 16.0),
                   ],
