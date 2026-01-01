@@ -42,6 +42,14 @@ class _HomePageState extends State<HomePage> {
   int _prevAppCount = -1;
   bool _prevIsLoading = true;
 
+  SettingsService? _settingsOrNull;
+  SettingsService get _settings {
+    assert(_settingsOrNull != null);
+    return _settingsOrNull!;
+  }
+
+  late bool _isRedesignEnabled;
+
   List<NavigationPageItem> pages = [
     NavigationPageItem(
       NavigationDestination(
@@ -79,14 +87,21 @@ class _HomePageState extends State<HomePage> {
 
   Future<void> _initDeepLinks() async {
     Future<void> goToAddApp(String data) async {
-      _switchToPage(1);
-      while ((pages[1].widget.key as GlobalKey<AddAppPageState>?)
-              ?.currentState ==
-          null) {
-        await Future.delayed(const Duration(microseconds: 1));
+      if (_isRedesignEnabled) {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => AddAppPage(input: data)),
+        );
+      } else {
+        _switchToPage(1);
+        while ((pages[1].widget.key as GlobalKey<AddAppPageState>?)
+                ?.currentState ==
+            null) {
+          await Future.delayed(const Duration(microseconds: 1));
+        }
+        (pages[1].widget.key as GlobalKey<AddAppPageState>?)?.currentState
+            ?.linkFn(data);
       }
-      (pages[1].widget.key as GlobalKey<AddAppPageState>?)?.currentState
-          ?.linkFn(data);
     }
 
     Future<void> interpretLink(Uri uri) async {
@@ -169,6 +184,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   Future<void> _switchToPage(int index) async {
+    if (_isRedesignEnabled) return;
     if (index == 0) {
       while ((pages[0].widget.key as GlobalKey<AppsPageState>).currentState !=
           null) {
@@ -220,6 +236,10 @@ class _HomePageState extends State<HomePage> {
   //   return !(pages[0].widget.key as GlobalKey<AppsPageState>).currentState!
   //       .clearSelected();
   // }
+
+  void _developerModeListener() {
+    setState(() => _isRedesignEnabled = _settings.developerMode.value);
+  }
 
   @override
   void initState() {
@@ -349,19 +369,28 @@ class _HomePageState extends State<HomePage> {
   }
 
   @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final oldSettings = _settingsOrNull;
+    final newSettings = context.read<SettingsService>();
+    if (oldSettings != newSettings) {
+      oldSettings?.removeListener(_developerModeListener);
+      newSettings.addListener(_developerModeListener);
+      _isRedesignEnabled = newSettings.developerMode.value;
+    }
+    _settingsOrNull = newSettings;
+  }
+
+  @override
   void dispose() {
+    _settings.removeListener(_developerModeListener);
     _linkSubscription?.cancel();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    final settings = context.read<SettingsService>();
     final appsProvider = context.watch<AppsProvider>();
-
-    final isRedesignEnabled = context.select<SettingsService, bool>(
-      (settings) => settings.developerMode.value,
-    );
 
     if (!_prevIsLoading &&
         _prevAppCount >= 0 &&
@@ -377,7 +406,7 @@ class _HomePageState extends State<HomePage> {
     _prevAppCount = appsProvider.apps.length;
     _prevIsLoading = appsProvider.loadingApps;
 
-    final selectedIndex = isRedesignEnabled
+    final selectedIndex = _isRedesignEnabled
         ? 0
         : _selectedIndexHistory.isEmpty
         ? 0
@@ -388,7 +417,7 @@ class _HomePageState extends State<HomePage> {
       onPopInvokedWithResult: (didPop, result) {},
       child: Scaffold(
         backgroundColor: colorTheme.surfaceContainer,
-        body: isRedesignEnabled
+        body: _isRedesignEnabled
             ? pages.first.widget
             : pages
                   .elementAt(
@@ -397,9 +426,9 @@ class _HomePageState extends State<HomePage> {
                         : _selectedIndexHistory.last,
                   )
                   .widget,
-        bottomNavigationBar: !isRedesignEnabled
+        bottomNavigationBar: !_isRedesignEnabled
             ? NavigationBar(
-                backgroundColor: isRedesignEnabled
+                backgroundColor: _isRedesignEnabled
                     ? colorTheme.surfaceContainer
                     : colorTheme.surfaceContainerHigh,
                 onDestinationSelected: (index) {

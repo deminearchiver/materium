@@ -19,7 +19,9 @@ import 'package:super_keyboard/super_keyboard.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
 class AddAppPage extends StatefulWidget {
-  const AddAppPage({super.key});
+  const AddAppPage({super.key, this.input});
+
+  final String? input;
 
   @override
   State<AddAppPage> createState() => AddAppPageState();
@@ -97,6 +99,14 @@ class AddAppPageState extends State<AddAppPage> {
           inferAppIdIfOptional = true;
         }
       });
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.input case final input?) {
+      linkFn(input);
     }
   }
 
@@ -236,6 +246,7 @@ class AddAppPageState extends State<AddAppPage> {
           await appsProvider.saveApps([app], onlyIfExists: false);
         }
         if (app != null && context.mounted) {
+          // TODO: push a replacement when redesign is enabled
           (globalNavigatorKey.currentState ?? Navigator.of(context)).push(
             MaterialPageRoute(builder: (context) => AppPage(appId: app!.id)),
           );
