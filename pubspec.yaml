@@ -24,10 +24,12 @@ dependencies:
   layout:
     git:
       url: https://github.com/deminearchiver/dart-flutter-packages.git
+      ref: 748aa38be8bbc35d69f5e06e1a177544b73935d9
       path: packages/layout
   material:
     git:
       url: https://github.com/deminearchiver/dart-flutter-packages.git
+      ref: 748aa38be8bbc35d69f5e06e1a177544b73935d9
       path: packages/material
 
   # Hosted dependencies
@@ -117,18 +119,6 @@ dev_dependencies:
   fastforge: ^0.6.6
 
 dependency_overrides:
-  # Git dependencies
-  layout:
-    git:
-      url: https://github.com/deminearchiver/dart-flutter-packages.git
-      ref: 748aa38be8bbc35d69f5e06e1a177544b73935d9
-      path: packages/layout
-  material:
-    git:
-      url: https://github.com/deminearchiver/dart-flutter-packages.git
-      ref: 748aa38be8bbc35d69f5e06e1a177544b73935d9
-      path: packages/material
-
   # Hosted dependencies
   archive: ^4.0.7 # fastforge uses outdated version
   device_info_plus: ^12.3.0 # Needed for unknown reasons
