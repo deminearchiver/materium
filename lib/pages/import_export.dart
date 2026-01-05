@@ -1079,7 +1079,7 @@ class _SelectionModalState extends State<SelectionModal> {
 
             var multiSelectTile = Flex.horizontal(
               children: [
-                Checkbox.biState(
+                Checkbox.bistate(
                   checked: entrySelections[entry]!,
                   onCheckedChanged: (value) => selectThis(value),
                 ),

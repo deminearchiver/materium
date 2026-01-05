@@ -301,6 +301,11 @@ class _ListItemInteractionState extends State<ListItemInteraction> {
     } else {
       states.remove(WidgetState.focused);
     }
+    if (result.isPressed) {
+      states.add(WidgetState.pressed);
+    } else {
+      states.remove(WidgetState.pressed);
+    }
     return result;
   }
 
@@ -430,14 +435,16 @@ class _ListItemInteractionState extends State<ListItemInteraction> {
       );
       final resolvedColor = stateLayerColor.resolve(resolvedStates);
       final resolvedOpacity = stateLayerOpacity.resolve(resolvedStates);
-      return resolvedColor.withValues(alpha: resolvedColor.a * resolvedOpacity);
+      return resolvedOpacity > 0.0
+          ? resolvedColor.withValues(alpha: resolvedColor.a * resolvedOpacity)
+          : resolvedColor.withAlpha(0);
     });
 
     return listItemContainerScope.buildCenterOptically(
       inverse: true,
       child: FocusRingTheme.merge(
         data: FocusRingThemeDataPartial.from(
-          shape: Corners.all(_shapeTheme.corner.large),
+          shape: CornersBorder.rounded(corners: .all(_shapeTheme.corner.large)),
         ),
         child: FocusRing(
           visible: states.isFocused,

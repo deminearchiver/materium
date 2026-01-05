@@ -1396,7 +1396,7 @@ class _CheckboxComponentState extends State<CheckboxComponent>
             padding: const EdgeInsets.only(left: 16, right: 4),
             child: IgnorePointer(
               ignoring: widget.viewModel.setComplete == null,
-              child: Checkbox.biState(
+              child: Checkbox.bistate(
                 checked: widget.viewModel.isComplete,
                 onCheckedChanged: (value) {
                   widget.viewModel.setComplete?.call(value);
@@ -2635,6 +2635,32 @@ class _MaterialDemoViewState extends State<_MaterialDemoView> {
                   ),
                   child: SliverList.list(
                     children: [
+                      if (kDebugMode)
+                        ListenableBuilder(
+                          listenable: Listenable.merge([_enabled, _selected]),
+                          // ignore: prefer_const_constructors
+                          builder: (context, child) => FittedBox(
+                            fit: .contain,
+                            // child: Checkbox.bistate(
+                            //   onCheckedChanged: _enabled.value
+                            //       ? (value) => _selected.value = value
+                            //       : null,
+                            //   checked: _selected.value,
+                            // ),
+                            // child: Switch(
+                            //   onCheckedChanged: _enabled.value
+                            //       ? (value) => _selected.value = value
+                            //       : null,
+                            //   checked: _selected.value,
+                            // ),
+                            // child: RadioButton(
+                            //   onTap: _enabled.value
+                            //       ? () => _selected.value = !_selected.value
+                            //       : null,
+                            //   selected: _selected.value,
+                            // ),
+                          ),
+                        ),
                       Padding(
                         padding: const EdgeInsets.fromLTRB(
                           16.0,
@@ -2912,12 +2938,13 @@ class _MaterialDemoViewState extends State<_MaterialDemoView> {
                                 "Switch · Checkbox · Radio button",
                               ),
                             ),
+                            const SizedBox(height: 8.0),
                             Padding(
                               padding: const EdgeInsets.fromLTRB(
                                 16.0,
                                 0.0,
                                 16.0,
-                                16.0,
+                                0.0,
                               ),
                               child: ConstrainedBox(
                                 constraints: const BoxConstraints(
@@ -2928,50 +2955,313 @@ class _MaterialDemoViewState extends State<_MaterialDemoView> {
                                     _enabled,
                                     _selected,
                                   ]),
-                                  builder: (context, _) => Flex.horizontal(
-                                    spacing: 16.0,
-                                    children: [
-                                      Flexible.tight(
-                                        child: FittedBox(
-                                          fit: BoxFit.contain,
-                                          child: Switch(
-                                            onCheckedChanged: _enabled.value
-                                                ? (value) =>
-                                                      _selected.value = value
-                                                : null,
-                                            checked: _selected.value,
+                                  builder: (context, _) => Material(
+                                    shape: CornersBorder.rounded(
+                                      corners: .all(shapeTheme.corner.full),
+                                    ),
+                                    color: colorTheme.surface,
+                                    child: Flex.horizontal(
+                                      spacing: 16.0,
+                                      children: [
+                                        Flexible.tight(
+                                          child: FittedBox(
+                                            fit: BoxFit.contain,
+                                            child: SizedBox(
+                                              width: 72.0,
+                                              height: 48.0,
+                                              child: Switch(
+                                                onCheckedChanged: _enabled.value
+                                                    ? (value) =>
+                                                          _selected.value =
+                                                              value
+                                                    : null,
+                                                checked: _selected.value,
+                                              ),
+                                            ),
                                           ),
                                         ),
-                                      ),
-                                      Flexible.tight(
-                                        child: FittedBox(
-                                          fit: BoxFit.contain,
-                                          child: Checkbox.biState(
-                                            onCheckedChanged: _enabled.value
-                                                ? (value) =>
-                                                      _selected.value = value
-                                                : null,
-                                            checked: _selected.value,
+                                        Flexible.tight(
+                                          child: FittedBox(
+                                            fit: BoxFit.contain,
+                                            child: SizedBox(
+                                              width: 72.0,
+                                              height: 48.0,
+                                              child: Checkbox.bistate(
+                                                onCheckedChanged: _enabled.value
+                                                    ? (value) =>
+                                                          _selected.value =
+                                                              value
+                                                    : null,
+                                                checked: _selected.value,
+                                              ),
+                                            ),
                                           ),
                                         ),
-                                      ),
-                                      Flexible.tight(
-                                        child: FittedBox(
-                                          fit: BoxFit.contain,
-                                          child: RadioButton(
-                                            onTap: _enabled.value
-                                                ? () => _selected.value =
-                                                      !_selected.value
-                                                : null,
-                                            selected: _selected.value,
+                                        Flexible.tight(
+                                          child: FittedBox(
+                                            fit: BoxFit.contain,
+                                            child: SizedBox(
+                                              width: 72.0,
+                                              height: 48.0,
+                                              child: RadioButton(
+                                                onTap: _enabled.value
+                                                    ? () => _selected.value =
+                                                          !_selected.value
+                                                    : null,
+                                                selected: _selected.value,
+                                              ),
+                                            ),
                                           ),
                                         ),
-                                      ),
-                                    ],
+                                      ],
+                                    ),
                                   ),
                                 ),
                               ),
                             ),
+                            const SizedBox(height: 8.0),
+                            Padding(
+                              padding: const EdgeInsets.fromLTRB(
+                                16.0,
+                                0.0,
+                                16.0,
+                                0.0,
+                              ),
+                              child: ConstrainedBox(
+                                constraints: const BoxConstraints(
+                                  maxHeight: 160.0,
+                                ),
+                                child: CheckboxTheme.merge(
+                                  data: CustomThemeFactory.createCheckboxTheme(
+                                    colorTheme: colorTheme,
+                                    shapeTheme: shapeTheme,
+                                    stateTheme: stateTheme,
+                                    color: .listItemPhone,
+                                  ),
+                                  child: RadioButtonTheme.merge(
+                                    data:
+                                        CustomThemeFactory.createRadioButtonTheme(
+                                          colorTheme: colorTheme,
+                                          shapeTheme: shapeTheme,
+                                          stateTheme: stateTheme,
+                                          color: .listItemPhone,
+                                        ),
+                                    child: SwitchTheme.merge(
+                                      data:
+                                          CustomThemeFactory.createSwitchTheme(
+                                            colorTheme: colorTheme,
+                                            shapeTheme: shapeTheme,
+                                            stateTheme: stateTheme,
+                                            color: .listItemPhone,
+                                          ),
+                                      child: ListenableBuilder(
+                                        listenable: Listenable.merge([
+                                          _enabled,
+                                          _selected,
+                                        ]),
+                                        builder: (context, _) => Material(
+                                          shape: CornersBorder.rounded(
+                                            corners: .all(
+                                              _selected.value
+                                                  ? shapeTheme
+                                                        .corner
+                                                        .largeIncreased
+                                                  : shapeTheme.corner.full,
+                                            ),
+                                          ),
+                                          color:
+                                              _selected.value && _enabled.value
+                                              ? colorTheme.secondaryContainer
+                                              : colorTheme.surface,
+                                          child: Flex.horizontal(
+                                            spacing: 16.0,
+                                            children: [
+                                              Flexible.tight(
+                                                child: FittedBox(
+                                                  fit: BoxFit.contain,
+                                                  child: SizedBox(
+                                                    width: 72.0,
+                                                    height: 48.0,
+                                                    child: Switch(
+                                                      onCheckedChanged:
+                                                          _enabled.value
+                                                          ? (value) =>
+                                                                _selected
+                                                                        .value =
+                                                                    value
+                                                          : null,
+                                                      checked: _selected.value,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                              Flexible.tight(
+                                                child: FittedBox(
+                                                  fit: BoxFit.contain,
+                                                  child: SizedBox(
+                                                    width: 72.0,
+                                                    height: 48.0,
+                                                    child: Checkbox.bistate(
+                                                      onCheckedChanged:
+                                                          _enabled.value
+                                                          ? (value) =>
+                                                                _selected
+                                                                        .value =
+                                                                    value
+                                                          : null,
+                                                      checked: _selected.value,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                              Flexible.tight(
+                                                child: FittedBox(
+                                                  fit: BoxFit.contain,
+                                                  child: SizedBox(
+                                                    width: 72.0,
+                                                    height: 48.0,
+                                                    child: RadioButton(
+                                                      onTap: _enabled.value
+                                                          ? () =>
+                                                                _selected
+                                                                        .value =
+                                                                    !_selected
+                                                                        .value
+                                                          : null,
+                                                      selected: _selected.value,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                            const SizedBox(height: 8.0),
+                            Padding(
+                              padding: const EdgeInsets.fromLTRB(
+                                16.0,
+                                0.0,
+                                16.0,
+                                0.0,
+                              ),
+                              child: ConstrainedBox(
+                                constraints: const BoxConstraints(
+                                  maxHeight: 160.0,
+                                ),
+                                child: CheckboxTheme.merge(
+                                  data: CustomThemeFactory.createCheckboxTheme(
+                                    colorTheme: colorTheme,
+                                    shapeTheme: shapeTheme,
+                                    stateTheme: stateTheme,
+                                    color: .listItemWatch,
+                                  ),
+                                  child: RadioButtonTheme.merge(
+                                    data:
+                                        CustomThemeFactory.createRadioButtonTheme(
+                                          colorTheme: colorTheme,
+                                          shapeTheme: shapeTheme,
+                                          stateTheme: stateTheme,
+                                          color: .listItemWatch,
+                                        ),
+                                    child: SwitchTheme.merge(
+                                      data:
+                                          CustomThemeFactory.createSwitchTheme(
+                                            colorTheme: colorTheme,
+                                            shapeTheme: shapeTheme,
+                                            stateTheme: stateTheme,
+                                            color: .listItemWatch,
+                                          ),
+                                      child: ListenableBuilder(
+                                        listenable: Listenable.merge([
+                                          _enabled,
+                                          _selected,
+                                        ]),
+                                        builder: (context, _) => Material(
+                                          shape: CornersBorder.rounded(
+                                            corners: .all(
+                                              shapeTheme.corner.full,
+                                            ),
+                                          ),
+                                          color:
+                                              _selected.value && _enabled.value
+                                              ? colorTheme.primaryContainer
+                                              : colorTheme.surfaceContainer,
+                                          child: Flex.horizontal(
+                                            spacing: 16.0,
+                                            children: [
+                                              Flexible.tight(
+                                                child: FittedBox(
+                                                  fit: BoxFit.contain,
+                                                  child: SizedBox(
+                                                    width: 72.0,
+                                                    height: 48.0,
+                                                    child: Switch(
+                                                      onCheckedChanged:
+                                                          _enabled.value
+                                                          ? (value) =>
+                                                                _selected
+                                                                        .value =
+                                                                    value
+                                                          : null,
+                                                      checked: _selected.value,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                              Flexible.tight(
+                                                child: FittedBox(
+                                                  fit: BoxFit.contain,
+                                                  child: SizedBox(
+                                                    width: 72.0,
+                                                    height: 48.0,
+                                                    child: Checkbox.bistate(
+                                                      onCheckedChanged:
+                                                          _enabled.value
+                                                          ? (value) =>
+                                                                _selected
+                                                                        .value =
+                                                                    value
+                                                          : null,
+                                                      checked: _selected.value,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                              Flexible.tight(
+                                                child: FittedBox(
+                                                  fit: BoxFit.contain,
+                                                  child: SizedBox(
+                                                    width: 72.0,
+                                                    height: 48.0,
+                                                    child: RadioButton(
+                                                      onTap: _enabled.value
+                                                          ? () =>
+                                                                _selected
+                                                                        .value =
+                                                                    !_selected
+                                                                        .value
+                                                          : null,
+                                                      selected: _selected.value,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                            const SizedBox(height: 16.0),
                           ],
                         ),
                       ),

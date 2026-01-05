@@ -143,9 +143,300 @@ class TypographyDefaults with Diagnosticable {
   );
 }
 
+enum CustomCheckboxColor { standard, listItemPhone, listItemWatch }
+
+enum CustomRadioButtonColor { standard, listItemPhone, listItemWatch }
+
+enum CustomSwitchSize { phone, watch, nowInAndroid }
+
+enum CustomSwitchColor {
+  /// Baseline switch (no icons)
+  baseline,
+
+  /// Expressive switch (both icons)
+  expressive,
+
+  /// Now in Android switch (no icons)
+  nowInAndroid,
+
+  /// Inside of a list item on phone
+  listItemPhone,
+
+  /// Inside of a list item on watch (standard watch switch)
+  listItemWatch,
+}
+
 enum CustomListItemVariant { settings, licenses, logs }
 
 abstract final class CustomThemeFactory {
+  static CheckboxThemeDataPartial createCheckboxTheme({
+    required ColorThemeData colorTheme,
+    required ShapeThemeData shapeTheme,
+    required StateThemeData stateTheme,
+    CustomRadioButtonColor color = .standard,
+  }) => switch (color) {
+    .listItemPhone => .from(
+      stateLayerColor: .resolveWith(
+        (states) => switch (states) {
+          CheckboxEnabledStates(isSelected: true) => colorTheme.secondary,
+          _ => null,
+        },
+      ),
+      containerColor: .resolveWith(
+        (states) => switch (states) {
+          CheckboxEnabledStates(isSelected: true) => colorTheme.secondary,
+          _ => null,
+        },
+      ),
+      containerOutline: .resolveWith(
+        (states) => .from(
+          color: switch (states) {
+            CheckboxEnabledStates(isSelected: true) =>
+              colorTheme.secondary.withValues(alpha: 0.0),
+            _ => null,
+          },
+        ),
+      ),
+      iconColor: .resolveWith(
+        (states) => switch (states) {
+          CheckboxEnabledStates() => colorTheme.onSecondary,
+          _ => null,
+        },
+      ),
+    ),
+    .listItemWatch => .from(
+      stateLayerColor: .resolveWith(
+        (states) => switch (states) {
+          CheckboxEnabledStates(isSelected: true) =>
+            colorTheme.onPrimaryContainer,
+          _ => null,
+        },
+      ),
+      containerColor: .resolveWith(
+        (states) => switch (states) {
+          CheckboxDisabledStates(isSelected: false) =>
+            colorTheme.surfaceContainer.withValues(alpha: 0.0),
+          CheckboxEnabledStates(isSelected: false) =>
+            colorTheme.surfaceContainer,
+          CheckboxEnabledStates(isSelected: true) =>
+            colorTheme.onPrimaryContainer,
+          _ => null,
+        },
+      ),
+      containerOutline: .resolveWith(
+        (states) => .from(
+          color: switch (states) {
+            CheckboxEnabledStates(isSelected: false) => colorTheme.outline,
+            CheckboxEnabledStates(isSelected: true) =>
+              colorTheme.onPrimaryContainer.withValues(alpha: 0.0),
+            _ => null,
+          },
+        ),
+      ),
+      iconColor: .resolveWith(
+        (states) => switch (states) {
+          CheckboxEnabledStates(isSelected: true) =>
+            colorTheme.primaryContainer,
+          _ => null,
+        },
+      ),
+    ),
+    _ => const .from(),
+  };
+
+  static RadioButtonThemeDataPartial createRadioButtonTheme({
+    required ColorThemeData colorTheme,
+    required ShapeThemeData shapeTheme,
+    required StateThemeData stateTheme,
+    CustomRadioButtonColor color = .standard,
+  }) => switch (color) {
+    .listItemPhone => .from(
+      stateLayerColor: .resolveWith(
+        (states) => switch (states) {
+          RadioButtonEnabledStates(isSelected: true) => colorTheme.secondary,
+          _ => null,
+        },
+      ),
+      // iconBackgroundColor: .resolveWith(
+      //   (states) => switch (states) {
+      //     RadioButtonEnabledStates(isSelected: true) =>
+      //       colorTheme.secondary,
+      //     _ => null,
+      //   },
+      // ),
+      iconOutlineColor: .resolveWith(
+        (states) => switch (states) {
+          RadioButtonEnabledStates(isSelected: true) => colorTheme.secondary,
+          _ => null,
+        },
+      ),
+      iconDotColor: .resolveWith(
+        (states) => switch (states) {
+          RadioButtonEnabledStates(isSelected: true) => colorTheme.secondary,
+          _ => null,
+        },
+      ),
+    ),
+    .listItemWatch => .from(
+      stateLayerColor: .resolveWith(
+        (states) => switch (states) {
+          RadioButtonEnabledStates(isSelected: true) =>
+            colorTheme.onPrimaryContainer,
+          _ => null,
+        },
+      ),
+      iconBackgroundColor: .resolveWith(
+        (states) => switch (states) {
+          RadioButtonDisabledStates(isSelected: false) =>
+            colorTheme.surfaceContainer.withValues(alpha: 0.0),
+          RadioButtonDisabledStates(isSelected: true) =>
+            colorTheme.primaryContainer.withValues(alpha: 0.0),
+          RadioButtonEnabledStates(isSelected: false) =>
+            colorTheme.surfaceContainer,
+          RadioButtonEnabledStates(isSelected: true) =>
+            colorTheme.primaryContainer,
+          _ => null,
+        },
+      ),
+      iconOutlineColor: .resolveWith(
+        (states) => switch (states) {
+          RadioButtonEnabledStates(isSelected: false) => colorTheme.outline,
+          RadioButtonEnabledStates(isSelected: true) =>
+            colorTheme.onPrimaryContainer,
+          _ => null,
+        },
+      ),
+      iconDotColor: .resolveWith(
+        (states) => switch (states) {
+          RadioButtonEnabledStates(isSelected: false) => colorTheme.outline,
+          RadioButtonEnabledStates(isSelected: true) =>
+            colorTheme.onPrimaryContainer,
+          _ => null,
+        },
+      ),
+    ),
+    _ => const .from(),
+  };
+
+  static SwitchThemeDataPartial createSwitchTheme({
+    required ColorThemeData colorTheme,
+    required ShapeThemeData shapeTheme,
+    required StateThemeData stateTheme,
+    CustomSwitchSize size = .phone,
+    CustomSwitchColor color = .expressive,
+    bool? showUnselectedIcon,
+    bool? showSelectedIcon,
+  }) {
+    showUnselectedIcon = showUnselectedIcon ?? true;
+    showSelectedIcon = showSelectedIcon ?? true;
+
+    return switch (color) {
+      .baseline => .from(
+        handleSize: .resolveWith(
+          (states) => switch (states) {
+            SwitchEnabledStates(isPressed: true) => const .square(28.0),
+            SwitchStates(isSelected: false) => const .square(16.0),
+            SwitchStates(isSelected: true) => const .square(24.0),
+          },
+        ),
+        iconTheme: .resolveWith(
+          (states) => switch (states) {
+            SwitchStates(isSelected: false) => const .from(
+              color: Colors.transparent,
+            ),
+            SwitchStates(isSelected: true) => const .from(
+              color: Colors.transparent,
+            ),
+          },
+        ),
+      ),
+      .expressive => const .from(),
+      .listItemPhone => .from(
+        trackColor: .resolveWith(
+          (states) => switch (states) {
+            SwitchEnabledStates(isSelected: true) => colorTheme.secondary,
+            _ => null,
+          },
+        ),
+        trackOutline: .resolveWith(
+          (states) => .from(
+            color: switch (states) {
+              SwitchDisabledStates(isSelected: true) =>
+                colorTheme.secondary.withValues(alpha: 0.0),
+              SwitchStates(isSelected: true) => colorTheme.secondary.withValues(
+                alpha: 0.0,
+              ),
+              _ => null,
+            },
+          ),
+        ),
+        stateLayerColor: .resolveWith(
+          (states) => switch (states) {
+            SwitchEnabledStates(isSelected: true) => colorTheme.secondary,
+            _ => null,
+          },
+        ),
+        handleColor: .resolveWith(
+          (states) => switch (states) {
+            SwitchEnabledStates(isSelected: true) => colorTheme.onSecondary,
+            _ => null,
+          },
+        ),
+        iconTheme: .resolveWith(
+          (states) => switch (states) {
+            SwitchEnabledStates(isSelected: true) => .from(
+              color: colorTheme.secondary,
+            ),
+            _ => null,
+          },
+        ),
+      ),
+      .listItemWatch => .from(
+        trackColor: .resolveWith(
+          (states) => switch (states) {
+            SwitchDisabledStates(isSelected: false) => null,
+            SwitchDisabledStates(isSelected: true) => null,
+            SwitchStates(isSelected: false) => colorTheme.surfaceContainer,
+            SwitchStates(isSelected: true) => colorTheme.onPrimaryContainer,
+          },
+        ),
+        trackOutline: .resolveWith(
+          (states) => .from(
+            color: switch (states) {
+              SwitchDisabledStates(isSelected: false) => null,
+              SwitchDisabledStates(isSelected: true) =>
+                colorTheme.onPrimaryContainer.withValues(alpha: 0.0),
+              SwitchStates(isSelected: false) => colorTheme.outline,
+              SwitchStates(isSelected: true) =>
+                colorTheme.onPrimaryContainer.withValues(alpha: 0.0),
+            },
+          ),
+        ),
+        handleColor: .resolveWith(
+          (states) => switch (states) {
+            SwitchDisabledStates(isSelected: false) => null,
+            SwitchDisabledStates(isSelected: true) => null,
+            SwitchStates(isSelected: false) => colorTheme.outline,
+            SwitchStates(isSelected: true) => colorTheme.primaryContainer,
+          },
+        ),
+        iconTheme: .resolveWith(
+          (states) => switch (states) {
+            SwitchDisabledStates(isSelected: false) => null,
+            SwitchDisabledStates(isSelected: true) => null,
+            SwitchStates(isSelected: false) => .from(
+              color: colorTheme.surfaceContainer,
+            ),
+            SwitchStates(isSelected: true) => .from(
+              color: colorTheme.onPrimaryContainer,
+            ),
+          },
+        ),
+      ),
+      _ => const .from(),
+    };
+  }
+
   static ListItemThemeDataPartial createListItemTheme({
     required ColorThemeData colorTheme,
     required ElevationThemeData elevationTheme,
