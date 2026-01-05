@@ -187,6 +187,9 @@ class AppsPageState extends State<AppsPage> with TickerProviderStateMixin {
     final isRedesignEnabled = context.select<SettingsService, bool>(
       (settings) => settings.developerMode.value,
     );
+    final useBlackTheme = context.select<SettingsService, bool>(
+      (settings) => settings.useBlackTheme.value,
+    );
 
     final padding = MediaQuery.paddingOf(context);
     final colorTheme = ColorTheme.of(context);
@@ -716,8 +719,8 @@ class AppsPageState extends State<AppsPage> with TickerProviderStateMixin {
             softWrap: false,
             style:
                 (isInstalled
-                        ? typescaleTheme.titleMediumEmphasized
-                        : typescaleTheme.titleMedium)
+                        ? typescaleTheme.bodyLargeEmphasized
+                        : typescaleTheme.bodyLarge)
                     .toTextStyle(
                       color: isSelected
                           ? colorTheme.onSecondaryContainer
@@ -1374,9 +1377,13 @@ class AppsPageState extends State<AppsPage> with TickerProviderStateMixin {
           padding: const .symmetric(horizontal: 8.0),
           sliver: ListItemTheme.merge(
             data: .from(
-              containerColor: .all(colorTheme.surface),
+              containerColor: .all(
+                useBlackTheme
+                    ? colorTheme.surfaceContainer
+                    : colorTheme.surface,
+              ),
               headlineTextStyle: .all(
-                typescaleTheme.titleMediumEmphasized.toTextStyle(),
+                typescaleTheme.bodyLargeEmphasized.toTextStyle(),
               ),
             ),
             child: CheckboxTheme.merge(
@@ -1384,7 +1391,7 @@ class AppsPageState extends State<AppsPage> with TickerProviderStateMixin {
                 colorTheme: colorTheme,
                 shapeTheme: shapeTheme,
                 stateTheme: stateTheme,
-                color: .listItemPhone,
+                color: useBlackTheme ? .listItemWatch : .listItemPhone,
               ),
               child: SliverList.separated(
                 itemCount: listedApps.length,
@@ -1413,6 +1420,12 @@ class AppsPageState extends State<AppsPage> with TickerProviderStateMixin {
                       shape: .round,
                       color: .tonal,
                       width: .wide,
+                      containerColor: useBlackTheme
+                          ? colorTheme.primaryContainer
+                          : null,
+                      iconColor: useBlackTheme
+                          ? colorTheme.onPrimaryContainer
+                          : null,
                     ),
                     onPressed: !appsProvider.areDownloadsRunning()
                         ? () {
@@ -1444,7 +1457,7 @@ class AppsPageState extends State<AppsPage> with TickerProviderStateMixin {
                       colorTheme: colorTheme,
                       elevationTheme: elevationTheme,
                       shapeTheme: shapeTheme,
-                      variant: .vibrant,
+                      variant: useBlackTheme ? .standard : .vibrant,
                     ),
                     child: MenuButtonTheme(
                       data: LegacyThemeFactory.createMenuButtonTheme(
@@ -1453,7 +1466,7 @@ class AppsPageState extends State<AppsPage> with TickerProviderStateMixin {
                         shapeTheme: shapeTheme,
                         stateTheme: stateTheme,
                         typescaleTheme: typescaleTheme,
-                        variant: .vibrant,
+                        variant: useBlackTheme ? .standard : .vibrant,
                       ),
                       child: MenuAnchor(
                         consumeOutsideTap: true,
@@ -1551,11 +1564,15 @@ class AppsPageState extends State<AppsPage> with TickerProviderStateMixin {
                             shape: .round,
                             color: .standard,
                             width: .narrow,
-                            containerColor: isSelected
+                            containerColor: isSelected || useBlackTheme
                                 ? Colors.transparent
                                 : colorTheme.surfaceContainer,
                             iconColor: isSelected
-                                ? colorTheme.onSecondaryContainer
+                                ? useBlackTheme
+                                      ? colorTheme.onPrimaryContainer
+                                      : colorTheme.onSecondaryContainer
+                                : useBlackTheme
+                                ? colorTheme.primary
                                 : colorTheme.onSurfaceVariant,
                           ),
                           onPressed: () {
@@ -1589,12 +1606,20 @@ class AppsPageState extends State<AppsPage> with TickerProviderStateMixin {
                             : null,
                       ),
                       containerColor: .all(
-                        isSelected ? colorTheme.secondaryContainer : null,
+                        isSelected
+                            ? useBlackTheme
+                                  ? colorTheme.primaryContainer
+                                  : colorTheme.secondaryContainer
+                            : null,
                       ),
                       child: ListItemInteraction(
                         stateLayerColor: .all(
                           isSelected
-                              ? colorTheme.onSecondaryContainer
+                              ? useBlackTheme
+                                    ? colorTheme.onPrimaryContainer
+                                    : colorTheme.onSecondaryContainer
+                              : useBlackTheme
+                              ? colorTheme.onPrimaryContainer
                               : colorTheme.onSurface,
                         ),
                         onTap: () {
@@ -1627,30 +1652,32 @@ class AppsPageState extends State<AppsPage> with TickerProviderStateMixin {
                                     ),
                                     duration: listItemDuration,
                                     curve: listItemEasing,
-                                    builder: (context, value, child) =>
-                                        Material(
-                                          clipBehavior: .antiAlias,
-                                          shape: ShapeBorder.lerp(
-                                            CornersBorder.rounded(
-                                              corners: .all(
-                                                shapeTheme.corner.small,
-                                              ),
-                                            ),
-                                            CornersBorder.rounded(
-                                              corners: .all(
-                                                shapeTheme.corner.full,
-                                              ),
-                                            ),
-                                            value,
-                                          )!,
-                                          color: isSelected
-                                              ? bytes != null
-                                                    ? colorTheme
-                                                          .secondaryContainer
-                                                    : Colors.transparent
-                                              : colorTheme.surfaceContainer,
-                                          child: child!,
+                                    builder: (context, value, child) => Material(
+                                      clipBehavior: .antiAlias,
+                                      shape: ShapeBorder.lerp(
+                                        CornersBorder.rounded(
+                                          corners: .all(
+                                            shapeTheme.corner.small,
+                                          ),
                                         ),
+                                        CornersBorder.rounded(
+                                          corners: .all(shapeTheme.corner.full),
+                                        ),
+                                        value,
+                                      )!,
+                                      color: isSelected
+                                          ? bytes != null
+                                                ? useBlackTheme
+                                                      ? colorTheme
+                                                            .primaryContainer
+                                                      : colorTheme
+                                                            .secondaryContainer
+                                                : Colors.transparent
+                                          : useBlackTheme
+                                          ? colorTheme.surfaceContainerLow
+                                          : colorTheme.surfaceContainer,
+                                      child: child!,
+                                    ),
                                     child: Stack(
                                       fit: .expand,
                                       children: [
@@ -1682,8 +1709,13 @@ class AppsPageState extends State<AppsPage> with TickerProviderStateMixin {
                                                       opticalSize: size,
                                                       size: size,
                                                       color: isSelected
-                                                          ? colorTheme
-                                                                .onSecondaryContainer
+                                                          ? useBlackTheme
+                                                                ? colorTheme
+                                                                      .onPrimaryContainer
+                                                                : colorTheme
+                                                                      .onSecondaryContainer
+                                                          : useBlackTheme
+                                                          ? colorTheme.primary
                                                           : colorTheme
                                                                 .onSurfaceVariant,
                                                     ),
@@ -1694,8 +1726,13 @@ class AppsPageState extends State<AppsPage> with TickerProviderStateMixin {
                                           overlayColor: WidgetStateLayerColor(
                                             color: WidgetStatePropertyAll(
                                               isSelected
-                                                  ? colorTheme
-                                                        .onSecondaryContainer
+                                                  ? useBlackTheme
+                                                        ? colorTheme
+                                                              .onPrimaryContainer
+                                                        : colorTheme
+                                                              .onSecondaryContainer
+                                                  : useBlackTheme
+                                                  ? colorTheme.primary
                                                   : colorTheme.onSurface,
                                             ),
                                             opacity:
@@ -1757,7 +1794,12 @@ class AppsPageState extends State<AppsPage> with TickerProviderStateMixin {
                             softWrap: false,
                             style: TextStyle(
                               color: isSelected
-                                  ? colorTheme.onSecondaryContainer
+                                  ? useBlackTheme
+                                        ? colorTheme.onPrimaryContainer
+                                              .withValues(alpha: 0.9)
+                                        : colorTheme.onSecondaryContainer
+                                  : useBlackTheme
+                                  ? colorTheme.onSurfaceVariant
                                   : null,
                             ),
                           ),
@@ -1768,11 +1810,14 @@ class AppsPageState extends State<AppsPage> with TickerProviderStateMixin {
                             softWrap: false,
                             style:
                                 (isInstalled
-                                        ? typescaleTheme.titleMediumEmphasized
-                                        : typescaleTheme.titleMedium)
+                                        ? typescaleTheme.bodyLargeEmphasized
+                                        : typescaleTheme.bodyLarge)
                                     .toTextStyle(
                                       color: isSelected
-                                          ? colorTheme.onSecondaryContainer
+                                          ? useBlackTheme
+                                                ? colorTheme.onPrimaryContainer
+                                                : colorTheme
+                                                      .onSecondaryContainer
                                           : colorTheme.onSurface,
                                     ),
                           ),
@@ -1789,7 +1834,10 @@ class AppsPageState extends State<AppsPage> with TickerProviderStateMixin {
                                       ? FontFamily.googleSansCode
                                       : null,
                                   color: isSelected
-                                      ? colorTheme.onSecondaryContainer
+                                      ? useBlackTheme
+                                            ? colorTheme.onPrimaryContainer
+                                                  .withValues(alpha: 0.9)
+                                            : colorTheme.onSecondaryContainer
                                       : hasUpdate
                                       ? colorTheme.onSurface
                                       : colorTheme.onSurfaceVariant,
@@ -1973,15 +2021,23 @@ class AppsPageState extends State<AppsPage> with TickerProviderStateMixin {
                 width: .wide,
                 isSelected: hasSelection,
                 unselectedShape: .round,
-                unselectedContainerColor: colorTheme.secondaryContainer,
-                unselectedIconColor: colorTheme.onSecondaryContainer,
+                unselectedContainerColor: useBlackTheme
+                    ? colorTheme.primaryDim
+                    : colorTheme.secondaryContainer,
+                unselectedIconColor: useBlackTheme
+                    ? colorTheme.onPrimary
+                    : colorTheme.onSecondaryContainer,
                 selectedShape: .round,
                 selectedDisabledContainerColor: colorTheme.onPrimaryContainer
                     .withValues(alpha: 0.10),
-                selectedContainerColor: colorTheme.surfaceContainer,
+                selectedContainerColor: useBlackTheme
+                    ? colorTheme.onPrimaryContainer
+                    : colorTheme.surfaceContainer,
                 selectedDisabledIconColor: colorTheme.onPrimaryContainer
                     .withValues(alpha: 0.38),
-                selectedIconColor: colorTheme.onSurface,
+                selectedIconColor: useBlackTheme
+                    ? colorTheme.primaryContainer
+                    : colorTheme.onSurface,
               )
             : LegacyThemeFactory.createIconButtonStyle(
                 colorTheme: colorTheme,
@@ -2101,9 +2157,15 @@ class AppsPageState extends State<AppsPage> with TickerProviderStateMixin {
           shape: .square,
           color: .tonal,
           width: .normal,
-          containerColor: colorTheme.primaryContainer,
-          iconColor: colorTheme.onPrimaryContainer,
-          containerElevation: elevationTheme.level3,
+          containerColor: useBlackTheme
+              ? colorTheme.primary
+              : colorTheme.primaryContainer,
+          iconColor: useBlackTheme
+              ? colorTheme.onPrimary
+              : colorTheme.onPrimaryContainer,
+          containerElevation: useBlackTheme
+              ? elevationTheme.level0
+              : elevationTheme.level3,
         ),
         onPressed: () => Navigator.push(
           context,
@@ -2129,7 +2191,9 @@ class AppsPageState extends State<AppsPage> with TickerProviderStateMixin {
         child: Material(
           clipBehavior: .antiAlias,
           color: isRedesignEnabled
-              ? hasSelection
+              ? useBlackTheme
+                    ? colorTheme.surfaceContainer
+                    : hasSelection
                     ? colorTheme.primaryContainer
                     : colorTheme.surfaceContainerHighest
               : colorTheme.surfaceContainerHigh,
@@ -2241,8 +2305,12 @@ class AppsPageState extends State<AppsPage> with TickerProviderStateMixin {
 
     final toolbar = getDockedOrFloatingToolbar();
 
+    final backgroundColor = useBlackTheme
+        ? colorTheme.surface
+        : colorTheme.surfaceContainer;
+
     return Scaffold(
-      backgroundColor: colorTheme.surfaceContainer,
+      backgroundColor: backgroundColor,
       extendBody: true,
       body: SafeArea(
         top: false,
@@ -2271,8 +2339,8 @@ class AppsPageState extends State<AppsPage> with TickerProviderStateMixin {
                 isRedesignEnabled
                     ? CustomAppBar(
                         type: .small,
-                        expandedContainerColor: colorTheme.surfaceContainer,
-                        collapsedContainerColor: colorTheme.surfaceContainer,
+                        expandedContainerColor: backgroundColor,
+                        collapsedContainerColor: backgroundColor,
                         collapsedTitleTextStyle: typescaleTheme
                             .titleLargeEmphasized
                             .toTextStyle(),
@@ -2291,12 +2359,18 @@ class AppsPageState extends State<AppsPage> with TickerProviderStateMixin {
                               color: .standard,
                               width: .wide,
                               isSelected: !isFilterOff,
-                              unselectedContainerColor:
-                                  colorTheme.surfaceContainerHighest,
-                              unselectedIconColor: colorTheme.onSurfaceVariant,
-                              selectedContainerColor:
-                                  colorTheme.tertiaryContainer,
-                              selectedIconColor: colorTheme.onTertiaryContainer,
+                              unselectedContainerColor: useBlackTheme
+                                  ? colorTheme.surfaceContainer
+                                  : colorTheme.surfaceContainerHighest,
+                              unselectedIconColor: useBlackTheme
+                                  ? colorTheme.primary
+                                  : colorTheme.onSurfaceVariant,
+                              selectedContainerColor: useBlackTheme
+                                  ? colorTheme.primaryContainer
+                                  : colorTheme.tertiaryContainer,
+                              selectedIconColor: useBlackTheme
+                                  ? colorTheme.onPrimaryContainer
+                                  : colorTheme.onTertiaryContainer,
                             ),
                             onPressed: isFilterOff
                                 ? showFilterDialog
@@ -2332,9 +2406,12 @@ class AppsPageState extends State<AppsPage> with TickerProviderStateMixin {
                               stateTheme: stateTheme,
                               color: .standard,
                               width: .wide,
-                              containerColor:
-                                  colorTheme.surfaceContainerHighest,
-                              iconColor: colorTheme.onSurfaceVariant,
+                              containerColor: useBlackTheme
+                                  ? colorTheme.surfaceContainer
+                                  : colorTheme.surfaceContainerHighest,
+                              iconColor: useBlackTheme
+                                  ? colorTheme.primary
+                                  : colorTheme.onSurfaceVariant,
                             ),
                             onPressed: () => Navigator.push(
                               context,

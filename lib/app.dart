@@ -151,12 +151,16 @@ class _ObtainiumState extends State<Obtainium> {
               ? _settings.themeVariant.value.dynamicSchemeVariant
               : _settings.themeVariant.value.dynamicSchemeVariant;
 
+          final DynamicSchemePlatform platform = _settings.useBlackTheme.value
+              ? .watch
+              : .phone;
+
           var colorTheme = ColorThemeData.fromSeed(
             sourceColor: sourceColor,
             brightness: brightness,
             contrastLevel: contrastLevel,
             variant: variant,
-            platform: _platform,
+            platform: platform,
             specVersion: _specVersion,
           );
 
@@ -172,7 +176,7 @@ class _ObtainiumState extends State<Obtainium> {
             contrastLevel: contrastLevel,
             variant: variant,
             specVersion: _specVersion,
-            platform: _platform,
+            platform: platform,
           );
 
           return ColorTheme(
@@ -196,24 +200,33 @@ class _ObtainiumState extends State<Obtainium> {
         child: child,
       );
 
-  Widget _buildLegacyThemes(BuildContext context, Widget child) {
-    final colorTheme = ColorTheme.of(context);
-    final elevationTheme = ElevationTheme.of(context);
-    final shapeTheme = ShapeTheme.of(context);
-    final stateTheme = StateTheme.of(context);
-    final typescaleTheme = TypescaleTheme.of(context);
+  Widget _buildLegacyThemes(BuildContext context, Widget child) =>
+      ListenableBuilder(
+        listenable: _themeListenable,
+        builder: (context, child) {
+          {
+            final colorTheme = ColorTheme.of(context);
+            final elevationTheme = ElevationTheme.of(context);
+            final shapeTheme = ShapeTheme.of(context);
+            final stateTheme = StateTheme.of(context);
+            final typescaleTheme = TypescaleTheme.of(context);
 
-    final legacyTheme = LegacyThemeFactory.createTheme(
-      colorTheme: colorTheme,
-      elevationTheme: elevationTheme,
-      shapeTheme: shapeTheme,
-      stateTheme: stateTheme,
-      typescaleTheme: typescaleTheme,
-      scaffoldBackgroundColor: colorTheme.surfaceContainer,
-    );
+            final legacyTheme = LegacyThemeFactory.createTheme(
+              colorTheme: colorTheme,
+              elevationTheme: elevationTheme,
+              shapeTheme: shapeTheme,
+              stateTheme: stateTheme,
+              typescaleTheme: typescaleTheme,
+              scaffoldBackgroundColor: _settings.useBlackTheme.value
+                  ? colorTheme.surface
+                  : colorTheme.surfaceContainer,
+            );
 
-    return Theme(data: legacyTheme, child: child);
-  }
+            return Theme(data: legacyTheme, child: child!);
+          }
+        },
+        child: child,
+      );
 
   Widget _buildThemes(BuildContext context, Widget child) => CombiningBuilder(
     builders: [_buildReferenceThemes, _buildSystemThemes, _buildLegacyThemes],
@@ -296,6 +309,7 @@ class _ObtainiumState extends State<Obtainium> {
         newSettings.themeVariant,
         newSettings.themeColor,
         newSettings.useMaterialYou,
+        newSettings.useBlackTheme,
       ]);
     }
     _settingsOrNull = newSettings;
@@ -385,7 +399,7 @@ class _ObtainiumState extends State<Obtainium> {
     return WithForegroundTask(child: _buildThemes(context, appBuilder));
   }
 
-  static const _platform = DynamicSchemePlatform.phone;
+  // static const _platform = DynamicSchemePlatform.phone;
   static const _specVersion = DynamicSchemeSpecVersion.spec2025;
   static const _typography = TypographyDefaults.material3Expressive2026;
 }

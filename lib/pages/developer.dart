@@ -16,8 +16,10 @@ import 'package:materium/components/custom_refresh_indicator.dart';
 import 'package:materium/flutter.dart' hide Cubic;
 
 import 'package:markdown/markdown.dart' as md;
+import 'package:materium/providers/settings_new.dart';
 import 'package:materium/theme/legacy.dart';
 import 'package:materium/theme/theme.dart';
+import 'package:provider/provider.dart';
 import 'package:screen_corners_ffi/screen_corners_ffi.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:super_editor/super_editor.dart';
@@ -36,39 +38,59 @@ class DeveloperPageBackButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final useBlackTheme = context.select<SettingsService, bool>(
+      (settings) => settings.useBlackTheme.value,
+    );
+
     final navigator = Navigator.of(context);
     final route = ModalRoute.of(context);
     final colorTheme = ColorTheme.of(context);
+    final elevationTheme = ElevationTheme.of(context);
     final shapeTheme = ShapeTheme.of(context);
     final stateTheme = StateTheme.of(context);
     return IconButton(
-      onPressed: () => navigator.pop(),
-      style: ButtonStyle(
-        elevation: const WidgetStatePropertyAll(0.0),
-        shadowColor: WidgetStateColor.transparent,
-        minimumSize: const WidgetStatePropertyAll(Size.zero),
-        fixedSize: const WidgetStatePropertyAll(Size(40.0, 40.0)),
-        maximumSize: const WidgetStatePropertyAll(Size.infinite),
-        padding: const WidgetStatePropertyAll(EdgeInsets.zero),
-        iconSize: const WidgetStatePropertyAll(24.0),
-        shape: WidgetStatePropertyAll(
-          CornersBorder.rounded(corners: Corners.all(shapeTheme.corner.full)),
-        ),
-        overlayColor: WidgetStateLayerColor(
-          color: WidgetStatePropertyAll(colorTheme.onSurfaceVariant),
-          opacity: stateTheme.stateLayerOpacity,
-        ),
-        backgroundColor: WidgetStateProperty.resolveWith(
-          (states) => states.contains(WidgetState.disabled)
-              ? colorTheme.onSurface.withValues(alpha: 0.1)
-              : colorTheme.surfaceContainerHighest,
-        ),
-        iconColor: WidgetStateProperty.resolveWith(
-          (states) => states.contains(WidgetState.disabled)
-              ? colorTheme.onSurface.withValues(alpha: 0.38)
-              : colorTheme.onSurfaceVariant,
-        ),
+      // style: ButtonStyle(
+      //   elevation: const WidgetStatePropertyAll(0.0),
+      //   shadowColor: WidgetStateColor.transparent,
+      //   minimumSize: const WidgetStatePropertyAll(Size.zero),
+      //   fixedSize: const WidgetStatePropertyAll(Size(40.0, 40.0)),
+      //   maximumSize: const WidgetStatePropertyAll(Size.infinite),
+      //   padding: const WidgetStatePropertyAll(EdgeInsets.zero),
+      //   iconSize: const WidgetStatePropertyAll(24.0),
+      //   shape: WidgetStatePropertyAll(
+      //     CornersBorder.rounded(corners: Corners.all(shapeTheme.corner.full)),
+      //   ),
+      //   overlayColor: WidgetStateLayerColor(
+      //     color: WidgetStatePropertyAll(colorTheme.onSurfaceVariant),
+      //     opacity: stateTheme.stateLayerOpacity,
+      //   ),
+      //   backgroundColor: WidgetStateProperty.resolveWith(
+      //     (states) => states.contains(WidgetState.disabled)
+      //         ? colorTheme.onSurface.withValues(alpha: 0.1)
+      //         : useBlackTheme
+      //         ? colorTheme.surfaceContainer
+      //         : colorTheme.surfaceContainerHighest,
+      //   ),
+      //   iconColor: WidgetStateProperty.resolveWith(
+      //     (states) => states.contains(WidgetState.disabled)
+      //         ? colorTheme.onSurface.withValues(alpha: 0.38)
+      //         : colorTheme.onSurfaceVariant,
+      //   ),
+      // ),
+      style: LegacyThemeFactory.createIconButtonStyle(
+        colorTheme: colorTheme,
+        elevationTheme: elevationTheme,
+        shapeTheme: shapeTheme,
+        stateTheme: stateTheme,
+        color: .standard,
+        containerColor: useBlackTheme
+            ? colorTheme.surfaceContainer
+            : colorTheme.surfaceContainerHighest,
+        iconColor: useBlackTheme
+            ? colorTheme.primary
+            : colorTheme.onSurfaceVariant,
       ),
+      onPressed: () => navigator.pop(),
       icon: const IconLegacy(Symbols.arrow_back_rounded),
     );
   }
@@ -3741,7 +3763,7 @@ class _MaterialDemoViewState extends State<_MaterialDemoView> {
                               ),
                               headline: Text(
                                 "Android 16 Switch",
-                                style: typescaleTheme.titleMediumEmphasized
+                                style: typescaleTheme.bodyLargeEmphasized
                                     .toTextStyle(
                                       color: colorTheme.onPrimaryContainer,
                                     ),

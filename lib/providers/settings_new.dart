@@ -152,6 +152,17 @@ class SettingsService with ChangeNotifier {
 
   SettingNotifier<bool> get useMaterialYou => _useMaterialYou;
 
+  late final _useBlackTheme = ExternalSettingNotifier<bool>(
+    defaultValue: false,
+    onLoad: () async => Option.maybe(await _prefs.getBool(_useBlackThemeKey)),
+    onSave: (value) => switch (value) {
+      Some(:final value) => _prefs.setBool(_useBlackThemeKey, value),
+      None() => _prefs.remove(_useBlackThemeKey),
+    },
+  )..addListener(_maybeNotify);
+
+  SettingNotifier<bool> get useBlackTheme => _useBlackTheme;
+
   bool _isNotifyingAllListeners = false;
 
   void _maybeNotify() {
@@ -171,6 +182,7 @@ class SettingsService with ChangeNotifier {
     _themeVariant.notify();
     _themeColor.notify();
     _useMaterialYou.notify();
+    _useBlackTheme.notify();
 
     // Resume notifying global listeners
     _isNotifyingAllListeners = false;
@@ -186,6 +198,7 @@ class SettingsService with ChangeNotifier {
     bool themeVariant = false,
     bool themeColor = false,
     bool useMaterialYou = false,
+    bool useBlackTheme = false,
   }) async {
     final futures = <Future<bool>>[
       if (developerMode) _developerMode.load(notify: false),
@@ -194,6 +207,7 @@ class SettingsService with ChangeNotifier {
       if (themeVariant) _themeVariant.load(notify: false),
       if (themeColor) _themeColor.load(notify: false),
       if (useMaterialYou) _useMaterialYou.load(notify: false),
+      if (useBlackTheme) _useBlackTheme.load(notify: false),
     ];
     if (futures.isNotEmpty) {
       final result = await Future.wait(futures);
@@ -210,6 +224,7 @@ class SettingsService with ChangeNotifier {
     themeVariant: true,
     themeColor: true,
     useMaterialYou: true,
+    useBlackTheme: true,
   );
 
   Future<void> saveOnly({
@@ -219,6 +234,7 @@ class SettingsService with ChangeNotifier {
     bool themeVariant = false,
     bool themeColor = false,
     bool useMaterialYou = false,
+    bool useBlackTheme = false,
   }) async {
     final futures = <Future<void>>[
       if (developerMode) _developerMode.save(),
@@ -227,6 +243,7 @@ class SettingsService with ChangeNotifier {
       if (themeVariant) _themeVariant.save(),
       if (themeColor) _themeColor.save(),
       if (useMaterialYou) _useMaterialYou.save(),
+      if (useBlackTheme) _useBlackTheme.save(),
     ];
     if (futures.isNotEmpty) {
       await Future.wait(futures);
@@ -240,6 +257,7 @@ class SettingsService with ChangeNotifier {
     themeVariant: true,
     themeColor: true,
     useMaterialYou: true,
+    useBlackTheme: true,
   );
 
   static const _developerModeKey = "developerMode";
@@ -248,6 +266,7 @@ class SettingsService with ChangeNotifier {
   static const _themeVariantKey = "themeVariant";
   static const _themeColorKey = "themeColor";
   static const _useMaterialYouKey = "useMaterialYou";
+  static const _useBlackThemeKey = "useBlackTheme";
 
   static Future<SettingsService> create() async {
     final instance = SettingsService._(

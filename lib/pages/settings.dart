@@ -178,6 +178,10 @@ class _SettingsPageState extends State<SettingsPage> {
     final settings = context.read<SettingsService>();
     final sourceProvider = SourceProvider();
 
+    final useBlackTheme = context.select<SettingsService, bool>(
+      (settings) => settings.useBlackTheme.value,
+    );
+
     final padding = MediaQuery.paddingOf(context);
     final t = Translations.of(context);
     final colorTheme = ColorTheme.of(context);
@@ -323,35 +327,85 @@ class _SettingsPageState extends State<SettingsPage> {
     final disabledContainerColor = colorTheme.onSurface.withValues(alpha: 0.10);
     final disabledContentColor = colorTheme.onSurface.withValues(alpha: 0.38);
 
+    final unselectedContainerColor = useBlackTheme
+        ? colorTheme.surfaceContainer
+        : colorTheme.surface;
+
+    final selectedContainerColor = useBlackTheme
+        ? colorTheme.primaryContainer
+        : colorTheme.secondaryContainer;
+
     final selectedListItemTheme = ListItemThemeDataPartial.from(
-      containerColor: .all(colorTheme.secondaryContainer),
+      containerColor: .all(selectedContainerColor),
       containerShape: .all(
         CornersBorder.rounded(corners: .all(shapeTheme.corner.large)),
       ),
-      stateLayerColor: .all(colorTheme.onSecondaryContainer),
-      leadingIconTheme: .all(.from(color: colorTheme.onSecondaryContainer)),
-      leadingTextStyle: .all(TextStyle(color: colorTheme.onSecondaryContainer)),
+      stateLayerColor: .all(
+        useBlackTheme
+            ? colorTheme.onPrimaryContainer
+            : colorTheme.onSecondaryContainer,
+      ),
+      leadingIconTheme: .all(
+        .from(
+          color: useBlackTheme
+              ? colorTheme.onPrimaryContainer
+              : colorTheme.onSecondaryContainer,
+        ),
+      ),
+      leadingTextStyle: .all(
+        TextStyle(
+          color: useBlackTheme
+              ? colorTheme.onPrimaryContainer.withValues(alpha: 0.9)
+              : colorTheme.onSecondaryContainer,
+        ),
+      ),
       overlineTextStyle: .all(
-        TextStyle(color: colorTheme.onSecondaryContainer),
+        TextStyle(
+          color: useBlackTheme
+              ? colorTheme.onPrimaryContainer.withValues(alpha: 0.9)
+              : colorTheme.onSecondaryContainer,
+        ),
       ),
       headlineTextStyle: .all(
-        TextStyle(color: colorTheme.onSecondaryContainer),
+        TextStyle(
+          color: useBlackTheme
+              ? colorTheme.onPrimaryContainer
+              : colorTheme.onSecondaryContainer,
+        ),
       ),
       supportingTextStyle: .all(
-        TextStyle(color: colorTheme.onSecondaryContainer),
+        TextStyle(
+          color: useBlackTheme
+              ? colorTheme.onPrimaryContainer.withValues(alpha: 0.9)
+              : colorTheme.onSecondaryContainer,
+        ),
       ),
       trailingTextStyle: .all(
-        TextStyle(color: colorTheme.onSecondaryContainer),
+        TextStyle(
+          color: useBlackTheme
+              ? colorTheme.onPrimaryContainer.withValues(alpha: 0.9)
+              : colorTheme.onSecondaryContainer,
+        ),
       ),
-      trailingIconTheme: .all(.from(color: colorTheme.onSecondaryContainer)),
+      trailingIconTheme: .all(
+        .from(
+          color: useBlackTheme
+              ? colorTheme.onPrimaryContainer.withValues(alpha: 0.9)
+              : colorTheme.onSecondaryContainer,
+        ),
+      ),
     );
 
     final unselectedListItemTheme = ListItemThemeDataPartial.from(
-      containerColor: .all(colorTheme.surface),
+      containerColor: .all(unselectedContainerColor),
     );
 
+    final backgroundColor = useBlackTheme
+        ? colorTheme.surface
+        : colorTheme.surfaceContainer;
+
     return Scaffold(
-      backgroundColor: colorTheme.surfaceContainer,
+      backgroundColor: backgroundColor,
       body: SafeArea(
         top: false,
         bottom: false,
@@ -361,8 +415,8 @@ class _SettingsPageState extends State<SettingsPage> {
               valueListenable: settings.developerMode,
               builder: (context, developerMode, _) => CustomAppBar(
                 type: developerMode || showBackButton ? .small : .largeFlexible,
-                expandedContainerColor: colorTheme.surfaceContainer,
-                collapsedContainerColor: colorTheme.surfaceContainer,
+                expandedContainerColor: backgroundColor,
+                collapsedContainerColor: backgroundColor,
                 collapsedPadding: showBackButton
                     ? const .fromSTEB(8.0 + 40.0 + 8.0, 0.0, 16.0, 0.0)
                     : null,
@@ -388,7 +442,7 @@ class _SettingsPageState extends State<SettingsPage> {
                   colorTheme: colorTheme,
                   shapeTheme: shapeTheme,
                   stateTheme: stateTheme,
-                  color: .listItemPhone,
+                  color: useBlackTheme ? .listItemWatch : .listItemPhone,
                 ),
                 child: SliverList.list(
                   children: [
@@ -400,13 +454,15 @@ class _SettingsPageState extends State<SettingsPage> {
                         builder: (context, updateIntervalSliderVal, _) {
                           final isSelected = updateIntervalSliderVal > 0.0;
                           final activeIndicatorColor = isSelected
-                              ? colorTheme.primary
+                              ? colorTheme.secondary
                               : colorTheme.primary;
                           final trackColor = isSelected
-                              ? colorTheme.surfaceContainer
-                              // ? colorTheme.onSecondaryContainer.withValues(
-                              //     alpha: 0.38,
-                              //   )
+                              // TODO: pull value from watch spec
+                              ? useBlackTheme
+                                    ? colorTheme.primary.withValues(alpha: 0.6)
+                                    : colorTheme.surface
+                              : useBlackTheme
+                              ? colorTheme.surface.withValues(alpha: 0.3)
                               : colorTheme.secondaryContainer;
                           return ListItemTheme.merge(
                             data: isSelected
@@ -1167,7 +1223,7 @@ class _SettingsPageState extends State<SettingsPage> {
                       shape: CornersBorder.rounded(
                         corners: .all(shapeTheme.corner.large),
                       ),
-                      color: colorTheme.surface,
+                      color: unselectedContainerColor,
                       child: Padding(
                         padding: const .all(16.0),
                         child: Flex.vertical(
@@ -1196,8 +1252,8 @@ class _SettingsPageState extends State<SettingsPage> {
                               ),
                               filled: true,
                               fillColor: isSelected
-                                  ? colorTheme.secondaryContainer
-                                  : colorTheme.surface,
+                                  ? selectedContainerColor
+                                  : unselectedContainerColor,
                             ),
                             expandedInsets: .zero,
                             label: Text(tr("language")),
@@ -1285,6 +1341,74 @@ class _SettingsPageState extends State<SettingsPage> {
                                 ),
                               ),
                             ),
+                          );
+                        },
+                      ),
+                    ),
+                    const SizedBox(height: 2.0),
+                    KeyedSubtree(
+                      key: const ValueKey("useBlackTheme"),
+                      child: ValueListenableBuilder(
+                        valueListenable: settings.useMaterialYou,
+                        builder: (context, useMaterialYou, _) {
+                          final isDisabled = useMaterialYou;
+                          final containerColor = isDisabled
+                              ? disabledContainerColor
+                              : null;
+                          final contentColor = isDisabled
+                              ? disabledContentColor
+                              : null;
+                          return ValueListenableBuilder(
+                            valueListenable: settings.useBlackTheme,
+                            builder: (context, useBlackTheme, _) {
+                              useBlackTheme = useBlackTheme && !isDisabled;
+                              final textStyle = TextStyle(color: contentColor);
+                              return ListItemTheme.merge(
+                                data: useBlackTheme
+                                    ? selectedListItemTheme
+                                    : unselectedListItemTheme,
+                                child: ListItemContainer(
+                                  child: MergeSemantics(
+                                    child: ListItemInteraction(
+                                      onTap: !isDisabled
+                                          ? () => settings.useBlackTheme.value =
+                                                !useBlackTheme
+                                          : null,
+                                      child: ListItemLayout(
+                                        padding: const .fromLTRB(
+                                          16.0,
+                                          0.0,
+                                          16.0 - 8.0,
+                                          0.0,
+                                        ),
+                                        trailingPadding: const .symmetric(
+                                          vertical:
+                                              (32.0 + 2 * 10.0 - 48.0) / 2.0,
+                                        ),
+                                        headline: Text(
+                                          "Pure black theme",
+                                          style: textStyle,
+                                        ),
+                                        supportingText: Text(
+                                          "Feature is work-in-progress. Visual artifacts may occur.",
+                                          style: textStyle,
+                                        ),
+                                        trailing: ExcludeFocus(
+                                          child: Switch(
+                                            onCheckedChanged: !isDisabled
+                                                ? settings
+                                                      .useBlackTheme
+                                                      .setValue
+                                                : null,
+                                            checked: useBlackTheme,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              );
+                            },
                           );
                         },
                       ),
@@ -1391,12 +1515,11 @@ class _SettingsPageState extends State<SettingsPage> {
                                           ),
                                           filled: true,
                                           fillColor: isSelected
-                                              ? colorTheme.secondaryContainer
-                                              : colorTheme.surface,
+                                              ? selectedContainerColor
+                                              : unselectedContainerColor,
                                         ),
                                     expandedInsets: .zero,
-                                    textStyle: typescaleTheme
-                                        .titleMediumEmphasized
+                                    textStyle: typescaleTheme.bodyLarge
                                         .toTextStyle(),
                                     label: Text(tr("theme")),
                                     initialSelection: themeMode,
@@ -1468,12 +1591,11 @@ class _SettingsPageState extends State<SettingsPage> {
                                           ),
                                           filled: true,
                                           fillColor: isSelected
-                                              ? colorTheme.secondaryContainer
-                                              : colorTheme.surface,
+                                              ? selectedContainerColor
+                                              : unselectedContainerColor,
                                         ),
                                     expandedInsets: .zero,
-                                    textStyle: typescaleTheme
-                                        .titleMediumEmphasized
+                                    textStyle: typescaleTheme.bodyLarge
                                         .toTextStyle(),
                                     label: Text("Color scheme"),
                                     initialSelection: themeVariant,
@@ -1548,7 +1670,7 @@ class _SettingsPageState extends State<SettingsPage> {
                                     ),
                                   ),
                                   filled: true,
-                                  fillColor: colorTheme.surface,
+                                  fillColor: unselectedContainerColor,
                                 ),
                                 expandedInsets: .zero,
                                 label: Text(tr("appSortBy")),
@@ -1597,7 +1719,7 @@ class _SettingsPageState extends State<SettingsPage> {
                                     ),
                                   ),
                                   filled: true,
-                                  fillColor: colorTheme.surface,
+                                  fillColor: unselectedContainerColor,
                                 ),
                                 expandedInsets: .zero,
                                 label: Text(tr("appSortOrder")),
@@ -1902,7 +2024,7 @@ class _SettingsPageState extends State<SettingsPage> {
                       shape: CornersBorder.rounded(
                         corners: .all(shapeTheme.corner.large),
                       ),
-                      color: colorTheme.surface,
+                      color: unselectedContainerColor,
                       child: const Padding(
                         padding: .all(16.0),
                         child: CategoryEditorSelector(
@@ -2449,6 +2571,10 @@ class _LogsPageState extends State<_LogsPage> {
     final logsProvider = LogsProvider.instance;
     final settings = context.read<SettingsService>();
 
+    final useBlackTheme = context.select<SettingsService, bool>(
+      (settings) => settings.useBlackTheme.value,
+    );
+
     final colorTheme = ColorTheme.of(context);
     final elevationTheme = ElevationTheme.of(context);
     final shapeTheme = ShapeTheme.of(context);
@@ -2479,8 +2605,12 @@ class _LogsPageState extends State<_LogsPage> {
       color: .tonal,
     );
 
+    final backgroundColor = useBlackTheme
+        ? colorTheme.surface
+        : colorTheme.surfaceContainer;
+
     return Scaffold(
-      backgroundColor: colorTheme.surfaceContainer,
+      backgroundColor: backgroundColor,
       body: SafeArea(
         top: false,
         bottom: false,
@@ -2488,8 +2618,8 @@ class _LogsPageState extends State<_LogsPage> {
           slivers: [
             CustomAppBar(
               type: .small,
-              expandedContainerColor: colorTheme.surfaceContainer,
-              collapsedContainerColor: colorTheme.surfaceContainer,
+              expandedContainerColor: backgroundColor,
+              collapsedContainerColor: backgroundColor,
               collapsedPadding: const .fromSTEB(
                 8.0 + 40.0 + 8.0,
                 0.0,

@@ -11,6 +11,7 @@ import 'package:materium/pages/apps.dart';
 import 'package:materium/pages/developer.dart';
 import 'package:materium/pages/settings.dart';
 import 'package:materium/providers/apps_provider.dart';
+import 'package:materium/providers/settings_new.dart';
 import 'package:materium/providers/settings_provider.dart';
 import 'package:materium/providers/source_provider.dart';
 import 'package:url_launcher/url_launcher_string.dart';
@@ -68,6 +69,10 @@ class _AppPageState extends State<AppPage> {
   Widget build(BuildContext context) {
     final appsProvider = context.watch<AppsProvider>();
 
+    final useBlackTheme = context.select<SettingsService, bool>(
+      (settings) => settings.useBlackTheme.value,
+    );
+
     final showBackButton =
         ModalRoute.of(context)?.impliesAppBarDismissal ?? false;
 
@@ -75,6 +80,10 @@ class _AppPageState extends State<AppPage> {
     final shapeTheme = ShapeTheme.of(context);
     final stateTheme = StateTheme.of(context);
     final typescaleTheme = TypescaleTheme.of(context);
+
+    final backgroundColor = useBlackTheme
+        ? colorTheme.surface
+        : colorTheme.surfaceContainer;
 
     final showAppWebpage = context.select<SettingsProvider, bool>(
       (settingsProvider) => settingsProvider.showAppWebpage,
@@ -742,9 +751,9 @@ class _AppPageState extends State<AppPage> {
     return Scaffold(
       extendBody: false,
       appBar: showAppWebpageFinal
-          ? AppBar(backgroundColor: colorTheme.surfaceContainer)
+          ? AppBar(backgroundColor: backgroundColor)
           : null,
-      backgroundColor: colorTheme.surfaceContainer,
+      backgroundColor: backgroundColor,
       // TODO: replace with a Loading indicator
       body: CustomRefreshIndicator(
         onRefresh: () async {
@@ -763,8 +772,8 @@ class _AppPageState extends State<AppPage> {
                 slivers: [
                   CustomAppBar(
                     type: .small,
-                    expandedContainerColor: colorTheme.surfaceContainer,
-                    collapsedContainerColor: colorTheme.surfaceContainer,
+                    expandedContainerColor: backgroundColor,
+                    collapsedContainerColor: backgroundColor,
                     collapsedPadding: showBackButton
                         ? const .fromSTEB(8.0 + 40.0 + 8.0, 0.0, 16.0, 0.0)
                         : null,
@@ -789,7 +798,9 @@ class _AppPageState extends State<AppPage> {
           shape: CornersBorder.rounded(
             corners: Corners.all(shapeTheme.corner.none),
           ),
-          color: colorTheme.surfaceContainerHigh,
+          color: useBlackTheme
+              ? backgroundColor
+              : colorTheme.surfaceContainerHigh,
           child: Padding(
             padding: EdgeInsets.only(bottom: padding.bottom),
             child: SizedBox(

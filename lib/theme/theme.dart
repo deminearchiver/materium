@@ -392,6 +392,13 @@ abstract final class CustomThemeFactory {
         ),
       ),
       .listItemWatch => .from(
+        handleSize: .resolveWith(
+          (states) => switch (states) {
+            SwitchEnabledStates(isPressed: true) => const .square(28.0),
+            SwitchStates(isSelected: false) => const .square(16.0),
+            SwitchStates(isSelected: true) => const .square(24.0),
+          },
+        ),
         trackColor: .resolveWith(
           (states) => switch (states) {
             SwitchDisabledStates(isSelected: false) => null,
@@ -422,11 +429,14 @@ abstract final class CustomThemeFactory {
         ),
         iconTheme: .resolveWith(
           (states) => switch (states) {
-            SwitchDisabledStates(isSelected: false) => null,
-            SwitchDisabledStates(isSelected: true) => null,
-            SwitchStates(isSelected: false) => .from(
-              color: colorTheme.surfaceContainer,
+            SwitchStates(isSelected: false) => const .from(
+              color: Colors.transparent,
             ),
+            // SwitchDisabledStates(isSelected: false) => null,
+            SwitchDisabledStates(isSelected: true) => null,
+            // SwitchStates(isSelected: false) => .from(
+            //   color: colorTheme.surfaceContainer,
+            // ),
             SwitchStates(isSelected: true) => .from(
               color: colorTheme.onPrimaryContainer,
             ),
@@ -456,7 +466,7 @@ abstract final class CustomThemeFactory {
         ),
       ),
       headlineTextStyle: .all(
-        typescaleTheme.titleMediumEmphasized.toTextStyle(
+        typescaleTheme.bodyLargeEmphasized.toTextStyle(
           color: colorTheme.onSurface,
         ),
       ),

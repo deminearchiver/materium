@@ -35,6 +35,10 @@ class _ImportExportPageState extends State<ImportExportPage> {
     final settingsProvider = context.watch<SettingsProvider>();
     final settings = context.read<SettingsService>();
 
+    final useBlackTheme = context.select<SettingsService, bool>(
+      (settings) => settings.useBlackTheme.value,
+    );
+
     final padding = MediaQuery.paddingOf(context);
 
     final showBackButton =
@@ -45,6 +49,10 @@ class _ImportExportPageState extends State<ImportExportPage> {
     final shapeTheme = ShapeTheme.of(context);
     final stateTheme = StateTheme.of(context);
     final typescaleTheme = TypescaleTheme.of(context);
+
+    final backgroundColor = useBlackTheme
+        ? colorTheme.surface
+        : colorTheme.surfaceContainer;
 
     void urlListImport({String? initValue, bool overrideInitValid = false}) {
       showDialog<Map<String, dynamic>?>(
@@ -374,8 +382,8 @@ class _ImportExportPageState extends State<ImportExportPage> {
       valueListenable: settings.developerMode,
       builder: (context, developerMode, _) => CustomAppBar(
         type: developerMode || showBackButton ? .small : .largeFlexible,
-        expandedContainerColor: colorTheme.surfaceContainer,
-        collapsedContainerColor: colorTheme.surfaceContainer,
+        expandedContainerColor: backgroundColor,
+        collapsedContainerColor: backgroundColor,
         collapsedPadding: showBackButton
             ? const .fromSTEB(8.0 + 40.0 + 8.0, 0.0, 16.0, 0.0)
             : null,
@@ -399,10 +407,14 @@ class _ImportExportPageState extends State<ImportExportPage> {
       stateTheme: stateTheme,
       typescaleTheme: typescaleTheme,
       size: .small,
-      shape: .round,
+      shape: .square,
       color: .filled,
-      isSelected: false,
-      unselectedContainerColor: colorTheme.surfaceBright,
+      containerColor: useBlackTheme
+          ? colorTheme.surfaceContainer
+          : colorTheme.surfaceContainerHighest,
+      contentColor: useBlackTheme
+          ? colorTheme.primary
+          : colorTheme.onSurfaceVariant,
     );
 
     Widget getSliverList() => SliverPadding(
@@ -428,53 +440,72 @@ class _ImportExportPageState extends State<ImportExportPage> {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   FilledButton.icon(
-                    style: ButtonStyle(
-                      animationDuration: Duration.zero,
-                      elevation: const WidgetStatePropertyAll(0.0),
-                      shadowColor: WidgetStateColor.transparent,
-                      minimumSize: const WidgetStatePropertyAll(
-                        Size(48.0, 56.0),
-                      ),
-                      fixedSize: const WidgetStatePropertyAll(null),
-                      maximumSize: const WidgetStatePropertyAll(Size.infinite),
-                      padding: const WidgetStatePropertyAll(
-                        EdgeInsets.symmetric(horizontal: 24.0, vertical: 16.0),
-                      ),
-                      iconSize: const WidgetStatePropertyAll(24.0),
-                      shape: WidgetStatePropertyAll(
-                        CornersBorder.rounded(
-                          corners: Corners.all(shapeTheme.corner.large),
-                        ),
-                      ),
-                      overlayColor: WidgetStateLayerColor(
-                        color: WidgetStatePropertyAll(
-                          hasExportDir
-                              ? colorTheme.onSurfaceVariant
-                              : colorTheme.onPrimary,
-                        ),
-                        opacity: stateTheme.stateLayerOpacity,
-                      ),
-                      backgroundColor: WidgetStateProperty.resolveWith(
-                        (states) => states.contains(WidgetState.disabled)
-                            ? colorTheme.onSurface.withValues(alpha: 0.1)
-                            : hasExportDir
-                            ? colorTheme.surfaceBright
-                            : colorTheme.primary,
-                      ),
-                      foregroundColor: WidgetStateProperty.resolveWith(
-                        (states) => states.contains(WidgetState.disabled)
-                            ? colorTheme.onSurface.withValues(alpha: 0.38)
-                            : hasExportDir
-                            ? colorTheme.onSurfaceVariant
-                            : colorTheme.onPrimary,
-                      ),
-                      textStyle: WidgetStateProperty.resolveWith(
-                        (states) =>
-                            (hasExportDir
-                                    ? typescaleTheme.titleMedium
-                                    : typescaleTheme.titleMediumEmphasized)
-                                .toTextStyle(),
-                      ),
+                    // style: ButtonStyle(
+                    //   animationDuration: Duration.zero,
+                    //   elevation: const WidgetStatePropertyAll(0.0),
+                    //   shadowColor: WidgetStateColor.transparent,
+                    //   minimumSize: const WidgetStatePropertyAll(
+                    //     Size(48.0, 56.0),
+                    //   ),
+                    //   fixedSize: const WidgetStatePropertyAll(null),
+                    //   maximumSize: const WidgetStatePropertyAll(Size.infinite),
+                    //   padding: const WidgetStatePropertyAll(
+                    //     EdgeInsets.symmetric(horizontal: 24.0, vertical: 16.0),
+                    //   ),
+                    //   iconSize: const WidgetStatePropertyAll(24.0),
+                    //   shape: WidgetStatePropertyAll(
+                    //     CornersBorder.rounded(
+                    //       corners: Corners.all(shapeTheme.corner.large),
+                    //     ),
+                    //   ),
+                    //   overlayColor: WidgetStateLayerColor(
+                    //     color: WidgetStatePropertyAll(
+                    //       hasExportDir
+                    //           ? colorTheme.onSurfaceVariant
+                    //           : colorTheme.onPrimary,
+                    //     ),
+                    //     opacity: stateTheme.stateLayerOpacity,
+                    //   ),
+                    //   backgroundColor: WidgetStateProperty.resolveWith(
+                    //     (states) => states.contains(WidgetState.disabled)
+                    //         ? colorTheme.onSurface.withValues(alpha: 0.1)
+                    //         : hasExportDir
+                    //         ? colorTheme.surfaceBright
+                    //         : colorTheme.primary,
+                    //   ),
+                    //   foregroundColor: WidgetStateProperty.resolveWith(
+                    //     (states) => states.contains(WidgetState.disabled)
+                    //         ? colorTheme.onSurface.withValues(alpha: 0.38)
+                    //         : hasExportDir
+                    //         ? colorTheme.onSurfaceVariant
+                    //         : colorTheme.onPrimary,
+                    //   ),
+                    //   textStyle: WidgetStateProperty.resolveWith(
+                    //     (states) =>
+                    //         (hasExportDir
+                    //                 ? typescaleTheme.titleMedium
+                    //                 : typescaleTheme.titleMediumEmphasized)
+                    //             .toTextStyle(),
+                    //   ),
+                    // ),
+                    style: LegacyThemeFactory.createButtonStyle(
+                      colorTheme: colorTheme,
+                      elevationTheme: elevationTheme,
+                      shapeTheme: shapeTheme,
+                      stateTheme: stateTheme,
+                      typescaleTheme: typescaleTheme,
+                      size: .medium,
+                      shape: .square,
+                      color: .filled,
+                      isSelected: !hasExportDir,
+                      unselectedContainerColor: useBlackTheme
+                          ? colorTheme.surfaceContainer
+                          : colorTheme.surfaceContainerHighest,
+                      unselectedContentColor: colorTheme.primary,
+                      unselectedTextStyle: typescaleTheme.titleMedium
+                          .toTextStyle(),
+                      selectedTextStyle: typescaleTheme.titleMediumEmphasized
+                          .toTextStyle(),
                     ),
                     onPressed: importInProgress
                         ? null
@@ -493,42 +524,17 @@ class _ImportExportPageState extends State<ImportExportPage> {
                   ),
                   const SizedBox(height: 8.0),
                   FilledButton.icon(
-                    style: ButtonStyle(
-                      animationDuration: Duration.zero,
-                      elevation: const WidgetStatePropertyAll(0.0),
-                      shadowColor: WidgetStateColor.transparent,
-                      minimumSize: const WidgetStatePropertyAll(
-                        Size(48.0, 56.0),
-                      ),
-                      fixedSize: const WidgetStatePropertyAll(null),
-                      maximumSize: const WidgetStatePropertyAll(Size.infinite),
-                      padding: const WidgetStatePropertyAll(
-                        EdgeInsets.symmetric(horizontal: 24.0, vertical: 16.0),
-                      ),
-                      iconSize: const WidgetStatePropertyAll(24.0),
-                      shape: WidgetStatePropertyAll(
-                        CornersBorder.rounded(
-                          corners: Corners.all(shapeTheme.corner.large),
-                        ),
-                      ),
-                      overlayColor: WidgetStateLayerColor(
-                        color: WidgetStatePropertyAll(colorTheme.onPrimary),
-                        opacity: stateTheme.stateLayerOpacity,
-                      ),
-                      backgroundColor: WidgetStateProperty.resolveWith(
-                        (states) => states.contains(WidgetState.disabled)
-                            ? colorTheme.onSurface.withValues(alpha: 0.1)
-                            : colorTheme.primary,
-                      ),
-                      foregroundColor: WidgetStateProperty.resolveWith(
-                        (states) => states.contains(WidgetState.disabled)
-                            ? colorTheme.onSurface.withValues(alpha: 0.38)
-                            : colorTheme.onPrimary,
-                      ),
-                      textStyle: WidgetStateProperty.resolveWith(
-                        (states) =>
-                            typescaleTheme.titleMediumEmphasized.toTextStyle(),
-                      ),
+                    style: LegacyThemeFactory.createButtonStyle(
+                      colorTheme: colorTheme,
+                      elevationTheme: elevationTheme,
+                      shapeTheme: shapeTheme,
+                      stateTheme: stateTheme,
+                      typescaleTheme: typescaleTheme,
+                      size: .medium,
+                      shape: .round,
+                      color: .filled,
+                      textStyle: typescaleTheme.titleMediumEmphasized
+                          .toTextStyle(),
                     ),
                     onPressed: importInProgress || snapshot.data == null
                         ? null
@@ -605,39 +611,16 @@ class _ImportExportPageState extends State<ImportExportPage> {
             ),
           ),
           FilledButton.icon(
-            style: ButtonStyle(
-              animationDuration: Duration.zero,
-              elevation: const WidgetStatePropertyAll(0.0),
-              shadowColor: WidgetStateColor.transparent,
-              minimumSize: const WidgetStatePropertyAll(Size(48.0, 56.0)),
-              fixedSize: const WidgetStatePropertyAll(null),
-              maximumSize: const WidgetStatePropertyAll(Size.infinite),
-              padding: const WidgetStatePropertyAll(
-                EdgeInsets.symmetric(horizontal: 24.0, vertical: 16.0),
-              ),
-              iconSize: const WidgetStatePropertyAll(24.0),
-              shape: WidgetStatePropertyAll(
-                CornersBorder.rounded(
-                  corners: Corners.all(shapeTheme.corner.large),
-                ),
-              ),
-              overlayColor: WidgetStateLayerColor(
-                color: WidgetStatePropertyAll(colorTheme.onPrimary),
-                opacity: stateTheme.stateLayerOpacity,
-              ),
-              backgroundColor: WidgetStateProperty.resolveWith(
-                (states) => states.contains(WidgetState.disabled)
-                    ? colorTheme.onSurface.withValues(alpha: 0.1)
-                    : colorTheme.primary,
-              ),
-              foregroundColor: WidgetStateProperty.resolveWith(
-                (states) => states.contains(WidgetState.disabled)
-                    ? colorTheme.onSurface.withValues(alpha: 0.38)
-                    : colorTheme.onPrimary,
-              ),
-              textStyle: WidgetStateProperty.resolveWith(
-                (states) => typescaleTheme.titleMediumEmphasized.toTextStyle(),
-              ),
+            style: LegacyThemeFactory.createButtonStyle(
+              colorTheme: colorTheme,
+              elevationTheme: elevationTheme,
+              shapeTheme: shapeTheme,
+              stateTheme: stateTheme,
+              typescaleTheme: typescaleTheme,
+              size: .medium,
+              shape: .round,
+              color: .filled,
+              textStyle: typescaleTheme.titleMediumEmphasized.toTextStyle(),
             ),
             onPressed: importInProgress ? null : runObtainiumImport,
             icon: const IconLegacy(
@@ -772,7 +755,7 @@ class _ImportExportPageState extends State<ImportExportPage> {
     );
 
     return Scaffold(
-      backgroundColor: colorTheme.surfaceContainer,
+      backgroundColor: backgroundColor,
       body: SafeArea(
         top: false,
         bottom: false,

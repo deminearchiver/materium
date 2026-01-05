@@ -459,6 +459,7 @@ abstract final class LegacyThemeFactory {
     Color? unselectedIconColor,
     Color? selectedDisabledIconColor,
     Color? selectedIconColor,
+    Color? outlineColor,
   }) {
     final isUnselectedNotDefault = isSelected == false;
     final isUnselectedDefault = isSelected != true;
@@ -613,13 +614,13 @@ abstract final class LegacyThemeFactory {
     final side = switch (color) {
       .outlined when isUnselectedDefault => BorderSide(
         style: BorderStyle.solid,
-        color: colorTheme.outlineVariant,
+        color: outlineColor ?? colorTheme.outlineVariant,
         width: outlineWidth,
         strokeAlign: BorderSide.strokeAlignInside,
       ),
-      _ => BorderSide(
+      _ => const BorderSide(
         style: BorderStyle.none,
-        color: colorTheme.background,
+        color: Colors.transparent,
         width: 0.0,
         strokeAlign: BorderSide.strokeAlignInside,
       ),
