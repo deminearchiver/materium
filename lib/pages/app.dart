@@ -271,7 +271,7 @@ class _AppPageState extends State<AppPage> {
                         color: WidgetStatePropertyAll(
                           colorTheme.onSurfaceVariant,
                         ),
-                        opacity: stateTheme.stateLayerOpacity,
+                        opacity: stateTheme.asWidgetStateLayerOpacity,
                       ),
                       child: Padding(
                         padding: const EdgeInsets.symmetric(
@@ -730,7 +730,7 @@ class _AppPageState extends State<AppPage> {
       ),
       overlayColor: WidgetStateLayerColor(
         color: WidgetStatePropertyAll(colorTheme.onSurfaceVariant),
-        opacity: stateTheme.stateLayerOpacity,
+        opacity: stateTheme.asWidgetStateLayerOpacity,
       ),
       backgroundColor: WidgetStateProperty.resolveWith(
         (states) => states.contains(WidgetState.disabled)
@@ -937,7 +937,7 @@ class _AppPageState extends State<AppPage> {
                               color: WidgetStatePropertyAll(
                                 colorTheme.onPrimary,
                               ),
-                              opacity: stateTheme.stateLayerOpacity,
+                              opacity: stateTheme.asWidgetStateLayerOpacity,
                             ),
                       backgroundColor: showProgressIndicator
                           ? WidgetStatePropertyAll(colorTheme.surface)

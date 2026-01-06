@@ -324,80 +324,93 @@ class _SettingsPageState extends State<SettingsPage> {
     final showBackButton =
         ModalRoute.of(context)?.impliesAppBarDismissal ?? false;
 
+    final containerOuterCorner = shapeTheme.corner.large;
+    final containerInnerCorner = shapeTheme.corner.extraSmall;
+
     final disabledContainerColor = colorTheme.onSurface.withValues(alpha: 0.10);
     final disabledContentColor = colorTheme.onSurface.withValues(alpha: 0.38);
 
     final unselectedContainerColor = useBlackTheme
-        ? colorTheme.surfaceContainer
+        ? colorTheme.surface
         : colorTheme.surface;
 
     final selectedContainerColor = useBlackTheme
         ? colorTheme.primaryContainer
         : colorTheme.secondaryContainer;
 
+    final unselectedOnContainerColor = useBlackTheme
+        ? colorTheme.onSurface
+        : colorTheme.onSurface;
+    final unselectedOnContainerVariantColor = useBlackTheme
+        ? colorTheme.onSurface
+        : colorTheme.onSurfaceVariant;
+    final selectedOnContainerColor = useBlackTheme
+        ? colorTheme.onPrimaryContainer
+        : colorTheme.onSecondaryContainer;
+    final selectedOnContainerVariantColor = useBlackTheme
+        ? colorTheme.onPrimaryContainer.withValues(alpha: 0.9)
+        : colorTheme.onSecondaryContainer;
+
     final selectedListItemTheme = ListItemThemeDataPartial.from(
       containerColor: .all(selectedContainerColor),
       containerShape: .all(
-        CornersBorder.rounded(corners: .all(shapeTheme.corner.large)),
+        CornersBorder.rounded(
+          corners: .all(shapeTheme.corner.large),
+          // side: useBlackTheme
+          //     ? BorderSide(width: 2.0, color: colorTheme.onPrimaryContainer)
+          //     : .none,
+        ),
       ),
       stateLayerColor: .all(
         useBlackTheme
             ? colorTheme.onPrimaryContainer
             : colorTheme.onSecondaryContainer,
       ),
-      leadingIconTheme: .all(
-        .from(
-          color: useBlackTheme
-              ? colorTheme.onPrimaryContainer
-              : colorTheme.onSecondaryContainer,
-        ),
-      ),
-      leadingTextStyle: .all(
-        TextStyle(
-          color: useBlackTheme
-              ? colorTheme.onPrimaryContainer.withValues(alpha: 0.9)
-              : colorTheme.onSecondaryContainer,
-        ),
-      ),
+      leadingIconTheme: .all(.from(color: selectedOnContainerVariantColor)),
+      leadingTextStyle: .all(TextStyle(color: selectedOnContainerVariantColor)),
       overlineTextStyle: .all(
-        TextStyle(
-          color: useBlackTheme
-              ? colorTheme.onPrimaryContainer.withValues(alpha: 0.9)
-              : colorTheme.onSecondaryContainer,
-        ),
+        TextStyle(color: selectedOnContainerVariantColor),
       ),
       headlineTextStyle: .all(
-        TextStyle(
-          color: useBlackTheme
-              ? colorTheme.onPrimaryContainer
-              : colorTheme.onSecondaryContainer,
+        typescaleTheme.bodyLargeEmphasized.toTextStyle(
+          color: selectedOnContainerColor,
         ),
       ),
       supportingTextStyle: .all(
-        TextStyle(
-          color: useBlackTheme
-              ? colorTheme.onPrimaryContainer.withValues(alpha: 0.9)
-              : colorTheme.onSecondaryContainer,
-        ),
+        TextStyle(color: selectedOnContainerVariantColor),
       ),
       trailingTextStyle: .all(
-        TextStyle(
-          color: useBlackTheme
-              ? colorTheme.onPrimaryContainer.withValues(alpha: 0.9)
-              : colorTheme.onSecondaryContainer,
-        ),
+        TextStyle(color: selectedOnContainerVariantColor),
       ),
-      trailingIconTheme: .all(
-        .from(
-          color: useBlackTheme
-              ? colorTheme.onPrimaryContainer.withValues(alpha: 0.9)
-              : colorTheme.onSecondaryContainer,
-        ),
-      ),
+      trailingIconTheme: .all(.from(color: selectedOnContainerVariantColor)),
     );
 
     final unselectedListItemTheme = ListItemThemeDataPartial.from(
       containerColor: .all(unselectedContainerColor),
+      containerShape: .resolveWith((states) {
+        final CornersGeometry corners = switch (states) {
+          SegmentedListItemStates(isFirst: true, isLast: true) ||
+          SelectableListItemStates(
+            isSelected: true,
+          ) => .all(containerOuterCorner),
+          SegmentedListItemStates(isFirst: true) => .vertical(
+            top: containerOuterCorner,
+            bottom: containerInnerCorner,
+          ),
+          SegmentedListItemStates(isLast: true) => .vertical(
+            top: containerInnerCorner,
+            bottom: containerOuterCorner,
+          ),
+          _ => .all(containerInnerCorner),
+        };
+        return CornersBorder.rounded(
+          corners: corners,
+          // side: useBlackTheme
+          //     ? BorderSide(width: 1.0, color: colorTheme.outline)
+          //     : .none,
+        );
+      }),
+      headlineTextStyle: .all(typescaleTheme.bodyLargeEmphasized.toTextStyle()),
     );
 
     final backgroundColor = useBlackTheme
@@ -442,7 +455,8 @@ class _SettingsPageState extends State<SettingsPage> {
                   colorTheme: colorTheme,
                   shapeTheme: shapeTheme,
                   stateTheme: stateTheme,
-                  color: useBlackTheme ? .listItemWatch : .listItemPhone,
+                  size: useBlackTheme ? .black : .standard,
+                  color: useBlackTheme ? .black : .listItemPhone,
                 ),
                 child: SliverList.list(
                   children: [
@@ -453,16 +467,18 @@ class _SettingsPageState extends State<SettingsPage> {
                             settingsProvider.updateIntervalSliderVal,
                         builder: (context, updateIntervalSliderVal, _) {
                           final isSelected = updateIntervalSliderVal > 0.0;
-                          final activeIndicatorColor = isSelected
+                          final activeIndicatorColor = useBlackTheme
+                              ? colorTheme.primary
+                              : isSelected
                               ? colorTheme.secondary
                               : colorTheme.primary;
                           final trackColor = isSelected
                               // TODO: pull value from watch spec
                               ? useBlackTheme
-                                    ? colorTheme.primary.withValues(alpha: 0.6)
+                                    ? colorTheme.surface.withValues(alpha: 0.3)
                                     : colorTheme.surface
                               : useBlackTheme
-                              ? colorTheme.surface.withValues(alpha: 0.3)
+                              ? colorTheme.primaryContainer
                               : colorTheme.secondaryContainer;
                           return ListItemTheme.merge(
                             data: isSelected

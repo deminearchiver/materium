@@ -1,5 +1,4 @@
 import 'package:flutter_markdown_plus/flutter_markdown_plus.dart';
-import 'package:material/material_color_utilities.dart';
 import 'package:materium/flutter.dart';
 
 // Open fonts (bundled as assets or available as system fonts)
@@ -143,27 +142,18 @@ class TypographyDefaults with Diagnosticable {
   );
 }
 
-enum CustomCheckboxColor { standard, listItemPhone, listItemWatch }
+enum CustomCheckboxColor { standard, listItemPhone, listItemWatch, black }
 
 enum CustomRadioButtonColor { standard, listItemPhone, listItemWatch }
 
-enum CustomSwitchSize { phone, watch, nowInAndroid }
+enum CustomSwitchSize { standard, nowInAndroid, black }
 
 enum CustomSwitchColor {
-  /// Baseline switch (no icons)
-  baseline,
-
-  /// Expressive switch (both icons)
-  expressive,
-
-  /// Now in Android switch (no icons)
-  nowInAndroid,
-
-  /// Inside of a list item on phone
+  standard,
   listItemPhone,
-
-  /// Inside of a list item on watch (standard watch switch)
   listItemWatch,
+  nowInAndroid,
+  black,
 }
 
 enum CustomListItemVariant { settings, licenses, logs }
@@ -173,8 +163,9 @@ abstract final class CustomThemeFactory {
     required ColorThemeData colorTheme,
     required ShapeThemeData shapeTheme,
     required StateThemeData stateTheme,
-    CustomRadioButtonColor color = .standard,
+    CustomCheckboxColor color = .standard,
   }) => switch (color) {
+    .standard => const .from(),
     .listItemPhone => .from(
       stateLayerColor: .resolveWith(
         (states) => switch (states) {
@@ -199,7 +190,7 @@ abstract final class CustomThemeFactory {
       ),
       iconColor: .resolveWith(
         (states) => switch (states) {
-          CheckboxEnabledStates() => colorTheme.onSecondary,
+          CheckboxEnabledStates(isSelected: true) => colorTheme.onSecondary,
           _ => null,
         },
       ),
@@ -241,7 +232,41 @@ abstract final class CustomThemeFactory {
         },
       ),
     ),
-    _ => const .from(),
+    .black => .from(
+      stateLayerColor: .resolveWith(
+        (states) => switch (states) {
+          CheckboxEnabledStates(isSelected: true) =>
+            colorTheme.onPrimaryContainer,
+          _ => null,
+        },
+      ),
+      containerColor: .resolveWith(
+        (states) => switch (states) {
+          CheckboxDisabledStates(isSelected: false) =>
+            colorTheme.onPrimaryContainer.withValues(alpha: 0.0),
+          CheckboxEnabledStates(isSelected: true) =>
+            colorTheme.onPrimaryContainer,
+          _ => null,
+        },
+      ),
+      containerOutline: .resolveWith(
+        (states) => .from(
+          color: switch (states) {
+            CheckboxDisabledStates() => null,
+            CheckboxStates(isSelected: false) => colorTheme.onSurface,
+            CheckboxStates(isSelected: true) =>
+              colorTheme.onPrimaryContainer.withValues(alpha: 0.0),
+          },
+        ),
+      ),
+      iconColor: .resolveWith(
+        (states) => switch (states) {
+          CheckboxEnabledStates(isSelected: true) =>
+            colorTheme.primaryContainer,
+          _ => null,
+        },
+      ),
+    ),
   };
 
   static RadioButtonThemeDataPartial createRadioButtonTheme({
@@ -322,35 +347,90 @@ abstract final class CustomThemeFactory {
     required ColorThemeData colorTheme,
     required ShapeThemeData shapeTheme,
     required StateThemeData stateTheme,
-    CustomSwitchSize size = .phone,
-    CustomSwitchColor color = .expressive,
+    CustomSwitchSize size = .standard,
+    CustomSwitchColor color = .standard,
     bool? showUnselectedIcon,
     bool? showSelectedIcon,
   }) {
-    showUnselectedIcon = showUnselectedIcon ?? true;
-    showSelectedIcon = showSelectedIcon ?? true;
+    final resolvedShowUnselectedIcon = switch ((
+      size,
+      color,
+      showUnselectedIcon,
+    )) {
+      (.nowInAndroid, _, _) => false,
+      (_, .black, _) => false,
+      _ => showUnselectedIcon ?? true,
+    };
+    final resolvedShowSelectedIcon = switch ((size, color, showSelectedIcon)) {
+      (.nowInAndroid, _, _) => false,
+      (_, .black, _) => false,
+      _ => showSelectedIcon ?? true,
+    };
 
-    return switch (color) {
-      .baseline => .from(
-        handleSize: .resolveWith(
-          (states) => switch (states) {
-            SwitchEnabledStates(isPressed: true) => const .square(28.0),
-            SwitchStates(isSelected: false) => const .square(16.0),
-            SwitchStates(isSelected: true) => const .square(24.0),
-          },
-        ),
-        iconTheme: .resolveWith(
-          (states) => switch (states) {
-            SwitchStates(isSelected: false) => const .from(
-              color: Colors.transparent,
-            ),
-            SwitchStates(isSelected: true) => const .from(
-              color: Colors.transparent,
-            ),
-          },
-        ),
+    // final morph = Morph(
+    //   MaterialShapes.puffyDiamond.normalized(approximate: false),
+    //   MaterialShapes.softBurst.normalized(approximate: false),
+    // );
+    // final morph = Morph(
+    //   MaterialShapes.circle,
+    //   MaterialShapes.arrow
+    //   // ignore: invalid_use_of_internal_member
+    //       .transformedWithMatrix(Matrix4.rotationZ(math.pi / 2.0))
+    //       .normalized(approximate: true),
+    // );
+
+    final unselectedHandleSize = switch ((
+      size,
+      color,
+      resolvedShowUnselectedIcon,
+    )) {
+      (.nowInAndroid, _, _) => 17.0,
+      (_, .black, _) => 16.0,
+      (_, _, true) => 24.0,
+      (_, _, false) => 16.0,
+    };
+    final selectedHandleSize = switch ((
+      size,
+      color,
+      resolvedShowSelectedIcon,
+    )) {
+      (.nowInAndroid, _, _) => 17.6,
+      (_, .black, _) => 16.0,
+      _ => 24.0,
+    };
+    final unselectedPressedHandleSize = switch ((size, color)) {
+      (.nowInAndroid, _) => unselectedHandleSize,
+      (_, .black) => 24.0,
+      _ => 28.0,
+    };
+    final selectedPressedHandleSize = switch ((size, color)) {
+      (.nowInAndroid, _) => selectedHandleSize,
+      (_, .black) => 24.0,
+      _ => 28.0,
+    };
+
+    final SwitchThemeDataPartial switchThemeSize = .from(
+      trackSize: .all(switch (size) {
+        .nowInAndroid => const Size(48.0, 24.0),
+        _ => null,
+      }),
+      stateLayerSize: .all(switch (size) {
+        .nowInAndroid => const .square(30.0),
+        _ => null,
+      }),
+      handleSize: .resolveWith(
+        (states) => .square(switch (states) {
+          SwitchEnabledStates(isSelected: false, isPressed: true) =>
+            unselectedPressedHandleSize,
+          SwitchEnabledStates(isSelected: true, isPressed: true) =>
+            selectedPressedHandleSize,
+          SwitchStates(isSelected: false) => unselectedHandleSize,
+          SwitchStates(isSelected: true) => selectedHandleSize,
+        }),
       ),
-      .expressive => const .from(),
+    );
+    final SwitchThemeDataPartial switchThemeColor = switch (color) {
+      .standard => const .from(),
       .listItemPhone => .from(
         trackColor: .resolveWith(
           (states) => switch (states) {
@@ -392,13 +472,6 @@ abstract final class CustomThemeFactory {
         ),
       ),
       .listItemWatch => .from(
-        handleSize: .resolveWith(
-          (states) => switch (states) {
-            SwitchEnabledStates(isPressed: true) => const .square(28.0),
-            SwitchStates(isSelected: false) => const .square(16.0),
-            SwitchStates(isSelected: true) => const .square(24.0),
-          },
-        ),
         trackColor: .resolveWith(
           (states) => switch (states) {
             SwitchDisabledStates(isSelected: false) => null,
@@ -419,6 +492,23 @@ abstract final class CustomThemeFactory {
             },
           ),
         ),
+        stateLayerColor: .resolveWith(
+          (states) => states.isSelected
+              ? colorTheme.onPrimaryContainer
+              : colorTheme.onSurface,
+        ),
+        // handleShape: .resolveWith(
+        //   (states) => switch (states) {
+        //     SwitchStates(isSelected: false) => _MorphBorder(
+        //       morph: morph,
+        //       progress: 0.0,
+        //     ),
+        //     SwitchStates(isSelected: true) => _MorphBorder(
+        //       morph: morph,
+        //       progress: 1.0,
+        //     ),
+        //   },
+        // ),
         handleColor: .resolveWith(
           (states) => switch (states) {
             SwitchDisabledStates(isSelected: false) => null,
@@ -428,23 +518,157 @@ abstract final class CustomThemeFactory {
           },
         ),
         iconTheme: .resolveWith(
-          (states) => switch (states) {
-            SwitchStates(isSelected: false) => const .from(
-              color: Colors.transparent,
-            ),
-            // SwitchDisabledStates(isSelected: false) => null,
-            SwitchDisabledStates(isSelected: true) => null,
-            // SwitchStates(isSelected: false) => .from(
-            //   color: colorTheme.surfaceContainer,
-            // ),
-            SwitchStates(isSelected: true) => .from(
-              color: colorTheme.onPrimaryContainer,
-            ),
-          },
+          (states) => .from(
+            color: switch (states) {
+              SwitchDisabledStates() => null,
+              SwitchStates(isSelected: false) => colorTheme.surfaceContainer,
+              SwitchStates(isSelected: true) => colorTheme.onPrimaryContainer,
+            },
+          ),
         ),
       ),
-      _ => const .from(),
+      .nowInAndroid => .from(
+        trackColor: .resolveWith(
+          (states) => switch (states) {
+            SwitchDisabledStates(isSelected: false) =>
+              colorTheme.onSurfaceVariant.withValues(alpha: 0.38),
+            SwitchDisabledStates(isSelected: true) =>
+              colorTheme.onSurface.withValues(alpha: 0.38),
+            SwitchStates(isSelected: false) => colorTheme.onSurfaceVariant,
+            SwitchStates(isSelected: true) => colorTheme.onPrimaryContainer,
+          },
+        ),
+        trackOutline: const .all(.from(width: 0.0, color: Colors.transparent)),
+        stateLayerColor: .resolveWith(
+          (states) => states.isSelected
+              ? colorTheme.onPrimaryContainer
+              : colorTheme.onSurface,
+        ),
+        handleColor: .resolveWith(
+          (states) => switch (states) {
+            SwitchDisabledStates() => colorTheme.surface.withValues(
+              alpha: 0.38,
+            ),
+            SwitchStates(isSelected: false) =>
+              colorTheme.surfaceContainerHighest,
+            SwitchStates(isSelected: true) => colorTheme.primaryContainer,
+          },
+        ),
+        iconTheme: .resolveWith(
+          (states) => .from(
+            color: switch (states) {
+              SwitchDisabledStates(isSelected: false) =>
+                colorTheme.onSurface.withValues(
+                  alpha: resolvedShowUnselectedIcon ? 0.38 : 0.0,
+                ),
+              SwitchDisabledStates(isSelected: true) =>
+                colorTheme.onSurface.withValues(
+                  alpha: resolvedShowSelectedIcon ? 0.38 : 0.0,
+                ),
+              SwitchStates(isSelected: false) =>
+                colorTheme.onSurfaceVariant.withValues(
+                  alpha: resolvedShowUnselectedIcon ? 1.0 : 0.0,
+                ),
+              SwitchStates(isSelected: true) =>
+                colorTheme.onPrimaryContainer.withValues(
+                  alpha: resolvedShowSelectedIcon ? 1.0 : 0.0,
+                ),
+            },
+          ),
+        ),
+      ),
+      .black => .from(
+        trackColor: .resolveWith(
+          (states) => switch (states) {
+            SwitchDisabledStates(isSelected: false) =>
+              colorTheme.primaryContainer.withValues(alpha: 0.0),
+            SwitchDisabledStates(isSelected: true) =>
+              colorTheme.primaryContainer.withValues(alpha: 0.0),
+            SwitchStates(isSelected: false) =>
+              colorTheme.primaryContainer.withValues(alpha: 0.0),
+            SwitchStates(isSelected: true) =>
+              colorTheme.primaryContainer.withValues(alpha: 0.0),
+          },
+        ),
+        trackOutline: .resolveWith(
+          (states) => .from(
+            width: switch (states) {
+              SwitchStates(isSelected: false) => 2.0,
+              SwitchStates(isSelected: true) => 4.0,
+            },
+            color: switch (states) {
+              SwitchDisabledStates(isSelected: false) =>
+                colorTheme.onSurface.withValues(alpha: 0.12),
+              SwitchDisabledStates(isSelected: true) =>
+                colorTheme.onSurface.withValues(alpha: 0.12),
+              SwitchStates(isSelected: false) => colorTheme.onSurface,
+              SwitchStates(isSelected: true) => colorTheme.onPrimaryContainer,
+            },
+          ),
+        ),
+        stateLayerColor: .resolveWith(
+          (states) => states.isSelected
+              ? colorTheme.onPrimaryContainer
+              : colorTheme.onSurface,
+        ),
+        handleColor: .resolveWith(
+          (states) => switch (states) {
+            SwitchDisabledStates(isSelected: false) =>
+              colorTheme.onPrimaryContainer.withValues(alpha: 0.0),
+            SwitchDisabledStates(isSelected: true) =>
+              colorTheme.onPrimaryContainer.withValues(alpha: 0.0),
+            SwitchStates(isSelected: false) =>
+              colorTheme.onPrimaryContainer.withValues(alpha: 0.0),
+            SwitchStates(isSelected: true) =>
+              colorTheme.onPrimaryContainer.withValues(alpha: 0.0),
+          },
+        ),
+        handleOutline: .resolveWith(
+          (states) => .from(
+            width: switch (states) {
+              SwitchEnabledStates(isSelected: true, isPressed: true) =>
+                selectedPressedHandleSize / 2.0,
+              SwitchEnabledStates(isSelected: false, isPressed: true) =>
+                (unselectedPressedHandleSize - unselectedHandleSize).abs() /
+                        2.0 +
+                    2.0,
+              SwitchStates(isSelected: true) => selectedHandleSize / 2.0,
+              SwitchStates(isSelected: false) => 2.0,
+            },
+            color: switch (states) {
+              SwitchDisabledStates() => colorTheme.onSurface.withValues(
+                alpha: 0.38,
+              ),
+              SwitchStates(isSelected: false) => colorTheme.onSurface,
+              SwitchStates(isSelected: true) => colorTheme.onPrimaryContainer,
+            },
+          ),
+        ),
+        iconTheme: .resolveWith(
+          (states) => .from(
+            color: switch (states) {
+              SwitchDisabledStates(isSelected: false) =>
+                resolvedShowUnselectedIcon
+                    ? null
+                    : colorTheme.onSurface.withValues(alpha: 0.0),
+              SwitchDisabledStates(isSelected: true) =>
+                resolvedShowSelectedIcon
+                    ? null
+                    : colorTheme.onSurface.withValues(alpha: 0.0),
+              SwitchStates(isSelected: false) =>
+                colorTheme.surfaceContainerLow.withValues(
+                  alpha: resolvedShowUnselectedIcon ? 1.0 : 0.0,
+                ),
+              SwitchStates(isSelected: true) =>
+                colorTheme.onPrimaryContainer.withValues(
+                  alpha: resolvedShowSelectedIcon ? 1.0 : 0.0,
+                ),
+            },
+          ),
+        ),
+      ),
     };
+    return switchThemeSize.merge(switchThemeColor);
   }
 
   static ListItemThemeDataPartial createListItemTheme({
@@ -522,626 +746,172 @@ abstract final class MarkdownThemeFactory {
   }
 }
 
-extension on DynamicSchemeVariant {
-  Variant _toVariant() => switch (this) {
-    .monochrome => .monochrome,
-    .neutral => .neutral,
-    .tonalSpot => .tonalSpot,
-    .vibrant => .vibrant,
-    .expressive => .expressive,
-    .fidelity => .fidelity,
-    .content => .content,
-    .rainbow => .rainbow,
-    .fruitSalad => .fruitSalad,
-  };
-}
-
-Color _harmonizeColor(Color designColor, Color sourceColor) =>
-    designColor != sourceColor
-    ? Color(Blend.harmonize(designColor.toARGB32(), sourceColor.toARGB32()))
-    : designColor;
-
-extension on Color {
-  Hct _toHct() => .fromInt(toARGB32());
-
-  Color _harmonizeWith(Color sourceColor) => _harmonizeColor(this, sourceColor);
-}
-
-enum ExtendedColorPalette { primary, secondary, tertiary }
-
-enum ExtendedColorRole {
-  color,
-  onColor,
-  colorContainer,
-  onColorContainer,
-  colorFixed,
-  colorFixedDim,
-  onColorFixed,
-  onColorFixedVariant;
-
-  Color resolve(ExtendedColor extendedColor) => switch (this) {
-    .color => extendedColor.color,
-    .onColor => extendedColor.onColor,
-    .colorContainer => extendedColor.colorContainer,
-    .onColorContainer => extendedColor.onColorContainer,
-    .colorFixed => extendedColor.colorFixed,
-    .colorFixedDim => extendedColor.colorFixedDim,
-    .onColorFixed => extendedColor.onColorFixed,
-    .onColorFixedVariant => extendedColor.onColorFixedVariant,
-  };
-}
-
-class ExtendedColorPairing {
-  const ExtendedColorPairing.from({
-    required this.containerColorRole,
-    required this.contentColorRole,
-  });
-
-  final ExtendedColorRole containerColorRole;
-  final ExtendedColorRole contentColorRole;
-
-  Color resolveContainerColor(ExtendedColor extendedColor) =>
-      containerColorRole.resolve(extendedColor);
-  Color resolveContentColor(ExtendedColor extendedColor) =>
-      contentColorRole.resolve(extendedColor);
-
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      runtimeType == other.runtimeType &&
-          other is ExtendedColorPairing &&
-          containerColorRole == other.containerColorRole &&
-          contentColorRole == other.contentColorRole;
-
-  @override
-  int get hashCode =>
-      Object.hash(runtimeType, containerColorRole, contentColorRole);
-
-  static const normal = ExtendedColorPairing.from(
-    containerColorRole: .color,
-    contentColorRole: .onColor,
-  );
-
-  static const container = ExtendedColorPairing.from(
-    containerColorRole: .colorContainer,
-    contentColorRole: .onColorContainer,
-  );
-
-  static const normalOnFixed = ExtendedColorPairing.from(
-    containerColorRole: .colorFixed,
-    contentColorRole: .onColorFixed,
-  );
-
-  static const normalOnFixedDim = ExtendedColorPairing.from(
-    containerColorRole: .colorFixedDim,
-    contentColorRole: .onColorFixed,
-  );
-
-  static const variantOnFixed = ExtendedColorPairing.from(
-    containerColorRole: .colorFixed,
-    contentColorRole: .onColorFixedVariant,
-  );
-
-  static const variantOnFixedDim = ExtendedColorPairing.from(
-    containerColorRole: .colorFixedDim,
-    contentColorRole: .onColorFixedVariant,
-  );
-}
-
-abstract class ExtendedColor with Diagnosticable {
-  const ExtendedColor();
-
-  const factory ExtendedColor.from({
-    required Color color,
-    required Color onColor,
-    required Color colorContainer,
-    required Color onColorContainer,
-    required Color colorFixed,
-    required Color colorFixedDim,
-    required Color onColorFixed,
-    required Color onColorFixedVariant,
-  }) = _ExtendedColor;
-
-  factory ExtendedColor.fromDynamicScheme(
-    DynamicScheme scheme, {
-    ExtendedColorPalette palette = .primary,
-  }) => switch (palette) {
-    .primary => .from(
-      color: Color(scheme.primary),
-      onColor: Color(scheme.onPrimary),
-      colorContainer: Color(scheme.primaryContainer),
-      onColorContainer: Color(scheme.onPrimaryContainer),
-      colorFixed: Color(scheme.primaryFixed),
-      colorFixedDim: Color(scheme.primaryFixedDim),
-      onColorFixed: Color(scheme.onPrimaryFixed),
-      onColorFixedVariant: Color(scheme.onPrimaryFixedVariant),
-    ),
-    .secondary => .from(
-      color: Color(scheme.secondary),
-      onColor: Color(scheme.onSecondary),
-      colorContainer: Color(scheme.secondaryContainer),
-      onColorContainer: Color(scheme.onSecondaryContainer),
-      colorFixed: Color(scheme.secondaryFixed),
-      colorFixedDim: Color(scheme.secondaryFixedDim),
-      onColorFixed: Color(scheme.onSecondaryFixed),
-      onColorFixedVariant: Color(scheme.onSecondaryFixedVariant),
-    ),
-    .tertiary => .from(
-      color: Color(scheme.tertiary),
-      onColor: Color(scheme.onTertiary),
-      colorContainer: Color(scheme.tertiaryContainer),
-      onColorContainer: Color(scheme.onTertiaryContainer),
-      colorFixed: Color(scheme.tertiaryFixed),
-      colorFixedDim: Color(scheme.tertiaryFixedDim),
-      onColorFixed: Color(scheme.onTertiaryFixed),
-      onColorFixedVariant: Color(scheme.onTertiaryFixedVariant),
-    ),
-  };
-
-  factory ExtendedColor.fromSeed({
-    required Color sourceColor,
-    DynamicSchemeVariant variant = .tonalSpot,
-    required Brightness brightness,
-    DynamicSchemePlatform platform = DynamicScheme.defaultPlatform,
-    double contrastLevel = 0.0,
-    DynamicSchemeSpecVersion? specVersion = DynamicScheme.defaultSpecVersion,
-    Color? primaryPaletteKeyColor,
-    Color? secondaryPaletteKeyColor,
-    Color? tertiaryPaletteKeyColor,
-    Color? neutralPaletteKeyColor,
-    Color? neutralVariantPaletteKeyColor,
-    Color? errorPaletteKeyColor,
-    ExtendedColorPalette palette = .primary,
-  }) => .fromDynamicScheme(
-    .fromPalettesOrKeyColors(
-      sourceColorHct: sourceColor._toHct(),
-      variant: variant._toVariant(),
-      isDark: brightness == .dark, // Always exhaustive
-      platform: platform,
-      contrastLevel: contrastLevel,
-      specVersion: specVersion,
-      primaryPaletteKeyColor: primaryPaletteKeyColor?._toHct(),
-      secondaryPaletteKeyColor: secondaryPaletteKeyColor?._toHct(),
-      tertiaryPaletteKeyColor: tertiaryPaletteKeyColor?._toHct(),
-      neutralPaletteKeyColor: neutralPaletteKeyColor?._toHct(),
-      neutralVariantPaletteKeyColor: neutralVariantPaletteKeyColor?._toHct(),
-      errorPaletteKeyColor: errorPaletteKeyColor?._toHct(),
-    ),
-    palette: palette,
-  );
-
-  factory ExtendedColor.fromColorTheme(
-    ColorThemeData colorTheme, {
-    ExtendedColorPalette palette = .primary,
-  }) => switch (palette) {
-    .primary => .from(
-      color: colorTheme.primary,
-      onColor: colorTheme.onPrimary,
-      colorContainer: colorTheme.primaryContainer,
-      onColorContainer: colorTheme.onPrimaryContainer,
-      colorFixed: colorTheme.primaryFixed,
-      colorFixedDim: colorTheme.primaryFixedDim,
-      onColorFixed: colorTheme.onPrimaryFixed,
-      onColorFixedVariant: colorTheme.onPrimaryFixedVariant,
-    ),
-    .secondary => .from(
-      color: colorTheme.secondary,
-      onColor: colorTheme.onSecondary,
-      colorContainer: colorTheme.secondaryContainer,
-      onColorContainer: colorTheme.onSecondaryContainer,
-      colorFixed: colorTheme.secondaryFixed,
-      colorFixedDim: colorTheme.secondaryFixedDim,
-      onColorFixed: colorTheme.onSecondaryFixed,
-      onColorFixedVariant: colorTheme.onSecondaryFixedVariant,
-    ),
-    .tertiary => .from(
-      color: colorTheme.tertiary,
-      onColor: colorTheme.onTertiary,
-      colorContainer: colorTheme.tertiaryContainer,
-      onColorContainer: colorTheme.onTertiaryContainer,
-      colorFixed: colorTheme.tertiaryFixed,
-      colorFixedDim: colorTheme.tertiaryFixedDim,
-      onColorFixed: colorTheme.onTertiaryFixed,
-      onColorFixedVariant: colorTheme.onTertiaryFixedVariant,
-    ),
-  };
-
-  Color get color;
-
-  Color get onColor;
-
-  Color get colorContainer;
-
-  Color get onColorContainer;
-
-  Color get colorFixed;
-
-  Color get colorFixedDim;
-
-  Color get onColorFixed;
-
-  Color get onColorFixedVariant;
-
-  ExtendedColor copyWith({
-    Color? color,
-    Color? onColor,
-    Color? colorContainer,
-    Color? onColorContainer,
-    Color? colorFixed,
-    Color? colorFixedDim,
-    Color? onColorFixed,
-    Color? onColorFixedVariant,
-  }) =>
-      color != null ||
-          onColor != null ||
-          colorContainer != null ||
-          onColorContainer != null ||
-          colorFixed != null ||
-          colorFixedDim != null ||
-          onColorFixed != null ||
-          onColorFixedVariant != null
-      ? .from(
-          color: color ?? this.color,
-          onColor: onColor ?? this.onColor,
-          colorContainer: colorContainer ?? this.colorContainer,
-          onColorContainer: onColorContainer ?? this.onColorContainer,
-          colorFixed: colorFixed ?? this.colorFixed,
-          colorFixedDim: colorFixedDim ?? this.colorFixedDim,
-          onColorFixed: onColorFixed ?? this.onColorFixed,
-          onColorFixedVariant: onColorFixedVariant ?? this.onColorFixedVariant,
-        )
-      : this;
-
-  ExtendedColor harmonizeWith(Color sourceColor) => copyWith(
-    color: color._harmonizeWith(sourceColor),
-    onColor: onColor._harmonizeWith(sourceColor),
-    colorContainer: colorContainer._harmonizeWith(sourceColor),
-    onColorContainer: onColorContainer._harmonizeWith(sourceColor),
-    colorFixed: colorFixed._harmonizeWith(sourceColor),
-    colorFixedDim: colorFixedDim._harmonizeWith(sourceColor),
-    onColorFixed: onColorFixed._harmonizeWith(sourceColor),
-    onColorFixedVariant: onColorFixedVariant._harmonizeWith(sourceColor),
-  );
-
-  @override
-  // ignore: must_call_super
-  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
-    properties
-      ..add(ColorProperty("color", color))
-      ..add(ColorProperty("onColor", onColor))
-      ..add(ColorProperty("colorContainer", colorContainer))
-      ..add(ColorProperty("onColorContainer", onColorContainer))
-      ..add(ColorProperty("colorFixed", colorFixed))
-      ..add(ColorProperty("colorFixedDim", colorFixedDim))
-      ..add(ColorProperty("onColorFixed", onColorFixed))
-      ..add(ColorProperty("onColorFixedVariant", onColorFixedVariant));
-  }
-
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      runtimeType == other.runtimeType &&
-          other is ExtendedColor &&
-          color == other.color &&
-          onColor == other.onColor &&
-          colorContainer == other.colorContainer &&
-          onColorContainer == other.onColorContainer &&
-          colorFixed == other.colorFixed &&
-          colorFixedDim == other.colorFixedDim &&
-          onColorFixed == other.onColorFixed &&
-          onColorFixedVariant == other.onColorFixedVariant;
-
-  @override
-  int get hashCode => Object.hash(
-    runtimeType,
-    color,
-    onColor,
-    colorContainer,
-    onColorContainer,
-    colorFixed,
-    colorFixedDim,
-    onColorFixed,
-    onColorFixedVariant,
-  );
-}
-
-class _ExtendedColor extends ExtendedColor {
-  const _ExtendedColor({
-    required this.color,
-    required this.onColor,
-    required this.colorContainer,
-    required this.onColorContainer,
-    required this.colorFixed,
-    required this.colorFixedDim,
-    required this.onColorFixed,
-    required this.onColorFixedVariant,
-  });
-
-  @override
-  final Color color;
-
-  @override
-  final Color onColor;
-
-  @override
-  final Color colorContainer;
-
-  @override
-  final Color onColorContainer;
-
-  @override
-  final Color colorFixed;
-
-  @override
-  final Color colorFixedDim;
-
-  @override
-  final Color onColorFixed;
-
-  @override
-  final Color onColorFixedVariant;
-}
-
-abstract class StaticColorsData with Diagnosticable {
-  const StaticColorsData();
-
-  const factory StaticColorsData.from({
-    required ExtendedColor blue,
-    required ExtendedColor yellow,
-    required ExtendedColor red,
-    required ExtendedColor purple,
-    required ExtendedColor cyan,
-    required ExtendedColor green,
-    required ExtendedColor orange,
-    required ExtendedColor pink,
-  }) = _StaticColorsData.from;
-
-  factory StaticColorsData.fallback({
-    DynamicSchemeVariant variant = .tonalSpot,
-    required Brightness brightness,
-    DynamicSchemePlatform platform = DynamicScheme.defaultPlatform,
-    double contrastLevel = 0.0,
-    DynamicSchemeSpecVersion? specVersion = DynamicScheme.defaultSpecVersion,
-  }) {
-    const palette = StaticPaletteThemeData.fallback();
-    return .from(
-      blue: .fromSeed(
-        sourceColor: palette.blue50,
-        variant: variant,
-        brightness: brightness,
-        platform: platform,
-        contrastLevel: contrastLevel,
-        specVersion: specVersion,
-        palette: .primary,
-      ),
-      yellow: .fromSeed(
-        sourceColor: palette.yellow50,
-        variant: variant,
-        brightness: brightness,
-        platform: platform,
-        contrastLevel: contrastLevel,
-        specVersion: specVersion,
-        palette: .primary,
-      ),
-      red: .fromSeed(
-        sourceColor: palette.red50,
-        variant: variant,
-        brightness: brightness,
-        platform: platform,
-        contrastLevel: contrastLevel,
-        specVersion: specVersion,
-        palette: .primary,
-      ),
-      purple: .fromSeed(
-        sourceColor: palette.purple50,
-        variant: variant,
-        brightness: brightness,
-        platform: platform,
-        contrastLevel: contrastLevel,
-        specVersion: specVersion,
-        palette: .primary,
-      ),
-      cyan: .fromSeed(
-        sourceColor: palette.cyan50,
-        variant: variant,
-        brightness: brightness,
-        platform: platform,
-        contrastLevel: contrastLevel,
-        specVersion: specVersion,
-        palette: .primary,
-      ),
-      green: .fromSeed(
-        sourceColor: palette.green50,
-        variant: variant,
-        brightness: brightness,
-        platform: platform,
-        contrastLevel: contrastLevel,
-        specVersion: specVersion,
-        palette: .primary,
-      ),
-      orange: .fromSeed(
-        sourceColor: palette.orange50,
-        variant: variant,
-        brightness: brightness,
-        platform: platform,
-        contrastLevel: contrastLevel,
-        specVersion: specVersion,
-        palette: .primary,
-      ),
-      pink: .fromSeed(
-        sourceColor: palette.pink50,
-        variant: variant,
-        brightness: brightness,
-        platform: platform,
-        contrastLevel: contrastLevel,
-        specVersion: specVersion,
-        palette: .primary,
-      ),
-    );
-  }
-
-  ExtendedColor get blue;
-  ExtendedColor get yellow;
-  ExtendedColor get red;
-  ExtendedColor get purple;
-  ExtendedColor get cyan;
-  ExtendedColor get green;
-  ExtendedColor get orange;
-  ExtendedColor get pink;
-
-  StaticColorsData copyWith({
-    ExtendedColor? blue,
-    ExtendedColor? yellow,
-    ExtendedColor? red,
-    ExtendedColor? purple,
-    ExtendedColor? cyan,
-    ExtendedColor? green,
-    ExtendedColor? orange,
-    ExtendedColor? pink,
-  }) =>
-      blue != null ||
-          yellow != null ||
-          red != null ||
-          purple != null ||
-          cyan != null ||
-          green != null ||
-          orange != null ||
-          pink != null
-      ? .from(
-          blue: blue ?? this.blue,
-          yellow: yellow ?? this.yellow,
-          red: red ?? this.red,
-          purple: purple ?? this.purple,
-          cyan: cyan ?? this.cyan,
-          green: green ?? this.green,
-          orange: orange ?? this.orange,
-          pink: pink ?? this.pink,
-        )
-      : this;
-
-  StaticColorsData harmonizeWith(Color sourceColor) => copyWith(
-    blue: blue.harmonizeWith(sourceColor),
-    yellow: yellow.harmonizeWith(sourceColor),
-    red: red.harmonizeWith(sourceColor),
-    purple: purple.harmonizeWith(sourceColor),
-    cyan: cyan.harmonizeWith(sourceColor),
-    green: green.harmonizeWith(sourceColor),
-    orange: orange.harmonizeWith(sourceColor),
-    pink: pink.harmonizeWith(sourceColor),
-  );
-
-  StaticColorsData harmonizeWithPrimary(ColorThemeDataPartial colorTheme) {
-    final sourceColor = colorTheme.primary;
-    return sourceColor != null ? harmonizeWith(sourceColor) : this;
-  }
-
-  @override
-  // ignore: must_call_super
-  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
-    properties
-      ..add(DiagnosticsProperty<ExtendedColor>("blue", blue))
-      ..add(DiagnosticsProperty<ExtendedColor>("yellow", yellow))
-      ..add(DiagnosticsProperty<ExtendedColor>("red", red))
-      ..add(DiagnosticsProperty<ExtendedColor>("purple", purple))
-      ..add(DiagnosticsProperty<ExtendedColor>("cyan", cyan))
-      ..add(DiagnosticsProperty<ExtendedColor>("green", green))
-      ..add(DiagnosticsProperty<ExtendedColor>("orange", orange))
-      ..add(DiagnosticsProperty<ExtendedColor>("pink", pink));
-  }
-
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      runtimeType == other.runtimeType &&
-          other is StaticColorsData &&
-          blue == other.blue &&
-          yellow == other.yellow &&
-          red == other.red &&
-          purple == other.purple &&
-          cyan == other.cyan &&
-          green == other.green &&
-          orange == other.orange &&
-          pink == other.pink;
-
-  @override
-  int get hashCode => Object.hash(
-    runtimeType,
-    blue,
-    yellow,
-    red,
-    purple,
-    cyan,
-    green,
-    orange,
-    pink,
-  );
-}
-
-class _StaticColorsData extends StaticColorsData {
-  const _StaticColorsData.from({
-    required this.blue,
-    required this.yellow,
-    required this.red,
-    required this.purple,
-    required this.cyan,
-    required this.green,
-    required this.orange,
-    required this.pink,
-  });
-
-  @override
-  final ExtendedColor blue;
-
-  @override
-  final ExtendedColor yellow;
-
-  @override
-  final ExtendedColor red;
-
-  @override
-  final ExtendedColor purple;
-
-  @override
-  final ExtendedColor cyan;
-
-  @override
-  final ExtendedColor green;
-
-  @override
-  final ExtendedColor orange;
-
-  @override
-  final ExtendedColor pink;
-}
-
-class StaticColors extends InheritedTheme {
-  const StaticColors({super.key, required this.data, required super.child});
-
-  final StaticColorsData data;
-
-  @override
-  bool updateShouldNotify(StaticColors oldWidget) => data != oldWidget.data;
-
-  @override
-  Widget wrap(BuildContext context, Widget child) =>
-      StaticColors(data: data, child: child);
-
-  static StaticColorsData? maybeOf(BuildContext context) =>
-      context.dependOnInheritedWidgetOfExactType<StaticColors>()?.data;
-
-  static StaticColorsData of(BuildContext context) {
-    final result = maybeOf(context);
-    if (result != null) return result;
-    final colorTheme = ColorTheme.of(context);
-    final highContarst = MediaQuery.highContrastOf(context);
-    return .fallback(
-      brightness: colorTheme.brightness,
-      contrastLevel: highContarst ? 1.0 : 0.0,
-      platform: .phone,
-      variant: .tonalSpot,
-      specVersion: .spec2025,
-    ).harmonizeWith(colorTheme.primary);
-  }
-}
-
-// TODO(deminearchiver): return success (4E7D4D) and warning (FFC107) semantic colors
+// abstract class _PathBorder extends OutlinedBorder {
+//   const _PathBorder({super.side, this.squash = 0.0});
+
+//   Path get path;
+
+//   /// How much of the aspect ratio of the attached widget to take on.
+//   ///
+//   /// If [squash] is non-zero, the border will match the aspect ratio of the
+//   /// bounding box of the widget that it is attached to, which can give a
+//   /// squashed appearance.
+//   ///
+//   /// The [squash] parameter lets you control how much of that aspect ratio this
+//   /// border takes on.
+//   ///
+//   /// A value of zero means that the border will be drawn with a square aspect
+//   /// ratio at the size of the shortest side of the bounding rectangle, ignoring
+//   /// the aspect ratio of the widget, and a value of one means it will be drawn
+//   /// with the aspect ratio of the widget. The value of [squash] has no effect
+//   /// if the widget is square to begin with.
+//   ///
+//   /// Defaults to zero, and must be between zero and one, inclusive.
+//   final double squash;
+
+//   Path _transformPath(Rect rect, {TextDirection? textDirection}) {
+//     var scale = Offset(rect.width, rect.height);
+
+//     scale = rect.shortestSide == rect.width
+//         ? Offset(scale.dx, squash * scale.dy + (1 - squash) * scale.dx)
+//         : Offset(squash * scale.dx + (1 - squash) * scale.dy, scale.dy);
+
+//     final actualRect =
+//         Offset(
+//           rect.left + (rect.width - scale.dx) / 2,
+//           rect.top + (rect.height - scale.dy) / 2,
+//         ) &
+//         Size(scale.dx, scale.dy);
+
+//     final matrix = Matrix4.identity()
+//       ..translateByDouble(actualRect.left, actualRect.top, 0.0, 1.0)
+//       ..scaleByDouble(scale.dx, scale.dy, 1.0, 1.0);
+
+//     return path.transform(matrix.storage);
+//   }
+
+//   @override
+//   _PathBorder copyWith({BorderSide? side, double? squash});
+
+//   @override
+//   _PathBorder scale(double t);
+
+//   @override
+//   Path getInnerPath(Rect rect, {TextDirection? textDirection}) {
+//     final adjustedRect = rect.deflate(side.strokeInset);
+//     return _transformPath(adjustedRect, textDirection: textDirection);
+//   }
+
+//   @override
+//   Path getOuterPath(Rect rect, {TextDirection? textDirection}) {
+//     final adjustedRect = rect.inflate(side.strokeOutset);
+//     return _transformPath(adjustedRect, textDirection: textDirection);
+//   }
+
+//   @override
+//   void paint(Canvas canvas, Rect rect, {TextDirection? textDirection}) {
+//     switch (side.style) {
+//       case BorderStyle.none:
+//         return;
+//       case BorderStyle.solid:
+//         final adjustedRect = rect.inflate(side.strokeOffset / 2.0);
+//         final path = _transformPath(adjustedRect);
+//         canvas.drawPath(path, side.toPaint());
+//     }
+//   }
+
+//   @override
+//   bool operator ==(Object other) =>
+//       identical(this, other) ||
+//       runtimeType == other.runtimeType &&
+//           other is _PathBorder &&
+//           side == other.side &&
+//           squash == other.squash;
+
+//   @override
+//   int get hashCode => Object.hash(runtimeType, side, squash);
+// }
+
+// class _MorphBorder extends _PathBorder {
+//   const _MorphBorder({
+//     super.side,
+//     super.squash,
+//     required this.morph,
+//     required this.progress,
+//     this.startAngle = 0.0,
+//   });
+
+//   final Morph morph;
+//   final double progress;
+//   final double startAngle;
+
+//   @override
+//   Path get path => morph.toPath(progress: progress, startAngle: startAngle);
+
+//   @override
+//   _MorphBorder copyWith({
+//     BorderSide? side,
+//     double? squash,
+//     Morph? morph,
+//     double? progress,
+//     double? startAngle,
+//   }) => _MorphBorder(
+//     side: side ?? this.side,
+//     squash: squash ?? this.squash,
+//     morph: morph ?? this.morph,
+//     progress: progress ?? this.progress,
+//     startAngle: startAngle ?? this.startAngle,
+//   );
+
+//   @override
+//   _MorphBorder scale(double t) => _MorphBorder(
+//     side: side.scale(t),
+//     squash: squash,
+//     morph: morph,
+//     progress: progress,
+//     startAngle: startAngle,
+//   );
+
+//   @override
+//   ShapeBorder? lerpFrom(ShapeBorder? a, double t) {
+//     if (a is _MorphBorder) {
+//       return _MorphBorder(
+//         side: BorderSide.lerp(a.side, side, t),
+//         squash: lerpDouble(a.squash, squash, t),
+//         morph: t < 0.5 ? a.morph : morph,
+//         progress: lerpDouble(a.progress, progress, t),
+//         startAngle: lerpDouble(a.startAngle, startAngle, t),
+//       );
+//     }
+//     return super.lerpFrom(a, t);
+//   }
+
+//   @override
+//   ShapeBorder? lerpTo(ShapeBorder? b, double t) {
+//     if (b is _MorphBorder) {
+//       return _MorphBorder(
+//         side: BorderSide.lerp(side, b.side, t),
+//         squash: lerpDouble(squash, b.squash, t),
+//         morph: t < 0.5 ? morph : b.morph,
+//         progress: lerpDouble(progress, b.progress, t),
+//         startAngle: lerpDouble(startAngle, b.startAngle, t),
+//       );
+//     }
+//     return super.lerpTo(b, t);
+//   }
+
+//   @override
+//   bool operator ==(Object other) =>
+//       identical(this, other) ||
+//       runtimeType == other.runtimeType &&
+//           other is _MorphBorder &&
+//           side == other.side &&
+//           squash == other.squash &&
+//           morph == other.morph &&
+//           progress == other.progress &&
+//           startAngle == other.startAngle;
+
+//   @override
+//   int get hashCode =>
+//       Object.hash(runtimeType, side, squash, morph, progress, startAngle);
+// }

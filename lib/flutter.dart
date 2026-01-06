@@ -79,6 +79,11 @@ export 'assets/assets.gen.dart';
 export 'assets/fonts.dart';
 export 'assets/fonts.gen.dart';
 export 'i18n/i18n.dart';
+export 'theme/extended_color.dart';
+export 'theme/legacy.dart';
+export 'theme/semantic_colors.dart';
+export 'theme/static_colors.dart';
+export 'theme/theme.dart';
 
 // Shared utilities
 

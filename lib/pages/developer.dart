@@ -49,34 +49,6 @@ class DeveloperPageBackButton extends StatelessWidget {
     final shapeTheme = ShapeTheme.of(context);
     final stateTheme = StateTheme.of(context);
     return IconButton(
-      // style: ButtonStyle(
-      //   elevation: const WidgetStatePropertyAll(0.0),
-      //   shadowColor: WidgetStateColor.transparent,
-      //   minimumSize: const WidgetStatePropertyAll(Size.zero),
-      //   fixedSize: const WidgetStatePropertyAll(Size(40.0, 40.0)),
-      //   maximumSize: const WidgetStatePropertyAll(Size.infinite),
-      //   padding: const WidgetStatePropertyAll(EdgeInsets.zero),
-      //   iconSize: const WidgetStatePropertyAll(24.0),
-      //   shape: WidgetStatePropertyAll(
-      //     CornersBorder.rounded(corners: Corners.all(shapeTheme.corner.full)),
-      //   ),
-      //   overlayColor: WidgetStateLayerColor(
-      //     color: WidgetStatePropertyAll(colorTheme.onSurfaceVariant),
-      //     opacity: stateTheme.stateLayerOpacity,
-      //   ),
-      //   backgroundColor: WidgetStateProperty.resolveWith(
-      //     (states) => states.contains(WidgetState.disabled)
-      //         ? colorTheme.onSurface.withValues(alpha: 0.1)
-      //         : useBlackTheme
-      //         ? colorTheme.surfaceContainer
-      //         : colorTheme.surfaceContainerHighest,
-      //   ),
-      //   iconColor: WidgetStateProperty.resolveWith(
-      //     (states) => states.contains(WidgetState.disabled)
-      //         ? colorTheme.onSurface.withValues(alpha: 0.38)
-      //         : colorTheme.onSurfaceVariant,
-      //   ),
-      // ),
       style: LegacyThemeFactory.createIconButtonStyle(
         colorTheme: colorTheme,
         elevationTheme: elevationTheme,
@@ -1518,7 +1490,7 @@ class _SettingsAppBarState extends State<SettingsAppBar> {
                       color: WidgetStatePropertyAll(
                         colorTheme.onSurfaceVariant,
                       ),
-                      opacity: stateTheme.stateLayerOpacity,
+                      opacity: stateTheme.asWidgetStateLayerOpacity,
                     ),
                     backgroundColor: WidgetStateProperty.resolveWith(
                       (states) => states.contains(WidgetState.disabled)
@@ -1548,7 +1520,7 @@ class _SettingsAppBarState extends State<SettingsAppBar> {
                         child: InkWell(
                           overlayColor: WidgetStateLayerColor(
                             color: WidgetStatePropertyAll(colorTheme.onSurface),
-                            opacity: stateTheme.stateLayerOpacity,
+                            opacity: stateTheme.asWidgetStateLayerOpacity,
                           ),
                           onTap: _openView,
                           child: Padding(
@@ -1622,7 +1594,7 @@ class _SettingsAppBarState extends State<SettingsAppBar> {
                         color: WidgetStatePropertyAll(
                           colorTheme.onSurfaceVariant,
                         ),
-                        opacity: stateTheme.stateLayerOpacity,
+                        opacity: stateTheme.asWidgetStateLayerOpacity,
                       ),
                       backgroundColor: WidgetStateProperty.resolveWith(
                         (states) => states.contains(WidgetState.disabled)
@@ -1862,8 +1834,11 @@ class _SettingsAppBarRoute<T extends Object?> extends PopupRoute<T> {
           key: _viewKey,
           builder: (context, constraints) {
             Rect? beginContainerRect;
-            final containerBox =
-                containerKey.currentContext?.findRenderObject() as RenderBox?;
+            final containerBox = switch (containerKey.currentContext) {
+              final containerContext? when containerContext.mounted =>
+                containerContext.findRenderObject() as RenderBox?,
+              _ => null,
+            };
             if (containerBox != null && containerBox.hasSize) {
               try {
                 beginContainerRect =
@@ -1904,8 +1879,12 @@ class _SettingsAppBarRoute<T extends Object?> extends PopupRoute<T> {
                 : endContainerRect;
 
             Rect? beginTextRect;
-            final textBox =
-                textKey.currentContext?.findRenderObject() as RenderBox?;
+            final textBox = switch (textKey.currentContext) {
+              final textContext? when textContext.mounted =>
+                textContext.findRenderObject() as RenderBox?,
+              _ => null,
+            };
+
             if (textBox != null && textBox.hasSize) {
               try {
                 beginTextRect =
@@ -1916,8 +1895,11 @@ class _SettingsAppBarRoute<T extends Object?> extends PopupRoute<T> {
             }
 
             Rect? endTextRect;
-            final textFieldBox =
-                _textFieldKey.currentContext?.findRenderObject() as RenderBox?;
+            final textFieldBox = switch (_textFieldKey.currentContext) {
+              final textFieldContext? when textFieldContext.mounted =>
+                textFieldContext.findRenderObject() as RenderBox?,
+              _ => null,
+            };
             if (textFieldBox != null && textFieldBox.hasSize) {
               try {
                 endTextRect =
@@ -1974,7 +1956,7 @@ class _SettingsAppBarRoute<T extends Object?> extends PopupRoute<T> {
                 ),
                 overlayColor: WidgetStateLayerColor(
                   color: WidgetStatePropertyAll(colorTheme.onSurfaceVariant),
-                  opacity: stateTheme.stateLayerOpacity,
+                  opacity: stateTheme.asWidgetStateLayerOpacity,
                 ),
                 backgroundColor: WidgetStateProperty.resolveWith(
                   (states) => states.contains(WidgetState.disabled)
@@ -2007,7 +1989,7 @@ class _SettingsAppBarRoute<T extends Object?> extends PopupRoute<T> {
                 ),
                 overlayColor: WidgetStateLayerColor(
                   color: WidgetStatePropertyAll(colorTheme.onSurfaceVariant),
-                  opacity: stateTheme.stateLayerOpacity,
+                  opacity: stateTheme.asWidgetStateLayerOpacity,
                 ),
                 backgroundColor: WidgetStateProperty.resolveWith(
                   (states) => states.contains(WidgetState.disabled)
@@ -2508,7 +2490,7 @@ class _AboutPageState extends State<AboutPage> with TickerProviderStateMixin {
                         child: InkWell(
                           overlayColor: WidgetStateLayerColor(
                             color: WidgetStatePropertyAll(colorTheme.primary),
-                            opacity: stateTheme.stateLayerOpacity,
+                            opacity: stateTheme.asWidgetStateLayerOpacity,
                           ),
                           onTap: () {},
                           child: Assets.icLauncher.foregroundInner.svg(),
@@ -2606,6 +2588,10 @@ class _MaterialDemoViewState extends State<_MaterialDemoView> {
   Widget build(BuildContext context) {
     final padding = MediaQuery.paddingOf(context);
 
+    final useBlackTheme = context.select<SettingsService, bool>(
+      (settings) => settings.useBlackTheme.value,
+    );
+
     final colorTheme = ColorTheme.of(context);
     final elevationTheme = ElevationTheme.of(context);
     final shapeTheme = ShapeTheme.of(context);
@@ -2614,8 +2600,12 @@ class _MaterialDemoViewState extends State<_MaterialDemoView> {
 
     final staticColors = StaticColors.of(context);
 
+    final backgroundColor = useBlackTheme
+        ? colorTheme.surface
+        : colorTheme.surfaceContainer;
+
     return Scaffold(
-      backgroundColor: colorTheme.surfaceContainer,
+      backgroundColor: backgroundColor,
       body: CustomRefreshIndicator(
         onRefresh: () async {
           await Fluttertoast.showToast(msg: "Pull-to-refresh demo triggered");
@@ -2630,8 +2620,8 @@ class _MaterialDemoViewState extends State<_MaterialDemoView> {
             slivers: [
               CustomAppBar(
                 type: .small,
-                expandedContainerColor: colorTheme.surfaceContainer,
-                collapsedContainerColor: colorTheme.surfaceContainer,
+                expandedContainerColor: backgroundColor,
+                collapsedContainerColor: backgroundColor,
                 collapsedPadding: const .fromSTEB(
                   8.0 + 40.0 + 8.0,
                   0.0,
@@ -2647,14 +2637,21 @@ class _MaterialDemoViewState extends State<_MaterialDemoView> {
               SliverPadding(
                 padding: const .symmetric(horizontal: 8.0),
                 sliver: ListItemTheme.merge(
-                  data: CustomThemeFactory.createListItemTheme(
-                    colorTheme: colorTheme,
-                    elevationTheme: elevationTheme,
-                    shapeTheme: shapeTheme,
-                    stateTheme: stateTheme,
-                    typescaleTheme: typescaleTheme,
-                    variant: .settings,
-                  ),
+                  data:
+                      CustomThemeFactory.createListItemTheme(
+                        colorTheme: colorTheme,
+                        elevationTheme: elevationTheme,
+                        shapeTheme: shapeTheme,
+                        stateTheme: stateTheme,
+                        typescaleTheme: typescaleTheme,
+                        variant: .settings,
+                      ).copyWith(
+                        containerColor: .all(
+                          useBlackTheme
+                              ? colorTheme.surface
+                              : colorTheme.surfaceBright,
+                        ),
+                      ),
                   child: SliverList.list(
                     children: [
                       if (kDebugMode)
@@ -3273,6 +3270,220 @@ class _MaterialDemoViewState extends State<_MaterialDemoView> {
                                                     ),
                                                   ),
                                                 ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                            const SizedBox(height: 8.0),
+                            Padding(
+                              padding: const EdgeInsets.fromLTRB(
+                                16.0,
+                                0.0,
+                                16.0,
+                                0.0,
+                              ),
+                              child: ConstrainedBox(
+                                constraints: const BoxConstraints(
+                                  maxHeight: 160.0,
+                                ),
+                                child: CheckboxTheme.merge(
+                                  data: CustomThemeFactory.createCheckboxTheme(
+                                    colorTheme: colorTheme,
+                                    shapeTheme: shapeTheme,
+                                    stateTheme: stateTheme,
+                                    color: .black,
+                                  ),
+                                  child: RadioButtonTheme.merge(
+                                    data:
+                                        CustomThemeFactory.createRadioButtonTheme(
+                                          colorTheme: colorTheme,
+                                          shapeTheme: shapeTheme,
+                                          stateTheme: stateTheme,
+                                          color: .listItemWatch,
+                                        ),
+                                    child: SwitchTheme.merge(
+                                      data:
+                                          CustomThemeFactory.createSwitchTheme(
+                                            colorTheme: colorTheme,
+                                            shapeTheme: shapeTheme,
+                                            stateTheme: stateTheme,
+                                            size: .black,
+                                            color: .black,
+                                          ),
+                                      child: ListenableBuilder(
+                                        listenable: Listenable.merge([
+                                          _enabled,
+                                          _selected,
+                                        ]),
+                                        builder: (context, _) => Material(
+                                          shape: CornersBorder.rounded(
+                                            corners: .all(
+                                              shapeTheme.corner.full,
+                                            ),
+                                          ),
+                                          color:
+                                              _selected.value && _enabled.value
+                                              ? colorTheme.primaryContainer
+                                              : colorTheme.surface,
+                                          child: Flex.horizontal(
+                                            spacing: 16.0,
+                                            children: [
+                                              Flexible.tight(
+                                                child: FittedBox(
+                                                  fit: BoxFit.contain,
+                                                  child: SizedBox(
+                                                    width: 72.0,
+                                                    height: 48.0,
+                                                    child: Switch(
+                                                      onCheckedChanged:
+                                                          _enabled.value
+                                                          ? (value) =>
+                                                                _selected
+                                                                        .value =
+                                                                    value
+                                                          : null,
+                                                      checked: _selected.value,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                              Flexible.tight(
+                                                child: FittedBox(
+                                                  fit: BoxFit.contain,
+                                                  child: SizedBox(
+                                                    width: 72.0,
+                                                    height: 48.0,
+                                                    child: Checkbox.bistate(
+                                                      onCheckedChanged:
+                                                          _enabled.value
+                                                          ? (value) =>
+                                                                _selected
+                                                                        .value =
+                                                                    value
+                                                          : null,
+                                                      checked: _selected.value,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                              Flexible.tight(
+                                                child: FittedBox(
+                                                  fit: BoxFit.contain,
+                                                  child: SizedBox(
+                                                    width: 72.0,
+                                                    height: 48.0,
+                                                    child: RadioButton(
+                                                      onTap: _enabled.value
+                                                          ? () =>
+                                                                _selected
+                                                                        .value =
+                                                                    !_selected
+                                                                        .value
+                                                          : null,
+                                                      selected: _selected.value,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                            const SizedBox(height: 8.0),
+                            Padding(
+                              padding: const EdgeInsets.fromLTRB(
+                                16.0,
+                                0.0,
+                                16.0,
+                                0.0,
+                              ),
+                              child: SizedBox(
+                                width: .infinity,
+                                height: 64.0,
+                                child: SwitchTheme.merge(
+                                  data: CustomThemeFactory.createSwitchTheme(
+                                    colorTheme: colorTheme,
+                                    shapeTheme: shapeTheme,
+                                    stateTheme: stateTheme,
+                                    size: .nowInAndroid,
+                                    color: .nowInAndroid,
+                                  ),
+                                  child: ListenableBuilder(
+                                    listenable: Listenable.merge([
+                                      _enabled,
+                                      _selected,
+                                    ]),
+                                    builder: (context, _) => Material(
+                                      clipBehavior: .antiAlias,
+                                      shape: const CornersBorder.rounded(
+                                        corners: .all(.circular(24.0)),
+                                      ),
+                                      color: _selected.value && _enabled.value
+                                          ? colorTheme.primaryContainer
+                                          : colorTheme.surfaceContainerHighest,
+                                      child: InkWell(
+                                        overlayColor: WidgetStateLayerColor(
+                                          color: WidgetStatePropertyAll(
+                                            _selected.value && _enabled.value
+                                                ? colorTheme.onPrimary
+                                                : colorTheme.onSurface,
+                                          ),
+                                          opacity: stateTheme
+                                              .asWidgetStateLayerOpacity,
+                                        ),
+                                        onTap: () =>
+                                            _selected.value = !_selected.value,
+                                        child: Padding(
+                                          padding: const .fromSTEB(
+                                            20.0,
+                                            0.0,
+                                            20.0 - 12.0,
+                                            0.0,
+                                          ),
+                                          child: Flex.horizontal(
+                                            spacing: 12.0 - 12.0,
+                                            children: [
+                                              Flexible.tight(
+                                                child: Text(
+                                                  "Switch from \"Now in Android\"",
+                                                  style: typescaleTheme
+                                                      .labelLarge
+                                                      .copyWith(
+                                                        grad:
+                                                            _enabled.value &&
+                                                                _selected.value
+                                                            ? 100.0
+                                                            : 0.0,
+                                                      )
+                                                      .toTextStyle(
+                                                        color:
+                                                            _selected.value &&
+                                                                _enabled.value
+                                                            ? colorTheme
+                                                                  .onPrimaryContainer
+                                                            : colorTheme
+                                                                  .onSurface,
+                                                      ),
+                                                ),
+                                              ),
+                                              Switch(
+                                                onCheckedChanged: _enabled.value
+                                                    ? (value) =>
+                                                          _selected.value =
+                                                              value
+                                                    : null,
+                                                checked: _selected.value,
                                               ),
                                             ],
                                           ),
@@ -4039,7 +4250,7 @@ class _ShapeLibraryViewState extends State<_ShapeLibraryView> {
                       color: WidgetStatePropertyAll(
                         colorTheme.onSurfaceVariant,
                       ),
-                      opacity: stateTheme.stateLayerOpacity,
+                      opacity: stateTheme.asWidgetStateLayerOpacity,
                     ),
                     backgroundColor: WidgetStateProperty.resolveWith(
                       (states) => states.contains(WidgetState.disabled)
@@ -4131,7 +4342,7 @@ class _ShapeLibraryViewState extends State<_ShapeLibraryView> {
                     onTap: () => _controller.clear(),
                     overlayColor: WidgetStateLayerColor(
                       color: WidgetStatePropertyAll(colorTheme.error),
-                      opacity: stateTheme.stateLayerOpacity,
+                      opacity: stateTheme.asWidgetStateLayerOpacity,
                     ),
                     child: AnimatedAlign(
                       duration: const DurationThemeData.fallback().medium4,
@@ -4228,7 +4439,7 @@ class _ShapeLibraryViewState extends State<_ShapeLibraryView> {
                                 color: WidgetStatePropertyAll(
                                   colorTheme.onPrimary,
                                 ),
-                                opacity: stateTheme.stateLayerOpacity,
+                                opacity: stateTheme.asWidgetStateLayerOpacity,
                               ),
                               onTap: () => showDialog(
                                 context: context,

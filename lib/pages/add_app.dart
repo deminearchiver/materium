@@ -116,6 +116,10 @@ class AddAppPageState extends State<AddAppPage> {
     final appsProvider = context.read<AppsProvider>();
     final notificationsProvider = context.read<NotificationsProvider>();
 
+    final useBlackTheme = context.select<SettingsService, bool>(
+      (settings) => settings.useBlackTheme.value,
+    );
+
     final showBackButton =
         ModalRoute.of(context)?.impliesAppBarDismissal ?? false;
 
@@ -123,6 +127,10 @@ class AddAppPageState extends State<AddAppPage> {
     final shapeTheme = ShapeTheme.of(context);
     final stateTheme = StateTheme.of(context);
     final typescaleTheme = TypescaleTheme.of(context);
+
+    final backgroundColor = useBlackTheme
+        ? colorTheme.surface
+        : colorTheme.surfaceContainer;
 
     final hideTrackOnlyWarning = context.select<SettingsProvider, bool>(
       (settingsProvider) => settingsProvider.hideTrackOnlyWarning,
@@ -341,7 +349,7 @@ class AddAppPageState extends State<AddAppPage> {
 
               overlayColor: WidgetStateLayerColor(
                 color: WidgetStatePropertyAll(colorTheme.onPrimary),
-                opacity: stateTheme.stateLayerOpacity,
+                opacity: stateTheme.asWidgetStateLayerOpacity,
               ),
               backgroundColor: WidgetStateProperty.resolveWith(
                 (states) => states.contains(WidgetState.disabled)
@@ -668,7 +676,7 @@ class AddAppPageState extends State<AddAppPage> {
 
               overlayColor: WidgetStateLayerColor(
                 color: WidgetStatePropertyAll(colorTheme.onPrimary),
-                opacity: stateTheme.stateLayerOpacity,
+                opacity: stateTheme.asWidgetStateLayerOpacity,
               ),
               backgroundColor: WidgetStateProperty.resolveWith(
                 (states) => states.contains(WidgetState.disabled)
@@ -920,7 +928,7 @@ class AddAppPageState extends State<AddAppPage> {
         );
         return Scaffold(
           resizeToAvoidBottomInset: false,
-          backgroundColor: colorTheme.surfaceContainer,
+          backgroundColor: backgroundColor,
           bottomNavigationBar: pickedSource == null
               ? Padding(
                   padding: .fromLTRB(
@@ -943,8 +951,8 @@ class AddAppPageState extends State<AddAppPage> {
                     type: developerMode || showBackButton
                         ? .small
                         : .largeFlexible,
-                    expandedContainerColor: colorTheme.surfaceContainer,
-                    collapsedContainerColor: colorTheme.surfaceContainer,
+                    expandedContainerColor: backgroundColor,
+                    collapsedContainerColor: backgroundColor,
                     collapsedPadding: showBackButton
                         ? const .fromSTEB(8.0 + 40.0 + 8.0, 0.0, 16.0, 0.0)
                         : null,

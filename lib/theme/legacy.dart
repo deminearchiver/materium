@@ -416,7 +416,7 @@ abstract final class LegacyThemeFactory {
       side: WidgetStatePropertyAll(side),
       overlayColor: WidgetStateLayerColor(
         color: WidgetStatePropertyAll(foregroundColor),
-        opacity: stateTheme.stateLayerOpacity,
+        opacity: stateTheme.asWidgetStateLayerOpacity,
       ),
       backgroundColor: WidgetStateProperty.resolveWith(
         (states) => states.contains(WidgetState.disabled)
@@ -649,7 +649,7 @@ abstract final class LegacyThemeFactory {
       side: WidgetStatePropertyAll(side),
       overlayColor: WidgetStateLayerColor(
         color: WidgetStatePropertyAll(resolvedIconColor),
-        opacity: stateTheme.stateLayerOpacity,
+        opacity: stateTheme.asWidgetStateLayerOpacity,
       ),
       backgroundColor: WidgetStateProperty.resolveWith(
         (states) => states.contains(WidgetState.disabled)
@@ -723,9 +723,7 @@ abstract final class LegacyThemeFactory {
     });
     final labelTextStyle = WidgetStateProperty.resolveWith((states) {
       final isFocused = states.contains(WidgetState.focused);
-      return (isFocused
-              ? typescaleTheme.labelLargeEmphasized
-              : typescaleTheme.labelLarge)
+      return (isFocused ? typescaleTheme.labelLarge : typescaleTheme.labelLarge)
           .toTextStyle();
     });
     final labelTextColor = WidgetStateProperty.resolveWith((states) {

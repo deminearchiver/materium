@@ -90,7 +90,7 @@ class ListItemContainer extends StatelessWidget {
         containerColor?.resolve(states) ??
         listItemTheme.containerColor.resolve(states);
 
-    return Material.empty(
+    return Material.raw(
       clipBehavior: .antiAlias,
       color: resolvedContainerColor,
       shape: resolvedShape,
@@ -259,6 +259,16 @@ class ListItemInteraction extends StatefulWidget {
 class _ListItemInteractionState extends State<ListItemInteraction> {
   late ShapeThemeData _shapeTheme;
 
+  FocusNode? _internalFocusNode;
+
+  FocusNode get _focusNode {
+    if (widget.focusNode case final focusNode?) {
+      return focusNode;
+    }
+    assert(_internalFocusNode != null);
+    return _internalFocusNode!;
+  }
+
   WidgetStatesController? _internalStatesController;
 
   WidgetStatesController get _statesController {
@@ -370,6 +380,9 @@ class _ListItemInteractionState extends State<ListItemInteraction> {
   @override
   void initState() {
     super.initState();
+    if (widget.focusNode == null) {
+      _internalFocusNode = FocusNode();
+    }
     if (widget.statesController == null) {
       _internalStatesController = WidgetStatesController();
     }
@@ -385,14 +398,22 @@ class _ListItemInteractionState extends State<ListItemInteraction> {
   @override
   void didUpdateWidget(covariant ListItemInteraction oldWidget) {
     super.didUpdateWidget(oldWidget);
-    final oldStatesController = oldWidget.statesController;
-    final newStatesController = widget.statesController;
-    if (newStatesController != oldStatesController) {
-      oldStatesController?.removeListener(_statesListener);
-      _internalStatesController?.dispose();
-      _internalStatesController = newStatesController == null
-          ? WidgetStatesController()
-          : null;
+    if (widget.focusNode != oldWidget.focusNode) {
+      if (widget.focusNode != null) {
+        _internalFocusNode?.dispose();
+        _internalFocusNode = null;
+      } else {
+        _internalFocusNode = FocusNode();
+      }
+    }
+    if (widget.statesController != oldWidget.statesController) {
+      oldWidget.statesController?.removeListener(_statesListener);
+      if (widget.statesController != null) {
+        _internalStatesController?.dispose();
+        _internalStatesController = null;
+      } else {
+        _internalStatesController = WidgetStatesController();
+      }
       _statesController.addListener(_statesListener);
     }
   }
@@ -401,6 +422,8 @@ class _ListItemInteractionState extends State<ListItemInteraction> {
   void dispose() {
     _internalStatesController?.dispose();
     _internalStatesController = null;
+    _internalFocusNode?.dispose();
+    _internalFocusNode = null;
     super.dispose();
   }
 
@@ -458,8 +481,8 @@ class _ListItemInteractionState extends State<ListItemInteraction> {
             child: InkWell(
               customBorder: stateLayerShape,
               overlayColor: overlayColor,
-              statesController: widget.statesController,
-              focusNode: widget.focusNode,
+              statesController: _statesController,
+              focusNode: _focusNode,
               canRequestFocus: widget.canRequestFocus,
               autofocus: widget.autofocus,
               onTap: !states.isDisabled ? widget.onTap : null,

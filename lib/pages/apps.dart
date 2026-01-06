@@ -616,7 +616,7 @@ class AppsPageState extends State<AppsPage> with TickerProviderStateMixin {
                         ? colorTheme.onSecondaryContainer
                         : colorTheme.onSurface,
                   ),
-                  opacity: stateTheme.stateLayerOpacity,
+                  opacity: stateTheme.asWidgetStateLayerOpacity,
                 ),
                 child: Padding(
                   padding: const .symmetric(horizontal: 12.0),
@@ -1373,14 +1373,13 @@ class AppsPageState extends State<AppsPage> with TickerProviderStateMixin {
         );
       }
       if (isRedesignEnabled) {
+        const spacing = 2.0;
         return SliverPadding(
           padding: const .symmetric(horizontal: 8.0),
           sliver: ListItemTheme.merge(
             data: .from(
               containerColor: .all(
-                useBlackTheme
-                    ? colorTheme.surfaceContainer
-                    : colorTheme.surface,
+                useBlackTheme ? colorTheme.surface : colorTheme.surface,
               ),
               headlineTextStyle: .all(
                 typescaleTheme.bodyLargeEmphasized.toTextStyle(),
@@ -1391,13 +1390,14 @@ class AppsPageState extends State<AppsPage> with TickerProviderStateMixin {
                 colorTheme: colorTheme,
                 shapeTheme: shapeTheme,
                 stateTheme: stateTheme,
-                color: useBlackTheme ? .listItemWatch : .listItemPhone,
+                color: useBlackTheme ? .black : .listItemPhone,
               ),
-              child: SliverList.separated(
+              child: SliverList.builder(
                 itemCount: listedApps.length,
-                separatorBuilder: (context, index) =>
-                    const SizedBox(height: 2.0),
                 itemBuilder: (context, index) {
+                  final isFirst = index == 0;
+                  final isLast = index == listedApps.length - 1;
+
                   final item = listedApps[index];
 
                   final showChanges = getChangeLogFn(context, item.app);
@@ -1572,7 +1572,7 @@ class AppsPageState extends State<AppsPage> with TickerProviderStateMixin {
                                       ? colorTheme.onPrimaryContainer
                                       : colorTheme.onSecondaryContainer
                                 : useBlackTheme
-                                ? colorTheme.primary
+                                ? colorTheme.onSurface
                                 : colorTheme.onSurfaceVariant,
                           ),
                           onPressed: () {
@@ -1594,320 +1594,336 @@ class AppsPageState extends State<AppsPage> with TickerProviderStateMixin {
                   );
 
                   return KeyedSubtree(
-                    key: ValueKey(index),
-                    child: ListItemContainer(
-                      isFirst: index == 0,
-                      isLast: index == listedApps.length - 1,
-                      containerShape: .all(
-                        isSelected
-                            ? CornersBorder.rounded(
-                                corners: Corners.all(shapeTheme.corner.large),
-                              )
-                            : null,
+                    key: ValueKey(item.app.id),
+                    child: Padding(
+                      padding: .only(
+                        top: isFirst ? 0.0 : spacing / 2.0,
+                        bottom: isLast ? 0.0 : spacing / 2.0,
                       ),
-                      containerColor: .all(
-                        isSelected
-                            ? useBlackTheme
-                                  ? colorTheme.primaryContainer
-                                  : colorTheme.secondaryContainer
-                            : null,
-                      ),
-                      child: ListItemInteraction(
-                        stateLayerColor: .all(
+                      child: ListItemContainer(
+                        isFirst: index == 0,
+                        isLast: index == listedApps.length - 1,
+                        containerShape: .all(
+                          isSelected
+                              ? CornersBorder.rounded(
+                                  corners: Corners.all(shapeTheme.corner.large),
+                                )
+                              : null,
+                        ),
+                        containerColor: .all(
                           isSelected
                               ? useBlackTheme
-                                    ? colorTheme.onPrimaryContainer
-                                    : colorTheme.onSecondaryContainer
-                              : useBlackTheme
-                              ? colorTheme.onPrimaryContainer
-                              : colorTheme.onSurface,
+                                    ? colorTheme.primaryContainer
+                                    : colorTheme.secondaryContainer
+                              : null,
                         ),
-                        onTap: () {
-                          if (selectedAppIds.isNotEmpty) {
-                            toggleAppSelected(item.app);
-                          } else {
-                            Navigator.of(context).push(
-                              MaterialPageRoute(
-                                builder: (context) =>
-                                    AppPage(appId: item.app.id),
-                              ),
-                            );
-                          }
-                        },
-                        onLongPress: () => toggleAppSelected(item.app),
-                        child: ListItemLayout(
-                          padding: const .directional(start: 16.0, end: 0.0),
-                          leading: ExcludeFocus(
-                            child: SizedBox.square(
-                              dimension: 56.0,
-                              child: FutureBuilder(
-                                future: appsProvider
-                                    .updateAppIcon(item.app.id)
-                                    .then((_) => item.icon),
-                                builder: (context, snapshot) {
-                                  final bytes = snapshot.data;
-                                  return TweenAnimationBuilder<double>(
-                                    tween: Tween<double>(
-                                      end: progress != null ? 1.0 : 0.0,
-                                    ),
-                                    duration: listItemDuration,
-                                    curve: listItemEasing,
-                                    builder: (context, value, child) => Material(
-                                      clipBehavior: .antiAlias,
-                                      shape: ShapeBorder.lerp(
-                                        CornersBorder.rounded(
-                                          corners: .all(
-                                            shapeTheme.corner.small,
+                        child: ListItemInteraction(
+                          stateLayerColor: .all(
+                            isSelected
+                                ? useBlackTheme
+                                      ? colorTheme.onPrimaryContainer
+                                      : colorTheme.onSecondaryContainer
+                                : useBlackTheme
+                                ? colorTheme.onPrimaryContainer
+                                : colorTheme.onSurface,
+                          ),
+                          onTap: () {
+                            if (selectedAppIds.isNotEmpty) {
+                              toggleAppSelected(item.app);
+                            } else {
+                              Navigator.of(context).push(
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                      AppPage(appId: item.app.id),
+                                ),
+                              );
+                            }
+                          },
+                          onLongPress: () => toggleAppSelected(item.app),
+                          child: ListItemLayout(
+                            padding: const .directional(start: 16.0, end: 0.0),
+                            leading: ExcludeFocus(
+                              child: SizedBox.square(
+                                dimension: 56.0,
+                                child: FutureBuilder(
+                                  future: appsProvider
+                                      .updateAppIcon(item.app.id)
+                                      .then((_) => item.icon),
+                                  builder: (context, snapshot) {
+                                    final bytes = snapshot.data;
+                                    return TweenAnimationBuilder<double>(
+                                      tween: Tween<double>(
+                                        end: progress != null ? 1.0 : 0.0,
+                                      ),
+                                      duration: listItemDuration,
+                                      curve: listItemEasing,
+                                      builder: (context, value, child) => Material(
+                                        clipBehavior: .antiAlias,
+                                        shape: ShapeBorder.lerp(
+                                          CornersBorder.rounded(
+                                            corners: .all(
+                                              shapeTheme.corner.small,
+                                            ),
                                           ),
-                                        ),
-                                        CornersBorder.rounded(
-                                          corners: .all(shapeTheme.corner.full),
-                                        ),
-                                        value,
-                                      )!,
-                                      color: isSelected
-                                          ? bytes != null
-                                                ? useBlackTheme
-                                                      ? colorTheme
-                                                            .primaryContainer
-                                                      : colorTheme
-                                                            .secondaryContainer
-                                                : Colors.transparent
-                                          : useBlackTheme
-                                          ? colorTheme.surfaceContainerLow
-                                          : colorTheme.surfaceContainer,
-                                      child: child!,
-                                    ),
-                                    child: Stack(
-                                      fit: .expand,
-                                      children: [
-                                        TweenAnimationBuilder<double>(
-                                          tween: Tween<double>(
-                                            end: progress != null ? 1.0 : 0.0,
+                                          CornersBorder.rounded(
+                                            corners: .all(
+                                              shapeTheme.corner.full,
+                                            ),
                                           ),
-                                          duration: listItemDuration,
-                                          curve: listItemEasing,
-                                          builder: (context, value, _) {
-                                            final size = lerpDouble(
-                                              40.0,
-                                              28.0,
-                                              value,
-                                            );
-                                            return Align.center(
-                                              child: bytes != null
-                                                  ? SizedBox.square(
-                                                      dimension: size,
-                                                      child: Image.memory(
-                                                        bytes,
-                                                        gaplessPlayback: true,
-                                                        fit: .contain,
-                                                      ),
-                                                    )
-                                                  : Icon(
-                                                      Symbols
-                                                          .broken_image_rounded,
-                                                      opticalSize: size,
-                                                      size: size,
-                                                      color: isSelected
-                                                          ? useBlackTheme
-                                                                ? colorTheme
-                                                                      .onPrimaryContainer
-                                                                : colorTheme
-                                                                      .onSecondaryContainer
-                                                          : useBlackTheme
-                                                          ? colorTheme.primary
-                                                          : colorTheme
-                                                                .onSurfaceVariant,
-                                                    ),
-                                            );
-                                          },
-                                        ),
-                                        InkWell(
-                                          overlayColor: WidgetStateLayerColor(
-                                            color: WidgetStatePropertyAll(
-                                              isSelected
+                                          value,
+                                        )!,
+                                        color: isSelected
+                                            ? bytes != null
                                                   ? useBlackTheme
                                                         ? colorTheme
-                                                              .onPrimaryContainer
+                                                              .primaryContainer
                                                         : colorTheme
-                                                              .onSecondaryContainer
-                                                  : useBlackTheme
-                                                  ? colorTheme.primary
-                                                  : colorTheme.onSurface,
-                                            ),
-                                            opacity:
-                                                stateTheme.stateLayerOpacity,
-                                          ),
-                                          onDoubleTap: () {
-                                            pm.openApp(item.app.id);
-                                          },
-                                          onLongPress: () {
-                                            Navigator.of(context).push(
-                                              MaterialPageRoute(
-                                                builder: (context) => AppPage(
-                                                  appId: item.app.id,
-                                                  showOppositeOfPreferredView:
-                                                      true,
-                                                ),
-                                              ),
-                                            );
-                                          },
-                                        ),
-                                        TweenAnimationBuilder<double>(
-                                          tween: Tween<double>(
-                                            end: progress != null ? 1.0 : 0.0,
-                                          ),
-                                          duration: listItemDuration,
-                                          curve: listItemEasing,
-                                          builder: (context, value, _) =>
-                                              value > 0.0
-                                              ? CircularProgressIndicator(
-                                                  padding: const .all(0.0),
-                                                  strokeWidth: lerpDouble(
-                                                    0.0,
-                                                    4.0,
-                                                    value,
-                                                  ),
-                                                  value:
-                                                      progress != null &&
-                                                          progress >= 0.0
-                                                      ? clampDouble(
-                                                          progress / 100.0,
-                                                          0.0,
-                                                          1.0,
-                                                        )
-                                                      : null,
-                                                )
-                                              : const SizedBox.shrink(),
-                                        ),
-                                      ],
-                                    ),
-                                  );
-                                },
-                              ),
-                            ),
-                          ),
-                          overline: Text(
-                            tr("byX", args: [item.author]),
-                            maxLines: 1,
-                            overflow: .ellipsis,
-                            softWrap: false,
-                            style: TextStyle(
-                              color: isSelected
-                                  ? useBlackTheme
-                                        ? colorTheme.onPrimaryContainer
-                                              .withValues(alpha: 0.9)
-                                        : colorTheme.onSecondaryContainer
-                                  : useBlackTheme
-                                  ? colorTheme.onSurfaceVariant
-                                  : null,
-                            ),
-                          ),
-                          headline: Text(
-                            item.name,
-                            maxLines: 1,
-                            overflow: .ellipsis,
-                            softWrap: false,
-                            style:
-                                (isInstalled
-                                        ? typescaleTheme.bodyLargeEmphasized
-                                        : typescaleTheme.bodyLarge)
-                                    .toTextStyle(
-                                      color: isSelected
-                                          ? useBlackTheme
-                                                ? colorTheme.onPrimaryContainer
-                                                : colorTheme
-                                                      .onSecondaryContainer
-                                          : colorTheme.onSurface,
-                                    ),
-                          ),
-                          supportingText: Text(
-                            installedVersion != null
-                                ? hasUpdate
-                                      ? "$installedVersion → ${item.app.latestVersion}"
-                                      : installedVersion
-                                : tr("notInstalled"),
-                            style: typescaleTheme.bodySmall
-                                .toTextStyle()
-                                .copyWith(
-                                  fontFamily: installedVersion != null
-                                      ? FontFamily.googleSansCode
-                                      : null,
-                                  color: isSelected
-                                      ? useBlackTheme
-                                            ? colorTheme.onPrimaryContainer
-                                                  .withValues(alpha: 0.9)
-                                            : colorTheme.onSecondaryContainer
-                                      : hasUpdate
-                                      ? colorTheme.onSurface
-                                      : colorTheme.onSurfaceVariant,
-                                ),
-                          ),
-                          trailing: Flex.horizontal(
-                            children: [
-                              TweenAnimationBuilder<double>(
-                                tween: Tween<double>(
-                                  end: hasUpdate && selectedAppIds.isEmpty
-                                      ? 1.0
-                                      : 0.0,
-                                ),
-                                duration: listItemDuration,
-                                curve: listItemEasing,
-                                builder: (context, value, child) => Visibility(
-                                  visible: value > 0.0,
-                                  child: Opacity(
-                                    opacity: value,
-                                    child: Align.centerEnd(
-                                      widthFactor: value,
-                                      child: Transform.scale(
-                                        scale: value,
-                                        alignment:
-                                            AlignmentDirectional.centerEnd,
+                                                              .secondaryContainer
+                                                  : Colors.transparent
+                                            : useBlackTheme
+                                            ? colorTheme.surface
+                                            : colorTheme.surfaceContainer,
                                         child: child!,
                                       ),
-                                    ),
-                                  ),
-                                ),
-                                child: Padding(
-                                  padding: const .directional(end: 12.0 - 8.0),
-                                  child: updateButton,
+                                      child: Stack(
+                                        fit: .expand,
+                                        children: [
+                                          TweenAnimationBuilder<double>(
+                                            tween: Tween<double>(
+                                              end: progress != null ? 1.0 : 0.0,
+                                            ),
+                                            duration: listItemDuration,
+                                            curve: listItemEasing,
+                                            builder: (context, value, _) {
+                                              final size = lerpDouble(
+                                                40.0,
+                                                28.0,
+                                                value,
+                                              );
+                                              return Align.center(
+                                                child: bytes != null
+                                                    ? SizedBox.square(
+                                                        dimension: size,
+                                                        child: Image.memory(
+                                                          bytes,
+                                                          gaplessPlayback: true,
+                                                          fit: .contain,
+                                                        ),
+                                                      )
+                                                    : Icon(
+                                                        Symbols
+                                                            .broken_image_rounded,
+                                                        opticalSize: size,
+                                                        size: size,
+                                                        color: isSelected
+                                                            ? useBlackTheme
+                                                                  ? colorTheme
+                                                                        .onPrimaryContainer
+                                                                  : colorTheme
+                                                                        .onSecondaryContainer
+                                                            : useBlackTheme
+                                                            ? colorTheme.primary
+                                                            : colorTheme
+                                                                  .onSurfaceVariant,
+                                                      ),
+                                              );
+                                            },
+                                          ),
+                                          InkWell(
+                                            overlayColor: WidgetStateLayerColor(
+                                              color: WidgetStatePropertyAll(
+                                                isSelected
+                                                    ? useBlackTheme
+                                                          ? colorTheme
+                                                                .onPrimaryContainer
+                                                          : colorTheme
+                                                                .onSecondaryContainer
+                                                    : useBlackTheme
+                                                    ? colorTheme.primary
+                                                    : colorTheme.onSurface,
+                                              ),
+                                              opacity: stateTheme
+                                                  .asWidgetStateLayerOpacity,
+                                            ),
+                                            onTap: () {
+                                              toggleAppSelected(item.app);
+                                            },
+                                            onDoubleTap: () {
+                                              pm.openApp(item.app.id);
+                                            },
+                                            onLongPress: () {
+                                              Navigator.of(context).push(
+                                                MaterialPageRoute(
+                                                  builder: (context) => AppPage(
+                                                    appId: item.app.id,
+                                                    showOppositeOfPreferredView:
+                                                        true,
+                                                  ),
+                                                ),
+                                              );
+                                            },
+                                          ),
+                                          TweenAnimationBuilder<double>(
+                                            tween: Tween<double>(
+                                              end: progress != null ? 1.0 : 0.0,
+                                            ),
+                                            duration: listItemDuration,
+                                            curve: listItemEasing,
+                                            builder: (context, value, _) =>
+                                                value > 0.0
+                                                ? CircularProgressIndicator(
+                                                    padding: const .all(0.0),
+                                                    strokeWidth: lerpDouble(
+                                                      0.0,
+                                                      4.0,
+                                                      value,
+                                                    ),
+                                                    value:
+                                                        progress != null &&
+                                                            progress >= 0.0
+                                                        ? clampDouble(
+                                                            progress / 100.0,
+                                                            0.0,
+                                                            1.0,
+                                                          )
+                                                        : null,
+                                                  )
+                                                : const SizedBox.shrink(),
+                                          ),
+                                        ],
+                                      ),
+                                    );
+                                  },
                                 ),
                               ),
-                              overflowButton,
-                              TweenAnimationBuilder<double>(
-                                tween: Tween<double>(
-                                  end: selectedAppIds.isNotEmpty ? 1.0 : 0.0,
-                                ),
-                                duration: listItemDuration,
-                                curve: listItemEasing,
-                                builder: (context, value, child) => Visibility(
-                                  visible: value > 0.0,
-                                  child: Opacity(
-                                    opacity: value,
-                                    child: Align.centerStart(
-                                      widthFactor: value,
-                                      child: child!,
+                            ),
+                            overline: Text(
+                              tr("byX", args: [item.author]),
+                              maxLines: 1,
+                              overflow: .ellipsis,
+                              softWrap: false,
+                              style: TextStyle(
+                                color: isSelected
+                                    ? useBlackTheme
+                                          ? colorTheme.onPrimaryContainer
+                                                .withValues(alpha: 0.9)
+                                          : colorTheme.onSecondaryContainer
+                                    : useBlackTheme
+                                    ? colorTheme.onSurfaceVariant
+                                    : null,
+                              ),
+                            ),
+                            headline: Text(
+                              item.name,
+                              maxLines: 1,
+                              overflow: .ellipsis,
+                              softWrap: false,
+                              style:
+                                  (isInstalled
+                                          ? typescaleTheme.bodyLargeEmphasized
+                                          : typescaleTheme.bodyLarge)
+                                      .toTextStyle(
+                                        color: isSelected
+                                            ? useBlackTheme
+                                                  ? colorTheme
+                                                        .onPrimaryContainer
+                                                  : colorTheme
+                                                        .onSecondaryContainer
+                                            : colorTheme.onSurface,
+                                      ),
+                            ),
+                            supportingText: Text(
+                              installedVersion != null
+                                  ? hasUpdate
+                                        ? "$installedVersion → ${item.app.latestVersion}"
+                                        : installedVersion
+                                  : tr("notInstalled"),
+                              style: typescaleTheme.bodySmall
+                                  .toTextStyle()
+                                  .copyWith(
+                                    fontFamily: installedVersion != null
+                                        ? FontFamily.googleSansCode
+                                        : null,
+                                    color: isSelected
+                                        ? useBlackTheme
+                                              ? colorTheme.onPrimaryContainer
+                                                    .withValues(alpha: 0.9)
+                                              : colorTheme.onSecondaryContainer
+                                        : hasUpdate
+                                        ? colorTheme.onSurface
+                                        : colorTheme.onSurfaceVariant,
+                                  ),
+                            ),
+                            trailing: Flex.horizontal(
+                              children: [
+                                TweenAnimationBuilder<double>(
+                                  tween: Tween<double>(
+                                    end: hasUpdate && selectedAppIds.isEmpty
+                                        ? 1.0
+                                        : 0.0,
+                                  ),
+                                  duration: listItemDuration,
+                                  curve: listItemEasing,
+                                  builder: (context, value, child) =>
+                                      Visibility(
+                                        visible: value > 0.0,
+                                        child: Opacity(
+                                          opacity: value,
+                                          child: Align.centerEnd(
+                                            widthFactor: value,
+                                            child: Transform.scale(
+                                              scale: value,
+                                              alignment: AlignmentDirectional
+                                                  .centerEnd,
+                                              child: child!,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                  child: Padding(
+                                    padding: const .directional(
+                                      end: 12.0 - 8.0,
                                     ),
+                                    child: updateButton,
                                   ),
                                 ),
+                                overflowButton,
+                                TweenAnimationBuilder<double>(
+                                  tween: Tween<double>(
+                                    end: selectedAppIds.isNotEmpty ? 1.0 : 0.0,
+                                  ),
+                                  duration: listItemDuration,
+                                  curve: listItemEasing,
+                                  builder: (context, value, child) =>
+                                      Visibility(
+                                        visible: value > 0.0,
+                                        child: Opacity(
+                                          opacity: value,
+                                          child: Align.centerStart(
+                                            widthFactor: value,
+                                            child: child!,
+                                          ),
+                                        ),
+                                      ),
 
-                                child: checkbox,
-                              ),
-                              TweenAnimationBuilder<double>(
-                                tween: Tween<double>(
-                                  end: selectedAppIds.isNotEmpty ? 1.0 : 0.0,
+                                  child: checkbox,
                                 ),
-                                duration: listItemDuration,
-                                curve: listItemEasing,
-                                builder: (context, value, _) => SizedBox(
-                                  width: lerpDouble(
-                                    16.0 - 8.0,
-                                    16.0 - 4.0,
-                                    value,
+                                TweenAnimationBuilder<double>(
+                                  tween: Tween<double>(
+                                    end: selectedAppIds.isNotEmpty ? 1.0 : 0.0,
+                                  ),
+                                  duration: listItemDuration,
+                                  curve: listItemEasing,
+                                  builder: (context, value, _) => SizedBox(
+                                    width: lerpDouble(
+                                      16.0 - 8.0,
+                                      16.0 - 4.0,
+                                      value,
+                                    ),
                                   ),
                                 ),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
                         ),
                       ),
@@ -1924,7 +1940,7 @@ class AppsPageState extends State<AppsPage> with TickerProviderStateMixin {
         sliver: SliverList.builder(
           itemCount: listedApps.length,
           itemBuilder: (context, index) =>
-              Material.empty(child: getSingleAppHorizTile(index)),
+              Material.raw(child: getSingleAppHorizTile(index)),
         ),
       );
     }
@@ -1957,7 +1973,7 @@ class AppsPageState extends State<AppsPage> with TickerProviderStateMixin {
           ),
           overlayColor: WidgetStateLayerColor(
             color: WidgetStatePropertyAll(colorTheme.onSurfaceVariant),
-            opacity: stateTheme.stateLayerOpacity,
+            opacity: stateTheme.asWidgetStateLayerOpacity,
           ),
           backgroundColor: WidgetStateProperty.resolveWith(
             (states) => states.contains(WidgetState.disabled) && !hasSelection
@@ -1991,12 +2007,18 @@ class AppsPageState extends State<AppsPage> with TickerProviderStateMixin {
           width: isRedesignEnabled ? .normal : .wide,
           isSelected: hasSelection,
           unselectedContainerColor: Colors.transparent,
-          unselectedIconColor: colorTheme.onSurfaceVariant,
+          unselectedIconColor: useBlackTheme
+              ? colorTheme.onSurface
+              : colorTheme.onSurfaceVariant,
           selectedContainerColor: isRedesignEnabled
-              ? colorTheme.primaryContainer
+              ? useBlackTheme
+                    ? colorTheme.primaryContainer
+                    : colorTheme.primaryContainer
               : colorTheme.surfaceBright,
           selectedIconColor: isRedesignEnabled
-              ? colorTheme.onPrimaryContainer
+              ? useBlackTheme
+                    ? colorTheme.onPrimaryContainer
+                    : colorTheme.onPrimaryContainer
               : colorTheme.primary,
         ),
         onPressed: () => hasSelection
@@ -2072,10 +2094,14 @@ class AppsPageState extends State<AppsPage> with TickerProviderStateMixin {
           unselectedContainerColor: Colors.transparent,
           unselectedIconColor: colorTheme.onSurfaceVariant,
           selectedContainerColor: isRedesignEnabled
-              ? colorTheme.primaryContainer
+              ? useBlackTheme
+                    ? colorTheme.surfaceContainer
+                    : colorTheme.primaryContainer
               : colorTheme.surfaceBright,
           selectedIconColor: isRedesignEnabled
-              ? colorTheme.onPrimaryContainer
+              ? useBlackTheme
+                    ? colorTheme.primary
+                    : colorTheme.onPrimaryContainer
               : colorTheme.error,
         ),
         onPressed: hasSelection
@@ -2107,10 +2133,14 @@ class AppsPageState extends State<AppsPage> with TickerProviderStateMixin {
           unselectedContainerColor: Colors.transparent,
           unselectedIconColor: colorTheme.onSurfaceVariant,
           selectedContainerColor: isRedesignEnabled
-              ? colorTheme.primaryContainer
+              ? useBlackTheme
+                    ? colorTheme.surfaceContainer
+                    : colorTheme.primaryContainer
               : colorTheme.surfaceBright,
           selectedIconColor: isRedesignEnabled
-              ? colorTheme.onPrimaryContainer
+              ? useBlackTheme
+                    ? colorTheme.primary
+                    : colorTheme.onPrimaryContainer
               : colorTheme.onSurfaceVariant,
         ),
         onPressed: hasSelection ? launchCategorizeDialog() : null,
@@ -2134,10 +2164,14 @@ class AppsPageState extends State<AppsPage> with TickerProviderStateMixin {
           unselectedContainerColor: Colors.transparent,
           unselectedIconColor: colorTheme.onSurfaceVariant,
           selectedContainerColor: isRedesignEnabled
-              ? colorTheme.primaryContainer
+              ? useBlackTheme
+                    ? colorTheme.surfaceContainer
+                    : colorTheme.primaryContainer
               : colorTheme.surfaceBright,
           selectedIconColor: isRedesignEnabled
-              ? colorTheme.onPrimaryContainer
+              ? useBlackTheme
+                    ? colorTheme.primary
+                    : colorTheme.onPrimaryContainer
               : colorTheme.onSurfaceVariant,
         ),
         onPressed: hasSelection ? showMoreOptionsDialog : null,

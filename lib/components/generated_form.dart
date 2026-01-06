@@ -610,7 +610,7 @@ class _GeneratedFormState extends State<GeneratedForm> {
                                         ? colorTheme.onSecondary
                                         : colorTheme.onSecondaryContainer,
                                   ),
-                                  opacity: stateTheme.stateLayerOpacity,
+                                  opacity: stateTheme.asWidgetStateLayerOpacity,
                                 ),
                                 backgroundColor:
                                     WidgetStateProperty.resolveWith(
@@ -770,7 +770,7 @@ class _GeneratedFormState extends State<GeneratedForm> {
                           color: WidgetStatePropertyAll(
                             colorTheme.onSurfaceVariant,
                           ),
-                          opacity: stateTheme.stateLayerOpacity,
+                          opacity: stateTheme.asWidgetStateLayerOpacity,
                         ),
                         backgroundColor: WidgetStateProperty.resolveWith(
                           (states) => states.contains(WidgetState.disabled)
@@ -852,7 +852,7 @@ class _GeneratedFormState extends State<GeneratedForm> {
                           color: WidgetStatePropertyAll(
                             colorTheme.onSurfaceVariant,
                           ),
-                          opacity: stateTheme.stateLayerOpacity,
+                          opacity: stateTheme.asWidgetStateLayerOpacity,
                         ),
                         backgroundColor: WidgetStateProperty.resolveWith(
                           (states) => states.contains(WidgetState.disabled)
@@ -903,7 +903,7 @@ class _GeneratedFormState extends State<GeneratedForm> {
                           color: WidgetStatePropertyAll(
                             colorTheme.onSurfaceVariant,
                           ),
-                          opacity: stateTheme.stateLayerOpacity,
+                          opacity: stateTheme.asWidgetStateLayerOpacity,
                         ),
                         backgroundColor: WidgetStateProperty.resolveWith(
                           (states) => states.contains(WidgetState.disabled)
@@ -951,7 +951,7 @@ class _GeneratedFormState extends State<GeneratedForm> {
                           color: WidgetStatePropertyAll(
                             colorTheme.onSurfaceVariant,
                           ),
-                          opacity: stateTheme.stateLayerOpacity,
+                          opacity: stateTheme.asWidgetStateLayerOpacity,
                         ),
                         backgroundColor: WidgetStateProperty.resolveWith(
                           (states) => states.contains(WidgetState.disabled)
@@ -1062,7 +1062,7 @@ class _GeneratedFormState extends State<GeneratedForm> {
                           ),
                           overlayColor: WidgetStateLayerColor(
                             color: WidgetStatePropertyAll(colorTheme.error),
-                            opacity: stateTheme.stateLayerOpacity,
+                            opacity: stateTheme.asWidgetStateLayerOpacity,
                           ),
                           backgroundColor: WidgetStateProperty.resolveWith(
                             (states) => states.contains(WidgetState.disabled)
@@ -1140,7 +1140,7 @@ class _GeneratedFormState extends State<GeneratedForm> {
                           color: WidgetStatePropertyAll(
                             colorTheme.onSurfaceVariant,
                           ),
-                          opacity: stateTheme.stateLayerOpacity,
+                          opacity: stateTheme.asWidgetStateLayerOpacity,
                         ),
                         backgroundColor: WidgetStateProperty.resolveWith(
                           (states) => states.contains(WidgetState.disabled)
