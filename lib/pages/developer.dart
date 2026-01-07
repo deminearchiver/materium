@@ -42,12 +42,16 @@ class DeveloperPageBackButton extends StatelessWidget {
       (settings) => settings.useBlackTheme.value,
     );
 
+    final materialLocalization = MaterialLocalizations.of(context);
+
     final navigator = Navigator.of(context);
     final route = ModalRoute.of(context);
+
     final colorTheme = ColorTheme.of(context);
     final elevationTheme = ElevationTheme.of(context);
     final shapeTheme = ShapeTheme.of(context);
     final stateTheme = StateTheme.of(context);
+
     return IconButton(
       style: LegacyThemeFactory.createIconButtonStyle(
         colorTheme: colorTheme,
@@ -64,6 +68,7 @@ class DeveloperPageBackButton extends StatelessWidget {
       ),
       onPressed: () => navigator.pop(),
       icon: const IconLegacy(Symbols.arrow_back_rounded),
+      tooltip: materialLocalization.backButtonTooltip,
     );
   }
 }

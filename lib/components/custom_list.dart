@@ -90,12 +90,10 @@ class ListItemContainer extends StatelessWidget {
         containerColor?.resolve(states) ??
         listItemTheme.containerColor.resolve(states);
 
-    return Material.raw(
+    return Material(
       clipBehavior: .antiAlias,
       color: resolvedContainerColor,
       shape: resolvedShape,
-      elevation: 0.0,
-      shadowColor: Colors.transparent,
       child: CenterOptically(
         enabled: corners != null,
         corners: corners ?? .none,
@@ -472,7 +470,6 @@ class _ListItemInteractionState extends State<ListItemInteraction> {
         child: FocusRing(
           visible: states.isFocused,
           placement: .inward,
-          layoutBuilder: (context, info, child) => child,
           child: Listener(
             behavior: .deferToChild,
             onPointerDown: !states.isDisabled ? _onPointerDown : null,

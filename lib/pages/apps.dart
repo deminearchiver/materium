@@ -2092,7 +2092,7 @@ class AppsPageState extends State<AppsPage> with TickerProviderStateMixin {
               }
             : null,
 
-        icon: const IconLegacy(Symbols.delete_rounded, fill: 0.0),
+        icon: const IconLegacy(Symbols.delete_rounded, fill: 1.0),
         tooltip: tr("removeSelectedApps"),
       );
 

@@ -70,6 +70,7 @@ class _GeneratedFormModalState extends State<GeneratedFormModal> {
                 });
               }
             },
+            textFieldType: .outlined,
           ),
           if (widget.additionalWidgets.isNotEmpty) ...widget.additionalWidgets,
         ],

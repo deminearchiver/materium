@@ -28,8 +28,8 @@ class AddAppPage extends StatefulWidget {
 }
 
 class AddAppPageState extends State<AddAppPage> {
-  bool gettingAppInfo = false;
-  bool searching = false;
+  bool _adding = false;
+  bool _searching = false;
 
   String userInput = '';
   String searchQuery = '';
@@ -141,7 +141,7 @@ class AddAppPageState extends State<AddAppPage> {
       (settingsProvider) => settingsProvider.searchDeselected,
     );
 
-    final doingSomething = gettingAppInfo || searching;
+    final doingSomething = _adding || _searching;
 
     Future<bool> getTrackOnlyConfirmationIfNeeded(
       bool userPickedTrackOnly, {
@@ -197,7 +197,7 @@ class AddAppPageState extends State<AddAppPage> {
 
     Future<void> addApp({bool resetUserInputAfter = false}) async {
       setState(() {
-        gettingAppInfo = true;
+        _adding = true;
       });
       try {
         var userPickedTrackOnly = additionalSettings['trackOnly'] == true;
@@ -270,7 +270,7 @@ class AddAppPageState extends State<AddAppPage> {
       } finally {
         if (context.mounted) {
           setState(() {
-            gettingAppInfo = false;
+            _adding = false;
             if (resetUserInputAfter) {
               changeUserInput('', false, true);
             }
@@ -324,7 +324,7 @@ class AddAppPageState extends State<AddAppPage> {
         const SizedBox(width: 12.0),
         Builder(
           builder: (context) {
-            final isSelected = gettingAppInfo;
+            final isSelected = _adding;
             final canAddApp =
                 !doingSomething &&
                 pickedSource != null &&
@@ -336,18 +336,19 @@ class AddAppPageState extends State<AddAppPage> {
                 elevationTheme: elevationTheme,
                 shapeTheme: shapeTheme,
                 stateTheme: stateTheme,
-                // typescaleTheme: typescaleTheme,
                 size: .medium,
                 shape: .square,
                 width: .wide,
                 isSelected: isSelected,
                 unselectedContainerColor: colorTheme.primary,
                 unselectedIconColor: colorTheme.onPrimary,
-                selectedContainerColor: colorTheme.errorContainer,
-                selectedIconColor: colorTheme.onErrorContainer,
+                selectedContainerColor: colorTheme.surfaceContainer,
+                selectedIconColor: colorTheme.primary,
+                // selectedContainerColor: colorTheme.errorContainer,
+                // selectedIconColor: colorTheme.onErrorContainer,
                 padding: .zero,
               ),
-              onPressed: gettingAppInfo || canAddApp
+              onPressed: canAddApp || isSelected
                   ? () {
                       if (canAddApp) {
                         HapticFeedback.selectionClick();
@@ -359,7 +360,8 @@ class AddAppPageState extends State<AddAppPage> {
                 fit: .expand,
                 children: [
                   isSelected
-                      ? const IconLegacy(Symbols.close_rounded)
+                      // ? const IconLegacy(Symbols.close_rounded)
+                      ? const IconLegacy(Symbols.add_rounded)
                       : const IconLegacy(Symbols.add_rounded),
                   if (isSelected)
                     Positioned.fill(
@@ -388,14 +390,11 @@ class AddAppPageState extends State<AddAppPage> {
     );
 
     Future<void> runSearch({bool filtered = true}) async {
-      setState(() {
-        searching = true;
-      });
-      final sourceStrings = <String, List<String>>{};
-      sourceProvider.sources.where((e) => e.canSearch).forEach((s) {
-        sourceStrings[s.name] = [s.name];
-      });
       try {
+        final sourceStrings = <String, List<String>>{};
+        sourceProvider.sources.where((e) => e.canSearch).forEach((s) {
+          sourceStrings[s.name] = [s.name];
+        });
         final searchSources =
             await showDialog<List<String>?>(
               context: context,
@@ -415,6 +414,9 @@ class AddAppPageState extends State<AddAppPage> {
             ) ??
             [];
         if (!context.mounted) return;
+        setState(() {
+          _searching = true;
+        });
         if (searchSources.isNotEmpty) {
           context.read<SettingsProvider>().searchDeselected = sourceStrings.keys
               .where((s) => !searchSources.contains(s))
@@ -535,9 +537,9 @@ class AddAppPageState extends State<AddAppPage> {
       } catch (e) {
         if (context.mounted) showError(e, context);
       } finally {
-        if (context.mounted) {
+        if (mounted) {
           setState(() {
-            searching = false;
+            _searching = false;
           });
         }
       }
@@ -630,57 +632,65 @@ class AddAppPageState extends State<AddAppPage> {
           ),
         ),
         const SizedBox(width: 12.0),
-        IconButton(
-          style: LegacyThemeFactory.createIconButtonStyle(
-            colorTheme: colorTheme,
-            elevationTheme: elevationTheme,
-            shapeTheme: shapeTheme,
-            stateTheme: stateTheme,
-            // typescaleTheme: typescaleTheme,
-            size: .medium,
-            shape: .square,
-            width: .wide,
-            isSelected: searching,
-            unselectedContainerColor: colorTheme.primary,
-            unselectedIconColor: colorTheme.onPrimary,
-            selectedContainerColor: colorTheme.errorContainer,
-            selectedIconColor: colorTheme.onErrorContainer,
-            padding: .zero,
-          ),
-          onPressed: searchQuery.isNotEmpty && (!doingSomething || searching)
-              ? () {
-                  if (searchQuery.isNotEmpty && !doingSomething) {
-                    HapticFeedback.selectionClick();
-                    runSearch();
-                  }
-                }
-              : null,
-          icon: Stack(
-            fit: .expand,
-            children: [
-              searching
-                  ? const IconLegacy(Symbols.close_rounded)
-                  : const IconLegacy(Symbols.search_rounded),
-              if (searching)
-                Positioned.fill(
-                  child: Align.center(
-                    child: SizedBox.square(
-                      dimension: 40.0,
-                      child: Builder(
-                        builder: (context) => CircularProgressIndicator(
-                          value: null,
-                          padding: .zero,
-                          strokeWidth: 2.0,
-                          backgroundColor: Colors.transparent,
-                          color: IconThemeLegacy.of(context).color,
+        Builder(
+          builder: (context) {
+            final isSelected = _searching;
+            final canSearch = searchQuery.isNotEmpty && !doingSomething;
+            return IconButton(
+              style: LegacyThemeFactory.createIconButtonStyle(
+                colorTheme: colorTheme,
+                elevationTheme: elevationTheme,
+                shapeTheme: shapeTheme,
+                stateTheme: stateTheme,
+                size: .medium,
+                shape: .square,
+                width: .wide,
+                isSelected: _searching,
+                unselectedContainerColor: colorTheme.primary,
+                unselectedIconColor: colorTheme.onPrimary,
+                selectedContainerColor: colorTheme.surfaceContainer,
+                selectedIconColor: colorTheme.primary,
+                // selectedContainerColor: colorTheme.errorContainer,
+                // selectedIconColor: colorTheme.onErrorContainer,
+                padding: .zero,
+              ),
+              onPressed: canSearch || isSelected
+                  ? () {
+                      if (canSearch) {
+                        HapticFeedback.selectionClick();
+                        runSearch();
+                      }
+                    }
+                  : null,
+              icon: Stack(
+                fit: .expand,
+                children: [
+                  isSelected
+                      // ? const IconLegacy(Symbols.close_rounded)
+                      ? const IconLegacy(Symbols.search_rounded)
+                      : const IconLegacy(Symbols.search_rounded),
+                  if (isSelected)
+                    Positioned.fill(
+                      child: Align.center(
+                        child: SizedBox.square(
+                          dimension: 40.0,
+                          child: Builder(
+                            builder: (context) => CircularProgressIndicator(
+                              value: null,
+                              padding: .zero,
+                              strokeWidth: 2.0,
+                              backgroundColor: Colors.transparent,
+                              color: IconThemeLegacy.of(context).color,
+                            ),
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                ),
-            ],
-          ),
-          tooltip: tr("search"),
+                ],
+              ),
+              tooltip: tr("search"),
+            );
+          },
         ),
       ],
     );

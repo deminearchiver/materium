@@ -1,7 +1,9 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:collection/collection.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:materium/components/custom_list.dart';
 import 'package:materium/flutter.dart';
 import 'package:materium/app_sources/fdroidrepo.dart';
 import 'package:materium/components/custom_app_bar.dart';
@@ -831,9 +833,8 @@ class _ImportErrorDialogState extends State<ImportErrorDialog> {
   }
 }
 
-// ignore: must_be_immutable
 class SelectionModal extends StatefulWidget {
-  SelectionModal({
+  const SelectionModal({
     super.key,
     required this.entries,
     this.selectedByDefault = true,
@@ -843,25 +844,26 @@ class SelectionModal extends StatefulWidget {
     this.deselectThese = const [],
   });
 
-  String? title;
-  Map<String, List<String>> entries;
-  bool selectedByDefault;
-  List<String> deselectThese;
-  bool onlyOneSelectionAllowed;
-  bool titlesAreLinks;
+  final String? title;
+  final Map<String, List<String>> entries;
+  final bool selectedByDefault;
+  final List<String> deselectThese;
+  final bool onlyOneSelectionAllowed;
+  final bool titlesAreLinks;
 
   @override
   State<SelectionModal> createState() => _SelectionModalState();
 }
 
 class _SelectionModalState extends State<SelectionModal> {
-  Map<MapEntry<String, List<String>>, bool> entrySelections = {};
-  String filterRegex = '';
+  Map<MapEntry<String, List<String>>, bool> _entrySelections = {};
+  String _filterRegex = '';
+
   @override
   void initState() {
     super.initState();
-    for (var entry in widget.entries.entries) {
-      entrySelections.putIfAbsent(
+    for (final entry in widget.entries.entries) {
+      _entrySelections.putIfAbsent(
         entry,
         () =>
             widget.selectedByDefault &&
@@ -870,249 +872,288 @@ class _SelectionModalState extends State<SelectionModal> {
       );
     }
     if (widget.selectedByDefault && widget.onlyOneSelectionAllowed) {
-      selectOnlyOne(widget.entries.entries.first.key);
+      _selectOnlyOne(widget.entries.entries.first.key);
     }
   }
 
-  void selectOnlyOne(String url) {
-    for (var e in entrySelections.keys) {
-      entrySelections[e] = e.key == url;
+  void _selectOnlyOne(String url) {
+    for (final entry in _entrySelections.keys) {
+      _entrySelections[entry] = entry.key == url;
     }
   }
 
-  void selectAll({bool deselect = false}) {
-    for (var e in entrySelections.keys) {
-      entrySelections[e] = !deselect;
+  void _selectEntry(MapEntry<String, List<String>> entry, bool? value) {
+    setState(() {
+      value ??= false;
+      if (value! && widget.onlyOneSelectionAllowed) {
+        _selectOnlyOne(entry.key);
+      } else {
+        _entrySelections[entry] = value!;
+      }
+    });
+  }
+
+  void _selectAll({bool deselect = false}) {
+    for (final e in _entrySelections.keys) {
+      _entrySelections[e] = !deselect;
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    Map<MapEntry<String, List<String>>, bool> filteredEntrySelections = {};
-    entrySelections.forEach((key, value) {
-      var searchableText = key.value.isEmpty ? key.key : key.value[0];
-      if (filterRegex.isEmpty || RegExp(filterRegex).hasMatch(searchableText)) {
+    final useBlackTheme = context.select<SettingsService, bool>(
+      (settings) => settings.useBlackTheme.value,
+    );
+
+    final height = MediaQuery.heightOf(context);
+
+    final colorTheme = ColorTheme.of(context);
+    final elevationTheme = ElevationTheme.of(context);
+    final shapeTheme = ShapeTheme.of(context);
+    final stateTheme = StateTheme.of(context);
+    final typescaleTheme = TypescaleTheme.of(context);
+
+    final filteredEntrySelections = <MapEntry<String, List<String>>, bool>{};
+    _entrySelections.forEach((key, value) {
+      final searchableText = key.value.isEmpty ? key.key : key.value[0];
+      if (_filterRegex.isEmpty ||
+          RegExp(_filterRegex).hasMatch(searchableText)) {
         filteredEntrySelections.putIfAbsent(key, () => value);
       }
     });
-    if (filterRegex.isNotEmpty && filteredEntrySelections.isEmpty) {
-      entrySelections.forEach((key, value) {
-        var searchableText = key.value.isEmpty ? key.key : key.value[0];
-        if (filterRegex.isEmpty ||
+    if (_filterRegex.isNotEmpty && filteredEntrySelections.isEmpty) {
+      _entrySelections.forEach((key, value) {
+        final searchableText = key.value.isEmpty ? key.key : key.value[0];
+        if (_filterRegex.isEmpty ||
             RegExp(
-              filterRegex,
+              _filterRegex,
               caseSensitive: false,
             ).hasMatch(searchableText)) {
           filteredEntrySelections.putIfAbsent(key, () => value);
         }
       });
     }
+
     Widget getSelectAllButton() {
       if (widget.onlyOneSelectionAllowed) {
         return const SizedBox.shrink();
       }
-      var noneSelected = entrySelections.values.where((v) => v == true).isEmpty;
-      return noneSelected
-          ? TextButton(
-              style: const ButtonStyle(visualDensity: VisualDensity.compact),
-              onPressed: () {
-                setState(() {
-                  selectAll();
-                });
-              },
-              child: Text(tr('selectAll')),
-            )
-          : TextButton(
-              style: const ButtonStyle(visualDensity: VisualDensity.compact),
-              onPressed: () {
-                setState(() {
-                  selectAll(deselect: true);
-                });
-              },
-              child: Text(tr('deselectX', args: [''])),
-            );
+      final noneSelected = _entrySelections.values
+          .where((v) => v == true)
+          .isEmpty;
+      return TextButton(
+        style: LegacyThemeFactory.createButtonStyle(
+          colorTheme: colorTheme,
+          elevationTheme: elevationTheme,
+          shapeTheme: shapeTheme,
+          stateTheme: stateTheme,
+          typescaleTheme: typescaleTheme,
+          color: .text,
+        ),
+        onPressed: () {
+          setState(() {
+            _selectAll(deselect: !noneSelected);
+          });
+        },
+        child: Text(
+          noneSelected ? tr("selectAll") : tr("deselectX", args: [""]),
+        ),
+      );
+    }
+
+    final selectedEntries = _entrySelections.entries
+        .where((e) => e.value)
+        .toList();
+
+    Widget content = ListItemTheme.merge(
+      data: .from(
+        overlineTextStyle: .all(typescaleTheme.labelSmall.toTextStyle()),
+        headlineTextStyle: .all(
+          typescaleTheme.bodyMediumEmphasized.toTextStyle(),
+        ),
+        supportingTextStyle: .all(typescaleTheme.bodySmall.toTextStyle()),
+      ),
+      child: Flex.vertical(
+        mainAxisSize: .min,
+        crossAxisAlignment: .stretch,
+        spacing: 2.0,
+        children: filteredEntrySelections.keys
+            .mapIndexed((index, entry) {
+              final isFirst = index == 0;
+              final isLast = index == filteredEntrySelections.length - 1;
+              final isSelected = _entrySelections[entry];
+
+              return ListItemContainer(
+                isFirst: isFirst,
+                isLast: isLast,
+                containerColor: const .all(Colors.transparent),
+                child: ListItemInteraction(
+                  onTap: () {
+                    if (widget.onlyOneSelectionAllowed) {
+                      setState(() {
+                        _selectOnlyOne(entry.key);
+                      });
+                    } else {
+                      _selectEntry(entry, !(isSelected ?? false));
+                    }
+                  },
+                  child: ListItemLayout(
+                    padding: .fromSTEB(
+                      16.0 - 4.0,
+                      0.0,
+                      widget.titlesAreLinks ? 16.0 - 8.0 : 16.0,
+                      0.0,
+                    ),
+                    leadingPadding: const .symmetric(
+                      vertical: 10.0 - (48.0 - 40.0) / 2.0,
+                    ),
+                    trailingPadding: widget.titlesAreLinks
+                        ? const .symmetric(vertical: 10.0 - (48.0 - 40.0) / 2.0)
+                        : null,
+                    leading: widget.onlyOneSelectionAllowed
+                        ? RadioGroupButton<String>(value: entry.key)
+                        : Checkbox.bistate(
+                            checked: isSelected!,
+                            onCheckedChanged: (value) =>
+                                _selectEntry(entry, value),
+                          ),
+                    overline: widget.titlesAreLinks
+                        ? Text(
+                            Uri.parse(entry.key).host,
+                            style: const TextStyle(),
+                          )
+                        : null,
+                    headline: Text(
+                      entry.value.isEmpty ? entry.key : entry.value[0],
+                    ),
+                    supportingText: entry.value.length > 1
+                        ? Text(
+                            entry.value[1].length > 128
+                                ? "${entry.value[1].substring(0, 128)}..."
+                                : entry.value[1],
+                          )
+                        : null,
+                    trailing: widget.titlesAreLinks
+                        ? IconButton(
+                            style: LegacyThemeFactory.createIconButtonStyle(
+                              colorTheme: colorTheme,
+                              elevationTheme: elevationTheme,
+                              shapeTheme: shapeTheme,
+                              stateTheme: stateTheme,
+                              color: .standard,
+                              width: .narrow,
+                              containerColor: colorTheme.surfaceContainer,
+                            ),
+                            onPressed: () {
+                              launchUrlString(
+                                entry.key,
+                                mode: .externalApplication,
+                              );
+                            },
+                            icon: const IconLegacy(Symbols.link_rounded),
+                          )
+                        : null,
+                  ),
+                ),
+              );
+            })
+            .toList(growable: false),
+      ),
+    );
+
+    if (widget.onlyOneSelectionAllowed) {
+      content = RadioGroup<String>(
+        groupValue: selectedEntries.isEmpty
+            ? null
+            : selectedEntries.first.key.key,
+        onChanged: (value) {
+          if (value == null) return;
+          setState(() {
+            _selectOnlyOne(value);
+          });
+        },
+        child: content,
+      );
     }
 
     return AlertDialog(
       scrollable: true,
-      title: Text(widget.title ?? tr('pick')),
+      backgroundColor: useBlackTheme ? colorTheme.surfaceContainerLow : null,
+      constraints: BoxConstraints(
+        minWidth: 560.0,
+        maxWidth: 560.0,
+        minHeight: 280.0,
+        maxHeight: height * 2.0 / 3.0,
+      ),
+      title: Text(widget.title ?? tr("pick")),
+      titlePadding: const .fromSTEB(24.0, 24.0, 24.0, 16.0),
+      contentPadding: const .symmetric(),
       content: Flex.vertical(
         children: [
-          GeneratedForm(
-            items: [
-              [
-                GeneratedFormTextField(
-                  'filter',
-                  label: tr('filter'),
-                  required: false,
-                  additionalValidators: [
-                    (value) {
-                      return regExValidator(value);
-                    },
-                  ],
-                ),
-              ],
-            ],
-            onValueChanges: (value, valid, isBuilding) {
-              if (valid && !isBuilding) {
-                if (value['filter'] != null) {
-                  setState(() {
-                    filterRegex = value['filter'];
-                  });
-                }
-              }
-            },
-          ),
-          ...filteredEntrySelections.keys.map((entry) {
-            void selectThis(bool? value) {
-              setState(() {
-                value ??= false;
-                if (value! && widget.onlyOneSelectionAllowed) {
-                  selectOnlyOne(entry.key);
-                } else {
-                  entrySelections[entry] = value!;
-                }
-              });
-            }
-
-            var urlLink = GestureDetector(
-              onTap: !widget.titlesAreLinks
-                  ? null
-                  : () {
-                      launchUrlString(
-                        entry.key,
-                        mode: LaunchMode.externalApplication,
-                      );
-                    },
-              child: Flex.vertical(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    entry.value.isEmpty ? entry.key : entry.value[0],
-                    style: TextStyle(
-                      decoration: widget.titlesAreLinks
-                          ? TextDecoration.underline
-                          : null,
-                      fontWeight: FontWeight.bold,
-                    ),
-                    textAlign: TextAlign.start,
-                  ),
-                  if (widget.titlesAreLinks)
-                    Text(
-                      Uri.parse(entry.key).host,
-                      style: const TextStyle(
-                        decoration: TextDecoration.underline,
-                        fontSize: 12,
-                      ),
-                    ),
-                ],
-              ),
-            );
-
-            var descriptionText = entry.value.length <= 1
-                ? const SizedBox.shrink()
-                : Text(
-                    entry.value[1].length > 128
-                        ? '${entry.value[1].substring(0, 128)}...'
-                        : entry.value[1],
-                    style: const TextStyle(
-                      fontStyle: FontStyle.italic,
-                      fontSize: 12,
-                    ),
-                  );
-
-            var selectedEntries = entrySelections.entries
-                .where((e) => e.value)
-                .toList();
-
-            var singleSelectTile = ListTile(
-              title: GestureDetector(
-                onTap: widget.titlesAreLinks
-                    ? null
-                    : () {
-                        selectThis(!(entrySelections[entry] ?? false));
+          Padding(
+            padding: const .symmetric(horizontal: 24.0),
+            child: GeneratedForm(
+              items: [
+                [
+                  GeneratedFormTextField(
+                    "filter",
+                    label: tr("filter"),
+                    required: false,
+                    additionalValidators: [
+                      (value) {
+                        return regExValidator(value);
                       },
-                child: urlLink,
-              ),
-              subtitle: entry.value.length <= 1
-                  ? null
-                  : GestureDetector(
-                      onTap: () {
-                        setState(() {
-                          selectOnlyOne(entry.key);
-                        });
-                      },
-                      child: descriptionText,
-                    ),
-              leading: RadioGroupButton<String>(
-                value: entry.key,
-                groupValue: selectedEntries.isEmpty
-                    ? null
-                    : selectedEntries.first.key.key,
-                onChanged: (value) {
-                  setState(() {
-                    selectOnlyOne(entry.key);
-                  });
-                },
-              ),
-            );
-
-            var multiSelectTile = Flex.horizontal(
-              children: [
-                Checkbox.bistate(
-                  checked: entrySelections[entry]!,
-                  onCheckedChanged: (value) => selectThis(value),
-                ),
-                const SizedBox(width: 8),
-                Flexible.tight(
-                  child: Flex.vertical(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      const SizedBox(height: 8),
-                      GestureDetector(
-                        onTap: widget.titlesAreLinks
-                            ? null
-                            : () {
-                                selectThis(!(entrySelections[entry] ?? false));
-                              },
-                        child: urlLink,
-                      ),
-                      entry.value.length <= 1
-                          ? const SizedBox.shrink()
-                          : GestureDetector(
-                              onTap: () {
-                                selectThis(!(entrySelections[entry] ?? false));
-                              },
-                              child: descriptionText,
-                            ),
-                      const SizedBox(height: 8),
                     ],
                   ),
-                ),
+                ],
               ],
-            );
-
-            return widget.onlyOneSelectionAllowed
-                ? singleSelectTile
-                : multiSelectTile;
-          }),
+              onValueChanges: (value, valid, isBuilding) {
+                if (valid && !isBuilding) {
+                  if (value["filter"] != null) {
+                    setState(() {
+                      _filterRegex = value["filter"];
+                    });
+                  }
+                }
+              },
+              textFieldType: .outlined,
+            ),
+          ),
+          const SizedBox(height: 16.0),
+          Padding(padding: const .symmetric(horizontal: 8.0), child: content),
         ],
       ),
+      actionsPadding: const .symmetric(horizontal: 24.0, vertical: 24.0 - 4.0),
       actions: [
         getSelectAllButton(),
         TextButton(
+          style: LegacyThemeFactory.createButtonStyle(
+            colorTheme: colorTheme,
+            elevationTheme: elevationTheme,
+            shapeTheme: shapeTheme,
+            stateTheme: stateTheme,
+            typescaleTheme: typescaleTheme,
+            color: .text,
+          ),
           onPressed: () {
             Navigator.of(context).pop();
           },
-          child: Text(tr('cancel')),
+          child: Text(tr("cancel")),
         ),
         TextButton(
-          onPressed: entrySelections.values.where((b) => b).isEmpty
+          style: LegacyThemeFactory.createButtonStyle(
+            colorTheme: colorTheme,
+            elevationTheme: elevationTheme,
+            shapeTheme: shapeTheme,
+            stateTheme: stateTheme,
+            typescaleTheme: typescaleTheme,
+            color: .text,
+          ),
+          onPressed: _entrySelections.values.where((b) => b).isEmpty
               ? null
               : () {
                   Navigator.of(context).pop(
-                    entrySelections.entries
+                    _entrySelections.entries
                         .where((entry) => entry.value)
                         .map((e) => e.key.key)
                         .toList(),
@@ -1120,11 +1161,11 @@ class _SelectionModalState extends State<SelectionModal> {
                 },
           child: Text(
             widget.onlyOneSelectionAllowed
-                ? tr('pick')
+                ? tr("pick")
                 : tr(
-                    'selectX',
+                    "selectX",
                     args: [
-                      entrySelections.values.where((b) => b).length.toString(),
+                      _entrySelections.values.where((b) => b).length.toString(),
                     ],
                   ),
           ),
