@@ -102,6 +102,7 @@ dependencies:
   slang: ^4.11.1
   slang_flutter: ^4.11.0
   rhttp: ^0.15.0
+  pub_semver: ^2.2.0
 
 dev_dependencies:
   # Hosted dependencies
@@ -115,6 +116,7 @@ dev_dependencies:
   slang_build_runner: ^4.11.0
   slang_gpt: ^0.11.1
   fastforge: ^0.6.6
+  pubspec_generator: ^5.0.0
 
 dependency_overrides:
   # Git dependencies
