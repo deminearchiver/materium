@@ -2064,6 +2064,7 @@ class _SettingsPageState extends State<SettingsPage> {
                 size: useBlackTheme ? .black : .standard,
                 color: useBlackTheme ? .black : .listItemPhone,
               ),
+              // Using eager builds is actually faster for small lists!!!
               child: SliverToBoxAdapter(
                 child: Padding(
                   padding: .fromLTRB(8.0, showBackButton ? 0.0 : 4.0, 8.0, 0.0),
