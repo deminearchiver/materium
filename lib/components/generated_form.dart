@@ -186,10 +186,12 @@ class GeneratedForm extends StatefulWidget {
     super.key,
     required this.items,
     required this.onValueChanges,
+    this.textFieldType = .filled,
   });
 
   final List<List<GeneratedFormItem>> items;
   final OnValueChanges onValueChanges;
+  final LegacyTextFieldType textFieldType;
 
   @override
   State<GeneratedForm> createState() => _GeneratedFormState();
@@ -277,6 +279,38 @@ class _GeneratedFormState extends State<GeneratedForm> {
   String? initKey;
   int forceUpdateKeyCount = 0;
 
+  late ValueNotifier<LegacyTextFieldType> _textFieldTypeNotifier;
+
+  InputDecorationThemeData _createInputDecorationTheme({
+    required BuildContext context,
+    required LegacyTextFieldType textFieldType,
+    required bool hasLabelText,
+  }) {
+    final typescaleTheme = TypescaleTheme.of(context);
+
+    const containerHeight = 56.0;
+
+    const inputTextHeight = 24.0;
+    final labelTextPopulatedHeight = hasLabelText ? 16.0 : 0.0;
+
+    final verticalPadding =
+        (containerHeight - inputTextHeight - labelTextPopulatedHeight) / 2.0;
+
+    return InputDecorationThemeData(
+      border: switch (widget.textFieldType) {
+        .filled => const UnderlineInputBorder(),
+        .outlined => const OutlineInputBorder(),
+      },
+      filled: switch (widget.textFieldType) {
+        .filled => true,
+        .outlined => false,
+      },
+      constraints: const BoxConstraints(minHeight: 56.0),
+      contentPadding: .symmetric(horizontal: 16.0, vertical: verticalPadding),
+      labelStyle: typescaleTheme.bodyLarge.toTextStyle(),
+    );
+  }
+
   // If any value changes, call this to update the parent with value and validity
   void someValueChanged({bool isBuilding = false, bool forceInvalid = false}) {
     final Map<String, dynamic> returnValues = values;
@@ -314,42 +348,57 @@ class _GeneratedFormState extends State<GeneratedForm> {
           return TypeAheadField<String>(
             controller: ctrl,
             builder: (context, controller, focusNode) {
-              return TextFormField(
-                controller: ctrl,
-                focusNode: focusNode,
-                keyboardType: formItem.textInputType,
-                obscureText: formItem.password,
-                autocorrect: !formItem.password,
-                enableSuggestions: !formItem.password,
-                key: formFieldKey,
-                autovalidateMode: AutovalidateMode.onUserInteraction,
-                onChanged: (value) {
-                  setState(() {
-                    values[formItem.key] = value;
-                    someValueChanged();
-                  });
-                },
-                decoration: InputDecoration(
-                  border: const UnderlineInputBorder(),
-                  filled: true,
-                  helperText: formItem.label + (formItem.required ? ' *' : ''),
-                  hintText: formItem.hint,
-                ),
-                minLines: formItem.max <= 1 ? null : formItem.max,
-                maxLines: formItem.max <= 1 ? 1 : formItem.max,
-                validator: (value) {
-                  if (formItem.required &&
-                      (value == null || value.trim().isEmpty)) {
-                    return '${formItem.label} ${tr('requiredInBrackets')}';
-                  }
-                  for (final validator in formItem.additionalValidators) {
-                    final String? result = validator(value);
-                    if (result != null) {
-                      return result;
+              return ValueListenableBuilder(
+                valueListenable: _textFieldTypeNotifier,
+                builder: (context, textFieldType, child) =>
+                    InputDecorationTheme(
+                      data: _createInputDecorationTheme(
+                        context: context,
+                        textFieldType: _textFieldTypeNotifier.value,
+                        hasLabelText: false,
+                      ),
+                      child: child!,
+                    ),
+                child: TextFormField(
+                  controller: ctrl,
+                  focusNode: focusNode,
+                  keyboardType: formItem.textInputType,
+                  obscureText: formItem.password,
+                  autocorrect: !formItem.password,
+                  enableSuggestions: !formItem.password,
+                  key: formFieldKey,
+                  autovalidateMode: AutovalidateMode.onUserInteraction,
+                  onChanged: (value) {
+                    setState(() {
+                      values[formItem.key] = value;
+                      someValueChanged();
+                    });
+                  },
+                  decoration: InputDecoration(
+                    contentPadding: const .symmetric(
+                      horizontal: 16.0,
+                      vertical: (56.0 - 24.0) / 2.0,
+                    ),
+                    helperText:
+                        formItem.label + (formItem.required ? ' *' : ''),
+                    hintText: formItem.hint,
+                  ),
+                  minLines: formItem.max <= 1 ? null : formItem.max,
+                  maxLines: formItem.max <= 1 ? 1 : formItem.max,
+                  validator: (value) {
+                    if (formItem.required &&
+                        (value == null || value.trim().isEmpty)) {
+                      return '${formItem.label} ${tr('requiredInBrackets')}';
                     }
-                  }
-                  return null;
-                },
+                    for (final validator in formItem.additionalValidators) {
+                      final String? result = validator(value);
+                      if (result != null) {
+                        return result;
+                      }
+                    }
+                    return null;
+                  },
+                ),
               );
             },
             itemBuilder: (context, value) {
@@ -373,27 +422,34 @@ class _GeneratedFormState extends State<GeneratedForm> {
           if (formItem.opts!.isEmpty) {
             return Text(tr('dropdownNoOptsError'));
           }
-          return DropdownMenuFormField<Object>(
-            expandedInsets: EdgeInsets.zero,
-            inputDecorationTheme: const InputDecorationThemeData(
-              border: UnderlineInputBorder(),
-              filled: true,
-            ),
-            label: Text(formItem.label),
-            initialSelection: values[formItem.key],
-            dropdownMenuEntries: formItem.opts!
-                .map(
-                  (e2) => DropdownMenuEntry(
-                    value: e2.key,
-                    enabled: formItem.disabledOptKeys?.contains(e2.key) != true,
-                    label: e2.value,
+          return ValueListenableBuilder(
+            valueListenable: _textFieldTypeNotifier,
+            builder: (context, textFieldType, _) =>
+                DropdownMenuFormField<Object>(
+                  expandedInsets: EdgeInsets.zero,
+                  inputDecorationTheme: _createInputDecorationTheme(
+                    context: context,
+                    textFieldType: textFieldType,
+                    hasLabelText: true,
                   ),
-                )
-                .toList(),
-            onSelected: (value) => setState(() {
-              values[formItem.key] = value ?? formItem.opts!.first.key;
-              someValueChanged();
-            }),
+                  label: Text(formItem.label),
+                  initialSelection: values[formItem.key],
+                  dropdownMenuEntries: formItem.opts!
+                      .map(
+                        (e2) => DropdownMenuEntry(
+                          value: e2.key,
+                          enabled:
+                              formItem.disabledOptKeys?.contains(e2.key) !=
+                              true,
+                          label: e2.value,
+                        ),
+                      )
+                      .toList(),
+                  onSelected: (value) => setState(() {
+                    values[formItem.key] = value ?? formItem.opts!.first.key;
+                    someValueChanged();
+                  }),
+                ),
           );
         } else if (formItem is GeneratedFormSubForm) {
           values[formItem.key] = [];
@@ -417,7 +473,22 @@ class _GeneratedFormState extends State<GeneratedForm> {
   @override
   void initState() {
     super.initState();
+    _textFieldTypeNotifier = ValueNotifier(widget.textFieldType);
     initForm();
+  }
+
+  @override
+  void didUpdateWidget(covariant GeneratedForm oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.textFieldType != oldWidget.textFieldType) {
+      _textFieldTypeNotifier.value = widget.textFieldType;
+    }
+  }
+
+  @override
+  void dispose() {
+    _textFieldTypeNotifier.dispose();
+    super.dispose();
   }
 
   @override

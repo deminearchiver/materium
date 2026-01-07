@@ -1449,138 +1449,176 @@ class AppsPageState extends State<AppsPage> with TickerProviderStateMixin {
                       : tr("update"),
                 );
 
-                final Widget overflowButton = MenuTheme(
-                  data: LegacyThemeFactory.createMenuTheme(
+                final LegacyMenuVariant menuVariant = useBlackTheme
+                    ? .standard
+                    : .standard;
+
+                final Widget overflowButton = MenuAnchor(
+                  consumeOutsideTap: true,
+                  crossAxisUnconstrained: false,
+                  style: LegacyThemeFactory.createMenuStyle(
                     colorTheme: colorTheme,
                     elevationTheme: elevationTheme,
                     shapeTheme: shapeTheme,
-                    variant: useBlackTheme ? .standard : .vibrant,
+                    variant: menuVariant,
                   ),
-                  child: MenuButtonTheme(
-                    data: LegacyThemeFactory.createMenuButtonTheme(
-                      colorTheme: colorTheme,
-                      elevationTheme: elevationTheme,
-                      shapeTheme: shapeTheme,
-                      stateTheme: stateTheme,
-                      typescaleTheme: typescaleTheme,
-                      variant: useBlackTheme ? .standard : .vibrant,
+                  menuChildren: [
+                    MenuItemButton(
+                      style: LegacyThemeFactory.createMenuButtonStyle(
+                        colorTheme: colorTheme,
+                        elevationTheme: elevationTheme,
+                        shapeTheme: shapeTheme,
+                        stateTheme: stateTheme,
+                        typescaleTheme: typescaleTheme,
+                        variant: menuVariant,
+                        isFirst: true,
+                        isLast: false,
+                        isSelected: isSelected,
+                      ),
+                      // closeOnActivate:
+                      //     (!isSelected && selectedAppIds.isEmpty) ||
+                      //     (isSelected && selectedAppIds.length == 1),
+                      onPressed: () => toggleAppSelected(item.app),
+                      leadingIcon: const IconLegacy(
+                        Symbols.check_rounded,
+                        fill: 1.0,
+                      ),
+                      child: isSelected
+                          ? const Text("Selected")
+                          : const Text("Select"),
                     ),
-                    child: MenuAnchor(
-                      consumeOutsideTap: true,
-                      crossAxisUnconstrained: false,
-                      menuChildren: [
-                        MenuItemButton(
-                          onPressed: () => toggleAppSelected(item.app),
-                          leadingIcon: isSelected
-                              ? const IconLegacy(
-                                  Symbols.cancel_rounded,
-                                  fill: 1.0,
-                                )
-                              : const IconLegacy(
-                                  Symbols.check_box_rounded,
-                                  fill: 1.0,
-                                ),
-                          child: isSelected
-                              ? const Text("Deselect")
-                              : const Text("Select"),
-                        ),
-                        if (hasUpdate && selectedAppIds.isNotEmpty)
-                          MenuItemButton(
-                            onPressed: !appsProvider.areDownloadsRunning()
-                                ? () {
-                                    appsProvider
-                                        .downloadAndInstallLatestApps([
-                                          item.app.id,
-                                        ], globalNavigatorKey.currentContext)
-                                        .catchError((e) {
-                                          if (context.mounted) {
-                                            showError(e, context);
-                                          }
-                                          return <String>[];
-                                        });
-                                  }
-                                : null,
-                            leadingIcon:
-                                item.app.additionalSettings["trackOnly"] == true
-                                ? const IconLegacy(
-                                    Symbols.check_circle_rounded,
-                                    fill: 1.0,
-                                  )
-                                : const IconLegacy(
-                                    Symbols.install_mobile,
-                                    fill: 1.0,
-                                  ),
-                            child: Text(
-                              item.app.additionalSettings["trackOnly"] == true
-                                  ? tr("markUpdated")
-                                  : tr("update"),
-                            ),
-                          ),
-                        MenuItemButton(
-                          onPressed: showChanges,
-                          leadingIcon: const IconLegacy(
-                            Symbols.menu_book_rounded,
-                            fill: 1.0,
-                          ),
-                          child: const Text("View changelog"),
-                        ),
-                        if (selectedAppIds.isNotEmpty)
-                          MenuItemButton(
-                            onPressed: () => Navigator.of(context).push(
-                              MaterialPageRoute<void>(
-                                builder: (context) =>
-                                    AppPage(appId: item.app.id),
-                              ),
-                            ),
-                            leadingIcon: const IconLegacy(
-                              Symbols.edit_rounded,
-                              fill: 1.0,
-                            ),
-                            child: const Text("Edit"),
-                          ),
-                        MenuItemButton(
-                          onPressed: () => appsProvider.removeAppsWithModal(
-                            context,
-                            [item.app],
-                          ),
-                          leadingIcon: const IconLegacy(
-                            Symbols.delete_rounded,
-                            fill: 1.0,
-                          ),
-                          child: Text(tr("remove")),
-                        ),
-                      ],
-                      builder: (context, controller, child) => IconButton(
-                        style: LegacyThemeFactory.createIconButtonStyle(
+                    if (hasUpdate && selectedAppIds.isNotEmpty)
+                      MenuItemButton(
+                        style: LegacyThemeFactory.createMenuButtonStyle(
                           colorTheme: colorTheme,
                           elevationTheme: elevationTheme,
                           shapeTheme: shapeTheme,
                           stateTheme: stateTheme,
-                          size: .small,
-                          shape: .round,
-                          color: .standard,
-                          width: .narrow,
-                          containerColor: isSelected || useBlackTheme
-                              ? Colors.transparent
-                              : colorTheme.surfaceContainer,
-                          iconColor: isSelected
-                              ? useBlackTheme
-                                    ? colorTheme.onPrimaryContainer
-                                    : colorTheme.onSecondaryContainer
-                              : useBlackTheme
-                              ? colorTheme.onSurface
-                              : colorTheme.onSurfaceVariant,
+                          typescaleTheme: typescaleTheme,
+                          variant: menuVariant,
+                          isFirst: false,
+                          isLast: false,
                         ),
-                        onPressed: () {
-                          if (controller.isOpen) {
-                            controller.close();
-                          } else {
-                            controller.open();
-                          }
-                        },
-                        icon: const IconLegacy(Symbols.more_vert_rounded),
+                        onPressed: !appsProvider.areDownloadsRunning()
+                            ? () {
+                                appsProvider
+                                    .downloadAndInstallLatestApps([
+                                      item.app.id,
+                                    ], globalNavigatorKey.currentContext)
+                                    .catchError((e) {
+                                      if (context.mounted) {
+                                        showError(e, context);
+                                      }
+                                      return <String>[];
+                                    });
+                              }
+                            : null,
+                        leadingIcon:
+                            item.app.additionalSettings["trackOnly"] == true
+                            ? const IconLegacy(
+                                Symbols.check_circle_rounded,
+                                fill: 1.0,
+                              )
+                            : const IconLegacy(
+                                Symbols.install_mobile,
+                                fill: 1.0,
+                              ),
+                        child: Text(
+                          item.app.additionalSettings["trackOnly"] == true
+                              ? tr("markUpdated")
+                              : tr("update"),
+                        ),
                       ),
+                    MenuItemButton(
+                      style: LegacyThemeFactory.createMenuButtonStyle(
+                        colorTheme: colorTheme,
+                        elevationTheme: elevationTheme,
+                        shapeTheme: shapeTheme,
+                        stateTheme: stateTheme,
+                        typescaleTheme: typescaleTheme,
+                        variant: menuVariant,
+                        isFirst: false,
+                        isLast: false,
+                      ),
+                      onPressed: showChanges,
+                      leadingIcon: const IconLegacy(
+                        Symbols.menu_book_rounded,
+                        fill: 1.0,
+                      ),
+                      child: const Text("View changelog"),
                     ),
+                    if (selectedAppIds.isNotEmpty)
+                      MenuItemButton(
+                        style: LegacyThemeFactory.createMenuButtonStyle(
+                          colorTheme: colorTheme,
+                          elevationTheme: elevationTheme,
+                          shapeTheme: shapeTheme,
+                          stateTheme: stateTheme,
+                          typescaleTheme: typescaleTheme,
+                          variant: menuVariant,
+                          isFirst: false,
+                          isLast: false,
+                        ),
+                        onPressed: () => Navigator.of(context).push(
+                          MaterialPageRoute<void>(
+                            builder: (context) => AppPage(appId: item.app.id),
+                          ),
+                        ),
+                        leadingIcon: const IconLegacy(
+                          Symbols.edit_rounded,
+                          fill: 1.0,
+                        ),
+                        child: const Text("Edit"),
+                      ),
+                    MenuItemButton(
+                      style: LegacyThemeFactory.createMenuButtonStyle(
+                        colorTheme: colorTheme,
+                        elevationTheme: elevationTheme,
+                        shapeTheme: shapeTheme,
+                        stateTheme: stateTheme,
+                        typescaleTheme: typescaleTheme,
+                        variant: menuVariant,
+                        isFirst: false,
+                        isLast: true,
+                      ),
+                      onPressed: () =>
+                          appsProvider.removeAppsWithModal(context, [item.app]),
+                      leadingIcon: const IconLegacy(
+                        Symbols.delete_rounded,
+                        fill: 1.0,
+                      ),
+                      child: Text(tr("remove")),
+                    ),
+                  ],
+                  builder: (context, controller, child) => IconButton(
+                    style: LegacyThemeFactory.createIconButtonStyle(
+                      colorTheme: colorTheme,
+                      elevationTheme: elevationTheme,
+                      shapeTheme: shapeTheme,
+                      stateTheme: stateTheme,
+                      size: .small,
+                      shape: .round,
+                      color: .standard,
+                      width: .narrow,
+                      containerColor: isSelected || useBlackTheme
+                          ? Colors.transparent
+                          : colorTheme.surfaceContainer,
+                      iconColor: isSelected
+                          ? useBlackTheme
+                                ? colorTheme.onPrimaryContainer
+                                : colorTheme.onSecondaryContainer
+                          : useBlackTheme
+                          ? colorTheme.onSurface
+                          : colorTheme.onSurfaceVariant,
+                    ),
+                    onPressed: () {
+                      if (controller.isOpen) {
+                        controller.close();
+                      } else {
+                        controller.open();
+                      }
+                    },
+                    icon: const IconLegacy(Symbols.more_vert_rounded),
                   ),
                 );
 

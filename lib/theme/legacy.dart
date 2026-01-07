@@ -161,19 +161,23 @@ abstract final class LegacyThemeFactory {
           corners: .all(shapeTheme.corner.extraSmall),
         ),
       ),
-      menuTheme: createMenuTheme(
-        colorTheme: colorTheme,
-        elevationTheme: elevationTheme,
-        shapeTheme: shapeTheme,
-        variant: .standard,
+      menuTheme: MenuThemeData(
+        style: createMenuStyle(
+          colorTheme: colorTheme,
+          elevationTheme: elevationTheme,
+          shapeTheme: shapeTheme,
+          variant: .standard,
+        ),
       ),
-      menuButtonTheme: createMenuButtonTheme(
-        colorTheme: colorTheme,
-        elevationTheme: elevationTheme,
-        shapeTheme: shapeTheme,
-        stateTheme: stateTheme,
-        typescaleTheme: typescaleTheme,
-        variant: .standard,
+      menuButtonTheme: MenuButtonThemeData(
+        style: createMenuButtonStyle(
+          colorTheme: colorTheme,
+          elevationTheme: elevationTheme,
+          shapeTheme: shapeTheme,
+          stateTheme: stateTheme,
+          typescaleTheme: typescaleTheme,
+          variant: .standard,
+        ),
       ),
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: createButtonStyle(
@@ -256,6 +260,7 @@ abstract final class LegacyThemeFactory {
     Color? contentColor,
     Color? unselectedContentColor,
     Color? selectedContentColor,
+    EdgeInsetsGeometry? padding,
   }) {
     final isUnselectedNotDefault = isSelected == false;
     final isUnselectedDefault = isSelected != true;
@@ -271,13 +276,15 @@ abstract final class LegacyThemeFactory {
       .extraLarge => 136.0,
     };
 
-    final EdgeInsetsGeometry padding = switch (size) {
-      .extraSmall => const .symmetric(horizontal: 12.0, vertical: 6.0),
-      .small => const .symmetric(horizontal: 16.0, vertical: 10.0),
-      .medium => const .symmetric(horizontal: 24.0, vertical: 16.0),
-      .large => const .symmetric(horizontal: 48.0, vertical: 32.0),
-      .extraLarge => const .symmetric(horizontal: 64.0, vertical: 48.0),
-    };
+    final resolvedPadding =
+        padding ??
+        switch (size) {
+          .extraSmall => const .symmetric(horizontal: 12.0, vertical: 6.0),
+          .small => const .symmetric(horizontal: 16.0, vertical: 10.0),
+          .medium => const .symmetric(horizontal: 24.0, vertical: 16.0),
+          .large => const .symmetric(horizontal: 48.0, vertical: 32.0),
+          .extraLarge => const .symmetric(horizontal: 64.0, vertical: 48.0),
+        };
 
     final cornerRound = shapeTheme.corner.full;
     final cornerSquare = switch (size) {
@@ -408,7 +415,7 @@ abstract final class LegacyThemeFactory {
       minimumSize: WidgetStatePropertyAll(Size(minWidth, minHeight)),
       fixedSize: const WidgetStatePropertyAll(null),
       maximumSize: const WidgetStatePropertyAll(Size.infinite),
-      padding: WidgetStatePropertyAll(padding),
+      padding: WidgetStatePropertyAll(resolvedPadding),
       iconSize: WidgetStatePropertyAll(iconSize),
       shape: WidgetStatePropertyAll(
         CornersBorder.rounded(corners: .all(corner)),
@@ -460,6 +467,7 @@ abstract final class LegacyThemeFactory {
     Color? selectedDisabledIconColor,
     Color? selectedIconColor,
     Color? outlineColor,
+    EdgeInsetsGeometry? padding,
   }) {
     final isUnselectedNotDefault = isSelected == false;
     final isUnselectedDefault = isSelected != true;
@@ -664,87 +672,93 @@ abstract final class LegacyThemeFactory {
     );
   }
 
-  static MenuThemeData createMenuTheme({
+  static MenuStyle createMenuStyle({
     required ColorThemeData colorTheme,
     required ElevationThemeData elevationTheme,
     required ShapeThemeData shapeTheme,
     LegacyMenuVariant variant = LegacyMenuVariant.standard,
   }) {
-    return MenuThemeData(
-      style: MenuStyle(
-        visualDensity: VisualDensity.standard,
-        padding: const WidgetStatePropertyAll(.fromLTRB(4.0, 2.0, 4.0, 2.0)),
-        shape: WidgetStatePropertyAll(
-          CornersBorder.rounded(corners: .all(shapeTheme.corner.large)),
-        ),
-        backgroundColor: WidgetStatePropertyAll(switch (variant) {
-          LegacyMenuVariant.standard => colorTheme.surfaceContainerLow,
-          LegacyMenuVariant.vibrant => colorTheme.tertiaryContainer,
-        }),
-        elevation: WidgetStatePropertyAll(elevationTheme.level2),
-        shadowColor: WidgetStatePropertyAll(colorTheme.shadow),
-        side: const WidgetStatePropertyAll(BorderSide.none),
+    return MenuStyle(
+      visualDensity: VisualDensity.standard,
+      padding: const WidgetStatePropertyAll(.fromLTRB(4.0, 2.0, 4.0, 2.0)),
+      shape: WidgetStatePropertyAll(
+        CornersBorder.rounded(corners: .all(shapeTheme.corner.large)),
       ),
+      backgroundColor: WidgetStatePropertyAll(switch (variant) {
+        LegacyMenuVariant.standard => colorTheme.surfaceContainerLow,
+        LegacyMenuVariant.vibrant => colorTheme.tertiaryContainer,
+      }),
+      elevation: WidgetStatePropertyAll(elevationTheme.level2),
+      shadowColor: WidgetStatePropertyAll(colorTheme.shadow),
+      side: const WidgetStatePropertyAll(BorderSide.none),
     );
   }
 
-  static MenuButtonThemeData createMenuButtonTheme({
+  static ButtonStyle createMenuButtonStyle({
     required ColorThemeData colorTheme,
     required ElevationThemeData elevationTheme,
     required ShapeThemeData shapeTheme,
     required StateThemeData stateTheme,
     required TypescaleThemeData typescaleTheme,
     LegacyMenuVariant variant = LegacyMenuVariant.standard,
+    bool isFirst = true,
+    bool isLast = true,
+    bool isSelected = false,
   }) {
-    final containerShape = WidgetStatePropertyAll(
-      CornersBorder.rounded(corners: .all(shapeTheme.corner.medium)),
+    final outerCorner = shapeTheme.corner.medium;
+    final innerCorner = shapeTheme.corner.extraSmall;
+
+    final resolvedContainerShape = CornersBorder.rounded(
+      corners: isSelected
+          ? .all(outerCorner)
+          : .vertical(
+              top: isFirst ? outerCorner : innerCorner,
+              bottom: isLast ? outerCorner : innerCorner,
+            ),
     );
-    final containerColor = WidgetStateProperty.resolveWith((states) {
-      final isFocused = states.contains(WidgetState.focused);
-      return switch (variant) {
-        LegacyMenuVariant.standard =>
-          isFocused
-              ? colorTheme.tertiaryContainer
-              : colorTheme.surfaceContainerLow,
-        LegacyMenuVariant.vibrant =>
-          isFocused ? colorTheme.tertiary : colorTheme.tertiaryContainer,
-      };
-    });
-    final iconColor = WidgetStateProperty.resolveWith((states) {
-      final isFocused = states.contains(WidgetState.focused);
-      return switch (variant) {
-        LegacyMenuVariant.standard =>
-          isFocused
-              ? colorTheme.onTertiaryContainer
-              : colorTheme.onSurfaceVariant,
-        LegacyMenuVariant.vibrant =>
-          isFocused ? colorTheme.onTertiary : colorTheme.onTertiaryContainer,
-      };
-    });
-    final labelTextStyle = WidgetStateProperty.resolveWith((states) {
-      final isFocused = states.contains(WidgetState.focused);
-      return (isFocused ? typescaleTheme.labelLarge : typescaleTheme.labelLarge)
-          .toTextStyle();
-    });
-    final labelTextColor = WidgetStateProperty.resolveWith((states) {
-      final isFocused = states.contains(WidgetState.focused);
-      return switch (variant) {
-        LegacyMenuVariant.standard =>
-          isFocused ? colorTheme.onTertiaryContainer : colorTheme.onSurface,
-        LegacyMenuVariant.vibrant =>
-          isFocused ? colorTheme.onTertiary : colorTheme.onTertiaryContainer,
-      };
-    });
-    final stateLayerColor = WidgetStateLayerColor(
-      color: WidgetStateProperty.resolveWith((states) {
-        final isFocused = states.contains(WidgetState.focused);
-        return switch (variant) {
-          LegacyMenuVariant.standard =>
-            isFocused ? colorTheme.onTertiaryContainer : colorTheme.onSurface,
-          LegacyMenuVariant.vibrant =>
-            isFocused ? colorTheme.onTertiary : colorTheme.onTertiaryContainer,
-        };
-      }),
+
+    final resolvedBackgroundColor = isSelected
+        ? switch (variant) {
+            .standard => colorTheme.tertiaryContainer,
+            .vibrant => colorTheme.tertiary,
+          }
+        : switch (variant) {
+            .standard => colorTheme.surfaceContainerLow,
+            .vibrant => colorTheme.tertiaryContainer,
+          };
+
+    final resolvedIconColor = isSelected
+        ? switch (variant) {
+            .standard => colorTheme.onTertiaryContainer,
+            .vibrant => colorTheme.onTertiary,
+          }
+        : switch (variant) {
+            .standard => colorTheme.onSurfaceVariant,
+            .vibrant => colorTheme.onTertiaryContainer,
+          };
+
+    final resolvedTextColor = isSelected
+        ? switch (variant) {
+            .standard => colorTheme.onTertiaryContainer,
+            .vibrant => colorTheme.onTertiary,
+          }
+        : switch (variant) {
+            .standard => colorTheme.onSurface,
+            .vibrant => colorTheme.onTertiaryContainer,
+          };
+
+    final resolvedStateLayerColor = isSelected
+        ? switch (variant) {
+            .standard => colorTheme.onTertiaryContainer,
+            .vibrant => colorTheme.onTertiary,
+          }
+        : switch (variant) {
+            .standard => colorTheme.onSurface,
+            .vibrant => colorTheme.onTertiaryContainer,
+          };
+
+    final overlayColor = WidgetStateLayerColor(
+      color: WidgetStatePropertyAll(resolvedStateLayerColor),
       opacity: WidgetStateProperty.resolveWith((states) {
         if (states.contains(WidgetState.pressed)) {
           return stateTheme.pressedStateLayerOpacity;
@@ -758,22 +772,29 @@ abstract final class LegacyThemeFactory {
         return 0.0;
       }),
     );
-    return MenuButtonThemeData(
-      style: ButtonStyle(
-        animationDuration: Duration.zero,
-        minimumSize: const WidgetStatePropertyAll(Size(0.0, 44.0)),
-        maximumSize: const WidgetStatePropertyAll(Size(double.infinity, 44.0)),
-        padding: const WidgetStatePropertyAll(.fromLTRB(12.0, 0.0, 12.0, 0.0)),
-        tapTargetSize: MaterialTapTargetSize.padded,
-        mouseCursor: WidgetStateMouseCursor.clickable,
-        shape: containerShape,
-        backgroundColor: containerColor,
-        iconSize: const WidgetStatePropertyAll(24.0),
-        iconColor: iconColor,
-        textStyle: labelTextStyle,
-        foregroundColor: labelTextColor,
-        overlayColor: stateLayerColor,
+    return ButtonStyle(
+      animationDuration: Duration.zero,
+      minimumSize: const WidgetStatePropertyAll(Size(0.0, 44.0)),
+      maximumSize: const WidgetStatePropertyAll(Size(double.infinity, 44.0)),
+      padding: const WidgetStatePropertyAll(.fromLTRB(12.0, 0.0, 12.0, 0.0)),
+      tapTargetSize: MaterialTapTargetSize.padded,
+      mouseCursor: WidgetStateMouseCursor.clickable,
+      shape: WidgetStatePropertyAll(resolvedContainerShape),
+      backgroundColor: WidgetStateProperty.resolveWith((states) {
+        final containerColor = resolvedBackgroundColor;
+        if (states.contains(WidgetState.focused)) {
+          final resolvedOverlayColor = overlayColor.resolve(const {.focused});
+          return Color.alphaBlend(resolvedOverlayColor, containerColor);
+        }
+        return containerColor;
+      }),
+      iconSize: const WidgetStatePropertyAll(24.0),
+      iconColor: WidgetStatePropertyAll(resolvedIconColor),
+      textStyle: WidgetStatePropertyAll(
+        typescaleTheme.labelLarge.toTextStyle(),
       ),
+      foregroundColor: WidgetStatePropertyAll(resolvedTextColor),
+      overlayColor: overlayColor,
     );
   }
 }
