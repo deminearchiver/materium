@@ -42,14 +42,6 @@ class _HomePageState extends State<HomePage> {
   int _prevAppCount = -1;
   bool _prevIsLoading = true;
 
-  SettingsService? _settingsOrNull;
-  SettingsService get _settings {
-    assert(_settingsOrNull != null);
-    return _settingsOrNull!;
-  }
-
-  late bool _isRedesignEnabled;
-
   List<NavigationPageItem> pages = [
     NavigationPageItem(
       NavigationDestination(
@@ -87,21 +79,18 @@ class _HomePageState extends State<HomePage> {
 
   Future<void> _initDeepLinks() async {
     Future<void> goToAddApp(String data) async {
-      if (_isRedesignEnabled) {
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => AddAppPage(input: data)),
-        );
-      } else {
-        _switchToPage(1);
-        while ((pages[1].widget.key as GlobalKey<AddAppPageState>?)
-                ?.currentState ==
-            null) {
-          await Future.delayed(const Duration(microseconds: 1));
-        }
-        (pages[1].widget.key as GlobalKey<AddAppPageState>?)?.currentState
-            ?.linkFn(data);
-      }
+      Navigator.push(
+        context,
+        MaterialPageRoute<void>(builder: (context) => AddAppPage(input: data)),
+      );
+      // _switchToPage(1);
+      // while ((pages[1].widget.key as GlobalKey<AddAppPageState>?)
+      //         ?.currentState ==
+      //     null) {
+      //   await Future.delayed(const Duration(microseconds: 1));
+      // }
+      // (pages[1].widget.key as GlobalKey<AddAppPageState>?)?.currentState
+      //     ?.linkFn(data);
     }
 
     Future<void> interpretLink(Uri uri) async {
@@ -184,7 +173,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   Future<void> _switchToPage(int index) async {
-    if (_isRedesignEnabled) return;
+    if (true) return;
     if (index == 0) {
       while ((pages[0].widget.key as GlobalKey<AppsPageState>).currentState !=
           null) {
@@ -236,10 +225,6 @@ class _HomePageState extends State<HomePage> {
   //   return !(pages[0].widget.key as GlobalKey<AppsPageState>).currentState!
   //       .clearSelected();
   // }
-
-  void _developerModeListener() {
-    setState(() => _isRedesignEnabled = _settings.developerMode.value);
-  }
 
   @override
   void initState() {
@@ -369,21 +354,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    final oldSettings = _settingsOrNull;
-    final newSettings = context.read<SettingsService>();
-    if (oldSettings != newSettings) {
-      oldSettings?.removeListener(_developerModeListener);
-      newSettings.addListener(_developerModeListener);
-      _isRedesignEnabled = newSettings.developerMode.value;
-    }
-    _settingsOrNull = newSettings;
-  }
-
-  @override
   void dispose() {
-    _settings.removeListener(_developerModeListener);
     _linkSubscription?.cancel();
     super.dispose();
   }
@@ -406,7 +377,7 @@ class _HomePageState extends State<HomePage> {
     _prevAppCount = appsProvider.apps.length;
     _prevIsLoading = appsProvider.loadingApps;
 
-    final selectedIndex = _isRedesignEnabled
+    final selectedIndex = true
         ? 0
         : _selectedIndexHistory.isEmpty
         ? 0
@@ -417,7 +388,7 @@ class _HomePageState extends State<HomePage> {
       onPopInvokedWithResult: (didPop, result) {},
       child: Scaffold(
         backgroundColor: colorTheme.surfaceContainer,
-        body: _isRedesignEnabled
+        body: true
             ? pages.first.widget
             : pages
                   .elementAt(
@@ -426,9 +397,9 @@ class _HomePageState extends State<HomePage> {
                         : _selectedIndexHistory.last,
                   )
                   .widget,
-        bottomNavigationBar: !_isRedesignEnabled
+        bottomNavigationBar: false
             ? NavigationBar(
-                backgroundColor: _isRedesignEnabled
+                backgroundColor: true
                     ? colorTheme.surfaceContainer
                     : colorTheme.surfaceContainerHigh,
                 onDestinationSelected: (index) {

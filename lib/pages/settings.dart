@@ -424,27 +424,22 @@ class _SettingsPageState extends State<SettingsPage> {
         bottom: false,
         child: CustomScrollView(
           slivers: <Widget>[
-            ValueListenableBuilder(
-              valueListenable: settings.developerMode,
-              builder: (context, developerMode, _) => CustomAppBar(
-                type: developerMode || showBackButton ? .small : .largeFlexible,
-                expandedContainerColor: backgroundColor,
-                collapsedContainerColor: backgroundColor,
-                collapsedPadding: showBackButton
-                    ? const .fromSTEB(8.0 + 40.0 + 8.0, 0.0, 16.0, 0.0)
-                    : null,
-                leading: showBackButton
-                    ? const Padding(
-                        padding: .fromSTEB(8.0 - 4.0, 0.0, 8.0 - 4.0, 0.0),
-                        child: DeveloperPageBackButton(),
-                      )
-                    : null,
-                title: Text(
-                  tr("settings"),
-                  textAlign: developerMode && !showBackButton
-                      ? .center
-                      : .start,
-                ),
+            CustomAppBar(
+              type: showBackButton ? .small : .largeFlexible,
+              expandedContainerColor: backgroundColor,
+              collapsedContainerColor: backgroundColor,
+              collapsedPadding: showBackButton
+                  ? const .fromSTEB(8.0 + 40.0 + 8.0, 0.0, 16.0, 0.0)
+                  : null,
+              leading: showBackButton
+                  ? const Padding(
+                      padding: .fromSTEB(8.0 - 4.0, 0.0, 8.0 - 4.0, 0.0),
+                      child: DeveloperPageBackButton(),
+                    )
+                  : null,
+              title: Text(
+                tr("settings"),
+                textAlign: !showBackButton ? .center : .start,
               ),
             ),
             SliverPadding(
@@ -2129,7 +2124,7 @@ class _SettingsPageState extends State<SettingsPage> {
                           child: ListItemInteraction(
                             onTap: () => Navigator.push(
                               context,
-                              MaterialPageRoute(
+                              MaterialPageRoute<void>(
                                 builder: (context) => const _LogsPage(),
                               ),
                             ),
@@ -2157,7 +2152,7 @@ class _SettingsPageState extends State<SettingsPage> {
                           child: ListItemInteraction(
                             onTap: () => Navigator.push(
                               context,
-                              MaterialPageRoute(
+                              MaterialPageRoute<void>(
                                 builder: (context) => const ImportExportPage(),
                               ),
                             ),
@@ -2283,7 +2278,7 @@ class _SettingsPageState extends State<SettingsPage> {
                                       onTap: developerMode
                                           ? () => Navigator.push(
                                               context,
-                                              MaterialPageRoute(
+                                              MaterialPageRoute<void>(
                                                 builder: (context) =>
                                                     const DeveloperPage(),
                                               ),
@@ -2387,7 +2382,7 @@ class _SettingsPageState extends State<SettingsPage> {
                         child: ListItemInteraction(
                           onTap: () => Navigator.push(
                             context,
-                            MaterialPageRoute(
+                            MaterialPageRoute<void>(
                               builder: (context) => const ImportExportPage(),
                             ),
                           ),

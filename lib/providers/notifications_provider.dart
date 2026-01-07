@@ -234,7 +234,7 @@ class NotificationsProvider {
       var title = (payload ?? '\n\n').split('\n').first;
       var content = (payload ?? '\n\n').split('\n').sublist(1).join('\n');
       globalNavigatorKey.currentState?.push(
-        PageRouteBuilder(
+        PageRouteBuilder<void>(
           pageBuilder: (context, _, _) => AlertDialog(
             title: Text(title),
             content: Text(content),

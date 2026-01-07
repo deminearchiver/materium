@@ -130,7 +130,7 @@ class _DeveloperPageState extends State<DeveloperPage> {
                         child: MergeSemantics(
                           child: ListItemInteraction(
                             onTap: () => Navigator.of(context).push(
-                              MaterialPageRoute(
+                              MaterialPageRoute<void>(
                                 builder: (context) =>
                                     const DeveloperMarkdown1Page(),
                               ),
@@ -168,7 +168,7 @@ class _DeveloperPageState extends State<DeveloperPage> {
                         child: MergeSemantics(
                           child: ListItemInteraction(
                             onTap: () => Navigator.of(context).push(
-                              MaterialPageRoute(
+                              MaterialPageRoute<void>(
                                 builder: (context) =>
                                     const DeveloperMarkdown2Page(),
                               ),
@@ -204,7 +204,7 @@ class _DeveloperPageState extends State<DeveloperPage> {
                         child: MergeSemantics(
                           child: ListItemInteraction(
                             onTap: () => Navigator.of(context).push(
-                              MaterialPageRoute(
+                              MaterialPageRoute<void>(
                                 builder: (context) => const _MaterialDemoView(),
                               ),
                             ),
@@ -240,7 +240,7 @@ class _DeveloperPageState extends State<DeveloperPage> {
                         child: MergeSemantics(
                           child: ListItemInteraction(
                             onTap: () => Navigator.of(context).push(
-                              MaterialPageRoute(
+                              MaterialPageRoute<void>(
                                 builder: (context) => const Settings2View(),
                               ),
                             ),
@@ -277,7 +277,7 @@ class _DeveloperPageState extends State<DeveloperPage> {
                         child: MergeSemantics(
                           child: ListItemInteraction(
                             onTap: () => Navigator.of(context).push(
-                              MaterialPageRoute(
+                              MaterialPageRoute<void>(
                                 builder: (context) =>
                                     const _DeveloperAddAppPage(),
                               ),
@@ -1434,7 +1434,7 @@ class _SettingsAppBarState extends State<SettingsAppBar> {
 
   Future<void> _openView() async {
     final navigator = Navigator.of(context);
-    final route = _SettingsAppBarRoute(
+    final route = _SettingsAppBarRoute<void>(
       containerKey: _containerKey,
       textKey: _textKey,
     );
@@ -2359,7 +2359,7 @@ class _Settings2ViewState extends State<Settings2View> {
                     child: MergeSemantics(
                       child: ListItemInteraction(
                         onTap: () => Navigator.of(context).push(
-                          MaterialPageRoute(
+                          MaterialPageRoute<void>(
                             builder: (context) => const AboutPage(),
                           ),
                         ),
@@ -2699,7 +2699,7 @@ class _MaterialDemoViewState extends State<_MaterialDemoView> {
                         child: ListItemInteraction(
                           onTap: () => Navigator.push(
                             context,
-                            MaterialPageRoute(
+                            MaterialPageRoute<void>(
                               builder: (context) => const _ShapeLibraryView(),
                             ),
                           ),
@@ -3411,81 +3411,87 @@ class _MaterialDemoViewState extends State<_MaterialDemoView> {
                               child: SizedBox(
                                 width: .infinity,
                                 height: 64.0,
-                                child: SwitchTheme.merge(
-                                  data: CustomThemeFactory.createSwitchTheme(
-                                    colorTheme: colorTheme,
-                                    shapeTheme: shapeTheme,
-                                    stateTheme: stateTheme,
-                                    size: .nowInAndroid,
-                                    color: .nowInAndroid,
-                                  ),
-                                  child: ListenableBuilder(
-                                    listenable: Listenable.merge([
-                                      _enabled,
-                                      _selected,
-                                    ]),
-                                    builder: (context, _) => Material(
-                                      clipBehavior: .antiAlias,
-                                      shape: const CornersBorder.rounded(
-                                        corners: .all(.circular(24.0)),
-                                      ),
-                                      color: _selected.value && _enabled.value
-                                          ? colorTheme.primaryContainer
-                                          : colorTheme.surfaceContainerHighest,
-                                      child: InkWell(
-                                        overlayColor: WidgetStateLayerColor(
-                                          color: WidgetStatePropertyAll(
-                                            _selected.value && _enabled.value
-                                                ? colorTheme.onPrimary
-                                                : colorTheme.onSurface,
-                                          ),
-                                          opacity: stateTheme
-                                              .asWidgetStateLayerOpacity,
+                                child: SpringTheme(
+                                  data: const .standard(),
+                                  child: SwitchTheme.merge(
+                                    data: CustomThemeFactory.createSwitchTheme(
+                                      colorTheme: colorTheme,
+                                      shapeTheme: shapeTheme,
+                                      stateTheme: stateTheme,
+                                      size: .nowInAndroid,
+                                      color: .nowInAndroid,
+                                    ),
+                                    child: ListenableBuilder(
+                                      listenable: Listenable.merge([
+                                        _enabled,
+                                        _selected,
+                                      ]),
+                                      builder: (context, _) => Material(
+                                        clipBehavior: .antiAlias,
+                                        shape: const CornersBorder.rounded(
+                                          corners: .all(.circular(24.0)),
                                         ),
-                                        onTap: () =>
-                                            _selected.value = !_selected.value,
-                                        child: Padding(
-                                          padding: const .fromSTEB(
-                                            20.0,
-                                            0.0,
-                                            20.0 - 12.0,
-                                            0.0,
+                                        color: _selected.value && _enabled.value
+                                            ? colorTheme.primaryContainer
+                                            : colorTheme
+                                                  .surfaceContainerHighest,
+                                        child: InkWell(
+                                          overlayColor: WidgetStateLayerColor(
+                                            color: WidgetStatePropertyAll(
+                                              _selected.value && _enabled.value
+                                                  ? colorTheme.onPrimary
+                                                  : colorTheme.onSurface,
+                                            ),
+                                            opacity: stateTheme
+                                                .asWidgetStateLayerOpacity,
                                           ),
-                                          child: Flex.horizontal(
-                                            spacing: 12.0 - 12.0,
-                                            children: [
-                                              Flexible.tight(
-                                                child: Text(
-                                                  "Switch from \"Now in Android\"",
-                                                  style: typescaleTheme
-                                                      .labelLarge
-                                                      .copyWith(
-                                                        grad:
-                                                            _enabled.value &&
-                                                                _selected.value
-                                                            ? 100.0
-                                                            : 0.0,
-                                                      )
-                                                      .toTextStyle(
-                                                        color:
-                                                            _selected.value &&
-                                                                _enabled.value
-                                                            ? colorTheme
-                                                                  .onPrimaryContainer
-                                                            : colorTheme
-                                                                  .onSurface,
-                                                      ),
+                                          onTap: () => _selected.value =
+                                              !_selected.value,
+                                          child: Padding(
+                                            padding: const .fromSTEB(
+                                              20.0,
+                                              0.0,
+                                              20.0 - 12.0,
+                                              0.0,
+                                            ),
+                                            child: Flex.horizontal(
+                                              spacing: 12.0 - 12.0,
+                                              children: [
+                                                Flexible.tight(
+                                                  child: Text(
+                                                    "Switch from \"Now in Android\"",
+                                                    style: typescaleTheme
+                                                        .labelLarge
+                                                        .copyWith(
+                                                          grad:
+                                                              _enabled.value &&
+                                                                  _selected
+                                                                      .value
+                                                              ? 100.0
+                                                              : 0.0,
+                                                        )
+                                                        .toTextStyle(
+                                                          color:
+                                                              _selected.value &&
+                                                                  _enabled.value
+                                                              ? colorTheme
+                                                                    .onPrimaryContainer
+                                                              : colorTheme
+                                                                    .onSurface,
+                                                        ),
+                                                  ),
                                                 ),
-                                              ),
-                                              Switch(
-                                                onCheckedChanged: _enabled.value
-                                                    ? (value) =>
-                                                          _selected.value =
-                                                              value
-                                                    : null,
-                                                checked: _selected.value,
-                                              ),
-                                            ],
+                                                Switch(
+                                                  onCheckedChanged:
+                                                      _enabled.value
+                                                      ? (value) =>
+                                                            _selected.value =
+                                                                value
+                                                      : null,
+                                                  checked: _selected.value,
+                                                ),
+                                              ],
+                                            ),
                                           ),
                                         ),
                                       ),

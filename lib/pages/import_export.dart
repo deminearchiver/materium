@@ -378,25 +378,22 @@ class _ImportExportPageState extends State<ImportExportPage> {
       sourceStrings[s.name] = [s.name];
     });
 
-    Widget getSliverAppBar() => ValueListenableBuilder(
-      valueListenable: settings.developerMode,
-      builder: (context, developerMode, _) => CustomAppBar(
-        type: developerMode || showBackButton ? .small : .largeFlexible,
-        expandedContainerColor: backgroundColor,
-        collapsedContainerColor: backgroundColor,
-        collapsedPadding: showBackButton
-            ? const .fromSTEB(8.0 + 40.0 + 8.0, 0.0, 16.0, 0.0)
-            : null,
-        leading: showBackButton
-            ? const Padding(
-                padding: .fromSTEB(8.0 - 4.0, 0.0, 8.0 - 4.0, 0.0),
-                child: DeveloperPageBackButton(),
-              )
-            : null,
-        title: Text(
-          tr("importExport"),
-          textAlign: developerMode && !showBackButton ? .center : .start,
-        ),
+    Widget getSliverAppBar() => CustomAppBar(
+      type: showBackButton ? .small : .largeFlexible,
+      expandedContainerColor: backgroundColor,
+      collapsedContainerColor: backgroundColor,
+      collapsedPadding: showBackButton
+          ? const .fromSTEB(8.0 + 40.0 + 8.0, 0.0, 16.0, 0.0)
+          : null,
+      leading: showBackButton
+          ? const Padding(
+              padding: .fromSTEB(8.0 - 4.0, 0.0, 8.0 - 4.0, 0.0),
+              child: DeveloperPageBackButton(),
+            )
+          : null,
+      title: Text(
+        tr("importExport"),
+        textAlign: !showBackButton ? .center : .start,
       ),
     );
 

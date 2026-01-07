@@ -254,10 +254,13 @@ class AddAppPageState extends State<AddAppPage> {
           await appsProvider.saveApps([app], onlyIfExists: false);
         }
         if (app != null && context.mounted) {
-          // TODO: push a replacement when redesign is enabled
-          (globalNavigatorKey.currentState ?? Navigator.of(context)).push(
-            MaterialPageRoute(builder: (context) => AppPage(appId: app!.id)),
-          );
+          final navigator =
+              globalNavigatorKey.currentState ?? Navigator.maybeOf(context);
+          if (navigator != null && navigator.mounted) {
+            navigator.pushReplacement(
+              MaterialPageRoute(builder: (context) => AppPage(appId: app!.id)),
+            );
+          }
         }
       } catch (e) {
         if (context.mounted) {
@@ -945,29 +948,22 @@ class AddAppPageState extends State<AddAppPage> {
             bottom: false,
             child: CustomScrollView(
               slivers: <Widget>[
-                ValueListenableBuilder(
-                  valueListenable: settings.developerMode,
-                  builder: (context, developerMode, _) => CustomAppBar(
-                    type: developerMode || showBackButton
-                        ? .small
-                        : .largeFlexible,
-                    expandedContainerColor: backgroundColor,
-                    collapsedContainerColor: backgroundColor,
-                    collapsedPadding: showBackButton
-                        ? const .fromSTEB(8.0 + 40.0 + 8.0, 0.0, 16.0, 0.0)
-                        : null,
-                    leading: showBackButton
-                        ? const Padding(
-                            padding: .fromSTEB(8.0 - 4.0, 0.0, 8.0 - 4.0, 0.0),
-                            child: DeveloperPageBackButton(),
-                          )
-                        : null,
-                    title: Text(
-                      tr("addApp"),
-                      textAlign: developerMode && !showBackButton
-                          ? .center
-                          : .start,
-                    ),
+                CustomAppBar(
+                  type: showBackButton ? .small : .largeFlexible,
+                  expandedContainerColor: backgroundColor,
+                  collapsedContainerColor: backgroundColor,
+                  collapsedPadding: showBackButton
+                      ? const .fromSTEB(8.0 + 40.0 + 8.0, 0.0, 16.0, 0.0)
+                      : null,
+                  leading: showBackButton
+                      ? const Padding(
+                          padding: .fromSTEB(8.0 - 4.0, 0.0, 8.0 - 4.0, 0.0),
+                          child: DeveloperPageBackButton(),
+                        )
+                      : null,
+                  title: Text(
+                    tr("addApp"),
+                    textAlign: !showBackButton ? .center : .start,
                   ),
                 ),
                 SliverToBoxAdapter(
