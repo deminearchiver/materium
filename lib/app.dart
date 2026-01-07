@@ -135,11 +135,14 @@ class _ObtainiumState extends State<Obtainium> {
       ListenableBuilder(
         listenable: _themeListenable,
         builder: (context, child) {
-          final Brightness brightness = switch (_settings.themeMode.value) {
-            .system => MediaQuery.platformBrightnessOf(context),
-            .light => .light,
-            .dark => .dark,
-          };
+          final Brightness brightness = _settings.useBlackTheme.value
+              ? .dark
+              : switch (_settings.themeMode.value) {
+                  .system => MediaQuery.platformBrightnessOf(context),
+                  .light => .light,
+                  .dark => .dark,
+                };
+
           final highContrast = MediaQuery.highContrastOf(context);
 
           final sourceColor = _settings.themeColor.value;
