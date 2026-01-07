@@ -199,9 +199,9 @@ Future<File> downloadFileWithRetry(
 }
 
 String hashListOfLists(List<List<int>> data) {
-  var bytes = utf8.encode(jsonEncode(data));
-  var digest = sha256.convert(bytes);
-  var hash = digest.toString();
+  final bytes = utf8.encode(jsonEncode(data));
+  final digest = sha256.convert(bytes);
+  final hash = digest.toString();
   return hash.hashCode.toString();
 }
 
@@ -213,7 +213,7 @@ Future<String> checkPartialDownloadHashDynamic(
   bool allowInsecure = false,
 }) async {
   for (int i = startingSize; i >= lowerLimit; i -= 256) {
-    List<String> ab = await Future.wait([
+    final List<String> ab = await Future.wait([
       checkPartialDownloadHash(
         url,
         i,
@@ -698,11 +698,14 @@ class AppsProvider with ChangeNotifier {
           apks = [temp!, ...apks];
         }
 
-        if (app.additionalSettings['zippedApkFilterRegEx']?.isNotEmpty ==
+        if ((app.additionalSettings['zippedApkFilterRegEx'] as String?)
+                ?.isNotEmpty ==
             true) {
-          var reg = RegExp(app.additionalSettings['zippedApkFilterRegEx']);
+          var reg = RegExp(
+            app.additionalSettings['zippedApkFilterRegEx']! as String,
+          );
           apks.removeWhere((apk) {
-            var shouldDelete = !reg.hasMatch(apk.uri.pathSegments.last);
+            final shouldDelete = !reg.hasMatch(apk.uri.pathSegments.last);
             if (shouldDelete) {
               apk.delete();
             }
@@ -1993,7 +1996,7 @@ class AppsProvider with ChangeNotifier {
       }
     }
     if (errors.idsByErrorString.isNotEmpty) {
-      var res = <String, dynamic>{};
+      final res = <String, Object?>{};
       res['errors'] = errors;
       res['updates'] = updates;
       throw res;
@@ -2022,11 +2025,11 @@ class AppsProvider with ChangeNotifier {
     return updateAppIds;
   }
 
-  Map<String, dynamic> generateExportJSON({
+  Map<String, Object?> generateExportJSON({
     List<String>? appIds,
     int? overrideExportSettings,
   }) {
-    Map<String, dynamic> finalExport = {};
+    final finalExport = <String, Object?>{};
     finalExport['apps'] = apps.values
         .where((e) {
           if (appIds == null) {
@@ -2091,7 +2094,7 @@ class AppsProvider with ChangeNotifier {
     String? returnPath;
     if (!pickOnly) {
       var encoder = const JsonEncoder.withIndent("    ");
-      Map<String, dynamic> finalExport = generateExportJSON();
+      final finalExport = generateExportJSON();
       var result = await saf.createFile(
         exportDir,
         displayName:
@@ -2112,9 +2115,9 @@ class AppsProvider with ChangeNotifier {
   Future<MapEntry<List<App>, bool>> import(String appsJSON) async {
     var decodedJSON = jsonDecode(appsJSON);
     var newFormat = decodedJSON is! List;
-    List<App> importedApps =
-        ((newFormat ? decodedJSON['apps'] : decodedJSON) as List<dynamic>)
-            .map((e) => App.fromJson(e))
+    final importedApps =
+        ((newFormat ? decodedJSON['apps'] : decodedJSON) as List<Object?>)
+            .map((e) => App.fromJson(e as Map<String, Object?>))
             .toList();
     while (loadingApps) {
       await Future.delayed(const Duration(microseconds: 1));
@@ -2163,13 +2166,11 @@ class AppsProvider with ChangeNotifier {
     List<String> urls, {
     AppSource? sourceOverride,
   }) async {
-    final List<dynamic> results = await SourceProvider().getAppsByURLNaive(
+    final (pps, errorsMap) = await SourceProvider().getAppsByURLNaive(
       urls,
       alreadyAddedUrls: apps.values.map((e) => e.app.url).toList(),
       sourceOverride: sourceOverride,
     );
-    final List<App> pps = results[0];
-    final Map<String, dynamic> errorsMap = results[1];
     for (final app in pps) {
       if (apps.containsKey(app.id)) {
         errorsMap.addAll({app.id: tr('appAlreadyAdded')});

@@ -1,6 +1,5 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:materium/components/custom_app_bar.dart';
-import 'package:materium/components/custom_list.dart';
 import 'package:materium/components/custom_refresh_indicator.dart';
 import 'package:materium/flutter.dart';
 import 'package:flutter_markdown_plus/flutter_markdown_plus.dart';
@@ -318,7 +317,7 @@ class _AppPageState extends State<AppPage> {
             },
           ),
           if (app?.app.additionalSettings['about'] is String &&
-              app?.app.additionalSettings['about'].isNotEmpty)
+              (app?.app.additionalSettings['about']! as String).isNotEmpty)
             Flex.vertical(
               mainAxisSize: MainAxisSize.min,
               children: [
@@ -327,7 +326,9 @@ class _AppPageState extends State<AppPage> {
                   onLongPress: () {
                     Clipboard.setData(
                       ClipboardData(
-                        text: app?.app.additionalSettings['about'] ?? '',
+                        text:
+                            app.app.additionalSettings['about'] as String? ??
+                            '',
                       ),
                     );
                     ScaffoldMessenger.of(context).showSnackBar(
@@ -343,7 +344,7 @@ class _AppPageState extends State<AppPage> {
                       ),
                       textAlign: WrapAlignment.center,
                     ),
-                    data: app?.app.additionalSettings['about'],
+                    data: app!.app.additionalSettings['about']! as String,
                     onTapLink: (text, href, title) {
                       if (href != null) {
                         launchUrlString(
@@ -490,8 +491,8 @@ class _AppPageState extends State<AppPage> {
       );
     }
 
-    Future<Map<String, dynamic>?>? showAdditionalOptionsDialog() async {
-      return await showDialog<Map<String, dynamic>?>(
+    Future<Map<String, Object?>?>? showAdditionalOptionsDialog() async {
+      return await showDialog<Map<String, Object?>?>(
         context: context,
         builder: (ctx) {
           var items = (source?.combinedAppSpecificSettingFormItems ?? []).map((
