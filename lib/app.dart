@@ -2,7 +2,6 @@ import 'package:background_fetch/background_fetch.dart';
 import 'package:dynamic_color_ffi/dynamic_color_ffi.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter_foreground_task/flutter_foreground_task.dart';
-import 'package:materium/components/custom_app.dart';
 import 'package:materium/flutter.dart';
 import 'package:materium/main.dart';
 import 'package:materium/pages/home.dart';
@@ -12,8 +11,6 @@ import 'package:materium/providers/notifications_provider.dart';
 import 'package:materium/providers/settings_new.dart';
 import 'package:materium/providers/settings_provider.dart';
 import 'package:materium/providers/source_provider.dart';
-import 'package:materium/theme/legacy.dart';
-import 'package:materium/theme/theme.dart';
 import 'package:provider/provider.dart';
 
 class Obtainium extends StatefulWidget {

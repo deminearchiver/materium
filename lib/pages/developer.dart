@@ -1,24 +1,18 @@
 // ignore_for_file: invalid_use_of_internal_member
 
 import 'dart:math' as math;
-import 'dart:ui';
 
 import 'package:collection/collection.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_markdown_plus/flutter_markdown_plus.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:material/material_shapes.dart';
-
 import 'package:materium/components/custom_app_bar.dart';
-import 'package:materium/components/custom_list.dart';
 import 'package:materium/components/custom_markdown.dart';
 import 'package:materium/components/custom_refresh_indicator.dart';
 import 'package:materium/flutter.dart' hide Cubic;
-
 import 'package:markdown/markdown.dart' as md;
 import 'package:materium/providers/settings_new.dart';
-import 'package:materium/theme/legacy.dart';
-import 'package:materium/theme/theme.dart';
 import 'package:provider/provider.dart';
 import 'package:screen_corners_ffi/screen_corners_ffi.dart';
 import 'package:share_plus/share_plus.dart';

@@ -3,7 +3,6 @@ import 'dart:io';
 
 import 'package:collection/collection.dart';
 import 'package:easy_localization/easy_localization.dart';
-import 'package:materium/components/custom_list.dart';
 import 'package:materium/flutter.dart';
 import 'package:materium/app_sources/fdroidrepo.dart';
 import 'package:materium/components/custom_app_bar.dart';
@@ -15,7 +14,6 @@ import 'package:materium/providers/apps_provider.dart';
 import 'package:materium/providers/settings_new.dart';
 import 'package:materium/providers/settings_provider.dart';
 import 'package:materium/providers/source_provider.dart';
-import 'package:materium/theme/legacy.dart';
 import 'package:provider/provider.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:url_launcher/url_launcher_string.dart';

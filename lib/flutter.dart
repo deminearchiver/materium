@@ -78,6 +78,8 @@ export 'package:material/material.dart';
 export 'assets/assets.gen.dart';
 export 'assets/fonts.dart';
 export 'assets/fonts.gen.dart';
+export 'components/list_item.dart';
+export 'components/raw_material_app.dart';
 export 'i18n/i18n.dart';
 export 'theme/extended_color.dart';
 export 'theme/legacy.dart';

@@ -12,7 +12,6 @@ import 'package:materium/pages/settings.dart';
 import 'package:materium/providers/apps_provider.dart';
 import 'package:materium/providers/settings_new.dart';
 import 'package:materium/providers/settings_provider.dart';
-import 'package:materium/theme/legacy.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 

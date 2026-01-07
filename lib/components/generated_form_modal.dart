@@ -1,7 +1,6 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:materium/flutter.dart';
 import 'package:materium/components/generated_form.dart';
-import 'package:materium/theme/legacy.dart';
 
 class GeneratedFormModal extends StatefulWidget {
   const GeneratedFormModal({

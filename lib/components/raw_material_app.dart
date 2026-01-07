@@ -1,6 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:materium/flutter.dart';
-import 'package:materium/theme/legacy.dart';
 
 // Examples can assume:
 // typedef GlobalWidgetsLocalizations = DefaultWidgetsLocalizations;
