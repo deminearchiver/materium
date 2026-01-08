@@ -10,8 +10,10 @@ import 'package:material/material_shapes.dart';
 import 'package:materium/components/custom_app_bar.dart';
 import 'package:materium/components/custom_markdown.dart';
 import 'package:materium/components/custom_refresh_indicator.dart';
+import 'package:materium/components/overflow.dart';
 import 'package:materium/flutter.dart' hide Cubic;
 import 'package:markdown/markdown.dart' as md;
+import 'package:materium/pages/settings.dart';
 import 'package:materium/providers/settings_new.dart';
 import 'package:provider/provider.dart';
 import 'package:screen_corners_ffi/screen_corners_ffi.dart';
@@ -85,6 +87,8 @@ class _DeveloperPageState extends State<DeveloperPage> {
 
     final staticColors = StaticColors.of(context);
 
+    const defaultPairing = ExtendedColorPairing.variantOnFixed;
+
     return Scaffold(
       backgroundColor: colorTheme.surfaceContainer,
       body: SafeArea(
@@ -135,21 +139,15 @@ class _DeveloperPageState extends State<DeveloperPage> {
                               ),
                             ),
                             child: ListItemLayout(
-                              leading: SizedBox.square(
-                                dimension: 40.0,
-                                child: Material(
-                                  clipBehavior: Clip.antiAlias,
-                                  color: staticColors.green.colorFixed,
-                                  shape: const StadiumBorder(),
-                                  child: Align.center(
-                                    child: Icon(
-                                      Symbols.markdown_rounded,
-                                      fill: 1.0,
-                                      color: staticColors
-                                          .green
-                                          .onColorFixedVariant,
-                                    ),
-                                  ),
+                              leading: CustomListItemLeading.fromExtendedColor(
+                                extendedColor: staticColors.cyan,
+                                pairing: defaultPairing,
+                                containerShape: RoundedPolygonBorder(
+                                  polygon: MaterialShapes.square,
+                                ),
+                                child: const Icon(
+                                  Symbols.markdown_rounded,
+                                  fill: 1.0,
                                 ),
                               ),
                               headline: const Text("Markdown Demo 1"),
@@ -173,21 +171,15 @@ class _DeveloperPageState extends State<DeveloperPage> {
                               ),
                             ),
                             child: ListItemLayout(
-                              leading: SizedBox.square(
-                                dimension: 40.0,
-                                child: Material(
-                                  clipBehavior: Clip.antiAlias,
-                                  color: staticColors.green.colorFixed,
-                                  shape: const StadiumBorder(),
-                                  child: Align.center(
-                                    child: Icon(
-                                      Symbols.markdown_rounded,
-                                      fill: 1.0,
-                                      color: staticColors
-                                          .green
-                                          .onColorFixedVariant,
-                                    ),
-                                  ),
+                              leading: CustomListItemLeading.fromExtendedColor(
+                                extendedColor: staticColors.cyan,
+                                pairing: defaultPairing,
+                                containerShape: RoundedPolygonBorder(
+                                  polygon: MaterialShapes.square,
+                                ),
+                                child: const Icon(
+                                  Symbols.markdown_rounded,
+                                  fill: 1.0,
                                 ),
                               ),
                               headline: const Text("Markdown Demo 2"),
@@ -208,20 +200,15 @@ class _DeveloperPageState extends State<DeveloperPage> {
                               ),
                             ),
                             child: ListItemLayout(
-                              leading: SizedBox.square(
-                                dimension: 40.0,
-                                child: Material(
-                                  clipBehavior: Clip.antiAlias,
-                                  color: staticColors.blue.colorFixed,
-                                  shape: const StadiumBorder(),
-                                  child: Align.center(
-                                    child: Icon(
-                                      Symbols.magic_button_rounded,
-                                      fill: 1.0,
-                                      color:
-                                          staticColors.blue.onColorFixedVariant,
-                                    ),
-                                  ),
+                              leading: CustomListItemLeading.fromExtendedColor(
+                                extendedColor: staticColors.purple,
+                                pairing: defaultPairing,
+                                containerShape: RoundedPolygonBorder(
+                                  polygon: MaterialShapes.pill,
+                                ),
+                                child: const Icon(
+                                  Symbols.magic_button_rounded,
+                                  fill: 1.0,
                                 ),
                               ),
                               headline: const Text("Material 3 Expressive"),
@@ -244,20 +231,15 @@ class _DeveloperPageState extends State<DeveloperPage> {
                               ),
                             ),
                             child: ListItemLayout(
-                              leading: SizedBox.square(
-                                dimension: 40.0,
-                                child: Material(
-                                  clipBehavior: Clip.antiAlias,
-                                  color: staticColors.cyan.colorFixed,
-                                  shape: const StadiumBorder(),
-                                  child: Align.center(
-                                    child: Icon(
-                                      Symbols.settings_rounded,
-                                      fill: 1.0,
-                                      color:
-                                          staticColors.cyan.onColorFixedVariant,
-                                    ),
-                                  ),
+                              leading: CustomListItemLeading.fromExtendedColor(
+                                extendedColor: staticColors.pink,
+                                pairing: defaultPairing,
+                                containerShape: RoundedPolygonBorder(
+                                  polygon: MaterialShapes.cookie12Sided,
+                                ),
+                                child: const Icon(
+                                  Symbols.settings_rounded,
+                                  fill: 1.0,
                                 ),
                               ),
                               headline: const Text("New settings experience"),
@@ -272,7 +254,6 @@ class _DeveloperPageState extends State<DeveloperPage> {
                         ),
                       ),
                       ListItemContainer(
-                        isLast: true,
                         child: MergeSemantics(
                           child: ListItemInteraction(
                             onTap: () => Navigator.of(context).push(
@@ -282,20 +263,15 @@ class _DeveloperPageState extends State<DeveloperPage> {
                               ),
                             ),
                             child: ListItemLayout(
-                              leading: SizedBox.square(
-                                dimension: 40.0,
-                                child: Material(
-                                  clipBehavior: Clip.antiAlias,
-                                  color: staticColors.cyan.colorFixed,
-                                  shape: const StadiumBorder(),
-                                  child: Align.center(
-                                    child: Icon(
-                                      Symbols.add_rounded,
-                                      fill: 1.0,
-                                      color:
-                                          staticColors.cyan.onColorFixedVariant,
-                                    ),
-                                  ),
+                              leading: CustomListItemLeading.fromExtendedColor(
+                                extendedColor: staticColors.blue,
+                                pairing: defaultPairing,
+                                containerShape: RoundedPolygonBorder(
+                                  polygon: MaterialShapes.cookie4Sided,
+                                ),
+                                child: const Icon(
+                                  Symbols.add_2_rounded,
+                                  fill: 1.0,
                                 ),
                               ),
                               headline: const Text("Add app page redesign"),
@@ -309,11 +285,201 @@ class _DeveloperPageState extends State<DeveloperPage> {
                           ),
                         ),
                       ),
+                      ListItemContainer(
+                        isLast: true,
+                        child: MergeSemantics(
+                          child: ListItemInteraction(
+                            onTap: () => Navigator.of(context).push(
+                              MaterialPageRoute<void>(
+                                builder: (context) => const _ExperimentsPage(),
+                              ),
+                            ),
+                            child: ListItemLayout(
+                              leading: CustomListItemLeading.fromExtendedColor(
+                                extendedColor: staticColors.red,
+                                pairing: defaultPairing,
+                                containerShape: RoundedPolygonBorder(
+                                  polygon: MaterialShapes.cookie7Sided,
+                                ),
+                                child: const Icon(
+                                  Symbols.experiment_rounded,
+                                  fill: 1.0,
+                                ),
+                              ),
+                              headline: const Text("Experiments"),
+                              supportingText: const Text(
+                                "May cause the app to crash",
+                              ),
+                              trailing: const Icon(
+                                Symbols.keyboard_arrow_right_rounded,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
                       SizedBox(height: MediaQuery.paddingOf(context).bottom),
                     ],
                   ),
                 ),
               ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _ExperimentsPage extends StatefulWidget {
+  const _ExperimentsPage({super.key});
+
+  @override
+  State<_ExperimentsPage> createState() => _ExperimentsPageState();
+}
+
+class _ExperimentsPageState extends State<_ExperimentsPage> {
+  double _widthFactor = 1.0;
+
+  @override
+  Widget build(BuildContext context) {
+    final useBlackTheme = context.select<SettingsService, bool>(
+      (settings) => settings.useBlackTheme.value,
+    );
+
+    final height = MediaQuery.heightOf(context);
+    final padding = MediaQuery.paddingOf(context);
+
+    final colorTheme = ColorTheme.of(context);
+    final elevationTheme = ElevationTheme.of(context);
+    final shapeTheme = ShapeTheme.of(context);
+    final stateTheme = StateTheme.of(context);
+    final typescaleTheme = TypescaleTheme.of(context);
+    final staticColors = StaticColors.of(context);
+
+    final showBackButton =
+        ModalRoute.of(context)?.impliesAppBarDismissal ?? false;
+
+    final backgroundColor = useBlackTheme
+        ? colorTheme.surface
+        : colorTheme.surfaceContainer;
+
+    const length = 5;
+
+    return Scaffold(
+      backgroundColor: backgroundColor,
+      body: SafeArea(
+        top: false,
+        bottom: false,
+        child: CustomScrollView(
+          slivers: [
+            CustomAppBar(
+              type: showBackButton ? .small : .largeFlexible,
+              expandedContainerColor: backgroundColor,
+              collapsedContainerColor: backgroundColor,
+              collapsedPadding: showBackButton
+                  ? const .fromSTEB(8.0 + 40.0 + 8.0, 0.0, 16.0, 0.0)
+                  : null,
+              leading: showBackButton
+                  ? const Padding(
+                      padding: .fromSTEB(8.0 - 4.0, 0.0, 8.0 - 4.0, 0.0),
+                      child: DeveloperPageBackButton(),
+                    )
+                  : null,
+              title: Text(
+                "Experiments",
+                textAlign: !showBackButton ? .center : .start,
+              ),
+            ),
+            SliverList.list(
+              children: [
+                Padding(
+                  padding: .symmetric(horizontal: 24.0),
+                  child: Slider(
+                    value: _widthFactor,
+                    onChanged: (value) => setState(() => _widthFactor = value),
+                  ),
+                ),
+                Padding(
+                  padding: .symmetric(horizontal: 8.0),
+                  child: FractionallySizedBox(
+                    widthFactor: _widthFactor,
+                    child: ColoredBox(
+                      color: colorTheme.errorContainer,
+                      child: Align.center(
+                        child: Material(
+                          shape: CornersBorder.rounded(
+                            corners: .all(shapeTheme.corner.full),
+                          ),
+                          color: colorTheme.surfaceContainerHighest,
+                          child: Padding(
+                            padding: .all(12.0 - 4.0),
+                            child: Overflow(
+                              direction: .horizontal,
+                              overflowIndicatorBuilder: (context, layoutInfo) {
+                                print(layoutInfo);
+                                return IconButton(
+                                  style:
+                                      LegacyThemeFactory.createIconButtonStyle(
+                                        colorTheme: colorTheme,
+                                        elevationTheme: elevationTheme,
+                                        shapeTheme: shapeTheme,
+                                        stateTheme: stateTheme,
+                                        color: .standard,
+                                        width: .narrow,
+                                        iconColor: colorTheme.onSurfaceVariant,
+                                      ),
+                                  onPressed: () async {
+                                    await Fluttertoast.cancel();
+                                    await Fluttertoast.showToast(
+                                      msg: "Overflow button clicked!",
+                                      toastLength: .LENGTH_SHORT,
+                                    );
+                                  },
+                                  icon: const IconLegacy(
+                                    Symbols.more_vert_rounded,
+                                  ),
+                                );
+                              },
+                              children: List.generate(
+                                length,
+                                (index) => Padding(
+                                  padding: .directional(
+                                    end: index == length - 1
+                                        ? 12.0 - 4.0 - 8.0
+                                        : 12.0 - 4.0 - 4.0,
+                                  ),
+                                  child: IconButton(
+                                    style:
+                                        LegacyThemeFactory.createIconButtonStyle(
+                                          colorTheme: colorTheme,
+                                          elevationTheme: elevationTheme,
+                                          shapeTheme: shapeTheme,
+                                          stateTheme: stateTheme,
+                                          color: .tonal,
+                                          width: .normal,
+                                        ),
+                                    onPressed: () async {
+                                      await Fluttertoast.cancel();
+                                      await Fluttertoast.showToast(
+                                        msg: "Button ${index + 1} clicked!",
+                                        toastLength: .LENGTH_SHORT,
+                                      );
+                                    },
+                                    icon: const IconLegacy(
+                                      Symbols.add_rounded,
+                                      fill: 1.0,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
             ),
           ],
         ),

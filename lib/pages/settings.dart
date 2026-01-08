@@ -29,8 +29,8 @@ import 'package:shizuku_apk_installer/shizuku_apk_installer.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
-class SettingsListItemLeading extends StatelessWidget {
-  const SettingsListItemLeading({
+class CustomListItemLeading extends StatelessWidget {
+  const CustomListItemLeading({
     super.key,
     this.shrinkWrapHeight = false,
     this.containerShape,
@@ -39,14 +39,14 @@ class SettingsListItemLeading extends StatelessWidget {
     required this.child,
   });
 
-  factory SettingsListItemLeading.fromExtendedColor({
+  factory CustomListItemLeading.fromExtendedColor({
     required ExtendedColorPairing pairing,
     required ExtendedColor extendedColor,
     ShapeBorder? containerShape,
     Color? containerColor,
     Color? contentColor,
     required Widget child,
-  }) => SettingsListItemLeading(
+  }) => CustomListItemLeading(
     containerShape: containerShape,
     containerColor:
         containerColor ?? pairing.resolveContainerColor(extendedColor),
@@ -62,15 +62,19 @@ class SettingsListItemLeading extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final shapeTheme = ShapeTheme.of(context);
+
     return SizedBox(
       width: 40.0,
       height: !shrinkWrapHeight ? 40.0 : null,
       child: Skeleton.leaf(
-        child: Material(
+        child: Material.raw(
           clipBehavior: .antiAlias,
           borderOnForeground: false,
-          shape: containerShape,
-          color: containerColor,
+          shape:
+              containerShape ??
+              CornersBorder.rounded(corners: .all(shapeTheme.corner.full)),
+          color: containerColor ?? Colors.transparent,
           child: DefaultTextStyle.merge(
             textAlign: .center,
             maxLines: 1,
@@ -2190,7 +2194,7 @@ class _SettingsPageState extends State<SettingsPage> {
                                           end: 12.0,
                                         ),
                                         leading:
-                                            SettingsListItemLeading.fromExtendedColor(
+                                            CustomListItemLeading.fromExtendedColor(
                                               extendedColor:
                                                   staticColors.purple,
                                               pairing: _defaultPairing,
@@ -2287,7 +2291,7 @@ class _SettingsPageState extends State<SettingsPage> {
                             ),
                           ),
                           child: ListItemLayout(
-                            leading: SettingsListItemLeading.fromExtendedColor(
+                            leading: CustomListItemLeading.fromExtendedColor(
                               extendedColor: staticColors.purple,
                               pairing: _defaultPairing,
                               containerShape: RoundedPolygonBorder(
