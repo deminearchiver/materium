@@ -1008,13 +1008,15 @@ class _SelectionModalState extends State<SelectionModal> {
                     trailingPadding: widget.titlesAreLinks
                         ? const .symmetric(vertical: 10.0 - (48.0 - 40.0) / 2.0)
                         : null,
-                    leading: widget.onlyOneSelectionAllowed
-                        ? RadioGroupButton<String>(value: entry.key)
-                        : Checkbox.bistate(
-                            checked: isSelected!,
-                            onCheckedChanged: (value) =>
-                                _selectEntry(entry, value),
-                          ),
+                    leading: ExcludeFocus(
+                      child: widget.onlyOneSelectionAllowed
+                          ? RadioGroupButton<String>(value: entry.key)
+                          : Checkbox.bistate(
+                              checked: isSelected!,
+                              onCheckedChanged: (value) =>
+                                  _selectEntry(entry, value),
+                            ),
+                    ),
                     overline: widget.titlesAreLinks
                         ? Text(
                             Uri.parse(entry.key).host,
@@ -1060,16 +1062,34 @@ class _SelectionModalState extends State<SelectionModal> {
     );
 
     if (widget.onlyOneSelectionAllowed) {
-      content = RadioGroup<String>(
-        groupValue: selectedEntries.isEmpty
-            ? null
-            : selectedEntries.first.key.key,
-        onChanged: (value) {
-          if (value == null) return;
-          setState(() {
-            _selectOnlyOne(value);
-          });
-        },
+      content = RadioButtonTheme.merge(
+        data: CustomThemeFactory.createRadioButtonTheme(
+          colorTheme: colorTheme,
+          shapeTheme: shapeTheme,
+          stateTheme: stateTheme,
+          color: .standard,
+        ),
+        child: RadioGroup<String>(
+          groupValue: selectedEntries.isEmpty
+              ? null
+              : selectedEntries.first.key.key,
+          onChanged: (value) {
+            if (value == null) return;
+            setState(() {
+              _selectOnlyOne(value);
+            });
+          },
+          child: content,
+        ),
+      );
+    } else {
+      content = CheckboxTheme.merge(
+        data: CustomThemeFactory.createCheckboxTheme(
+          colorTheme: colorTheme,
+          shapeTheme: shapeTheme,
+          stateTheme: stateTheme,
+          color: .standard,
+        ),
         child: content,
       );
     }
