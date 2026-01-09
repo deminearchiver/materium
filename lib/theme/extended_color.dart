@@ -81,9 +81,19 @@ class ExtendedColorPairing {
     contentColorRole: .onColor,
   );
 
+  static const normalInverse = ExtendedColorPairing.from(
+    containerColorRole: .onColor,
+    contentColorRole: .color,
+  );
+
   static const container = ExtendedColorPairing.from(
     containerColorRole: .colorContainer,
     contentColorRole: .onColorContainer,
+  );
+
+  static const containerInverse = ExtendedColorPairing.from(
+    containerColorRole: .onColorContainer,
+    contentColorRole: .colorContainer,
   );
 
   static const normalOnFixed = ExtendedColorPairing.from(
