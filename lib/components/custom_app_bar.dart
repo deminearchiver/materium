@@ -278,7 +278,10 @@ class _CustomAppBarState extends State<CustomAppBar> {
         ? MediaQuery.maybePaddingOf(context)?.top ?? 0.0
         : 0.0;
     final Widget flexibleSpace = Padding(
-      padding: .only(top: topPadding),
+      padding: .only(
+        top: topPadding,
+        bottom: widget.bottom?.preferredSize.height ?? 0.0,
+      ),
       child: Stack(
         fit: .expand,
         children: [
