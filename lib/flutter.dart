@@ -86,6 +86,7 @@ export 'theme/legacy.dart';
 export 'theme/semantic_colors.dart';
 export 'theme/static_colors.dart';
 export 'theme/theme.dart';
+export 'theme/typography.dart';
 
 // Shared utilities
 
