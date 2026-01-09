@@ -625,6 +625,7 @@ abstract final class CustomThemeFactory {
         trackOutline: .resolveWith(
           (states) => .from(
             width: switch (states) {
+              SwitchEnabledStates(isPressed: true) => 4.0,
               SwitchStates(isSelected: false) => 2.0,
               SwitchStates(isSelected: true) => 4.0,
             },
