@@ -18,7 +18,13 @@ enum CustomSwitchColor {
   black,
 }
 
-enum CustomListItemVariant { settings, licenses, logs }
+enum CustomListItemColor {
+  settings,
+  licenses,
+  logs,
+  materiumNormal,
+  materiumBlack,
+}
 
 abstract final class CustomThemeFactory {
   static CheckboxThemeDataPartial createCheckboxTheme({
@@ -549,8 +555,8 @@ abstract final class CustomThemeFactory {
     required ShapeThemeData shapeTheme,
     required StateThemeData stateTheme,
     required TypescaleThemeData typescaleTheme,
-    required CustomListItemVariant variant,
-  }) => switch (variant) {
+    required CustomListItemColor color,
+  }) => switch (color) {
     .settings => .from(
       containerColor: .all(colorTheme.surfaceBright),
       // stateLayerColor: .all(colorTheme.primary),
@@ -599,6 +605,8 @@ abstract final class CustomThemeFactory {
             .toTextStyle(color: colorTheme.onSurface),
       ),
     ),
+    .materiumNormal => .from(),
+    .materiumBlack => .from(),
   };
 }
 

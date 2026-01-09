@@ -119,13 +119,13 @@ class _DeveloperPageState extends State<DeveloperPage> {
                 shapeTheme: shapeTheme,
                 stateTheme: stateTheme,
                 typescaleTheme: typescaleTheme,
-                variant: .settings,
+                color: .settings,
               ),
               child: SliverToBoxAdapter(
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 8.0),
                   child: Flex.vertical(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    crossAxisAlignment: .stretch,
                     spacing: 2.0,
                     children: [
                       ListItemContainer(
@@ -558,11 +558,11 @@ class _DeveloperAddAppPageState extends State<_DeveloperAddAppPage> {
                   fillOverscroll: false,
                   hasScrollBody: false,
                   child: Flex.vertical(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    crossAxisAlignment: .stretch,
                     children: [
                       Flexible.tight(
                         child: Flex.vertical(
-                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          crossAxisAlignment: .stretch,
                           children: [
                             const Flexible.space(flex: 2.0),
                             Padding(
@@ -618,7 +618,7 @@ class _DeveloperAddAppPageState extends State<_DeveloperAddAppPage> {
                           16.0,
                         ),
                         child: Flex.vertical(
-                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          crossAxisAlignment: .stretch,
                           spacing: 8.0,
                           children: [
                             FilledButton(
@@ -776,7 +776,7 @@ class _DeveloperMarkdown1PageState extends State<DeveloperMarkdown1Page> {
                     fillOverscroll: false,
                     hasScrollBody: false,
                     child: Flex.vertical(
-                      crossAxisAlignment: CrossAxisAlignment.center,
+                      crossAxisAlignment: .center,
                       children: [
                         Flexible.space(flex: 1.0),
                         SizedBox.square(
@@ -1565,7 +1565,7 @@ class _CheckboxComponentState extends State<CheckboxComponent>
     return Directionality(
       textDirection: widget.viewModel.textDirection,
       child: Flex.horizontal(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: .start,
         children: [
           SizedBox(
             width: widget.viewModel.indentCalculator(
@@ -2467,7 +2467,7 @@ class _Settings2ViewState extends State<Settings2View> {
               shapeTheme: shapeTheme,
               stateTheme: stateTheme,
               typescaleTheme: typescaleTheme,
-              variant: .settings,
+              color: .settings,
             ),
             child: SliverList.list(
               children: [
@@ -2657,7 +2657,7 @@ class _AboutPageState extends State<AboutPage> with TickerProviderStateMixin {
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16.0),
                 child: Flex.vertical(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  crossAxisAlignment: .stretch,
                   children: [
                     SizedBox.square(
                       dimension: 192.0,
@@ -2757,20 +2757,6 @@ class _MaterialDemoViewState extends State<_MaterialDemoView> {
   final _selected = ValueNotifier<bool>(false);
   final _progress = ValueNotifier<double>(0.0);
 
-  final List<RoundedPolygon> _indeterminateIndicatorPolygons1 = [
-    MaterialShapes.flower,
-    MaterialShapes.clover8Leaf,
-    MaterialShapes.clover4Leaf,
-  ];
-  final List<RoundedPolygon> _indeterminateIndicatorPolygons2 = [
-    MaterialShapes.gem,
-    MaterialShapes.verySunny,
-    MaterialShapes.pentagon,
-    MaterialShapes.puffyDiamond,
-    MaterialShapes.softBoom,
-    MaterialShapes.sunny,
-  ];
-
   @override
   Widget build(BuildContext context) {
     final padding = MediaQuery.paddingOf(context);
@@ -2790,6 +2776,10 @@ class _MaterialDemoViewState extends State<_MaterialDemoView> {
     final backgroundColor = useBlackTheme
         ? colorTheme.surface
         : colorTheme.surfaceContainer;
+
+    final ExtendedColorPairing defaultPairing = useBlackTheme
+        ? .container
+        : .variantOnFixed;
 
     return Scaffold(
       backgroundColor: backgroundColor,
@@ -2831,7 +2821,7 @@ class _MaterialDemoViewState extends State<_MaterialDemoView> {
                         shapeTheme: shapeTheme,
                         stateTheme: stateTheme,
                         typescaleTheme: typescaleTheme,
-                        variant: .settings,
+                        color: .settings,
                       ).copyWith(
                         containerColor: .all(
                           useBlackTheme
@@ -2984,7 +2974,7 @@ class _MaterialDemoViewState extends State<_MaterialDemoView> {
                         isFirst: true,
                         isLast: true,
                         child: Flex.vertical(
-                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          crossAxisAlignment: .stretch,
                           children: [
                             ListItemInteraction(
                               onLongPress: timeDilation != 1.0
@@ -3120,7 +3110,7 @@ class _MaterialDemoViewState extends State<_MaterialDemoView> {
                       ListItemContainer(
                         isLast: true,
                         child: Flex.vertical(
-                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          crossAxisAlignment: .stretch,
                           children: [
                             ListItemLayout(
                               leading: SizedBox.square(
@@ -3708,7 +3698,7 @@ class _MaterialDemoViewState extends State<_MaterialDemoView> {
                       ListItemContainer(
                         isFirst: true,
                         child: Flex.vertical(
-                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          crossAxisAlignment: .stretch,
                           children: [
                             ListItemInteraction(
                               onTap: () async {
@@ -3718,26 +3708,23 @@ class _MaterialDemoViewState extends State<_MaterialDemoView> {
                                 );
                               },
                               child: ListItemLayout(
-                                leading: SizedBox.square(
-                                  dimension: 40.0,
-                                  child: Material(
-                                    clipBehavior: Clip.antiAlias,
-                                    color: staticColors.blue.colorFixed,
-                                    shape: const StadiumBorder(),
-                                    child: Align.center(
-                                      child: Icon(
+                                leading:
+                                    CustomListItemLeading.fromExtendedColor(
+                                      extendedColor: staticColors.blue,
+                                      pairing: defaultPairing,
+                                      containerShape: RoundedPolygonBorder(
+                                        polygon: MaterialShapes.cookie9Sided,
+                                      ),
+                                      child: const Icon(
                                         Symbols.progress_activity_rounded,
                                         fill: 1.0,
-                                        color: staticColors
-                                            .blue
-                                            .onColorFixedVariant,
                                       ),
                                     ),
-                                  ),
+                                headline: const Text(
+                                  "Loading indicator (indeterminate)",
                                 ),
-                                headline: const Text("Loading indicator"),
                                 supportingText: const Text(
-                                  "Indeterminate · Uncontained",
+                                  "Used to display loading states",
                                 ),
                               ),
                             ),
@@ -3750,9 +3737,9 @@ class _MaterialDemoViewState extends State<_MaterialDemoView> {
                               ),
                               child: ConstrainedBox(
                                 constraints: const BoxConstraints(
-                                  maxHeight: 160.0,
+                                  maxHeight: 96.0,
                                 ),
-                                child: Flex.horizontal(
+                                child: const Flex.horizontal(
                                   spacing: 16.0,
                                   children: [
                                     const Flexible.tight(
@@ -3763,23 +3750,11 @@ class _MaterialDemoViewState extends State<_MaterialDemoView> {
                                         ),
                                       ),
                                     ),
-                                    Flexible.tight(
+                                    const Flexible.tight(
                                       child: FittedBox(
                                         fit: BoxFit.contain,
                                         child: IndeterminateLoadingIndicator(
-                                          contained: false,
-                                          indicatorPolygons:
-                                              _indeterminateIndicatorPolygons1,
-                                        ),
-                                      ),
-                                    ),
-                                    Flexible.tight(
-                                      child: FittedBox(
-                                        fit: BoxFit.contain,
-                                        child: IndeterminateLoadingIndicator(
-                                          contained: false,
-                                          indicatorPolygons:
-                                              _indeterminateIndicatorPolygons2,
+                                          contained: true,
                                         ),
                                       ),
                                     ),
@@ -3793,7 +3768,7 @@ class _MaterialDemoViewState extends State<_MaterialDemoView> {
                       const SizedBox(height: 2.0),
                       ListItemContainer(
                         child: Flex.vertical(
-                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          crossAxisAlignment: .stretch,
                           children: [
                             ListItemInteraction(
                               onTap: () async {
@@ -3803,111 +3778,23 @@ class _MaterialDemoViewState extends State<_MaterialDemoView> {
                                 );
                               },
                               child: ListItemLayout(
-                                leading: SizedBox.square(
-                                  dimension: 40.0,
-                                  child: Material(
-                                    clipBehavior: Clip.antiAlias,
-                                    color: staticColors.blue.colorFixed,
-                                    shape: const StadiumBorder(),
-                                    child: Align.center(
-                                      child: Icon(
-                                        Symbols.progress_activity_rounded,
-                                        fill: 1.0,
-                                        color: staticColors
-                                            .blue
-                                            .onColorFixedVariant,
+                                leading:
+                                    CustomListItemLeading.fromExtendedColor(
+                                      extendedColor: staticColors.blue,
+                                      pairing: defaultPairing,
+                                      containerShape: RoundedPolygonBorder(
+                                        polygon: MaterialShapes.pill,
                                       ),
-                                    ),
-                                  ),
-                                ),
-                                headline: const Text("Loading indicator"),
-                                supportingText: const Text(
-                                  "Indeterminate · Contained",
-                                ),
-                              ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.fromLTRB(
-                                16.0,
-                                12.0,
-                                16.0,
-                                16.0,
-                              ),
-                              child: ConstrainedBox(
-                                constraints: const BoxConstraints(
-                                  maxHeight: 160.0,
-                                ),
-                                child: Flex.horizontal(
-                                  spacing: 16.0,
-                                  children: [
-                                    const Flexible.tight(
-                                      child: FittedBox(
-                                        fit: BoxFit.contain,
-                                        child: IndeterminateLoadingIndicator(
-                                          contained: true,
-                                        ),
-                                      ),
-                                    ),
-                                    Flexible.tight(
-                                      child: FittedBox(
-                                        fit: BoxFit.contain,
-                                        child: IndeterminateLoadingIndicator(
-                                          contained: true,
-                                          indicatorPolygons:
-                                              _indeterminateIndicatorPolygons1,
-                                        ),
-                                      ),
-                                    ),
-                                    Flexible.tight(
-                                      child: FittedBox(
-                                        fit: BoxFit.contain,
-                                        child: IndeterminateLoadingIndicator(
-                                          contained: true,
-                                          indicatorPolygons:
-                                              _indeterminateIndicatorPolygons2,
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      const SizedBox(height: 2.0),
-                      ListItemContainer(
-                        child: Flex.vertical(
-                          crossAxisAlignment: CrossAxisAlignment.stretch,
-                          children: [
-                            ListItemInteraction(
-                              onTap: () async {
-                                await Fluttertoast.showToast(
-                                  msg: "Not yet implemented!",
-                                  toastLength: Toast.LENGTH_SHORT,
-                                );
-                              },
-                              child: ListItemLayout(
-                                leading: SizedBox.square(
-                                  dimension: 40.0,
-                                  child: Material(
-                                    clipBehavior: Clip.antiAlias,
-                                    color: staticColors.blue.colorFixed,
-                                    shape: const StadiumBorder(),
-                                    child: Align.center(
-                                      child: Icon(
+                                      child: const Icon(
                                         Symbols.refresh_rounded,
                                         fill: 1.0,
-                                        color: staticColors
-                                            .blue
-                                            .onColorFixedVariant,
                                       ),
                                     ),
-                                  ),
+                                headline: const Text(
+                                  "Loading indicator (determinate)",
                                 ),
-                                headline: const Text("Loading indicator"),
                                 supportingText: const Text(
-                                  "Determinate · Uncontained",
+                                  "Typically used within a pull-to-refresh",
                                 ),
                               ),
                             ),
@@ -3920,149 +3807,36 @@ class _MaterialDemoViewState extends State<_MaterialDemoView> {
                               ),
                               child: ConstrainedBox(
                                 constraints: const BoxConstraints(
-                                  maxHeight: 160.0,
+                                  maxHeight: 96.0,
                                 ),
-                                child: ListenableBuilder(
-                                  listenable: _progress,
-                                  builder: (context, _) => Flex.horizontal(
-                                    spacing: 16.0,
-                                    children: [
-                                      Flexible.tight(
-                                        child: FittedBox(
-                                          fit: BoxFit.contain,
-                                          child: DeterminateLoadingIndicator(
-                                            progress: _progress.value,
-                                            contained: false,
+                                child: ValueListenableBuilder(
+                                  valueListenable: _progress,
+                                  builder: (context, progress, _) =>
+                                      Flex.horizontal(
+                                        spacing: 16.0,
+                                        children: [
+                                          Flexible.tight(
+                                            child: FittedBox(
+                                              fit: BoxFit.contain,
+                                              child:
+                                                  DeterminateLoadingIndicator(
+                                                    progress: progress,
+                                                    contained: false,
+                                                  ),
+                                            ),
                                           ),
-                                        ),
-                                      ),
-                                      Flexible.tight(
-                                        child: FittedBox(
-                                          fit: BoxFit.contain,
-                                          child: DeterminateLoadingIndicator(
-                                            progress: _progress.value,
-                                            contained: false,
-                                            indicatorPolygons: [
-                                              ..._indeterminateIndicatorPolygons1,
-                                              _indeterminateIndicatorPolygons1
-                                                  .first,
-                                            ],
+                                          Flexible.tight(
+                                            child: FittedBox(
+                                              fit: BoxFit.contain,
+                                              child:
+                                                  DeterminateLoadingIndicator(
+                                                    progress: progress,
+                                                    contained: true,
+                                                  ),
+                                            ),
                                           ),
-                                        ),
+                                        ],
                                       ),
-                                      Flexible.tight(
-                                        child: FittedBox(
-                                          fit: BoxFit.contain,
-                                          child: DeterminateLoadingIndicator(
-                                            progress: _progress.value,
-                                            contained: false,
-                                            indicatorPolygons: [
-                                              ..._indeterminateIndicatorPolygons2,
-                                              _indeterminateIndicatorPolygons2
-                                                  .first,
-                                            ],
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      const SizedBox(height: 2.0),
-                      ListItemContainer(
-                        child: Flex.vertical(
-                          crossAxisAlignment: CrossAxisAlignment.stretch,
-                          children: [
-                            ListItemInteraction(
-                              onTap: () async {
-                                await Fluttertoast.showToast(
-                                  msg: "Not yet implemented!",
-                                  toastLength: Toast.LENGTH_SHORT,
-                                );
-                              },
-                              child: ListItemLayout(
-                                leading: SizedBox.square(
-                                  dimension: 40.0,
-                                  child: Material(
-                                    clipBehavior: Clip.antiAlias,
-                                    color: staticColors.blue.colorFixed,
-                                    shape: const StadiumBorder(),
-                                    child: Align.center(
-                                      child: Icon(
-                                        Symbols.refresh_rounded,
-                                        fill: 1.0,
-                                        color: staticColors
-                                            .blue
-                                            .onColorFixedVariant,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                headline: const Text("Loading indicator"),
-                                supportingText: const Text(
-                                  "Determinate · Contained",
-                                ),
-                              ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.fromLTRB(
-                                16.0,
-                                12.0,
-                                16.0,
-                                16.0,
-                              ),
-                              child: ConstrainedBox(
-                                constraints: const BoxConstraints(
-                                  maxHeight: 160.0,
-                                ),
-                                child: ListenableBuilder(
-                                  listenable: _progress,
-                                  builder: (context, _) => Flex.horizontal(
-                                    spacing: 16.0,
-                                    children: [
-                                      Flexible.tight(
-                                        child: FittedBox(
-                                          fit: BoxFit.contain,
-                                          child: DeterminateLoadingIndicator(
-                                            progress: _progress.value,
-                                            contained: true,
-                                          ),
-                                        ),
-                                      ),
-                                      Flexible.tight(
-                                        child: FittedBox(
-                                          fit: BoxFit.contain,
-                                          child: DeterminateLoadingIndicator(
-                                            progress: _progress.value,
-                                            contained: true,
-                                            indicatorPolygons: [
-                                              ..._indeterminateIndicatorPolygons1,
-                                              _indeterminateIndicatorPolygons1
-                                                  .first,
-                                            ],
-                                          ),
-                                        ),
-                                      ),
-                                      Flexible.tight(
-                                        child: FittedBox(
-                                          fit: BoxFit.contain,
-                                          child: DeterminateLoadingIndicator(
-                                            progress: _progress.value,
-                                            contained: true,
-                                            indicatorPolygons: [
-                                              ..._indeterminateIndicatorPolygons2,
-                                              _indeterminateIndicatorPolygons2
-                                                  .first,
-                                            ],
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
                                 ),
                               ),
                             ),
@@ -4073,7 +3847,7 @@ class _MaterialDemoViewState extends State<_MaterialDemoView> {
                       ListItemContainer(
                         isLast: true,
                         child: Flex.vertical(
-                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          crossAxisAlignment: .stretch,
                           children: [
                             ListItemInteraction(
                               onTap: () async {
@@ -4083,23 +3857,18 @@ class _MaterialDemoViewState extends State<_MaterialDemoView> {
                                 );
                               },
                               child: ListItemLayout(
-                                leading: SizedBox.square(
-                                  dimension: 40.0,
-                                  child: Material(
-                                    clipBehavior: Clip.antiAlias,
-                                    color: staticColors.blue.colorFixed,
-                                    shape: const StadiumBorder(),
-                                    child: Align.center(
-                                      child: Icon(
+                                leading:
+                                    CustomListItemLeading.fromExtendedColor(
+                                      extendedColor: staticColors.blue,
+                                      pairing: defaultPairing,
+                                      containerShape: RoundedPolygonBorder(
+                                        polygon: MaterialShapes.square,
+                                      ),
+                                      child: const Icon(
                                         Symbols.clock_loader_60_rounded,
                                         fill: 1.0,
-                                        color: staticColors
-                                            .blue
-                                            .onColorFixedVariant,
                                       ),
                                     ),
-                                  ),
-                                ),
                                 headline: const Text("Progress"),
                                 supportingText: const Text(
                                   "Determinate loading indicator progress",
@@ -4555,7 +4324,7 @@ class _ShapeLibraryViewState extends State<_ShapeLibraryView> {
                             24.0,
                           ),
                           child: Flex.vertical(
-                            crossAxisAlignment: CrossAxisAlignment.stretch,
+                            crossAxisAlignment: .stretch,
                             children: [
                               Align.center(
                                 child: Icon(
@@ -4617,8 +4386,8 @@ class _ShapeLibraryViewState extends State<_ShapeLibraryView> {
                         _filteredShapesEntries[index];
                     final shape = RoundedPolygonBorder(polygon: polygon);
                     return Flex.vertical(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      mainAxisAlignment: .start,
+                      crossAxisAlignment: .stretch,
                       children: [
                         AspectRatio(
                           aspectRatio: 1.0,
@@ -4664,9 +4433,8 @@ class _ShapeLibraryViewState extends State<_ShapeLibraryView> {
                                           ),
                                     ),
                                     content: Flex.vertical(
-                                      mainAxisSize: MainAxisSize.min,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.stretch,
+                                      mainAxisSize: .min,
+                                      crossAxisAlignment: .stretch,
                                       children: [
                                         AspectRatio(
                                           aspectRatio: 1.0,

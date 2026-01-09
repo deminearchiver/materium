@@ -2780,7 +2780,7 @@ class _LogsPageState extends State<_LogsPage> {
                             shapeTheme: shapeTheme,
                             stateTheme: stateTheme,
                             typescaleTheme: typescaleTheme,
-                            variant: .logs,
+                            color: .logs,
                           ),
                           child: SliverList.builder(
                             itemCount: logs.length,
