@@ -144,7 +144,7 @@ class TypographyDefaults with Diagnosticable {
 
 enum CustomCheckboxColor { standard, listItemPhone, listItemWatch, black }
 
-enum CustomRadioButtonColor { standard, listItemPhone, listItemWatch }
+enum CustomRadioButtonColor { standard, listItemPhone, listItemWatch, black }
 
 enum CustomSwitchSize { standard, nowInAndroid, black }
 
@@ -275,6 +275,7 @@ abstract final class CustomThemeFactory {
     required StateThemeData stateTheme,
     CustomRadioButtonColor color = .standard,
   }) => switch (color) {
+    .standard => const .from(),
     .listItemPhone => .from(
       stateLayerColor: .resolveWith(
         (states) => switch (states) {
@@ -340,7 +341,38 @@ abstract final class CustomThemeFactory {
         },
       ),
     ),
-    _ => const .from(),
+    .black => .from(
+      stateLayerColor: .resolveWith(
+        (states) => switch (states) {
+          RadioButtonEnabledStates(isSelected: true) =>
+            colorTheme.onPrimaryContainer,
+          _ => null,
+        },
+      ),
+      iconBackgroundColor: .resolveWith(
+        (states) => switch (states) {
+          RadioButtonDisabledStates(isSelected: false) =>
+            colorTheme.onPrimaryContainer.withValues(alpha: 0.0),
+          RadioButtonEnabledStates(isSelected: true) =>
+            colorTheme.onPrimaryContainer.withValues(alpha: 0.0),
+          _ => null,
+        },
+      ),
+      iconOutlineColor: .resolveWith(
+        (states) => switch (states) {
+          RadioButtonDisabledStates() => null,
+          RadioButtonStates(isSelected: false) => colorTheme.onSurface,
+          RadioButtonStates(isSelected: true) => colorTheme.onPrimaryContainer,
+        },
+      ),
+      iconDotColor: .resolveWith(
+        (states) => switch (states) {
+          RadioButtonDisabledStates() => null,
+          RadioButtonStates(isSelected: false) => colorTheme.onSurface,
+          RadioButtonStates(isSelected: true) => colorTheme.onPrimaryContainer,
+        },
+      ),
+    ),
   };
 
   static SwitchThemeDataPartial createSwitchTheme({

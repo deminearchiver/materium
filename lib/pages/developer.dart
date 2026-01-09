@@ -3492,7 +3492,7 @@ class _MaterialDemoViewState extends State<_MaterialDemoView> {
                                           colorTheme: colorTheme,
                                           shapeTheme: shapeTheme,
                                           stateTheme: stateTheme,
-                                          color: .listItemWatch,
+                                          color: .black,
                                         ),
                                     child: SwitchTheme.merge(
                                       data:
