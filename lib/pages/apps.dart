@@ -2177,6 +2177,32 @@ class AppsPageState extends State<AppsPage> with TickerProviderStateMixin {
         tooltip: tr("removeSelectedApps"),
       );
 
+      final Widget categorizeButton = IconButton(
+        style: LegacyThemeFactory.createIconButtonStyle(
+          colorTheme: colorTheme,
+          elevationTheme: elevationTheme,
+          shapeTheme: shapeTheme,
+          stateTheme: stateTheme,
+          size: .small,
+          color: .standard,
+          width: .normal,
+          isSelected: false,
+          unselectedShape: .round,
+          selectedShape: .round,
+          unselectedContainerColor: unselectedContainerColor,
+          unselectedDisabledContainerColor: unselectedDisabledContainerColor,
+          unselectedIconColor: unselectedContentColor,
+          unselectedDisabledIconColor: unselectedDisabledContentColor,
+          selectedContainerColor: selectedContainerColor,
+          selectedDisabledContainerColor: selectedDisabledContainerColor,
+          selectedIconColor: selectedContentColor,
+          selectedDisabledIconColor: selectedDisabledContentColor,
+        ),
+        onPressed: hasSelection ? launchCategorizeDialog() : null,
+        icon: const IconLegacy(Symbols.category_rounded, fill: 1.0),
+        tooltip: tr("categorize"),
+      );
+
       final Widget pinButton = IconButton(
         style: LegacyThemeFactory.createIconButtonStyle(
           colorTheme: colorTheme,
@@ -2203,32 +2229,6 @@ class AppsPageState extends State<AppsPage> with TickerProviderStateMixin {
             ? const IconLegacy(Symbols.keep_off_rounded, fill: 1.0)
             : const IconLegacy(Symbols.keep_rounded, fill: 1.0),
         tooltip: hasPinnedSelection ? tr("unpinFromTop") : tr("pinToTop"),
-      );
-
-      final Widget categorizeButton = IconButton(
-        style: LegacyThemeFactory.createIconButtonStyle(
-          colorTheme: colorTheme,
-          elevationTheme: elevationTheme,
-          shapeTheme: shapeTheme,
-          stateTheme: stateTheme,
-          size: .small,
-          color: .standard,
-          width: .normal,
-          isSelected: false,
-          unselectedShape: .round,
-          selectedShape: .round,
-          unselectedContainerColor: unselectedContainerColor,
-          unselectedDisabledContainerColor: unselectedDisabledContainerColor,
-          unselectedIconColor: unselectedContentColor,
-          unselectedDisabledIconColor: unselectedDisabledContentColor,
-          selectedContainerColor: selectedContainerColor,
-          selectedDisabledContainerColor: selectedDisabledContainerColor,
-          selectedIconColor: selectedContentColor,
-          selectedDisabledIconColor: selectedDisabledContentColor,
-        ),
-        onPressed: hasSelection ? launchCategorizeDialog() : null,
-        icon: const IconLegacy(Symbols.category_rounded, fill: 1.0),
-        tooltip: tr("categorize"),
       );
 
       final Widget moreButton = IconButton(
@@ -2304,9 +2304,9 @@ class AppsPageState extends State<AppsPage> with TickerProviderStateMixin {
               const SizedBox(width: 12.0 - 4.0 - 4.0),
               removeButton,
               const SizedBox(width: 12.0 - 4.0 - 4.0),
-              pinButton,
-              const SizedBox(width: 12.0 - 4.0 - 4.0),
               categorizeButton,
+              const SizedBox(width: 12.0 - 4.0 - 4.0),
+              pinButton,
               const SizedBox(width: 12.0 - 4.0 - 4.0),
               moreButton,
               const SizedBox(width: 12.0 - 4.0),
