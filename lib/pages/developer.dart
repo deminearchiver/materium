@@ -10,7 +10,7 @@ import 'package:material/material_shapes.dart';
 import 'package:materium/components/custom_app_bar.dart';
 import 'package:materium/components/custom_markdown.dart';
 import 'package:materium/components/custom_refresh_indicator.dart';
-import 'package:materium/components/overflow.dart';
+import 'package:materium/components/overflow_eager.dart';
 import 'package:materium/flutter.dart' hide Cubic;
 import 'package:markdown/markdown.dart' as md;
 import 'package:materium/pages/settings.dart';
@@ -363,7 +363,7 @@ class _ExperimentsPageState extends State<_ExperimentsPage> {
         ? colorTheme.surface
         : colorTheme.surfaceContainer;
 
-    const length = 5;
+    const length = 25;
 
     return Scaffold(
       backgroundColor: backgroundColor,
@@ -410,66 +410,88 @@ class _ExperimentsPageState extends State<_ExperimentsPage> {
                           shape: CornersBorder.rounded(
                             corners: .all(shapeTheme.corner.full),
                           ),
-                          color: colorTheme.surfaceContainerHighest,
+                          color: colorTheme.primaryContainer,
                           child: Padding(
                             padding: .all(12.0 - 4.0),
                             child: Overflow(
                               direction: .horizontal,
-                              overflowIndicatorBuilder: (context, layoutInfo) {
-                                print(layoutInfo);
-                                return IconButton(
-                                  style:
-                                      LegacyThemeFactory.createIconButtonStyle(
-                                        colorTheme: colorTheme,
-                                        elevationTheme: elevationTheme,
-                                        shapeTheme: shapeTheme,
-                                        stateTheme: stateTheme,
-                                        color: .standard,
-                                        width: .narrow,
-                                        iconColor: colorTheme.onSurfaceVariant,
+                              overflowIndicator: OverflowItemBuilder(
+                                builder: (context, layoutInfo, child) {
+                                  // print(layoutInfo);
+                                  return Padding(
+                                    padding: .symmetric(
+                                      // horizontal: 12.0 - 4.0 - 4.0,
+                                    ),
+                                    child: IconButton(
+                                      style:
+                                          LegacyThemeFactory.createIconButtonStyle(
+                                            colorTheme: colorTheme,
+                                            elevationTheme: elevationTheme,
+                                            shapeTheme: shapeTheme,
+                                            stateTheme: stateTheme,
+                                            color: .standard,
+                                            width: .normal,
+                                            containerColor:
+                                                colorTheme.primaryContainer,
+                                            iconColor:
+                                                colorTheme.onPrimaryContainer,
+                                          ),
+                                      onPressed: () async {
+                                        await Fluttertoast.cancel();
+                                        await Fluttertoast.showToast(
+                                          msg: "Overflow button clicked!",
+                                          toastLength: .LENGTH_SHORT,
+                                        );
+                                      },
+                                      icon: const IconLegacy(
+                                        Symbols.more_vert_rounded,
                                       ),
-                                  onPressed: () async {
-                                    await Fluttertoast.cancel();
-                                    await Fluttertoast.showToast(
-                                      msg: "Overflow button clicked!",
-                                      toastLength: .LENGTH_SHORT,
-                                    );
-                                  },
-                                  icon: const IconLegacy(
-                                    Symbols.more_vert_rounded,
-                                  ),
-                                );
-                              },
+                                      tooltip:
+                                          "${layoutInfo.overflowChildCount}",
+                                    ),
+                                  );
+                                },
+                              ),
                               children: List.generate(
                                 length,
-                                (index) => Padding(
-                                  padding: .directional(
-                                    end: index == length - 1
-                                        ? 12.0 - 4.0 - 8.0
-                                        : 12.0 - 4.0 - 4.0,
-                                  ),
-                                  child: IconButton(
-                                    style:
-                                        LegacyThemeFactory.createIconButtonStyle(
-                                          colorTheme: colorTheme,
-                                          elevationTheme: elevationTheme,
-                                          shapeTheme: shapeTheme,
-                                          stateTheme: stateTheme,
-                                          color: .tonal,
-                                          width: .normal,
+                                (index) => OverflowItemBuilder(
+                                  builder: (context, layoutInfo, _) {
+                                    return Padding(
+                                      padding: .directional(
+                                        end: 12.0 - 4.0 - 4.0,
+                                      ),
+                                      child: IconButton(
+                                        style:
+                                            LegacyThemeFactory.createIconButtonStyle(
+                                              colorTheme: colorTheme,
+                                              elevationTheme: elevationTheme,
+                                              shapeTheme: shapeTheme,
+                                              stateTheme: stateTheme,
+                                              color: .standard,
+                                              width: .normal,
+                                              containerColor:
+                                                  layoutInfo.isVisible
+                                                  ? colorTheme.surfaceContainer
+                                                  : colorTheme.primaryContainer,
+                                              iconColor: layoutInfo.isVisible
+                                                  ? colorTheme.onSurface
+                                                  : colorTheme
+                                                        .onPrimaryContainer,
+                                            ),
+                                        onPressed: () async {
+                                          await Fluttertoast.cancel();
+                                          await Fluttertoast.showToast(
+                                            msg: "Button ${index + 1} clicked!",
+                                            toastLength: .LENGTH_SHORT,
+                                          );
+                                        },
+                                        icon: const IconLegacy(
+                                          Symbols.add_rounded,
+                                          fill: 1.0,
                                         ),
-                                    onPressed: () async {
-                                      await Fluttertoast.cancel();
-                                      await Fluttertoast.showToast(
-                                        msg: "Button ${index + 1} clicked!",
-                                        toastLength: .LENGTH_SHORT,
-                                      );
-                                    },
-                                    icon: const IconLegacy(
-                                      Symbols.add_rounded,
-                                      fill: 1.0,
-                                    ),
-                                  ),
+                                      ),
+                                    );
+                                  },
                                 ),
                               ),
                             ),

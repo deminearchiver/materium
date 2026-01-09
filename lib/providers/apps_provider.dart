@@ -2008,8 +2008,8 @@ class AppsProvider with ChangeNotifier {
     bool installedOnly = false,
     bool nonInstalledOnly = false,
   }) {
-    List<String> updateAppIds = [];
-    List<String> appIds = apps.keys.toList();
+    final List<String> updateAppIds = [];
+    final List<String> appIds = apps.keys.toList();
     for (int i = 0; i < appIds.length; i++) {
       App? app = apps[appIds[i]]!.app;
       if (app.installedVersion != app.latestVersion &&

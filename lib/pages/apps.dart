@@ -1,5 +1,7 @@
+import 'dart:collection';
 import 'dart:convert';
 
+import 'package:collection/collection.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:materium/components/custom_refresh_indicator.dart';
 import 'package:materium/components/custom_sliver_scrollbar.dart';
@@ -134,6 +136,9 @@ void Function()? getChangeLogFn(BuildContext context, App app) {
 }
 
 class AppsPageState extends State<AppsPage> with TickerProviderStateMixin {
+  final _progressIndicatorKey = GlobalKey();
+  double? _progressIndicatorValueCache;
+
   var filter = AppsFilter();
 
   final neutralFilter = AppsFilter();
@@ -179,6 +184,7 @@ class AppsPageState extends State<AppsPage> with TickerProviderStateMixin {
     final appsProvider = context.watch<AppsProvider>();
     final settingsProvider = context.watch<SettingsProvider>();
     var listedApps = appsProvider.getAppValues().toList();
+    final hasApps = appsProvider.apps.isNotEmpty;
 
     final useBlackTheme = context.select<SettingsService, bool>(
       (settings) => settings.useBlackTheme.value,
@@ -220,7 +226,7 @@ class AppsPageState extends State<AppsPage> with TickerProviderStateMixin {
     }
 
     selectedAppIds = selectedAppIds
-        .where((element) => listedApps.map((e) => e.app.id).contains(element))
+        .where((id) => listedApps.map((item) => item.app.id).contains(id))
         .toSet();
 
     void toggleAppSelected(App app) {
@@ -244,21 +250,21 @@ class AppsPageState extends State<AppsPage> with TickerProviderStateMixin {
             return false;
           }
           if (filter.nameFilter.isNotEmpty || filter.authorFilter.isNotEmpty) {
-            List<String> nameTokens = filter.nameFilter
-                .split(' ')
+            final nameTokens = filter.nameFilter
+                .split(" ")
                 .where((element) => element.trim().isNotEmpty)
                 .toList();
-            List<String> authorTokens = filter.authorFilter
-                .split(' ')
+            final authorTokens = filter.authorFilter
+                .split(" ")
                 .where((element) => element.trim().isNotEmpty)
                 .toList();
 
-            for (var t in nameTokens) {
+            for (final t in nameTokens) {
               if (!app.name.toLowerCase().contains(t.toLowerCase())) {
                 return false;
               }
             }
-            for (var t in authorTokens) {
+            for (final t in authorTokens) {
               if (!app.author.toLowerCase().contains(t.toLowerCase())) {
                 return false;
               }
@@ -289,43 +295,45 @@ class AppsPageState extends State<AppsPage> with TickerProviderStateMixin {
           return true;
         }).toList()..sort((a, b) {
           var result = 0;
-          if (settingsProvider.sortColumn == SortColumnSettings.authorName) {
-            result = ((a.author + a.name).toLowerCase()).compareTo(
-              (b.author + b.name).toLowerCase(),
-            );
-          } else if (settingsProvider.sortColumn ==
-              SortColumnSettings.nameAuthor) {
-            result = ((a.name + a.author).toLowerCase()).compareTo(
-              (b.name + b.author).toLowerCase(),
-            );
-          } else if (settingsProvider.sortColumn ==
-              SortColumnSettings.releaseDate) {
-            // Handle null dates: apps with unknown release dates are grouped at the end
-            final aDate = a.app.releaseDate;
-            final bDate = b.app.releaseDate;
-            if (aDate == null && bDate == null) {
-              // Both null: sort by name for consistency
+          switch (settingsProvider.sortColumn) {
+            case .authorName:
+              result = ((a.author + a.name).toLowerCase()).compareTo(
+                (b.author + b.name).toLowerCase(),
+              );
+            case .nameAuthor:
               result = ((a.name + a.author).toLowerCase()).compareTo(
                 (b.name + b.author).toLowerCase(),
               );
-            } else if (aDate == null) {
-              // a has no date, push to end (ascending) or beginning (will be reversed for descending)
-              result = 1;
-            } else if (bDate == null) {
-              // b has no date, push to end
-              result = -1;
-            } else {
-              result = aDate.compareTo(bDate);
-            }
+            case .releaseDate:
+              // Handle null dates: apps with unknown release dates are grouped at the end
+              final aDate = a.app.releaseDate;
+              final bDate = b.app.releaseDate;
+              if (aDate == null && bDate == null) {
+                // Both null: sort by name for consistency
+                result = ((a.name + a.author).toLowerCase()).compareTo(
+                  (b.name + b.author).toLowerCase(),
+                );
+              } else if (aDate == null) {
+                // a has no date, push to end (ascending) or beginning (will be reversed for descending)
+                result = 1;
+              } else if (bDate == null) {
+                // b has no date, push to end
+                result = -1;
+              } else {
+                result = aDate.compareTo(bDate);
+              }
+            default:
           }
           return result;
         });
 
-    if (settingsProvider.sortOrder == SortOrderSettings.descending) {
+    if (settingsProvider.sortOrder == .descending) {
       listedApps = listedApps.reversed.toList();
     }
 
-    var existingUpdates = appsProvider.findExistingUpdates(installedOnly: true);
+    final existingUpdates = appsProvider.findExistingUpdates(
+      installedOnly: true,
+    );
 
     var existingUpdateIdsAllOrSelected = existingUpdates
         .where(
@@ -343,7 +351,8 @@ class AppsPageState extends State<AppsPage> with TickerProviderStateMixin {
         )
         .toList();
 
-    List<String> trackOnlyUpdateIdsAllOrSelected = [];
+    final trackOnlyUpdateIdsAllOrSelected = <String>[];
+
     existingUpdateIdsAllOrSelected = existingUpdateIdsAllOrSelected.where((id) {
       if (appsProvider.apps[id]!.app.additionalSettings['trackOnly'] == true) {
         trackOnlyUpdateIdsAllOrSelected.add(id);
@@ -351,6 +360,7 @@ class AppsPageState extends State<AppsPage> with TickerProviderStateMixin {
       }
       return true;
     }).toList();
+
     newInstallIdsAllOrSelected = newInstallIdsAllOrSelected.where((id) {
       if (appsProvider.apps[id]!.app.additionalSettings['trackOnly'] == true) {
         trackOnlyUpdateIdsAllOrSelected.add(id);
@@ -360,7 +370,7 @@ class AppsPageState extends State<AppsPage> with TickerProviderStateMixin {
     }).toList();
 
     if (settingsProvider.pinUpdates) {
-      var temp = [];
+      final temp = [];
       listedApps = listedApps.where((sa) {
         if (existingUpdates.contains(sa.app.id)) {
           temp.add(sa);
@@ -383,16 +393,16 @@ class AppsPageState extends State<AppsPage> with TickerProviderStateMixin {
       listedApps = [...listedApps, ...temp];
     }
 
-    final tempPinned = <AppInMemory>[];
-    final tempNotPinned = <AppInMemory>[];
-    for (final a in listedApps) {
-      if (a.app.pinned) {
-        tempPinned.add(a);
+    final unpinnedApps = <AppInMemory>[];
+    final pinnedApps = <AppInMemory>[];
+    for (final item in listedApps) {
+      if (item.app.pinned) {
+        pinnedApps.add(item);
       } else {
-        tempNotPinned.add(a);
+        unpinnedApps.add(item);
       }
     }
-    listedApps = [...tempPinned, ...tempNotPinned];
+    listedApps = [...pinnedApps, ...unpinnedApps];
 
     List<String?> getListedCategories() {
       final temp = listedApps.map(
@@ -419,43 +429,67 @@ class AppsPageState extends State<AppsPage> with TickerProviderStateMixin {
         .where((a) => selectedAppIds.contains(a.id))
         .toSet();
 
-    List<Widget> getLoadingWidgets() {
-      return [
-        if (listedApps.isEmpty)
-          SliverFillRemaining(
-            child: Align.center(
-              child: Text(
-                appsProvider.apps.isEmpty
-                    ? appsProvider.loadingApps
-                          ? tr('pleaseWait')
-                          : tr('noApps')
-                    : tr('noAppsForFilter'),
-                style: typescaleTheme.headlineMedium.toTextStyle(),
-                textAlign: TextAlign.center,
-              ),
+    final hasPinnedSelection = selectedApps.any((element) => element.pinned);
+
+    Widget buildLinearProgressIndicator(
+      Widget Function(BuildContext context, Size preferredSize, Widget child)
+      builder,
+    ) {
+      final isVisible = refreshingSince != null || appsProvider.loadingApps;
+      return TweenAnimationBuilder<double>(
+        tween: Tween<double>(end: isVisible ? 1.0 : 0.0),
+        duration: const DurationThemeData.fallback().medium2,
+        curve: const EasingThemeData.fallback().standard,
+        builder: (context, heightFactor, _) {
+          if (heightFactor == 0.0) {
+            _progressIndicatorValueCache = 0.0;
+          }
+          final size = Size(.infinity, lerpDouble(0.0, 8.0, heightFactor));
+          final oldValue = _progressIndicatorValueCache;
+          final newValue = isVisible
+              ? !appsProvider.loadingApps
+                    ? appsProvider
+                              .getAppValues()
+                              .where(
+                                (element) =>
+                                    !(element.app.lastUpdateCheck?.isBefore(
+                                          refreshingSince!,
+                                        ) ??
+                                        true),
+                              )
+                              .length /
+                          (appsProvider.apps.isNotEmpty
+                              ? appsProvider.apps.length
+                              : 1.0)
+                    : null
+              : oldValue;
+          _progressIndicatorValueCache = newValue;
+          final Widget child = SizedBox.fromSize(
+            size: size,
+            child: TweenAnimationBuilder<double>(
+              tween: Tween<double>(end: newValue ?? 0.0),
+              duration: const DurationThemeData.fallback().short4,
+              curve: const EasingThemeData.fallback().standard,
+              builder: (context, value, _) {
+                return size.height > 0.0
+                    ? LinearProgressIndicator(
+                        value: newValue != null ? value : null,
+                        borderRadius: .circular(size.height / 2.0),
+                        trackGap: 4.0,
+                        stopIndicatorRadius: 2.0,
+                        backgroundColor: useBlackTheme
+                            ? colorTheme.surfaceContainer
+                            : colorTheme.secondaryContainer,
+                        color: colorTheme.primary,
+                        minHeight: size.height,
+                      )
+                    : const SizedBox.shrink();
+              },
             ),
-          ),
-        if (refreshingSince != null || appsProvider.loadingApps)
-          SliverToBoxAdapter(
-            child: LinearProgressIndicator(
-              value: appsProvider.loadingApps
-                  ? null
-                  : appsProvider
-                            .getAppValues()
-                            .where(
-                              (element) =>
-                                  !(element.app.lastUpdateCheck?.isBefore(
-                                        refreshingSince!,
-                                      ) ??
-                                      true),
-                            )
-                            .length /
-                        (appsProvider.apps.isNotEmpty
-                            ? appsProvider.apps.length
-                            : 1),
-            ),
-          ),
-      ];
+          );
+          return builder(context, size, child);
+        },
+      );
     }
 
     Widget getAppIcon(int appIndex) {
@@ -1023,14 +1057,13 @@ class AppsPageState extends State<AppsPage> with TickerProviderStateMixin {
     }
 
     void pinSelectedApps() {
-      var pinStatus = selectedApps.where((element) => element.pinned).isEmpty;
+      final pinStatus = !hasPinnedSelection;
       appsProvider.saveApps(
         selectedApps.map((e) {
           e.pinned = pinStatus;
           return e;
         }).toList(),
       );
-      Navigator.of(context).pop();
     }
 
     Future<void> showMoreOptionsDialog() {
@@ -1095,7 +1128,10 @@ class AppsPageState extends State<AppsPage> with TickerProviderStateMixin {
                       ListItemContainer(
                         isFirst: true,
                         child: ListItemInteraction(
-                          onTap: pinSelectedApps,
+                          onTap: () {
+                            pinSelectedApps();
+                            Navigator.pop(context);
+                          },
                           child: ListItemLayout(
                             leading:
                                 selectedApps
@@ -1282,7 +1318,7 @@ class AppsPageState extends State<AppsPage> with TickerProviderStateMixin {
       var values = await showDialog<Map<String, dynamic>?>(
         context: context,
         builder: (ctx) {
-          var vals = filter.toFormValuesMap();
+          final vals = filter.toFormValuesMap();
           return GeneratedFormModal(
             initValid: true,
             title: tr('filterApps'),
@@ -1292,13 +1328,13 @@ class AppsPageState extends State<AppsPage> with TickerProviderStateMixin {
                   'appName',
                   label: tr('appName'),
                   required: false,
-                  defaultValue: vals['appName'],
+                  defaultValue: vals['appName']! as String,
                 ),
                 GeneratedFormTextField(
                   'author',
                   label: tr('author'),
                   required: false,
-                  defaultValue: vals['author'],
+                  defaultValue: vals['author']! as String,
                 ),
               ],
               [
@@ -1306,21 +1342,21 @@ class AppsPageState extends State<AppsPage> with TickerProviderStateMixin {
                   'appId',
                   label: tr('appId'),
                   required: false,
-                  defaultValue: vals['appId'],
+                  defaultValue: vals['appId']! as String,
                 ),
               ],
               [
                 GeneratedFormSwitch(
                   'upToDateApps',
                   label: tr('upToDateApps'),
-                  defaultValue: vals['upToDateApps'],
+                  defaultValue: vals['upToDateApps']! as bool,
                 ),
               ],
               [
                 GeneratedFormSwitch(
                   'nonInstalledApps',
                   label: tr('nonInstalledApps'),
-                  defaultValue: vals['nonInstalledApps'],
+                  defaultValue: vals['nonInstalledApps']! as bool,
                 ),
               ],
               [
@@ -1356,6 +1392,586 @@ class AppsPageState extends State<AppsPage> with TickerProviderStateMixin {
       }
     }
 
+    Widget buildSliverList(List<AppInMemory> apps) {
+      const spacing = 2.0;
+      return ListItemTheme.merge(
+        data: .from(
+          containerColor: .all(
+            useBlackTheme ? colorTheme.surface : colorTheme.surface,
+          ),
+          headlineTextStyle: .all(
+            typescaleTheme.bodyLargeEmphasized.toTextStyle(),
+          ),
+        ),
+        child: CheckboxTheme.merge(
+          data: CustomThemeFactory.createCheckboxTheme(
+            colorTheme: colorTheme,
+            shapeTheme: shapeTheme,
+            stateTheme: stateTheme,
+            color: useBlackTheme ? .black : .listItemPhone,
+          ),
+          child: SliverList.builder(
+            itemCount: apps.length,
+            itemBuilder: (context, index) {
+              final isFirst = index == 0;
+              final isLast = index == apps.length - 1;
+
+              final item = apps[index];
+
+              final showChanges = getChangeLogFn(context, item.app);
+
+              final installedVersion = item.app.installedVersion;
+              final progress = item.downloadProgress;
+
+              final isInstalled = installedVersion != null;
+              final hasUpdate =
+                  isInstalled && installedVersion != item.app.latestVersion;
+              final isSelected = selectedAppIds.contains(item.app.id);
+
+              final Widget updateButton = IconButton(
+                style: LegacyThemeFactory.createIconButtonStyle(
+                  colorTheme: colorTheme,
+                  elevationTheme: elevationTheme,
+                  shapeTheme: shapeTheme,
+                  stateTheme: stateTheme,
+                  size: .small,
+                  shape: .round,
+                  color: .tonal,
+                  width: .wide,
+                  containerColor: useBlackTheme
+                      ? colorTheme.primaryContainer
+                      : null,
+                  iconColor: useBlackTheme
+                      ? colorTheme.onPrimaryContainer
+                      : null,
+                ),
+                onPressed: !appsProvider.areDownloadsRunning()
+                    ? () {
+                        appsProvider
+                            .downloadAndInstallLatestApps([
+                              item.app.id,
+                            ], globalNavigatorKey.currentContext)
+                            .catchError((e) {
+                              if (context.mounted) {
+                                showError(e, context);
+                              }
+                              return <String>[];
+                            });
+                      }
+                    : null,
+                icon: item.app.additionalSettings["trackOnly"] == true
+                    ? const IconLegacy(Symbols.check_circle_rounded, fill: 1.0)
+                    : const IconLegacy(Symbols.install_mobile, fill: 1.0),
+                tooltip: item.app.additionalSettings["trackOnly"] == true
+                    ? tr("markUpdated")
+                    : tr("update"),
+              );
+
+              final LegacyMenuVariant menuVariant = useBlackTheme
+                  ? .standard
+                  : .standard;
+
+              final Widget overflowButton = MenuAnchor(
+                consumeOutsideTap: true,
+                crossAxisUnconstrained: false,
+                style: LegacyThemeFactory.createMenuStyle(
+                  colorTheme: colorTheme,
+                  elevationTheme: elevationTheme,
+                  shapeTheme: shapeTheme,
+                  variant: menuVariant,
+                ),
+                menuChildren: [
+                  MenuItemButton(
+                    style: LegacyThemeFactory.createMenuButtonStyle(
+                      colorTheme: colorTheme,
+                      elevationTheme: elevationTheme,
+                      shapeTheme: shapeTheme,
+                      stateTheme: stateTheme,
+                      typescaleTheme: typescaleTheme,
+                      variant: menuVariant,
+                      isFirst: true,
+                      isLast: false,
+                      isSelected: isSelected,
+                    ),
+                    // closeOnActivate:
+                    //     (!isSelected && selectedAppIds.isEmpty) ||
+                    //     (isSelected && selectedAppIds.length == 1),
+                    onPressed: () => toggleAppSelected(item.app),
+                    leadingIcon: const IconLegacy(
+                      Symbols.check_rounded,
+                      fill: 1.0,
+                    ),
+                    child: isSelected
+                        ? const Text("Selected")
+                        : const Text("Select"),
+                  ),
+                  if (hasUpdate && selectedAppIds.isNotEmpty)
+                    MenuItemButton(
+                      style: LegacyThemeFactory.createMenuButtonStyle(
+                        colorTheme: colorTheme,
+                        elevationTheme: elevationTheme,
+                        shapeTheme: shapeTheme,
+                        stateTheme: stateTheme,
+                        typescaleTheme: typescaleTheme,
+                        variant: menuVariant,
+                        isFirst: false,
+                        isLast: false,
+                      ),
+                      onPressed: !appsProvider.areDownloadsRunning()
+                          ? () {
+                              appsProvider
+                                  .downloadAndInstallLatestApps([
+                                    item.app.id,
+                                  ], globalNavigatorKey.currentContext)
+                                  .catchError((e) {
+                                    if (context.mounted) {
+                                      showError(e, context);
+                                    }
+                                    return <String>[];
+                                  });
+                            }
+                          : null,
+                      leadingIcon:
+                          item.app.additionalSettings["trackOnly"] == true
+                          ? const IconLegacy(
+                              Symbols.check_circle_rounded,
+                              fill: 1.0,
+                            )
+                          : const IconLegacy(Symbols.install_mobile, fill: 1.0),
+                      child: Text(
+                        item.app.additionalSettings["trackOnly"] == true
+                            ? tr("markUpdated")
+                            : tr("update"),
+                      ),
+                    ),
+                  MenuItemButton(
+                    style: LegacyThemeFactory.createMenuButtonStyle(
+                      colorTheme: colorTheme,
+                      elevationTheme: elevationTheme,
+                      shapeTheme: shapeTheme,
+                      stateTheme: stateTheme,
+                      typescaleTheme: typescaleTheme,
+                      variant: menuVariant,
+                      isFirst: false,
+                      isLast: false,
+                    ),
+                    onPressed: showChanges,
+                    leadingIcon: const IconLegacy(
+                      Symbols.menu_book_rounded,
+                      fill: 1.0,
+                    ),
+                    child: const Text("View changelog"),
+                  ),
+                  if (selectedAppIds.isNotEmpty)
+                    MenuItemButton(
+                      style: LegacyThemeFactory.createMenuButtonStyle(
+                        colorTheme: colorTheme,
+                        elevationTheme: elevationTheme,
+                        shapeTheme: shapeTheme,
+                        stateTheme: stateTheme,
+                        typescaleTheme: typescaleTheme,
+                        variant: menuVariant,
+                        isFirst: false,
+                        isLast: false,
+                      ),
+                      onPressed: () => Navigator.of(context).push(
+                        MaterialPageRoute<void>(
+                          builder: (context) => AppPage(appId: item.app.id),
+                        ),
+                      ),
+                      leadingIcon: const IconLegacy(
+                        Symbols.edit_rounded,
+                        fill: 1.0,
+                      ),
+                      child: const Text("Edit"),
+                    ),
+                  MenuItemButton(
+                    style: LegacyThemeFactory.createMenuButtonStyle(
+                      colorTheme: colorTheme,
+                      elevationTheme: elevationTheme,
+                      shapeTheme: shapeTheme,
+                      stateTheme: stateTheme,
+                      typescaleTheme: typescaleTheme,
+                      variant: menuVariant,
+                      isFirst: false,
+                      isLast: true,
+                    ),
+                    onPressed: () =>
+                        appsProvider.removeAppsWithModal(context, [item.app]),
+                    leadingIcon: const IconLegacy(
+                      Symbols.delete_rounded,
+                      fill: 1.0,
+                    ),
+                    child: Text(tr("remove")),
+                  ),
+                ],
+                builder: (context, controller, child) => IconButton(
+                  style: LegacyThemeFactory.createIconButtonStyle(
+                    colorTheme: colorTheme,
+                    elevationTheme: elevationTheme,
+                    shapeTheme: shapeTheme,
+                    stateTheme: stateTheme,
+                    size: .small,
+                    shape: .round,
+                    color: .standard,
+                    width: .narrow,
+                    containerColor: isSelected || useBlackTheme
+                        ? Colors.transparent
+                        : colorTheme.surfaceContainer,
+                    iconColor: isSelected
+                        ? useBlackTheme
+                              ? colorTheme.onPrimaryContainer
+                              : colorTheme.onSecondaryContainer
+                        : useBlackTheme
+                        ? colorTheme.onSurface
+                        : colorTheme.onSurfaceVariant,
+                  ),
+                  onPressed: () {
+                    if (controller.isOpen) {
+                      controller.close();
+                    } else {
+                      controller.open();
+                    }
+                  },
+                  icon: const IconLegacy(Symbols.more_vert_rounded),
+                ),
+              );
+
+              final Widget checkbox = Checkbox.bistate(
+                onCheckedChanged: (value) => toggleAppSelected(item.app),
+                checked: isSelected,
+              );
+
+              return KeyedSubtree(
+                key: ValueKey(item.app.id),
+                child: Padding(
+                  padding: .only(
+                    top: isFirst ? 0.0 : spacing / 2.0,
+                    bottom: isLast ? 0.0 : spacing / 2.0,
+                  ),
+                  child: ListItemContainer(
+                    isFirst: isFirst,
+                    isLast: isLast,
+                    containerShape: .all(
+                      isSelected
+                          ? CornersBorder.rounded(
+                              corners: Corners.all(shapeTheme.corner.large),
+                            )
+                          : null,
+                    ),
+                    containerColor: .all(
+                      isSelected
+                          ? useBlackTheme
+                                ? colorTheme.primaryContainer
+                                : colorTheme.secondaryContainer
+                          : null,
+                    ),
+                    child: ListItemInteraction(
+                      stateLayerColor: .all(
+                        isSelected
+                            ? useBlackTheme
+                                  ? colorTheme.onPrimaryContainer
+                                  : colorTheme.onSecondaryContainer
+                            : useBlackTheme
+                            ? colorTheme.onPrimaryContainer
+                            : colorTheme.onSurface,
+                      ),
+                      onTap: () {
+                        if (selectedAppIds.isNotEmpty) {
+                          toggleAppSelected(item.app);
+                        } else {
+                          Navigator.of(context).push(
+                            MaterialPageRoute<void>(
+                              builder: (context) => AppPage(appId: item.app.id),
+                            ),
+                          );
+                        }
+                      },
+                      onLongPress: () => toggleAppSelected(item.app),
+                      child: ListItemLayout(
+                        padding: const .directional(start: 16.0, end: 0.0),
+                        leading: ExcludeFocus(
+                          child: SizedBox.square(
+                            dimension: 56.0,
+                            child: FutureBuilder(
+                              future: appsProvider
+                                  .updateAppIcon(item.app.id)
+                                  .then((_) => item.icon),
+                              builder: (context, snapshot) {
+                                final bytes = snapshot.data;
+                                return TweenAnimationBuilder<double>(
+                                  tween: Tween<double>(
+                                    end: progress != null ? 1.0 : 0.0,
+                                  ),
+                                  duration: listItemDuration,
+                                  curve: listItemEasing,
+                                  builder: (context, value, child) => Material(
+                                    clipBehavior: .antiAlias,
+                                    shape: ShapeBorder.lerp(
+                                      CornersBorder.rounded(
+                                        corners: .all(shapeTheme.corner.small),
+                                      ),
+                                      CornersBorder.rounded(
+                                        corners: .all(shapeTheme.corner.full),
+                                      ),
+                                      value,
+                                    )!,
+                                    color: isSelected
+                                        ? bytes != null
+                                              ? useBlackTheme
+                                                    ? colorTheme
+                                                          .primaryContainer
+                                                    : colorTheme
+                                                          .secondaryContainer
+                                              : Colors.transparent
+                                        : useBlackTheme
+                                        ? colorTheme.surface
+                                        : colorTheme.surfaceContainer,
+                                    child: child!,
+                                  ),
+                                  child: Stack(
+                                    fit: .expand,
+                                    children: [
+                                      TweenAnimationBuilder<double>(
+                                        tween: Tween<double>(
+                                          end: progress != null ? 1.0 : 0.0,
+                                        ),
+                                        duration: listItemDuration,
+                                        curve: listItemEasing,
+                                        builder: (context, value, _) {
+                                          final size = lerpDouble(
+                                            40.0,
+                                            28.0,
+                                            value,
+                                          );
+                                          return Align.center(
+                                            child: bytes != null
+                                                ? SizedBox.square(
+                                                    dimension: size,
+                                                    child: Image.memory(
+                                                      bytes,
+                                                      gaplessPlayback: true,
+                                                      fit: .contain,
+                                                    ),
+                                                  )
+                                                : Icon(
+                                                    Symbols
+                                                        .broken_image_rounded,
+                                                    opticalSize: size,
+                                                    size: size,
+                                                    color: isSelected
+                                                        ? useBlackTheme
+                                                              ? colorTheme
+                                                                    .onPrimaryContainer
+                                                              : colorTheme
+                                                                    .onSecondaryContainer
+                                                        : useBlackTheme
+                                                        ? colorTheme.primary
+                                                        : colorTheme
+                                                              .onSurfaceVariant,
+                                                  ),
+                                          );
+                                        },
+                                      ),
+                                      InkWell(
+                                        overlayColor: WidgetStateLayerColor(
+                                          color: WidgetStatePropertyAll(
+                                            isSelected
+                                                ? useBlackTheme
+                                                      ? colorTheme
+                                                            .onPrimaryContainer
+                                                      : colorTheme
+                                                            .onSecondaryContainer
+                                                : useBlackTheme
+                                                ? colorTheme.primary
+                                                : colorTheme.onSurface,
+                                          ),
+                                          opacity: stateTheme
+                                              .asWidgetStateLayerOpacity,
+                                        ),
+                                        onTap: () {
+                                          toggleAppSelected(item.app);
+                                        },
+                                        onDoubleTap: () {
+                                          pm.openApp(item.app.id);
+                                        },
+                                        onLongPress: () {
+                                          Navigator.of(context).push(
+                                            MaterialPageRoute<void>(
+                                              builder: (context) => AppPage(
+                                                appId: item.app.id,
+                                                showOppositeOfPreferredView:
+                                                    true,
+                                              ),
+                                            ),
+                                          );
+                                        },
+                                      ),
+                                      TweenAnimationBuilder<double>(
+                                        tween: Tween<double>(
+                                          end: progress != null ? 1.0 : 0.0,
+                                        ),
+                                        duration: listItemDuration,
+                                        curve: listItemEasing,
+                                        builder: (context, value, _) =>
+                                            value > 0.0
+                                            ? CircularProgressIndicator(
+                                                padding: const .all(0.0),
+                                                strokeWidth: lerpDouble(
+                                                  0.0,
+                                                  4.0,
+                                                  value,
+                                                ),
+                                                value:
+                                                    progress != null &&
+                                                        progress >= 0.0
+                                                    ? clampDouble(
+                                                        progress / 100.0,
+                                                        0.0,
+                                                        1.0,
+                                                      )
+                                                    : null,
+                                              )
+                                            : const SizedBox.shrink(),
+                                      ),
+                                    ],
+                                  ),
+                                );
+                              },
+                            ),
+                          ),
+                        ),
+                        overline: Text(
+                          tr("byX", args: [item.author]),
+                          maxLines: 1,
+                          overflow: .ellipsis,
+                          softWrap: false,
+                          style: TextStyle(
+                            color: isSelected
+                                ? useBlackTheme
+                                      ? colorTheme.onPrimaryContainer
+                                            .withValues(alpha: 0.9)
+                                      : colorTheme.onSecondaryContainer
+                                : useBlackTheme
+                                ? colorTheme.onSurfaceVariant
+                                : null,
+                          ),
+                        ),
+                        headline: Text(
+                          item.name,
+                          maxLines: 1,
+                          overflow: .ellipsis,
+                          softWrap: false,
+                          style:
+                              (isInstalled
+                                      ? typescaleTheme.bodyLargeEmphasized
+                                      : typescaleTheme.bodyLarge)
+                                  .toTextStyle(
+                                    color: isSelected
+                                        ? useBlackTheme
+                                              ? colorTheme.onPrimaryContainer
+                                              : colorTheme.onSecondaryContainer
+                                        : colorTheme.onSurface,
+                                  ),
+                        ),
+                        supportingText: Text(
+                          installedVersion != null
+                              ? hasUpdate
+                                    ? "$installedVersion → ${item.app.latestVersion}"
+                                    : installedVersion
+                              : tr("notInstalled"),
+                          style: typescaleTheme.bodySmall
+                              .toTextStyle()
+                              .copyWith(
+                                fontFamily: installedVersion != null
+                                    ? FontFamily.googleSansCode
+                                    : null,
+                                color: isSelected
+                                    ? useBlackTheme
+                                          ? colorTheme.onPrimaryContainer
+                                                .withValues(alpha: 0.9)
+                                          : colorTheme.onSecondaryContainer
+                                    : hasUpdate
+                                    ? colorTheme.onSurface
+                                    : colorTheme.onSurfaceVariant,
+                              ),
+                        ),
+                        trailing: Flex.horizontal(
+                          children: [
+                            TweenAnimationBuilder<double>(
+                              tween: Tween<double>(
+                                end: hasUpdate && selectedAppIds.isEmpty
+                                    ? 1.0
+                                    : 0.0,
+                              ),
+                              duration: listItemDuration,
+                              curve: listItemEasing,
+                              builder: (context, value, child) => Visibility(
+                                visible: value > 0.0,
+                                child: Opacity(
+                                  opacity: value,
+                                  child: Align.centerEnd(
+                                    widthFactor: value,
+                                    child: Transform.scale(
+                                      scale: value,
+                                      alignment: AlignmentDirectional.centerEnd,
+                                      child: child!,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              child: Padding(
+                                padding: const .directional(end: 12.0 - 8.0),
+                                child: updateButton,
+                              ),
+                            ),
+                            overflowButton,
+                            TweenAnimationBuilder<double>(
+                              tween: Tween<double>(
+                                end: selectedAppIds.isNotEmpty ? 1.0 : 0.0,
+                              ),
+                              duration: listItemDuration,
+                              curve: listItemEasing,
+                              builder: (context, value, child) => Visibility(
+                                visible: value > 0.0,
+                                child: Opacity(
+                                  opacity: value,
+                                  child: Align.centerStart(
+                                    widthFactor: value,
+                                    child: child!,
+                                  ),
+                                ),
+                              ),
+
+                              child: checkbox,
+                            ),
+                            TweenAnimationBuilder<double>(
+                              tween: Tween<double>(
+                                end: selectedAppIds.isNotEmpty ? 1.0 : 0.0,
+                              ),
+                              duration: listItemDuration,
+                              curve: listItemEasing,
+                              builder: (context, value, _) => SizedBox(
+                                width: lerpDouble(
+                                  16.0 - 8.0,
+                                  16.0 - 4.0,
+                                  value,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              );
+            },
+          ),
+        ),
+      );
+    }
+
     Widget getDisplayedList() {
       if (settingsProvider.groupByCategory &&
           !(listedCategories.isEmpty ||
@@ -1366,603 +1982,37 @@ class AppsPageState extends State<AppsPage> with TickerProviderStateMixin {
         );
       }
 
-      const spacing = 2.0;
       return SliverPadding(
         padding: const .symmetric(horizontal: 8.0),
-        sliver: ListItemTheme.merge(
-          data: .from(
-            containerColor: .all(
-              useBlackTheme ? colorTheme.surface : colorTheme.surface,
-            ),
-            headlineTextStyle: .all(
-              typescaleTheme.bodyLargeEmphasized.toTextStyle(),
-            ),
-          ),
-          child: CheckboxTheme.merge(
-            data: CustomThemeFactory.createCheckboxTheme(
-              colorTheme: colorTheme,
-              shapeTheme: shapeTheme,
-              stateTheme: stateTheme,
-              color: useBlackTheme ? .black : .listItemPhone,
-            ),
-            child: SliverList.builder(
-              itemCount: listedApps.length,
-              itemBuilder: (context, index) {
-                final isFirst = index == 0;
-                final isLast = index == listedApps.length - 1;
-
-                final item = listedApps[index];
-
-                final showChanges = getChangeLogFn(context, item.app);
-
-                final installedVersion = item.app.installedVersion;
-                final progress = item.downloadProgress;
-
-                final isInstalled = installedVersion != null;
-                final hasUpdate =
-                    isInstalled && installedVersion != item.app.latestVersion;
-                final isSelected = selectedAppIds.contains(item.app.id);
-
-                final Widget updateButton = IconButton(
-                  style: LegacyThemeFactory.createIconButtonStyle(
-                    colorTheme: colorTheme,
-                    elevationTheme: elevationTheme,
-                    shapeTheme: shapeTheme,
-                    stateTheme: stateTheme,
-                    size: .small,
-                    shape: .round,
-                    color: .tonal,
-                    width: .wide,
-                    containerColor: useBlackTheme
-                        ? colorTheme.primaryContainer
-                        : null,
-                    iconColor: useBlackTheme
-                        ? colorTheme.onPrimaryContainer
-                        : null,
-                  ),
-                  onPressed: !appsProvider.areDownloadsRunning()
-                      ? () {
-                          appsProvider
-                              .downloadAndInstallLatestApps([
-                                item.app.id,
-                              ], globalNavigatorKey.currentContext)
-                              .catchError((e) {
-                                if (context.mounted) {
-                                  showError(e, context);
-                                }
-                                return <String>[];
-                              });
-                        }
-                      : null,
-                  icon: item.app.additionalSettings["trackOnly"] == true
-                      ? const IconLegacy(
-                          Symbols.check_circle_rounded,
-                          fill: 1.0,
-                        )
-                      : const IconLegacy(Symbols.install_mobile, fill: 1.0),
-                  tooltip: item.app.additionalSettings["trackOnly"] == true
-                      ? tr("markUpdated")
-                      : tr("update"),
-                );
-
-                final LegacyMenuVariant menuVariant = useBlackTheme
-                    ? .standard
-                    : .standard;
-
-                final Widget overflowButton = MenuAnchor(
-                  consumeOutsideTap: true,
-                  crossAxisUnconstrained: false,
-                  style: LegacyThemeFactory.createMenuStyle(
-                    colorTheme: colorTheme,
-                    elevationTheme: elevationTheme,
-                    shapeTheme: shapeTheme,
-                    variant: menuVariant,
-                  ),
-                  menuChildren: [
-                    MenuItemButton(
-                      style: LegacyThemeFactory.createMenuButtonStyle(
-                        colorTheme: colorTheme,
-                        elevationTheme: elevationTheme,
-                        shapeTheme: shapeTheme,
-                        stateTheme: stateTheme,
-                        typescaleTheme: typescaleTheme,
-                        variant: menuVariant,
-                        isFirst: true,
-                        isLast: false,
-                        isSelected: isSelected,
-                      ),
-                      // closeOnActivate:
-                      //     (!isSelected && selectedAppIds.isEmpty) ||
-                      //     (isSelected && selectedAppIds.length == 1),
-                      onPressed: () => toggleAppSelected(item.app),
-                      leadingIcon: const IconLegacy(
-                        Symbols.check_rounded,
-                        fill: 1.0,
-                      ),
-                      child: isSelected
-                          ? const Text("Selected")
-                          : const Text("Select"),
-                    ),
-                    if (hasUpdate && selectedAppIds.isNotEmpty)
-                      MenuItemButton(
-                        style: LegacyThemeFactory.createMenuButtonStyle(
-                          colorTheme: colorTheme,
-                          elevationTheme: elevationTheme,
-                          shapeTheme: shapeTheme,
-                          stateTheme: stateTheme,
-                          typescaleTheme: typescaleTheme,
-                          variant: menuVariant,
-                          isFirst: false,
-                          isLast: false,
-                        ),
-                        onPressed: !appsProvider.areDownloadsRunning()
-                            ? () {
-                                appsProvider
-                                    .downloadAndInstallLatestApps([
-                                      item.app.id,
-                                    ], globalNavigatorKey.currentContext)
-                                    .catchError((e) {
-                                      if (context.mounted) {
-                                        showError(e, context);
-                                      }
-                                      return <String>[];
-                                    });
-                              }
-                            : null,
-                        leadingIcon:
-                            item.app.additionalSettings["trackOnly"] == true
-                            ? const IconLegacy(
-                                Symbols.check_circle_rounded,
-                                fill: 1.0,
-                              )
-                            : const IconLegacy(
-                                Symbols.install_mobile,
-                                fill: 1.0,
-                              ),
-                        child: Text(
-                          item.app.additionalSettings["trackOnly"] == true
-                              ? tr("markUpdated")
-                              : tr("update"),
-                        ),
-                      ),
-                    MenuItemButton(
-                      style: LegacyThemeFactory.createMenuButtonStyle(
-                        colorTheme: colorTheme,
-                        elevationTheme: elevationTheme,
-                        shapeTheme: shapeTheme,
-                        stateTheme: stateTheme,
-                        typescaleTheme: typescaleTheme,
-                        variant: menuVariant,
-                        isFirst: false,
-                        isLast: false,
-                      ),
-                      onPressed: showChanges,
-                      leadingIcon: const IconLegacy(
-                        Symbols.menu_book_rounded,
-                        fill: 1.0,
-                      ),
-                      child: const Text("View changelog"),
-                    ),
-                    if (selectedAppIds.isNotEmpty)
-                      MenuItemButton(
-                        style: LegacyThemeFactory.createMenuButtonStyle(
-                          colorTheme: colorTheme,
-                          elevationTheme: elevationTheme,
-                          shapeTheme: shapeTheme,
-                          stateTheme: stateTheme,
-                          typescaleTheme: typescaleTheme,
-                          variant: menuVariant,
-                          isFirst: false,
-                          isLast: false,
-                        ),
-                        onPressed: () => Navigator.of(context).push(
-                          MaterialPageRoute<void>(
-                            builder: (context) => AppPage(appId: item.app.id),
-                          ),
-                        ),
-                        leadingIcon: const IconLegacy(
-                          Symbols.edit_rounded,
-                          fill: 1.0,
-                        ),
-                        child: const Text("Edit"),
-                      ),
-                    MenuItemButton(
-                      style: LegacyThemeFactory.createMenuButtonStyle(
-                        colorTheme: colorTheme,
-                        elevationTheme: elevationTheme,
-                        shapeTheme: shapeTheme,
-                        stateTheme: stateTheme,
-                        typescaleTheme: typescaleTheme,
-                        variant: menuVariant,
-                        isFirst: false,
-                        isLast: true,
-                      ),
-                      onPressed: () =>
-                          appsProvider.removeAppsWithModal(context, [item.app]),
-                      leadingIcon: const IconLegacy(
-                        Symbols.delete_rounded,
-                        fill: 1.0,
-                      ),
-                      child: Text(tr("remove")),
-                    ),
-                  ],
-                  builder: (context, controller, child) => IconButton(
-                    style: LegacyThemeFactory.createIconButtonStyle(
-                      colorTheme: colorTheme,
-                      elevationTheme: elevationTheme,
-                      shapeTheme: shapeTheme,
-                      stateTheme: stateTheme,
-                      size: .small,
-                      shape: .round,
-                      color: .standard,
-                      width: .narrow,
-                      containerColor: isSelected || useBlackTheme
-                          ? Colors.transparent
-                          : colorTheme.surfaceContainer,
-                      iconColor: isSelected
-                          ? useBlackTheme
-                                ? colorTheme.onPrimaryContainer
-                                : colorTheme.onSecondaryContainer
-                          : useBlackTheme
-                          ? colorTheme.onSurface
-                          : colorTheme.onSurfaceVariant,
-                    ),
-                    onPressed: () {
-                      if (controller.isOpen) {
-                        controller.close();
-                      } else {
-                        controller.open();
-                      }
-                    },
-                    icon: const IconLegacy(Symbols.more_vert_rounded),
-                  ),
-                );
-
-                final Widget checkbox = Checkbox.bistate(
-                  onCheckedChanged: (value) => toggleAppSelected(item.app),
-                  checked: isSelected,
-                );
-
-                return KeyedSubtree(
-                  key: ValueKey(item.app.id),
-                  child: Padding(
-                    padding: .only(
-                      top: isFirst ? 0.0 : spacing / 2.0,
-                      bottom: isLast ? 0.0 : spacing / 2.0,
-                    ),
-                    child: ListItemContainer(
-                      isFirst: index == 0,
-                      isLast: index == listedApps.length - 1,
-                      containerShape: .all(
-                        isSelected
-                            ? CornersBorder.rounded(
-                                corners: Corners.all(shapeTheme.corner.large),
-                              )
-                            : null,
-                      ),
-                      containerColor: .all(
-                        isSelected
-                            ? useBlackTheme
-                                  ? colorTheme.primaryContainer
-                                  : colorTheme.secondaryContainer
-                            : null,
-                      ),
-                      child: ListItemInteraction(
-                        stateLayerColor: .all(
-                          isSelected
-                              ? useBlackTheme
-                                    ? colorTheme.onPrimaryContainer
-                                    : colorTheme.onSecondaryContainer
-                              : useBlackTheme
-                              ? colorTheme.onPrimaryContainer
-                              : colorTheme.onSurface,
-                        ),
-                        onTap: () {
-                          if (selectedAppIds.isNotEmpty) {
-                            toggleAppSelected(item.app);
-                          } else {
-                            Navigator.of(context).push(
-                              MaterialPageRoute<void>(
-                                builder: (context) =>
-                                    AppPage(appId: item.app.id),
-                              ),
-                            );
-                          }
-                        },
-                        onLongPress: () => toggleAppSelected(item.app),
-                        child: ListItemLayout(
-                          padding: const .directional(start: 16.0, end: 0.0),
-                          leading: ExcludeFocus(
-                            child: SizedBox.square(
-                              dimension: 56.0,
-                              child: FutureBuilder(
-                                future: appsProvider
-                                    .updateAppIcon(item.app.id)
-                                    .then((_) => item.icon),
-                                builder: (context, snapshot) {
-                                  final bytes = snapshot.data;
-                                  return TweenAnimationBuilder<double>(
-                                    tween: Tween<double>(
-                                      end: progress != null ? 1.0 : 0.0,
-                                    ),
-                                    duration: listItemDuration,
-                                    curve: listItemEasing,
-                                    builder: (context, value, child) => Material(
-                                      clipBehavior: .antiAlias,
-                                      shape: ShapeBorder.lerp(
-                                        CornersBorder.rounded(
-                                          corners: .all(
-                                            shapeTheme.corner.small,
-                                          ),
-                                        ),
-                                        CornersBorder.rounded(
-                                          corners: .all(shapeTheme.corner.full),
-                                        ),
-                                        value,
-                                      )!,
-                                      color: isSelected
-                                          ? bytes != null
-                                                ? useBlackTheme
-                                                      ? colorTheme
-                                                            .primaryContainer
-                                                      : colorTheme
-                                                            .secondaryContainer
-                                                : Colors.transparent
-                                          : useBlackTheme
-                                          ? colorTheme.surface
-                                          : colorTheme.surfaceContainer,
-                                      child: child!,
-                                    ),
-                                    child: Stack(
-                                      fit: .expand,
-                                      children: [
-                                        TweenAnimationBuilder<double>(
-                                          tween: Tween<double>(
-                                            end: progress != null ? 1.0 : 0.0,
-                                          ),
-                                          duration: listItemDuration,
-                                          curve: listItemEasing,
-                                          builder: (context, value, _) {
-                                            final size = lerpDouble(
-                                              40.0,
-                                              28.0,
-                                              value,
-                                            );
-                                            return Align.center(
-                                              child: bytes != null
-                                                  ? SizedBox.square(
-                                                      dimension: size,
-                                                      child: Image.memory(
-                                                        bytes,
-                                                        gaplessPlayback: true,
-                                                        fit: .contain,
-                                                      ),
-                                                    )
-                                                  : Icon(
-                                                      Symbols
-                                                          .broken_image_rounded,
-                                                      opticalSize: size,
-                                                      size: size,
-                                                      color: isSelected
-                                                          ? useBlackTheme
-                                                                ? colorTheme
-                                                                      .onPrimaryContainer
-                                                                : colorTheme
-                                                                      .onSecondaryContainer
-                                                          : useBlackTheme
-                                                          ? colorTheme.primary
-                                                          : colorTheme
-                                                                .onSurfaceVariant,
-                                                    ),
-                                            );
-                                          },
-                                        ),
-                                        InkWell(
-                                          overlayColor: WidgetStateLayerColor(
-                                            color: WidgetStatePropertyAll(
-                                              isSelected
-                                                  ? useBlackTheme
-                                                        ? colorTheme
-                                                              .onPrimaryContainer
-                                                        : colorTheme
-                                                              .onSecondaryContainer
-                                                  : useBlackTheme
-                                                  ? colorTheme.primary
-                                                  : colorTheme.onSurface,
-                                            ),
-                                            opacity: stateTheme
-                                                .asWidgetStateLayerOpacity,
-                                          ),
-                                          onTap: () {
-                                            toggleAppSelected(item.app);
-                                          },
-                                          onDoubleTap: () {
-                                            pm.openApp(item.app.id);
-                                          },
-                                          onLongPress: () {
-                                            Navigator.of(context).push(
-                                              MaterialPageRoute<void>(
-                                                builder: (context) => AppPage(
-                                                  appId: item.app.id,
-                                                  showOppositeOfPreferredView:
-                                                      true,
-                                                ),
-                                              ),
-                                            );
-                                          },
-                                        ),
-                                        TweenAnimationBuilder<double>(
-                                          tween: Tween<double>(
-                                            end: progress != null ? 1.0 : 0.0,
-                                          ),
-                                          duration: listItemDuration,
-                                          curve: listItemEasing,
-                                          builder: (context, value, _) =>
-                                              value > 0.0
-                                              ? CircularProgressIndicator(
-                                                  padding: const .all(0.0),
-                                                  strokeWidth: lerpDouble(
-                                                    0.0,
-                                                    4.0,
-                                                    value,
-                                                  ),
-                                                  value:
-                                                      progress != null &&
-                                                          progress >= 0.0
-                                                      ? clampDouble(
-                                                          progress / 100.0,
-                                                          0.0,
-                                                          1.0,
-                                                        )
-                                                      : null,
-                                                )
-                                              : const SizedBox.shrink(),
-                                        ),
-                                      ],
-                                    ),
-                                  );
-                                },
-                              ),
-                            ),
-                          ),
-                          overline: Text(
-                            tr("byX", args: [item.author]),
-                            maxLines: 1,
-                            overflow: .ellipsis,
-                            softWrap: false,
-                            style: TextStyle(
-                              color: isSelected
-                                  ? useBlackTheme
-                                        ? colorTheme.onPrimaryContainer
-                                              .withValues(alpha: 0.9)
-                                        : colorTheme.onSecondaryContainer
-                                  : useBlackTheme
-                                  ? colorTheme.onSurfaceVariant
-                                  : null,
-                            ),
-                          ),
-                          headline: Text(
-                            item.name,
-                            maxLines: 1,
-                            overflow: .ellipsis,
-                            softWrap: false,
-                            style:
-                                (isInstalled
-                                        ? typescaleTheme.bodyLargeEmphasized
-                                        : typescaleTheme.bodyLarge)
-                                    .toTextStyle(
-                                      color: isSelected
-                                          ? useBlackTheme
-                                                ? colorTheme.onPrimaryContainer
-                                                : colorTheme
-                                                      .onSecondaryContainer
-                                          : colorTheme.onSurface,
-                                    ),
-                          ),
-                          supportingText: Text(
-                            installedVersion != null
-                                ? hasUpdate
-                                      ? "$installedVersion → ${item.app.latestVersion}"
-                                      : installedVersion
-                                : tr("notInstalled"),
-                            style: typescaleTheme.bodySmall
-                                .toTextStyle()
-                                .copyWith(
-                                  fontFamily: installedVersion != null
-                                      ? FontFamily.googleSansCode
-                                      : null,
-                                  color: isSelected
-                                      ? useBlackTheme
-                                            ? colorTheme.onPrimaryContainer
-                                                  .withValues(alpha: 0.9)
-                                            : colorTheme.onSecondaryContainer
-                                      : hasUpdate
-                                      ? colorTheme.onSurface
-                                      : colorTheme.onSurfaceVariant,
-                                ),
-                          ),
-                          trailing: Flex.horizontal(
-                            children: [
-                              TweenAnimationBuilder<double>(
-                                tween: Tween<double>(
-                                  end: hasUpdate && selectedAppIds.isEmpty
-                                      ? 1.0
-                                      : 0.0,
-                                ),
-                                duration: listItemDuration,
-                                curve: listItemEasing,
-                                builder: (context, value, child) => Visibility(
-                                  visible: value > 0.0,
-                                  child: Opacity(
-                                    opacity: value,
-                                    child: Align.centerEnd(
-                                      widthFactor: value,
-                                      child: Transform.scale(
-                                        scale: value,
-                                        alignment:
-                                            AlignmentDirectional.centerEnd,
-                                        child: child!,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                child: Padding(
-                                  padding: const .directional(end: 12.0 - 8.0),
-                                  child: updateButton,
-                                ),
-                              ),
-                              overflowButton,
-                              TweenAnimationBuilder<double>(
-                                tween: Tween<double>(
-                                  end: selectedAppIds.isNotEmpty ? 1.0 : 0.0,
-                                ),
-                                duration: listItemDuration,
-                                curve: listItemEasing,
-                                builder: (context, value, child) => Visibility(
-                                  visible: value > 0.0,
-                                  child: Opacity(
-                                    opacity: value,
-                                    child: Align.centerStart(
-                                      widthFactor: value,
-                                      child: child!,
-                                    ),
-                                  ),
-                                ),
-
-                                child: checkbox,
-                              ),
-                              TweenAnimationBuilder<double>(
-                                tween: Tween<double>(
-                                  end: selectedAppIds.isNotEmpty ? 1.0 : 0.0,
-                                ),
-                                duration: listItemDuration,
-                                curve: listItemEasing,
-                                builder: (context, value, _) => SizedBox(
-                                  width: lerpDouble(
-                                    16.0 - 8.0,
-                                    16.0 - 4.0,
-                                    value,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
+        sliver: SliverMainAxisGroup(
+          slivers: [
+            if (pinnedApps.isNotEmpty) ...[
+              SliverToBoxAdapter(
+                child: Padding(
+                  padding: const .fromLTRB(16.0, 8.0, 16.0, 8.0),
+                  child: Text(
+                    "Pinned apps",
+                    style: typescaleTheme.labelLarge.toTextStyle(
+                      color: colorTheme.onSurfaceVariant,
                     ),
                   ),
-                );
-              },
-            ),
-          ),
-        ),
-      );
-      return SliverPadding(
-        padding: const EdgeInsets.symmetric(vertical: 16.0),
-        sliver: SliverList.builder(
-          itemCount: listedApps.length,
-          itemBuilder: (context, index) =>
-              Material.raw(child: getSingleAppHorizTile(index)),
+                ),
+              ),
+              buildSliverList(pinnedApps),
+              SliverToBoxAdapter(
+                child: Padding(
+                  padding: const .fromLTRB(16.0, 20.0, 16.0, 8.0),
+                  child: Text(
+                    "Non-pinned apps",
+                    style: typescaleTheme.labelLarge.toTextStyle(
+                      color: colorTheme.onSurfaceVariant,
+                    ),
+                  ),
+                ),
+              ),
+            ],
+            buildSliverList(unpinnedApps),
+          ],
         ),
       );
     }
@@ -1978,6 +2028,9 @@ class AppsPageState extends State<AppsPage> with TickerProviderStateMixin {
 
     PreferredSizeWidget getDockedOrFloatingToolbar() {
       const height = 64.0;
+      final elevation = useBlackTheme
+          ? elevationTheme.level0
+          : elevationTheme.level3;
 
       final margin = EdgeInsets.fromLTRB(
         padding.left + 16.0,
@@ -1986,6 +2039,44 @@ class AppsPageState extends State<AppsPage> with TickerProviderStateMixin {
         padding.bottom + 16.0,
       );
 
+      final unselectedContainerColor = Colors.transparent;
+
+      final selectedContainerColor = useBlackTheme
+          ? colorTheme.primaryContainer
+          : hasSelection
+          ? colorTheme.surfaceContainer
+          : colorTheme.secondaryContainer;
+
+      final unselectedContentColor = hasSelection
+          ? useBlackTheme
+                ? colorTheme.primary
+                : colorTheme.onPrimaryContainer
+          : useBlackTheme
+          ? colorTheme.onSurface
+          : colorTheme.onSurfaceVariant;
+
+      final selectedContentColor = useBlackTheme
+          ? colorTheme.onPrimaryContainer
+          : hasSelection
+          ? colorTheme.onSurface
+          : colorTheme.onSecondaryContainer;
+
+      final unselectedDisabledContainerColor = Colors.transparent;
+
+      final selectedDisabledContainerColor =
+          (useBlackTheme || !hasSelection
+                  ? colorTheme.onSurface
+                  : colorTheme.surface)
+              .withValues(alpha: useBlackTheme ? 0.12 : 0.1);
+
+      final unselectedDisabledContentColor =
+          (useBlackTheme || !hasSelection
+                  ? colorTheme.onSurface
+                  : colorTheme.surface)
+              .withValues(alpha: 0.38);
+
+      final selectedDisabledContentColor = unselectedDisabledContentColor;
+
       final Widget selectButton = IconButton(
         style: LegacyThemeFactory.createIconButtonStyle(
           colorTheme: colorTheme,
@@ -1993,21 +2084,19 @@ class AppsPageState extends State<AppsPage> with TickerProviderStateMixin {
           shapeTheme: shapeTheme,
           stateTheme: stateTheme,
           size: .small,
-          unselectedShape: .round,
-          selectedShape: .round,
           color: .filled,
           width: .normal,
           isSelected: hasSelection,
-          unselectedContainerColor: Colors.transparent,
-          unselectedIconColor: useBlackTheme
-              ? colorTheme.onSurface
-              : colorTheme.onSurfaceVariant,
-          selectedContainerColor: useBlackTheme
-              ? colorTheme.primaryContainer
-              : colorTheme.primaryContainer,
-          selectedIconColor: useBlackTheme
-              ? colorTheme.onPrimaryContainer
-              : colorTheme.onPrimaryContainer,
+          unselectedShape: .round,
+          selectedShape: .round,
+          unselectedContainerColor: unselectedContainerColor,
+          unselectedDisabledContainerColor: unselectedDisabledContainerColor,
+          unselectedIconColor: unselectedContentColor,
+          unselectedDisabledIconColor: unselectedDisabledContentColor,
+          selectedContainerColor: selectedContainerColor,
+          selectedDisabledContainerColor: selectedDisabledContainerColor,
+          selectedIconColor: selectedContentColor,
+          selectedDisabledIconColor: selectedDisabledContentColor,
         ),
         onPressed: () => hasSelection
             ? clearSelected()
@@ -2031,24 +2120,21 @@ class AppsPageState extends State<AppsPage> with TickerProviderStateMixin {
           width: .wide,
           isSelected: hasSelection,
           unselectedShape: .round,
+          selectedShape: .round,
           unselectedContainerColor: useBlackTheme
               ? colorTheme.primaryDim
               : colorTheme.secondaryContainer,
           unselectedIconColor: useBlackTheme
               ? colorTheme.onPrimary
               : colorTheme.onSecondaryContainer,
-          selectedShape: .round,
-          selectedDisabledContainerColor: colorTheme.onPrimaryContainer
-              .withValues(alpha: 0.10),
           selectedContainerColor: useBlackTheme
               ? colorTheme.onPrimaryContainer
               : colorTheme.surfaceContainer,
-          selectedDisabledIconColor: colorTheme.onPrimaryContainer.withValues(
-            alpha: 0.38,
-          ),
+          selectedDisabledContainerColor: selectedDisabledContainerColor,
           selectedIconColor: useBlackTheme
               ? colorTheme.primaryContainer
               : colorTheme.onSurface,
+          selectedDisabledIconColor: unselectedDisabledContentColor,
         ),
         onPressed: getMassObtainFunction(),
         icon: const IconLegacy(Symbols.download_rounded),
@@ -2064,20 +2150,19 @@ class AppsPageState extends State<AppsPage> with TickerProviderStateMixin {
           shapeTheme: shapeTheme,
           stateTheme: stateTheme,
           size: .small,
-          unselectedShape: .round,
-          selectedShape: .round,
           color: .standard,
           width: .normal,
-          isSelected: hasSelection,
-          unselectedDisabledContainerColor: Colors.transparent,
-          unselectedContainerColor: Colors.transparent,
-          unselectedIconColor: colorTheme.onSurfaceVariant,
-          selectedContainerColor: useBlackTheme
-              ? colorTheme.surfaceContainer
-              : colorTheme.primaryContainer,
-          selectedIconColor: useBlackTheme
-              ? colorTheme.primary
-              : colorTheme.onPrimaryContainer,
+          isSelected: false,
+          unselectedShape: .round,
+          selectedShape: .round,
+          unselectedContainerColor: unselectedContainerColor,
+          unselectedDisabledContainerColor: unselectedDisabledContainerColor,
+          unselectedIconColor: unselectedContentColor,
+          unselectedDisabledIconColor: unselectedDisabledContentColor,
+          selectedContainerColor: selectedContainerColor,
+          selectedDisabledContainerColor: selectedDisabledContainerColor,
+          selectedIconColor: selectedContentColor,
+          selectedDisabledIconColor: selectedDisabledContentColor,
         ),
         onPressed: hasSelection
             ? () {
@@ -2092,6 +2177,34 @@ class AppsPageState extends State<AppsPage> with TickerProviderStateMixin {
         tooltip: tr("removeSelectedApps"),
       );
 
+      final Widget pinButton = IconButton(
+        style: LegacyThemeFactory.createIconButtonStyle(
+          colorTheme: colorTheme,
+          elevationTheme: elevationTheme,
+          shapeTheme: shapeTheme,
+          stateTheme: stateTheme,
+          size: .small,
+          color: .standard,
+          width: .normal,
+          isSelected: hasPinnedSelection,
+          unselectedShape: .round,
+          selectedShape: .round,
+          unselectedContainerColor: unselectedContainerColor,
+          unselectedDisabledContainerColor: unselectedDisabledContainerColor,
+          unselectedIconColor: unselectedContentColor,
+          unselectedDisabledIconColor: unselectedDisabledContentColor,
+          selectedContainerColor: selectedContainerColor,
+          selectedDisabledContainerColor: selectedDisabledContainerColor,
+          selectedIconColor: selectedContentColor,
+          selectedDisabledIconColor: selectedDisabledContentColor,
+        ),
+        onPressed: hasSelection ? pinSelectedApps : null,
+        icon: hasPinnedSelection
+            ? const IconLegacy(Symbols.keep_off_rounded, fill: 1.0)
+            : const IconLegacy(Symbols.keep_rounded, fill: 1.0),
+        tooltip: hasPinnedSelection ? tr("unpinFromTop") : tr("pinToTop"),
+      );
+
       final Widget categorizeButton = IconButton(
         style: LegacyThemeFactory.createIconButtonStyle(
           colorTheme: colorTheme,
@@ -2099,20 +2212,19 @@ class AppsPageState extends State<AppsPage> with TickerProviderStateMixin {
           shapeTheme: shapeTheme,
           stateTheme: stateTheme,
           size: .small,
-          unselectedShape: .round,
-          selectedShape: .round,
           color: .standard,
           width: .normal,
-          isSelected: hasSelection,
-          unselectedDisabledContainerColor: Colors.transparent,
-          unselectedContainerColor: Colors.transparent,
-          unselectedIconColor: colorTheme.onSurfaceVariant,
-          selectedContainerColor: useBlackTheme
-              ? colorTheme.surfaceContainer
-              : colorTheme.primaryContainer,
-          selectedIconColor: useBlackTheme
-              ? colorTheme.primary
-              : colorTheme.onPrimaryContainer,
+          isSelected: false,
+          unselectedShape: .round,
+          selectedShape: .round,
+          unselectedContainerColor: unselectedContainerColor,
+          unselectedDisabledContainerColor: unselectedDisabledContainerColor,
+          unselectedIconColor: unselectedContentColor,
+          unselectedDisabledIconColor: unselectedDisabledContentColor,
+          selectedContainerColor: selectedContainerColor,
+          selectedDisabledContainerColor: selectedDisabledContainerColor,
+          selectedIconColor: selectedContentColor,
+          selectedDisabledIconColor: selectedDisabledContentColor,
         ),
         onPressed: hasSelection ? launchCategorizeDialog() : null,
         icon: const IconLegacy(Symbols.category_rounded, fill: 1.0),
@@ -2126,20 +2238,19 @@ class AppsPageState extends State<AppsPage> with TickerProviderStateMixin {
           shapeTheme: shapeTheme,
           stateTheme: stateTheme,
           size: .small,
-          unselectedShape: .round,
-          selectedShape: .round,
           color: .standard,
           width: .normal,
-          isSelected: hasSelection,
-          unselectedDisabledContainerColor: Colors.transparent,
-          unselectedContainerColor: Colors.transparent,
-          unselectedIconColor: colorTheme.onSurfaceVariant,
-          selectedContainerColor: useBlackTheme
-              ? colorTheme.surfaceContainer
-              : colorTheme.primaryContainer,
-          selectedIconColor: useBlackTheme
-              ? colorTheme.primary
-              : colorTheme.onPrimaryContainer,
+          isSelected: false,
+          unselectedShape: .round,
+          selectedShape: .round,
+          unselectedContainerColor: unselectedContainerColor,
+          unselectedDisabledContainerColor: unselectedDisabledContainerColor,
+          unselectedIconColor: unselectedContentColor,
+          unselectedDisabledIconColor: unselectedDisabledContentColor,
+          selectedContainerColor: selectedContainerColor,
+          selectedDisabledContainerColor: selectedDisabledContainerColor,
+          selectedIconColor: selectedContentColor,
+          selectedDisabledIconColor: selectedDisabledContentColor,
         ),
         onPressed: hasSelection ? showMoreOptionsDialog : null,
         icon: const IconLegacy(Symbols.more_horiz_rounded),
@@ -2152,19 +2263,17 @@ class AppsPageState extends State<AppsPage> with TickerProviderStateMixin {
           elevationTheme: elevationTheme,
           shapeTheme: shapeTheme,
           stateTheme: stateTheme,
-          size: .medium,
+          size: hasApps ? .medium : .large,
           shape: .square,
           color: .tonal,
           width: .normal,
-          containerColor: useBlackTheme
+          containerColor: !hasApps || useBlackTheme
               ? colorTheme.primary
               : colorTheme.primaryContainer,
-          iconColor: useBlackTheme
+          iconColor: !hasApps || useBlackTheme
               ? colorTheme.onPrimary
               : colorTheme.onPrimaryContainer,
-          containerElevation: useBlackTheme
-              ? elevationTheme.level0
-              : elevationTheme.level3,
+          containerElevation: elevation,
         ),
         onPressed: () => Navigator.push(
           context,
@@ -2184,17 +2293,19 @@ class AppsPageState extends State<AppsPage> with TickerProviderStateMixin {
               ? colorTheme.primaryContainer
               : colorTheme.surfaceContainerHighest,
           shape: CornersBorder.rounded(corners: .all(shapeTheme.corner.full)),
-          elevation: elevationTheme.level3,
+          elevation: elevation,
           child: Flex.horizontal(
             mainAxisSize: .min,
             children: [
+              const SizedBox(width: 12.0),
+              downloadButton,
               const SizedBox(width: 12.0 - 4.0),
               selectButton,
               const SizedBox(width: 12.0 - 4.0 - 4.0),
               removeButton,
-              const SizedBox(width: 12.0 - 4.0),
-              downloadButton,
-              const SizedBox(width: 12.0 - 4.0),
+              const SizedBox(width: 12.0 - 4.0 - 4.0),
+              pinButton,
+              const SizedBox(width: 12.0 - 4.0 - 4.0),
               categorizeButton,
               const SizedBox(width: 12.0 - 4.0 - 4.0),
               moreButton,
@@ -2212,35 +2323,39 @@ class AppsPageState extends State<AppsPage> with TickerProviderStateMixin {
             padding: margin,
             child: Flex.horizontal(
               mainAxisSize: .max,
-              mainAxisAlignment: .center,
+              mainAxisAlignment: hasApps ? .center : .end,
               crossAxisAlignment: .center,
-              children: [
-                toolbar,
-                TweenAnimationBuilder<double>(
-                  tween: Tween<double>(end: selectedAppIds.isEmpty ? 1.0 : 0.0),
-                  duration: const DurationThemeData.fallback().long2,
-                  curve: const EasingThemeData.fallback().emphasized,
-                  builder: (context, value, child) => Visibility(
-                    visible: value > 0.0,
-                    child: Opacity(
-                      opacity: value,
-                      child: Align.center(
-                        widthFactor: value,
-                        heightFactor: 1.0,
-                        child: Transform.scale(
-                          scale: value,
-                          alignment: AlignmentDirectional.center,
-                          child: child!,
+              children: hasApps
+                  ? [
+                      toolbar,
+                      TweenAnimationBuilder<double>(
+                        tween: Tween<double>(
+                          end: selectedAppIds.isEmpty ? 1.0 : 0.0,
+                        ),
+                        duration: const DurationThemeData.fallback().long2,
+                        curve: const EasingThemeData.fallback().emphasized,
+                        builder: (context, value, child) => Visibility(
+                          visible: value > 0.0,
+                          child: Opacity(
+                            opacity: value,
+                            child: Align.center(
+                              widthFactor: value,
+                              heightFactor: 1.0,
+                              child: Transform.scale(
+                                scale: value,
+                                alignment: AlignmentDirectional.center,
+                                child: child!,
+                              ),
+                            ),
+                          ),
+                        ),
+                        child: Padding(
+                          padding: const .directional(start: 8.0),
+                          child: floatingActionButton,
                         ),
                       ),
-                    ),
-                  ),
-                  child: Padding(
-                    padding: const .directional(start: 8.0),
-                    child: floatingActionButton,
-                  ),
-                ),
-              ],
+                    ]
+                  : [floatingActionButton],
             ),
           ),
         ),
@@ -2262,9 +2377,9 @@ class AppsPageState extends State<AppsPage> with TickerProviderStateMixin {
         child: CustomRefreshIndicator(
           key: _refreshIndicatorKey,
           onRefresh: () async {
-            if (kDebugMode) {
-              await Future.delayed(const Duration(seconds: 5));
-            }
+            // if (kDebugMode) {
+            //   await Future.delayed(const Duration(seconds: 5));
+            // }
             if (context.mounted) {
               await refresh();
             }
@@ -2278,171 +2393,172 @@ class AppsPageState extends State<AppsPage> with TickerProviderStateMixin {
               physics: const AlwaysScrollableScrollPhysics(),
               controller: scrollController,
               slivers: <Widget>[
-                CustomAppBar(
-                  type: .small,
-                  expandedContainerColor: backgroundColor,
-                  collapsedContainerColor: backgroundColor,
-                  collapsedTitleTextStyle: typescaleTheme.titleLargeEmphasized
-                      .toTextStyle(),
-
-                  collapsedPadding: const .symmetric(
-                    horizontal: 8.0 + 52.0 + 8.0,
-                  ),
-                  leading: Padding(
-                    padding: const .fromSTEB(8.0, 0.0, 8.0, 0.0),
-                    child: IconButton(
-                      style: LegacyThemeFactory.createIconButtonStyle(
-                        colorTheme: colorTheme,
-                        elevationTheme: elevationTheme,
-                        shapeTheme: shapeTheme,
-                        stateTheme: stateTheme,
-                        color: .standard,
-                        width: .wide,
-                        isSelected: !isFilterOff,
-                        unselectedContainerColor: useBlackTheme
-                            ? colorTheme.surfaceContainer
-                            : colorTheme.surfaceContainerHighest,
-                        unselectedIconColor: useBlackTheme
-                            ? colorTheme.primary
-                            : colorTheme.onSurfaceVariant,
-                        selectedContainerColor: useBlackTheme
-                            ? colorTheme.primaryContainer
-                            : colorTheme.tertiaryContainer,
-                        selectedIconColor: useBlackTheme
-                            ? colorTheme.onPrimaryContainer
-                            : colorTheme.onTertiaryContainer,
-                      ),
-                      onPressed: isFilterOff
-                          ? showFilterDialog
-                          : () {
-                              setState(() {
-                                filter = AppsFilter();
-                              });
-                            },
-                      icon: IconLegacy(
-                        isFilterOff
-                            ? Symbols.search_rounded
-                            : Symbols.search_off_rounded,
-                      ),
-                      tooltip: isFilterOff
-                          ? tr('filterApps')
-                          : '${tr('filter')} - ${tr('remove')}',
+                buildLinearProgressIndicator(
+                  (context, preferredSize, child) => CustomAppBar(
+                    type: .small,
+                    expandedContainerColor: backgroundColor,
+                    collapsedContainerColor: backgroundColor,
+                    collapsedTitleTextStyle: typescaleTheme.titleLargeEmphasized
+                        .toTextStyle(),
+                    collapsedPadding: const .symmetric(
+                      horizontal: 8.0 + 52.0 + 8.0,
                     ),
-                  ),
-                  title: const Text(
-                    "Materium",
-                    textAlign: .center,
-                    maxLines: 1,
-                    overflow: .ellipsis,
-                    softWrap: false,
-                  ),
-                  trailing: Padding(
-                    padding: const .fromSTEB(8.0, 0.0, 8.0, 0.0),
-                    child: IconButton(
-                      style: LegacyThemeFactory.createIconButtonStyle(
-                        colorTheme: colorTheme,
-                        elevationTheme: elevationTheme,
-                        shapeTheme: shapeTheme,
-                        stateTheme: stateTheme,
-                        color: .standard,
-                        width: .wide,
-                        containerColor: useBlackTheme
-                            ? colorTheme.surfaceContainer
-                            : colorTheme.surfaceContainerHighest,
-                        iconColor: useBlackTheme
-                            ? colorTheme.primary
-                            : colorTheme.onSurfaceVariant,
+                    leading: Padding(
+                      padding: const .fromSTEB(8.0, 0.0, 8.0, 0.0),
+                      child: IconButton(
+                        style: LegacyThemeFactory.createIconButtonStyle(
+                          colorTheme: colorTheme,
+                          elevationTheme: elevationTheme,
+                          shapeTheme: shapeTheme,
+                          stateTheme: stateTheme,
+                          color: .standard,
+                          width: .wide,
+                          isSelected: !isFilterOff,
+                          unselectedContainerColor: useBlackTheme
+                              ? colorTheme.surfaceContainer
+                              : colorTheme.surfaceContainerHighest,
+                          unselectedIconColor: useBlackTheme
+                              ? colorTheme.primary
+                              : colorTheme.onSurfaceVariant,
+                          selectedContainerColor: useBlackTheme
+                              ? colorTheme.primaryContainer
+                              : colorTheme.tertiaryContainer,
+                          selectedIconColor: useBlackTheme
+                              ? colorTheme.onPrimaryContainer
+                              : colorTheme.onTertiaryContainer,
+                        ),
+                        onPressed: isFilterOff
+                            ? showFilterDialog
+                            : () {
+                                setState(() {
+                                  filter = AppsFilter();
+                                });
+                              },
+                        icon: IconLegacy(
+                          isFilterOff
+                              ? Symbols.search_rounded
+                              : Symbols.search_off_rounded,
+                        ),
+                        tooltip: isFilterOff
+                            ? tr('filterApps')
+                            : '${tr('filter')} - ${tr('remove')}',
                       ),
-                      onPressed: () => Navigator.push(
-                        context,
-                        MaterialPageRoute<void>(
-                          builder: (context) => const SettingsPage(),
+                    ),
+                    title: const Text(
+                      "Materium",
+                      textAlign: .center,
+                      maxLines: 1,
+                      overflow: .ellipsis,
+                      softWrap: false,
+                    ),
+                    trailing: Padding(
+                      padding: const .fromSTEB(8.0, 0.0, 8.0, 0.0),
+                      child: IconButton(
+                        style: LegacyThemeFactory.createIconButtonStyle(
+                          colorTheme: colorTheme,
+                          elevationTheme: elevationTheme,
+                          shapeTheme: shapeTheme,
+                          stateTheme: stateTheme,
+                          color: .standard,
+                          width: .wide,
+                          containerColor: useBlackTheme
+                              ? colorTheme.surfaceContainer
+                              : colorTheme.surfaceContainerHighest,
+                          iconColor: useBlackTheme
+                              ? colorTheme.primary
+                              : colorTheme.onSurfaceVariant,
+                        ),
+                        onPressed: () => Navigator.push(
+                          context,
+                          MaterialPageRoute<void>(
+                            builder: (context) => const SettingsPage(),
+                          ),
+                        ),
+                        icon: const IconLegacy(
+                          Symbols.settings_rounded,
+                          fill: 1.0,
+                        ),
+                        tooltip: tr("settings"),
+                      ),
+                    ),
+                    bottom: PreferredSize(
+                      preferredSize: preferredSize,
+                      child: Padding(
+                        padding: const .symmetric(horizontal: 4.0),
+                        child: KeyedSubtree(
+                          key: _progressIndicatorKey,
+                          child: child,
                         ),
                       ),
-                      icon: const IconLegacy(
-                        Symbols.settings_rounded,
-                        fill: 1.0,
-                      ),
-                      tooltip: tr("settings"),
                     ),
                   ),
                 ),
-                // TODO: either finish CustomScrollbar3 or use nested_scroll_view_plus
-                if (kCustomScrollbarVisible) ...[
-                  SliverScrollbar(
-                    sliver: SliverMainAxisGroup(
-                      // slivers: [...getLoadingWidgets(), getDisplayedList()],
-                      slivers: [
-                        SliverList.builder(
-                          itemCount: 100,
-                          itemBuilder: (context, index) =>
-                              ListTile(title: Text("Item ${index + 1}")),
-                        ),
-                      ],
+                getDisplayedList(),
+                if (listedApps.isEmpty)
+                  SliverFillRemaining(
+                    fillOverscroll: false,
+                    hasScrollBody: false,
+                    child: Align.center(
+                      child: Text(
+                        !hasApps
+                            ? appsProvider.loadingApps
+                                  ? tr("pleaseWait")
+                                  : tr("noApps")
+                            : tr("noAppsForFilter"),
+                        style: typescaleTheme.headlineMedium.toTextStyle(),
+                        textAlign: TextAlign.center,
+                      ),
                     ),
                   ),
-                  SliverToBoxAdapter(
-                    child: Container(
-                      color: Colors.green,
-                      width: double.infinity,
-                      height: 128.0,
-                      child: Align.center(child: Text("Another one")),
-                    ),
-                  ),
-                ] else ...[
-                  ...getLoadingWidgets(),
-                  getDisplayedList(),
+                if (hasApps)
                   SliverToBoxAdapter(
                     child: SizedBox(height: toolbar.preferredSize.height),
                   ),
-                ],
               ],
             ),
           ),
         ),
       ),
-      bottomNavigationBar: appsProvider.apps.isNotEmpty ? toolbar : null,
+      bottomNavigationBar: toolbar,
     );
   }
 }
 
 class AppsFilter {
-  late String nameFilter;
-  late String authorFilter;
-  late String idFilter;
-  late bool includeUptodate;
-  late bool includeNonInstalled;
-  late Set<String> categoryFilter;
-  late String sourceFilter;
-
   AppsFilter({
-    this.nameFilter = '',
-    this.authorFilter = '',
-    this.idFilter = '',
+    this.nameFilter = "",
+    this.authorFilter = "",
+    this.idFilter = "",
     this.includeUptodate = true,
     this.includeNonInstalled = true,
     this.categoryFilter = const {},
-    this.sourceFilter = '',
+    this.sourceFilter = "",
   });
 
-  Map<String, dynamic> toFormValuesMap() {
-    return {
-      'appName': nameFilter,
-      'author': authorFilter,
-      'appId': idFilter,
-      'upToDateApps': includeUptodate,
-      'nonInstalledApps': includeNonInstalled,
-      'sourceFilter': sourceFilter,
-    };
-  }
+  String nameFilter;
+  String authorFilter;
+  String idFilter;
+  bool includeUptodate;
+  bool includeNonInstalled;
+  Set<String> categoryFilter;
+  String sourceFilter;
 
-  void setFormValuesFromMap(Map<String, dynamic> values) {
-    nameFilter = values['appName']!;
-    authorFilter = values['author']!;
-    idFilter = values['appId']!;
-    includeUptodate = values['upToDateApps'];
-    includeNonInstalled = values['nonInstalledApps'];
-    sourceFilter = values['sourceFilter'];
+  Map<String, Object?> toFormValuesMap() => {
+    "appName": nameFilter,
+    "author": authorFilter,
+    "appId": idFilter,
+    "upToDateApps": includeUptodate,
+    "nonInstalledApps": includeNonInstalled,
+    "sourceFilter": sourceFilter,
+  };
+
+  void setFormValuesFromMap(Map<String, Object?> values) {
+    nameFilter = values["appName"]! as String;
+    authorFilter = values["author"]! as String;
+    idFilter = values["appId"]! as String;
+    includeUptodate = values["upToDateApps"] as bool;
+    includeNonInstalled = values["nonInstalledApps"] as bool;
+    sourceFilter = values["sourceFilter"] as String;
   }
 
   bool isIdenticalTo(AppsFilter other, SettingsProvider settingsProvider) =>

@@ -325,7 +325,12 @@ class _SettingsPageState extends State<SettingsPage> {
       }
     });
 
-    final containerOuterCorner = shapeTheme.corner.large;
+    final unselectedContainerOuterCorner = useBlackTheme
+        ? shapeTheme.corner.medium
+        : shapeTheme.corner.large;
+    final selectedContainerOuterCorner = useBlackTheme
+        ? shapeTheme.corner.largeIncreased
+        : shapeTheme.corner.large;
     final containerInnerCorner = shapeTheme.corner.extraSmall;
 
     final disabledContainerColor = colorTheme.onSurface.withValues(alpha: 0.10);
@@ -356,7 +361,7 @@ class _SettingsPageState extends State<SettingsPage> {
       containerColor: .all(selectedContainerColor),
       containerShape: .all(
         CornersBorder.rounded(
-          corners: .all(shapeTheme.corner.large),
+          corners: .all(selectedContainerOuterCorner),
           // side: useBlackTheme
           //     ? BorderSide(width: 2.0, color: colorTheme.onPrimaryContainer)
           //     : .none,
@@ -390,18 +395,18 @@ class _SettingsPageState extends State<SettingsPage> {
       containerColor: .all(unselectedContainerColor),
       containerShape: .resolveWith((states) {
         final CornersGeometry corners = switch (states) {
-          _ when useBlackTheme => .all(containerOuterCorner),
+          _ when useBlackTheme => .all(unselectedContainerOuterCorner),
           SegmentedListItemStates(isFirst: true, isLast: true) ||
           SelectableListItemStates(
             isSelected: true,
-          ) => .all(containerOuterCorner),
+          ) => .all(unselectedContainerOuterCorner),
           SegmentedListItemStates(isFirst: true) => .vertical(
-            top: containerOuterCorner,
+            top: unselectedContainerOuterCorner,
             bottom: containerInnerCorner,
           ),
           SegmentedListItemStates(isLast: true) => .vertical(
             top: containerInnerCorner,
-            bottom: containerOuterCorner,
+            bottom: unselectedContainerOuterCorner,
           ),
           _ => .all(containerInnerCorner),
         };
@@ -434,6 +439,10 @@ class _SettingsPageState extends State<SettingsPage> {
         ? colorTheme.surface
         : colorTheme.surfaceContainer;
 
+    final ExtendedColorPairing unselectedPairing = useBlackTheme
+        ? .container
+        : .variantOnFixed;
+
     final Widget verticalSpace = const SizedBox(height: 2.0);
 
     final Widget updateIntervalSliderValWidget = KeyedSubtree(
@@ -444,7 +453,7 @@ class _SettingsPageState extends State<SettingsPage> {
               settingsProvider.updateIntervalSliderVal,
           builder: (context, updateIntervalSliderVal, _) {
             _processIntervalSliderValue(updateIntervalSliderVal);
-            final isSelected = updateIntervalSliderVal > 0.0;
+            final isSelected = updateIntervalSliderVal > 0.5;
             final activeIndicatorColor = useBlackTheme
                 ? colorTheme.primary
                 : isSelected
@@ -2082,65 +2091,169 @@ class _SettingsPageState extends State<SettingsPage> {
               // ),
             ),
             ListItemTheme.merge(
-              data: CustomThemeFactory.createListItemTheme(
-                colorTheme: colorTheme,
-                elevationTheme: elevationTheme,
-                shapeTheme: shapeTheme,
-                stateTheme: stateTheme,
-                typescaleTheme: typescaleTheme,
-                variant: .settings,
-              ),
+              data: unselectedListItemTheme,
               child: SliverPadding(
                 padding: const .symmetric(horizontal: 8.0),
                 sliver: SliverList.list(
                   children: [
-                    // ListItemContainer(
-                    //   isFirst: true,
-                    //   child: ListItemInteraction(
-                    //     onTap: () {},
-                    //     child: ListItemLayout(
-                    //       leading: SettingsListItemLeading.fromExtendedColor(
-                    //         extendedColor: staticColors.red,
-                    //         pairing: _defaultPairing,
-                    //         containerShape: RoundedPolygonBorder(
-                    //           polygon: MaterialShapes.circle,
-                    //         ),
-                    //         child: const Icon(Symbols.info_rounded, fill: 1.0),
-                    //       ),
-                    //       headline: Text("About Materium"),
-                    //       supportingText: Text(
-                    //         "Information, socials and contributors",
-                    //       ),
-                    //       trailing: const Icon(
-                    //         Symbols.keyboard_arrow_right_rounded,
-                    //       ),
-                    //     ),
-                    //   ),
-                    // ),
-                    // const SizedBox(height: 2.0),
-                    // ListItemContainer(
-                    //   child: ListItemInteraction(
-                    //     onTap: () {},
-                    //     child: ListItemLayout(
-                    //       leading: SettingsListItemLeading.fromExtendedColor(
-                    //         extendedColor: staticColors.red,
-                    //         pairing: _defaultPairing,
-                    //         containerShape: RoundedPolygonBorder(
-                    //           polygon: MaterialShapes.clover8Leaf,
-                    //         ),
-                    //         child: const Icon(Symbols.support_rounded, fill: 1.0),
-                    //       ),
-                    //       headline: Text("Help & support"),
-                    //       supportingText: Text(
-                    //         "Get help, report a bug or request a feature",
-                    //       ),
-                    //       trailing: const Icon(
-                    //         Symbols.keyboard_arrow_right_rounded,
-                    //       ),
-                    //     ),
-                    //   ),
-                    // ),
-                    // const SizedBox(height: 16.0),
+                    ListItemContainer(
+                      isFirst: true,
+                      child: ListItemInteraction(
+                        onTap: () => Navigator.push(
+                          context,
+                          MaterialPageRoute<void>(
+                            builder: (context) => const ImportExportPage(),
+                          ),
+                        ),
+                        child: ListItemLayout(
+                          leading: CustomListItemLeading.fromExtendedColor(
+                            extendedColor: staticColors.green,
+                            pairing: unselectedPairing,
+                            containerShape: RoundedPolygonBorder(
+                              polygon: MaterialShapes.pill,
+                            ),
+                            child: const Icon(
+                              Symbols.compare_arrows_rounded,
+                              fill: 1.0,
+                            ),
+                          ),
+                          headline: Text("Back up & sync"),
+                          supportingText: Text("Export or import app data"),
+                          trailing: const Icon(
+                            Symbols.keyboard_arrow_right_rounded,
+                          ),
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: .fromLTRB(16.0, 20.0, 16.0, 8.0),
+                      child: Text(
+                        "Appearance",
+                        style: typescaleTheme.labelLarge.toTextStyle(
+                          color: colorTheme.onSurfaceVariant,
+                        ),
+                      ),
+                    ),
+                    ListItemContainer(
+                      isFirst: true,
+                      child: ListItemInteraction(
+                        onTap: () {},
+                        child: ListItemLayout(
+                          leading: CustomListItemLeading.fromExtendedColor(
+                            extendedColor: staticColors.orange,
+                            pairing: unselectedPairing,
+                            containerShape: RoundedPolygonBorder(
+                              polygon: MaterialShapes.slanted,
+                            ),
+                            child: const Icon(
+                              Symbols.translate_rounded,
+                              fill: 1.0,
+                            ),
+                          ),
+                          headline: Text("Language"),
+                          supportingText: Text("Follow system"),
+                          // supportingText: Text("Static (Creative)"),
+                          trailing: const Icon(
+                            Symbols.keyboard_arrow_right_rounded,
+                          ),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 2.0),
+                    ListItemContainer(
+                      child: ListItemInteraction(
+                        onTap: () {},
+                        child: ListItemLayout(
+                          leading: CustomListItemLeading.fromExtendedColor(
+                            extendedColor: staticColors.orange,
+                            pairing: unselectedPairing,
+                            containerShape: RoundedPolygonBorder(
+                              polygon: MaterialShapes.sunny,
+                            ),
+                            child: const Icon(
+                              Symbols.brightness_5_rounded,
+                              fill: 1.0,
+                            ),
+                          ),
+                          headline: Text("Theme"),
+                          supportingText: Text("Follow system"),
+                          // supportingText: Text("Static (Creative)"),
+                          trailing: const Icon(
+                            Symbols.keyboard_arrow_right_rounded,
+                          ),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 2.0),
+                    ListItemContainer(
+                      isLast: true,
+                      child: ListItemInteraction(
+                        onTap: () {},
+                        child: ListItemLayout(
+                          leading: CustomListItemLeading.fromExtendedColor(
+                            extendedColor: staticColors.orange,
+                            pairing: unselectedPairing,
+                            containerShape: RoundedPolygonBorder(
+                              polygon: MaterialShapes.clover8Leaf,
+                            ),
+                            child: const Icon(
+                              Symbols.palette_rounded,
+                              fill: 1.0,
+                            ),
+                          ),
+                          headline: Text("Color scheme"),
+                          supportingText: Text("Dynamic (creative)"),
+                          // supportingText: Text("Static (Creative)"),
+                          trailing: Flex.horizontal(
+                            children: [
+                              SizedBox.square(
+                                dimension: 40.0,
+                                child: Material(
+                                  shape: CornersBorder.rounded(
+                                    corners: .all(shapeTheme.corner.full),
+                                  ),
+                                  color: colorTheme.primaryFixed,
+                                ),
+                              ),
+                              const SizedBox(width: 12.0),
+                              const Icon(Symbols.keyboard_arrow_right_rounded),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: .fromLTRB(16.0, 20.0, 16.0, 8.0),
+                      child: Text(
+                        "Other",
+                        style: typescaleTheme.labelLarge.toTextStyle(
+                          color: colorTheme.onSurfaceVariant,
+                        ),
+                      ),
+                    ),
+                    ListItemContainer(
+                      isFirst: true,
+                      child: ListItemInteraction(
+                        onTap: () {},
+                        child: ListItemLayout(
+                          leading: CustomListItemLeading.fromExtendedColor(
+                            extendedColor: staticColors.purple,
+                            pairing: unselectedPairing,
+                            containerShape: RoundedPolygonBorder(
+                              polygon: MaterialShapes.circle,
+                            ),
+                            child: const Icon(Symbols.info_rounded, fill: 1.0),
+                          ),
+                          headline: Text("About Materium"),
+                          supportingText: Text("Dynamic"),
+                          // supportingText: Text("Static (Creative)"),
+                          trailing: const Icon(
+                            Symbols.keyboard_arrow_right_rounded,
+                          ),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 2.0),
                     ValueListenableBuilder(
                       key: const ValueKey("developerMode"),
                       valueListenable: _settings.developerMode,
@@ -2152,163 +2265,130 @@ class _SettingsPageState extends State<SettingsPage> {
                         final contentColor = isDisabled
                             ? disabledContentColor
                             : null;
-                        return ListItemContainer(
-                          isFirst: true,
-                          isLast: !developerMode,
-                          child: IntrinsicHeight(
-                            child: Flex.horizontal(
-                              crossAxisAlignment: .stretch,
-                              children: [
-                                Flexible.tight(
-                                  child: Tooltip(
-                                    message: isDisabled
-                                        ? t
-                                              .settingsPage
-                                              .items
-                                              .developerMode
-                                              .disabledTooltip
-                                        : "",
-                                    child: ListItemInteraction(
-                                      stateLayerShape: .all(
-                                        CornersBorder.rounded(
-                                          corners:
-                                              CornersDirectional.horizontal(
-                                                end: shapeTheme
-                                                    .corner
-                                                    .extraSmall,
-                                              ),
+                        return ListItemTheme.merge(
+                          data: developerMode
+                              ? selectedListItemTheme
+                              : unselectedListItemTheme,
+                          child: ListItemContainer(
+                            isLast: true,
+                            child: IntrinsicHeight(
+                              child: Flex.horizontal(
+                                crossAxisAlignment: .stretch,
+                                children: [
+                                  Flexible.tight(
+                                    child: Tooltip(
+                                      message: isDisabled
+                                          ? t
+                                                .settingsPage
+                                                .items
+                                                .developerMode
+                                                .disabledTooltip
+                                          : "",
+                                      child: ListItemInteraction(
+                                        stateLayerShape: .all(
+                                          CornersBorder.rounded(
+                                            corners:
+                                                CornersDirectional.horizontal(
+                                                  end: shapeTheme
+                                                      .corner
+                                                      .extraSmall,
+                                                ),
+                                          ),
                                         ),
-                                      ),
-                                      onTap: developerMode
-                                          ? () => Navigator.push(
-                                              context,
-                                              MaterialPageRoute<void>(
-                                                builder: (context) =>
-                                                    const DeveloperPage(),
+                                        onTap: developerMode
+                                            ? () => Navigator.push(
+                                                context,
+                                                MaterialPageRoute<void>(
+                                                  builder: (context) =>
+                                                      const DeveloperPage(),
+                                                ),
+                                              )
+                                            : null,
+                                        child: ListItemLayout(
+                                          padding: const .directional(
+                                            start: 16.0,
+                                            end: 12.0,
+                                          ),
+                                          leading:
+                                              CustomListItemLeading.fromExtendedColor(
+                                                extendedColor:
+                                                    staticColors.purple,
+                                                pairing: unselectedPairing,
+                                                containerShape:
+                                                    RoundedPolygonBorder(
+                                                      polygon: MaterialShapes
+                                                          .pixelCircle,
+                                                    ),
+                                                child: const Icon(
+                                                  Symbols
+                                                      .developer_mode_rounded,
+                                                  fill: 1.0,
+                                                ),
                                               ),
-                                            )
-                                          : null,
-                                      child: ListItemLayout(
-                                        padding: const .directional(
-                                          start: 16.0,
-                                          end: 12.0,
-                                        ),
-                                        leading:
-                                            CustomListItemLeading.fromExtendedColor(
-                                              extendedColor:
-                                                  staticColors.purple,
-                                              pairing: _defaultPairing,
-                                              containerShape:
-                                                  RoundedPolygonBorder(
-                                                    polygon: MaterialShapes
-                                                        .pixelCircle,
-                                                  ),
-                                              containerColor: containerColor,
-                                              contentColor: contentColor,
-                                              child: const Icon(
-                                                Symbols.developer_mode_rounded,
-                                                fill: 1.0,
-                                              ),
+                                          headline: Text(
+                                            t
+                                                .settingsPage
+                                                .items
+                                                .developerMode
+                                                .label,
+                                          ),
+                                          supportingText: Text(
+                                            t
+                                                .settingsPage
+                                                .items
+                                                .developerMode
+                                                .description,
+                                          ),
+                                          trailing: Visibility.maintain(
+                                            visible: developerMode,
+                                            child: const Icon(
+                                              Symbols
+                                                  .keyboard_arrow_right_rounded,
                                             ),
-                                        headline: Text(
-                                          t
-                                              .settingsPage
-                                              .items
-                                              .developerMode
-                                              .label,
-                                          style: TextStyle(color: contentColor),
-                                        ),
-                                        supportingText: Text(
-                                          t
-                                              .settingsPage
-                                              .items
-                                              .developerMode
-                                              .description,
-                                          style: TextStyle(color: contentColor),
-                                        ),
-                                        trailing: Icon(
-                                          Symbols.keyboard_arrow_right_rounded,
-                                          color: contentColor,
+                                          ),
                                         ),
                                       ),
                                     ),
                                   ),
-                                ),
-                                VerticalDivider(
-                                  thickness: 1.0,
-                                  width: 1.0,
-                                  indent: 10.0,
-                                  endIndent: 10.0,
-                                  color: colorTheme.outlineVariant,
-                                ),
-                                ListItemInteraction(
-                                  stateLayerShape: .all(
-                                    CornersBorder.rounded(
-                                      corners: CornersDirectional.horizontal(
-                                        start: shapeTheme.corner.extraSmall,
+                                  VerticalDivider(
+                                    thickness: 1.0,
+                                    width: 1.0,
+                                    indent: 10.0,
+                                    endIndent: 10.0,
+                                    color: colorTheme.outlineVariant,
+                                  ),
+                                  ListItemInteraction(
+                                    stateLayerShape: .all(
+                                      CornersBorder.rounded(
+                                        corners: CornersDirectional.horizontal(
+                                          start: shapeTheme.corner.extraSmall,
+                                        ),
+                                      ),
+                                    ),
+                                    onTap: () => _settings.developerMode.value =
+                                        !developerMode,
+                                    child: Padding(
+                                      padding: const .fromSTEB(
+                                        12.0 - 8.0,
+                                        (32.0 + 2 * 10.0 - 48.0) / 2.0,
+                                        16.0 - 8.0,
+                                        (32.0 + 2 * 10.0 - 48.0) / 2.0,
+                                      ),
+                                      child: ExcludeFocus(
+                                        child: Switch(
+                                          onCheckedChanged:
+                                              _settings.developerMode.setValue,
+                                          checked: developerMode,
+                                        ),
                                       ),
                                     ),
                                   ),
-                                  onTap: () => _settings.developerMode.value =
-                                      !developerMode,
-                                  child: Padding(
-                                    padding: const .fromSTEB(
-                                      12.0 - 8.0,
-                                      (32.0 + 2 * 10.0 - 48.0) / 2.0,
-                                      16.0 - 8.0,
-                                      (32.0 + 2 * 10.0 - 48.0) / 2.0,
-                                    ),
-                                    child: ExcludeFocus(
-                                      child: Switch(
-                                        onCheckedChanged:
-                                            _settings.developerMode.setValue,
-                                        checked: developerMode,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ],
+                                ],
+                              ),
                             ),
                           ),
                         );
                       },
-                    ),
-                    ValueListenableBuilder(
-                      valueListenable: _settings.developerMode,
-                      builder: (context, developerMode, child) => developerMode
-                          ? Padding(
-                              padding: const .only(top: 2.0),
-                              child: child,
-                            )
-                          : const SizedBox.shrink(),
-                      child: ListItemContainer(
-                        isLast: true,
-                        child: ListItemInteraction(
-                          onTap: () => Navigator.push(
-                            context,
-                            MaterialPageRoute<void>(
-                              builder: (context) => const ImportExportPage(),
-                            ),
-                          ),
-                          child: ListItemLayout(
-                            leading: CustomListItemLeading.fromExtendedColor(
-                              extendedColor: staticColors.purple,
-                              pairing: _defaultPairing,
-                              containerShape: RoundedPolygonBorder(
-                                polygon: MaterialShapes.pill,
-                              ),
-                              child: const Icon(
-                                Symbols.swap_vert_rounded,
-                                fill: 1.0,
-                              ),
-                            ),
-                            headline: Text(tr("importExport")),
-                            trailing: const Icon(
-                              Symbols.keyboard_arrow_right_rounded,
-                            ),
-                          ),
-                        ),
-                      ),
                     ),
                     const SizedBox(height: 16.0),
                   ],
@@ -2321,8 +2401,6 @@ class _SettingsPageState extends State<SettingsPage> {
       ),
     );
   }
-
-  static const _defaultPairing = ExtendedColorPairing.variantOnFixed;
 
   static const List<int> _updateIntervalNodes = <int>[
     15,

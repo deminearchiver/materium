@@ -7,19 +7,13 @@ class Overflow extends StatefulWidget {
     super.key,
     required this.direction,
     this.crossAxisAlignment = .center,
-    required this.overflowIndicatorBuilder,
+    required this.overflowIndicator,
     required this.children,
   });
 
   final Axis direction;
-
   final CrossAxisAlignment crossAxisAlignment;
-
-  // TODO(deminearchiver): replace with custom OverflowIndicatorBuilder widget
-  //  which would use LayoutBuilder with custom constraints inside.
-  final Widget Function(BuildContext context, OverflowLayoutInfo)
-  overflowIndicatorBuilder;
-
+  final Widget overflowIndicator;
   final List<Widget> children;
 
   @override
@@ -36,10 +30,7 @@ class _OverflowState extends State<Overflow> {
       state: this,
       child: _Overflow(
         direction: widget.direction,
-        overflowIndicator: _OverflowLayoutInfoProvider(
-          builder: (context, layoutInfo, child) =>
-              widget.overflowIndicatorBuilder(context, layoutInfo),
-        ),
+        overflowIndicator: widget.overflowIndicator,
         children: widget.children,
       ),
     );
@@ -55,13 +46,9 @@ class _OverflowScope extends InheritedWidget {
   bool updateShouldNotify(_OverflowScope oldWidget) => state != oldWidget.state;
 }
 
-class _OverflowLayoutInfoProvider extends StatefulWidget {
-  const _OverflowLayoutInfoProvider({
-    super.key,
-    this.cacheLayoutInfo = false,
-    required this.builder,
-    this.child,
-  });
+class OverflowItemBuilder extends StatefulWidget {
+  const OverflowItemBuilder({super.key, required this.builder, this.child})
+    : cacheLayoutInfo = false;
 
   final bool cacheLayoutInfo;
   final Widget Function(
@@ -73,12 +60,10 @@ class _OverflowLayoutInfoProvider extends StatefulWidget {
   final Widget? child;
 
   @override
-  State<_OverflowLayoutInfoProvider> createState() =>
-      _OverflowLayoutInfoProviderState();
+  State<OverflowItemBuilder> createState() => _OverflowItemBuilderState();
 }
 
-class _OverflowLayoutInfoProviderState
-    extends State<_OverflowLayoutInfoProvider> {
+class _OverflowItemBuilderState extends State<OverflowItemBuilder> {
   OverflowLayoutInfo? _cachedLayoutInfo;
   Widget? _cachedBuildResult;
 
@@ -88,23 +73,24 @@ class _OverflowLayoutInfoProviderState
   ) {
     final layoutInfo = constraints.value;
     final cachedBuildResult = _cachedBuildResult;
-
     if ((layoutInfo._doingDryLayout ||
             (widget.cacheLayoutInfo && layoutInfo == _cachedLayoutInfo)) &&
         cachedBuildResult != null) {
+      // print("Cached $constraints");
       return cachedBuildResult;
     } else {
-      _cachedLayoutInfo = layoutInfo;
-      return _cachedBuildResult = widget.builder(
-        context,
-        layoutInfo,
-        widget.child,
-      );
+      // print("Eager $constraints");
+      final buildResult = widget.builder(context, layoutInfo, widget.child);
+      if (!layoutInfo._doingDryLayout) {
+        _cachedLayoutInfo = layoutInfo;
+        _cachedBuildResult = buildResult;
+      }
+      return buildResult;
     }
   }
 
   @override
-  void didUpdateWidget(covariant _OverflowLayoutInfoProvider oldWidget) {
+  void didUpdateWidget(covariant OverflowItemBuilder oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (widget.cacheLayoutInfo != oldWidget.cacheLayoutInfo &&
         !widget.cacheLayoutInfo) {
@@ -134,7 +120,9 @@ class _OverflowLayoutInfoProviderState
       hasOverflowAncestor,
       "OverflowLayoutInfoProvider widget must have an Overflow ancestor widget.",
     );
-    return ValueLayoutBuilder(builder: _buildLayout);
+    return _OverflowParentDataWidget(
+      child: ValueLayoutBuilder(builder: _buildLayout),
+    );
   }
 }
 
@@ -179,15 +167,40 @@ class _Overflow extends CompoundRenderObjectWidget<_OverflowSlot, RenderBox> {
   }
 }
 
+class _OverflowParentDataWidget extends ParentDataWidget<_OverflowParentData> {
+  const _OverflowParentDataWidget({super.key, required super.child});
+
+  @override
+  void applyParentData(RenderObject renderObject) {
+    assert(renderObject.parentData is _OverflowParentData);
+    final parentData = renderObject.parentData! as _OverflowParentData;
+    var needsLayout = false;
+
+    if (needsLayout) {
+      renderObject.parent?.markNeedsLayout();
+    }
+  }
+
+  @override
+  Type get debugTypicalAncestorWidgetClass => Overflow;
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+  }
+}
+
 class _OverflowParentData extends ContainerBoxParentData<RenderBox> {
-  bool isVisible = false;
+  OverflowLayoutInfo _layoutInfo = OverflowLayoutInfo._doingDryLayout(
+    isVisible: false,
+    visibleChildCount: 1,
+    totalChildCount: 1,
+  );
 
   @override
   String toString() =>
-      "${objectRuntimeType(this, "OverflowParentData")}("
-      "offset: $offset, "
-      "isVisible: $isVisible"
-      ")";
+      "${super.toString()}; "
+      "layoutInfo=$_layoutInfo";
 }
 
 extension on CrossAxisAlignment {
@@ -246,6 +259,9 @@ class _RenderOverflow extends RenderBox
     markNeedsLayout();
   }
 
+  @pragma("wasm:prefer-inline")
+  @pragma("vm:prefer-inline")
+  @pragma("dart2js:prefer-inline")
   RenderBox? get _overflowIndicator => childForSlot(.overflowIndicator);
 
   @pragma("wasm:prefer-inline")
@@ -257,14 +273,13 @@ class _RenderOverflow extends RenderBox
     return child.parentData! as _OverflowParentData;
   }
 
+  @pragma("wasm:prefer-inline")
+  @pragma("vm:prefer-inline")
+  @pragma("dart2js:prefer-inline")
   ValueBoxConstraints<OverflowLayoutInfo> _overflowConstraints(
     BoxConstraints constraints,
     OverflowLayoutInfo info,
-  ) => ValueBoxConstraints(constraints, info);
-
-  void _positionChild(RenderBox child, Offset position) {
-    _childParentData(child).offset = position;
-  }
+  ) => ValueBoxConstraints<OverflowLayoutInfo>(constraints, info);
 
   double _childMainAxisExtent(Size childSize) => switch (direction) {
     .horizontal => childSize.width,
@@ -372,35 +387,40 @@ class _RenderOverflow extends RenderBox
       final isLast = childIndex == lastChildIndex;
 
       final childParentData = _childParentData(child);
-      // final childLayoutInfo = const OverflowLayoutInfo._(isVisible: false);
-      // final childConstraints = _overflowConstraints(
-      //   _constraintsForChild(constraints),
-      //   childLayoutInfo,
-      // );
-      final childConstraints = _constraintsForChild(constraints);
+      childParentData._layoutInfo = childParentData._layoutInfo.copyWith(
+        isVisible: true,
+        visibleChildCount: indexedChildCount,
+        totalChildCount: indexedChildCount,
+      );
+
+      final childConstraints = _overflowConstraints(
+        _constraintsForChild(constraints),
+        childParentData._layoutInfo,
+      );
       child.layout(childConstraints, parentUsesSize: true);
       final childSize = child.size;
       final childMainAxisExtent = _childMainAxisExtent(childSize);
 
-      final fits =
+      final isVisible =
           (childIndex == 0 || lastVisibleChildIndex == childIndex - 1) &&
           (childMainAxisExtent <= remainingMainAxisExtent ||
               (isLast && lastVisibleChildIndex == lastChildIndex - 1));
 
-      if (fits) {
+      childParentData._layoutInfo = childParentData._layoutInfo.copyWith(
+        isVisible: isVisible,
+      );
+
+      if (isVisible) {
         final childCrossAxisExtent = _childCrossAxisExtent(childSize);
         crossAxisExtent = math.max(crossAxisExtent, childCrossAxisExtent);
 
-        childParentData
-          ..isVisible = true
-          ..offset = _axisOffset(
-            mainAxisExtent,
-            crossAxisAlignment._getChildCrossAxisOffset(
-              crossAxisExtent - childCrossAxisExtent,
-              false,
-            ),
-          );
-
+        childParentData.offset = _axisOffset(
+          mainAxisExtent,
+          crossAxisAlignment._getChildCrossAxisOffset(
+            crossAxisExtent - childCrossAxisExtent,
+            false,
+          ),
+        );
         mainAxisExtent += childMainAxisExtent;
         remainingMainAxisExtent = math.max(
           remainingMainAxisExtent - childMainAxisExtent,
@@ -409,50 +429,66 @@ class _RenderOverflow extends RenderBox
 
         lastVisibleChildIndex = childIndex;
       } else {
-        childParentData.isVisible = false;
+        childParentData.offset = .zero;
       }
     }
     final hasOverflow = lastVisibleChildIndex < lastChildIndex;
 
-    if (_overflowIndicator case final child?) {
+    for (
+      var child = firstIndexedChild, childIndex = 0;
+      child != null;
+      child = indexedChildAfter(child), childIndex++
+    ) {
       final childParentData = _childParentData(child);
-      if (hasOverflow) {
-        crossAxisExtent = math.max(
-          crossAxisExtent,
-          overflowIndicatorCrossAxisExtent,
-        );
-        childParentData
-          ..isVisible = hasOverflow
-          ..offset = _axisOffset(
-            mainAxisExtent,
-            crossAxisAlignment._getChildCrossAxisOffset(
-              crossAxisExtent - overflowIndicatorCrossAxisExtent,
-              false,
-            ),
-          );
-
-        mainAxisExtent += overflowIndicatorMainAxisExtent;
-      } else {
-        childParentData.isVisible = false;
-      }
-
-      final childLayoutInfo = OverflowLayoutInfo._(
-        isVisible: childParentData.isVisible,
+      childParentData._layoutInfo = childParentData._layoutInfo.copyWith(
         visibleChildCount: lastVisibleChildIndex + 1,
         totalChildCount: indexedChildCount,
       );
       final childConstraints = _overflowConstraints(
-        BoxConstraints.tight(overflowIndicatorSize),
-        childLayoutInfo,
+        _constraintsForChild(constraints),
+        childParentData._layoutInfo,
       );
-      child.layout(childConstraints, parentUsesSize: false);
+      child.layout(childConstraints, parentUsesSize: true);
+    }
+
+    if (_overflowIndicator case final child?) {
+      final childParentData = _childParentData(child);
+      final isVisible = hasOverflow;
+      childParentData._layoutInfo = childParentData._layoutInfo.copyWith(
+        isVisible: isVisible,
+        visibleChildCount: lastVisibleChildIndex + 1,
+        totalChildCount: indexedChildCount,
+      );
+
+      final childConstraints = _overflowConstraints(
+        _constraintsForChild(constraints),
+        childParentData._layoutInfo,
+      );
+      child.layout(childConstraints, parentUsesSize: true);
+
+      if (isVisible) {
+        crossAxisExtent = math.max(
+          crossAxisExtent,
+          overflowIndicatorCrossAxisExtent,
+        );
+        childParentData.offset = _axisOffset(
+          mainAxisExtent,
+          crossAxisAlignment._getChildCrossAxisOffset(
+            crossAxisExtent - overflowIndicatorCrossAxisExtent,
+            false,
+          ),
+        );
+        mainAxisExtent += overflowIndicatorMainAxisExtent;
+      } else {
+        childParentData.offset = .zero;
+      }
     }
     size = constraints.constrain(_axisSize(mainAxisExtent, crossAxisExtent));
   }
 
   void _paintChild(PaintingContext context, RenderBox child) {
     final childParentData = _childParentData(child);
-    if (childParentData.isVisible) {
+    if (childParentData._layoutInfo.isVisible) {
       context.paintChild(child, childParentData.offset);
     }
   }
@@ -480,7 +516,7 @@ class _RenderOverflow extends RenderBox
 
   bool _hitTestChild(RenderBox child, BoxHitTestResult result, Offset offset) {
     final childParentData = _childParentData(child);
-    return childParentData.isVisible &&
+    return childParentData._layoutInfo.isVisible &&
         result.addWithPaintOffset(
           offset: childParentData.offset,
           position: offset,
@@ -512,10 +548,11 @@ class _RenderOverflow extends RenderBox
 @immutable
 class OverflowLayoutInfo with Diagnosticable {
   const OverflowLayoutInfo._({
+    required bool doingDryLayout,
     required this.isVisible,
     required this.visibleChildCount,
     required this.totalChildCount,
-  }) : _doingDryLayout = false;
+  }) : _doingDryLayout = doingDryLayout;
 
   const OverflowLayoutInfo._doingDryLayout({
     required this.isVisible,
@@ -523,13 +560,33 @@ class OverflowLayoutInfo with Diagnosticable {
     required this.totalChildCount,
   }) : _doingDryLayout = true;
 
+  const OverflowLayoutInfo._doingLayout({
+    required this.isVisible,
+    required this.visibleChildCount,
+    required this.totalChildCount,
+  }) : _doingDryLayout = false;
+
   final bool _doingDryLayout;
   final bool isVisible;
 
   final int visibleChildCount;
   final int totalChildCount;
 
-  int get overflowingChildCount => totalChildCount - visibleChildCount;
+  int get overflowChildCount => totalChildCount - visibleChildCount;
+
+  OverflowLayoutInfo copyWith({
+    bool? isVisible,
+    int? visibleChildCount,
+    int? totalChildCount,
+  }) =>
+      isVisible != null || visibleChildCount != null || totalChildCount != null
+      ? ._(
+          doingDryLayout: _doingDryLayout,
+          isVisible: isVisible ?? this.isVisible,
+          visibleChildCount: visibleChildCount ?? this.visibleChildCount,
+          totalChildCount: totalChildCount ?? this.totalChildCount,
+        )
+      : this;
 
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {

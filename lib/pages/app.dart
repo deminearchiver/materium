@@ -112,8 +112,9 @@ class _AppPageState extends State<AppPage> {
           appsProvider.saveApps([appsProvider.apps[id]!.app]);
         }
       } catch (err) {
-        // ignore: use_build_context_synchronously
-        showError(err, context);
+        if (context.mounted) {
+          showError(err, context);
+        }
       } finally {
         if (context.mounted) {
           setState(() {
@@ -521,8 +522,9 @@ class _AppPageState extends State<AppPage> {
         app.app.additionalSettings = values;
         if (source?.enforceTrackOnly == true) {
           app.app.additionalSettings['trackOnly'] = true;
-          // ignore: use_build_context_synchronously
-          showMessage(tr('appsFromSourceAreTrackOnly'), context);
+          if (context.mounted) {
+            showMessage(tr('appsFromSourceAreTrackOnly'), context);
+          }
         }
         var versionDetectionEnabled =
             app.app.additionalSettings['versionDetection'] == true &&
@@ -573,15 +575,17 @@ class _AppPageState extends State<AppPage> {
                   globalNavigatorKey.currentContext,
                 );
                 if (res.isNotEmpty && !trackOnly) {
-                  // ignore: use_build_context_synchronously
-                  showMessage(successMessage, context);
+                  if (context.mounted) {
+                    showMessage(successMessage, context);
+                  }
                 }
                 if (res.isNotEmpty && context.mounted) {
-                  Navigator.of(context).pop();
+                  Navigator.pop(context);
                 }
               } catch (e) {
-                // ignore: use_build_context_synchronously
-                showError(e, context);
+                if (context.mounted) {
+                  showError(e, context);
+                }
               }
             }
           : null,
@@ -905,15 +909,17 @@ class _AppPageState extends State<AppPage> {
                                     globalNavigatorKey.currentContext,
                                   );
                               if (res.isNotEmpty && !trackOnly) {
-                                // ignore: use_build_context_synchronously
-                                showMessage(successMessage, context);
+                                if (context.mounted) {
+                                  showMessage(successMessage, context);
+                                }
                               }
                               if (res.isNotEmpty && context.mounted) {
                                 Navigator.of(context).pop();
                               }
                             } catch (e) {
-                              // ignore: use_build_context_synchronously
-                              showError(e, context);
+                              if (context.mounted) {
+                                showError(e, context);
+                              }
                             }
                           }
                         : null,
