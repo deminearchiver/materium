@@ -274,9 +274,7 @@ class _CustomAppBarState extends State<CustomAppBar> {
 
   @override
   Widget build(BuildContext context) {
-    final topPadding = widget.primary
-        ? MediaQuery.maybePaddingOf(context)?.top ?? 0.0
-        : 0.0;
+    final topPadding = widget.primary ? MediaQuery.paddingOf(context).top : 0.0;
     final Widget flexibleSpace = Padding(
       padding: .only(
         top: topPadding,
