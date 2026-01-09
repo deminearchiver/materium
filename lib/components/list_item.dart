@@ -465,11 +465,13 @@ class _ListItemInteractionState extends State<ListItemInteraction> {
       inverse: true,
       child: FocusRingTheme.merge(
         data: FocusRingThemeDataPartial.from(
-          shape: CornersBorder.rounded(corners: .all(_shapeTheme.corner.large)),
+          shape: .all(
+            CornersBorder.rounded(corners: .all(_shapeTheme.corner.large)),
+          ),
         ),
         child: FocusRing(
-          visible: states.isFocused,
           placement: .inward,
+          visible: states.isFocused,
           child: Listener(
             behavior: .deferToChild,
             onPointerDown: !states.isDisabled ? _onPointerDown : null,
