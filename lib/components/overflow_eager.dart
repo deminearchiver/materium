@@ -121,7 +121,7 @@ class _OverflowItemBuilderState extends State<OverflowItemBuilder> {
       "OverflowLayoutInfoProvider widget must have an Overflow ancestor widget.",
     );
     return _OverflowParentDataWidget(
-      child: ValueLayoutBuilder(builder: _buildLayout),
+      child: ValueLayoutBuilder<OverflowLayoutInfo>(builder: _buildLayout),
     );
   }
 }
