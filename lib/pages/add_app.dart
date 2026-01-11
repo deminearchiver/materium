@@ -360,9 +360,9 @@ class AddAppPageState extends State<AddAppPage> {
                 fit: .expand,
                 children: [
                   isSelected
-                      // ? const IconLegacy(Symbols.close_rounded)
-                      ? const IconLegacy(Symbols.add_rounded)
-                      : const IconLegacy(Symbols.add_rounded),
+                      // ? const Icon(Symbols.close_rounded)
+                      ? const Icon(Symbols.add_rounded)
+                      : const Icon(Symbols.add_rounded),
                   if (isSelected)
                     Positioned.fill(
                       child: Align.center(
@@ -666,9 +666,9 @@ class AddAppPageState extends State<AddAppPage> {
                 fit: .expand,
                 children: [
                   isSelected
-                      // ? const IconLegacy(Symbols.close_rounded)
-                      ? const IconLegacy(Symbols.search_rounded)
-                      : const IconLegacy(Symbols.search_rounded),
+                      // ? const Icon(Symbols.close_rounded)
+                      ? const Icon(Symbols.search_rounded)
+                      : const Icon(Symbols.search_rounded),
                   if (isSelected)
                     Positioned.fill(
                       child: Align.center(
@@ -1006,7 +1006,7 @@ class AddAppPageState extends State<AddAppPage> {
                                 },
                               );
                             },
-                            icon: const IconLegacy(Symbols.list_alt_rounded),
+                            icon: const Icon(Symbols.list_alt_rounded),
                             tooltip: tr("supportedSources"),
                           ),
                           IconButton(
@@ -1032,7 +1032,7 @@ class AddAppPageState extends State<AddAppPage> {
                                 mode: .externalApplication,
                               );
                             },
-                            icon: const IconLegacy(Symbols.crowdsource_rounded),
+                            icon: const Icon(Symbols.crowdsource_rounded),
                             tooltip: tr("crowdsourcedConfigsShort"),
                           ),
                         ],

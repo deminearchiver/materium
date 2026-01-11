@@ -433,23 +433,11 @@ abstract final class CustomThemeFactory {
         ),
         iconTheme: .resolveWith(
           (states) => .from(
-            color: switch (states) {
-              SwitchDisabledStates(isSelected: false) =>
-                colorTheme.onSurface.withValues(
-                  alpha: resolvedShowUnselectedIcon ? 0.38 : 0.0,
-                ),
-              SwitchDisabledStates(isSelected: true) =>
-                colorTheme.onSurface.withValues(
-                  alpha: resolvedShowSelectedIcon ? 0.38 : 0.0,
-                ),
+            opacity: switch (states) {
               SwitchStates(isSelected: false) =>
-                colorTheme.onSurfaceVariant.withValues(
-                  alpha: resolvedShowUnselectedIcon ? 1.0 : 0.0,
-                ),
+                resolvedShowUnselectedIcon ? null : 0.0,
               SwitchStates(isSelected: true) =>
-                colorTheme.onPrimaryContainer.withValues(
-                  alpha: resolvedShowSelectedIcon ? 1.0 : 0.0,
-                ),
+                resolvedShowSelectedIcon ? null : 0.0,
             },
           ),
         ),
@@ -524,23 +512,11 @@ abstract final class CustomThemeFactory {
         ),
         iconTheme: .resolveWith(
           (states) => .from(
-            color: switch (states) {
-              SwitchDisabledStates(isSelected: false) =>
-                resolvedShowUnselectedIcon
-                    ? null
-                    : colorTheme.onSurface.withValues(alpha: 0.0),
-              SwitchDisabledStates(isSelected: true) =>
-                resolvedShowSelectedIcon
-                    ? null
-                    : colorTheme.onSurface.withValues(alpha: 0.0),
+            opacity: switch (states) {
               SwitchStates(isSelected: false) =>
-                colorTheme.surfaceContainerLow.withValues(
-                  alpha: resolvedShowUnselectedIcon ? 1.0 : 0.0,
-                ),
+                resolvedShowUnselectedIcon ? null : 0.0,
               SwitchStates(isSelected: true) =>
-                colorTheme.onPrimaryContainer.withValues(
-                  alpha: resolvedShowSelectedIcon ? 1.0 : 0.0,
-                ),
+                resolvedShowSelectedIcon ? null : 0.0,
             },
           ),
         ),

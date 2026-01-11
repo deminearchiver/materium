@@ -1368,9 +1368,7 @@ class _SettingsPageState extends State<SettingsPage> {
                             isSelected: themeMode == .system,
                           ),
                           value: .system,
-                          leadingIcon: const IconLegacy(
-                            Symbols.auto_mode_rounded,
-                          ),
+                          leadingIcon: const Icon(Symbols.auto_mode_rounded),
                           label: tr("followSystem"),
                         ),
                         DropdownMenuEntry(
@@ -1385,9 +1383,7 @@ class _SettingsPageState extends State<SettingsPage> {
                             isSelected: themeMode == .light,
                           ),
                           value: .light,
-                          leadingIcon: const IconLegacy(
-                            Symbols.light_mode_rounded,
-                          ),
+                          leadingIcon: const Icon(Symbols.light_mode_rounded),
                           label: tr("light"),
                         ),
                         DropdownMenuEntry(
@@ -1402,9 +1398,7 @@ class _SettingsPageState extends State<SettingsPage> {
                             isSelected: themeMode == .dark,
                           ),
                           value: .dark,
-                          leadingIcon: const IconLegacy(
-                            Symbols.dark_mode_rounded,
-                          ),
+                          leadingIcon: const Icon(Symbols.dark_mode_rounded),
                           label: tr("dark"),
                         ),
                       ],
@@ -1465,7 +1459,7 @@ class _SettingsPageState extends State<SettingsPage> {
                             isSelected: themeVariant == .calm,
                           ),
                           value: .calm,
-                          leadingIcon: const IconLegacy(
+                          leadingIcon: const Icon(
                             Symbols.moon_stars_rounded,
                             fill: 1.0,
                           ),
@@ -1483,7 +1477,7 @@ class _SettingsPageState extends State<SettingsPage> {
                             isSelected: themeVariant == .pastel,
                           ),
                           value: .pastel,
-                          leadingIcon: const IconLegacy(
+                          leadingIcon: const Icon(
                             Symbols.brush_rounded,
                             fill: 1.0,
                           ),
@@ -1501,7 +1495,7 @@ class _SettingsPageState extends State<SettingsPage> {
                             isSelected: themeVariant == .juicy,
                           ),
                           value: .juicy,
-                          leadingIcon: const IconLegacy(
+                          leadingIcon: const Icon(
                             Symbols.nutrition_rounded,
                             fill: 1.0,
                           ),
@@ -1519,7 +1513,7 @@ class _SettingsPageState extends State<SettingsPage> {
                             isSelected: themeVariant == .creative,
                           ),
                           value: .creative,
-                          leadingIcon: const IconLegacy(
+                          leadingIcon: const Icon(
                             Symbols.draw_abstract_rounded,
                             fill: 1.0,
                           ),
@@ -2096,15 +2090,25 @@ class _SettingsPageState extends State<SettingsPage> {
                 padding: const .symmetric(horizontal: 8.0),
                 sliver: SliverList.list(
                   children: [
+                    Padding(
+                      padding: .fromLTRB(16.0, 20.0, 16.0, 8.0),
+                      child: Text(
+                        "Back up & sync",
+                        style: typescaleTheme.labelLarge.toTextStyle(
+                          color: colorTheme.onSurfaceVariant,
+                        ),
+                      ),
+                    ),
                     ListItemContainer(
                       isFirst: true,
                       child: ListItemInteraction(
-                        onTap: () => Navigator.push(
-                          context,
-                          MaterialPageRoute<void>(
-                            builder: (context) => const ImportExportPage(),
-                          ),
-                        ),
+                        onTap: () async {
+                          await Fluttertoast.cancel();
+                          await Fluttertoast.showToast(
+                            msg: "Coming soon!",
+                            toastLength: .LENGTH_SHORT,
+                          );
+                        },
                         child: ListItemLayout(
                           leading: CustomListItemLeading.fromExtendedColor(
                             extendedColor: staticColors.green,
@@ -2117,8 +2121,36 @@ class _SettingsPageState extends State<SettingsPage> {
                               fill: 1.0,
                             ),
                           ),
-                          headline: Text("Back up & sync"),
-                          supportingText: Text("Export or import app data"),
+                          headline: Text("Import / export"),
+                          supportingText: Text("Back up or restore app data"),
+                          trailing: const Icon(
+                            Symbols.keyboard_arrow_right_rounded,
+                          ),
+                        ),
+                      ),
+                    ),
+                    verticalSpace,
+                    ListItemContainer(
+                      isLast: true,
+                      child: ListItemInteraction(
+                        onTap: () async {
+                          await Fluttertoast.cancel();
+                          await Fluttertoast.showToast(
+                            msg: "Coming soon!",
+                            toastLength: .LENGTH_SHORT,
+                          );
+                        },
+                        child: ListItemLayout(
+                          leading: CustomListItemLeading.fromExtendedColor(
+                            extendedColor: staticColors.green,
+                            pairing: unselectedPairing,
+                            containerShape: RoundedPolygonBorder(
+                              polygon: MaterialShapes.cookie9Sided,
+                            ),
+                            child: const Icon(Symbols.sync_rounded, fill: 1.0),
+                          ),
+                          headline: Text("Sync"),
+                          supportingText: Text("Persist data between devices"),
                           trailing: const Icon(
                             Symbols.keyboard_arrow_right_rounded,
                           ),
@@ -2137,7 +2169,13 @@ class _SettingsPageState extends State<SettingsPage> {
                     ListItemContainer(
                       isFirst: true,
                       child: ListItemInteraction(
-                        onTap: () {},
+                        onTap: () async {
+                          await Fluttertoast.cancel();
+                          await Fluttertoast.showToast(
+                            msg: "Coming soon!",
+                            toastLength: .LENGTH_SHORT,
+                          );
+                        },
                         child: ListItemLayout(
                           leading: CustomListItemLeading.fromExtendedColor(
                             extendedColor: staticColors.orange,
@@ -2159,10 +2197,16 @@ class _SettingsPageState extends State<SettingsPage> {
                         ),
                       ),
                     ),
-                    const SizedBox(height: 2.0),
+                    verticalSpace,
                     ListItemContainer(
                       child: ListItemInteraction(
-                        onTap: () {},
+                        onTap: () async {
+                          await Fluttertoast.cancel();
+                          await Fluttertoast.showToast(
+                            msg: "Coming soon!",
+                            toastLength: .LENGTH_SHORT,
+                          );
+                        },
                         child: ListItemLayout(
                           leading: CustomListItemLeading.fromExtendedColor(
                             extendedColor: staticColors.orange,
@@ -2184,11 +2228,17 @@ class _SettingsPageState extends State<SettingsPage> {
                         ),
                       ),
                     ),
-                    const SizedBox(height: 2.0),
+                    verticalSpace,
                     ListItemContainer(
                       isLast: true,
                       child: ListItemInteraction(
-                        onTap: () {},
+                        onTap: () async {
+                          await Fluttertoast.cancel();
+                          await Fluttertoast.showToast(
+                            msg: "Coming soon!",
+                            toastLength: .LENGTH_SHORT,
+                          );
+                        },
                         child: ListItemLayout(
                           leading: CustomListItemLeading.fromExtendedColor(
                             extendedColor: staticColors.orange,
@@ -2234,7 +2284,13 @@ class _SettingsPageState extends State<SettingsPage> {
                     ListItemContainer(
                       isFirst: true,
                       child: ListItemInteraction(
-                        onTap: () {},
+                        onTap: () async {
+                          await Fluttertoast.cancel();
+                          await Fluttertoast.showToast(
+                            msg: "Coming soon!",
+                            toastLength: .LENGTH_SHORT,
+                          );
+                        },
                         child: ListItemLayout(
                           leading: CustomListItemLeading.fromExtendedColor(
                             extendedColor: staticColors.purple,
@@ -2253,7 +2309,7 @@ class _SettingsPageState extends State<SettingsPage> {
                         ),
                       ),
                     ),
-                    const SizedBox(height: 2.0),
+                    verticalSpace,
                     ValueListenableBuilder(
                       key: const ValueKey("developerMode"),
                       valueListenable: _settings.developerMode,
@@ -2266,9 +2322,7 @@ class _SettingsPageState extends State<SettingsPage> {
                             ? disabledContentColor
                             : null;
                         return ListItemTheme.merge(
-                          data: developerMode
-                              ? selectedListItemTheme
-                              : unselectedListItemTheme,
+                          data: unselectedListItemTheme,
                           child: ListItemContainer(
                             isLast: true,
                             child: IntrinsicHeight(
@@ -2339,12 +2393,10 @@ class _SettingsPageState extends State<SettingsPage> {
                                                 .developerMode
                                                 .description,
                                           ),
-                                          trailing: Visibility.maintain(
-                                            visible: developerMode,
-                                            child: const Icon(
-                                              Symbols
-                                                  .keyboard_arrow_right_rounded,
-                                            ),
+                                          trailing: Icon(
+                                            Symbols
+                                                .keyboard_arrow_right_rounded,
+                                            color: contentColor,
                                           ),
                                         ),
                                       ),
@@ -2701,7 +2753,7 @@ class _LogsPageState extends State<_LogsPage> {
                               logsProvider.clear();
                             }
                           },
-                          icon: const IconLegacy(
+                          icon: const Icon(
                             Symbols.delete_forever_rounded,
                             fill: 1.0,
                           ),
@@ -2722,10 +2774,7 @@ class _LogsPageState extends State<_LogsPage> {
                               ),
                             );
                           },
-                          icon: const IconLegacy(
-                            Symbols.share_rounded,
-                            fill: 1.0,
-                          ),
+                          icon: const Icon(Symbols.share_rounded, fill: 1.0),
                           label: Text(tr("share")),
                         ),
                       ),
@@ -2751,7 +2800,7 @@ class _LogsPageState extends State<_LogsPage> {
                                   );
                                 }
                               },
-                              icon: const IconLegacy(
+                              icon: const Icon(
                                 Symbols.add_notes_rounded,
                                 fill: 1.0,
                                 size: 20.0,

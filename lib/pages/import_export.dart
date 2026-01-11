@@ -509,7 +509,7 @@ class _ImportExportPageState extends State<ImportExportPage> {
                         : () {
                             runObtainiumExport(pickOnly: true);
                           },
-                    icon: const IconLegacy(
+                    icon: const Icon(
                       Symbols.folder_open_rounded,
                       fill: 1.0,
                       opticalSize: 24.0,
@@ -536,7 +536,7 @@ class _ImportExportPageState extends State<ImportExportPage> {
                     onPressed: importInProgress || snapshot.data == null
                         ? null
                         : runObtainiumExport,
-                    icon: const IconLegacy(
+                    icon: const Icon(
                       Symbols.file_export_rounded,
                       fill: 1.0,
                       opticalSize: 24.0,
@@ -620,7 +620,7 @@ class _ImportExportPageState extends State<ImportExportPage> {
               textStyle: typescaleTheme.titleMediumEmphasized.toTextStyle(),
             ),
             onPressed: importInProgress ? null : runObtainiumImport,
-            icon: const IconLegacy(
+            icon: const Icon(
               Symbols.file_open_rounded,
               fill: 1.0,
               opticalSize: 24.0,
@@ -673,7 +673,7 @@ class _ImportExportPageState extends State<ImportExportPage> {
                             runSourceSearch(searchSource[0]);
                           }
                         },
-                  icon: const IconLegacy(
+                  icon: const Icon(
                     Symbols.search_rounded,
                     fill: 1.0,
                     opticalSize: 20.0,
@@ -687,7 +687,7 @@ class _ImportExportPageState extends State<ImportExportPage> {
                 FilledButton.icon(
                   style: otherImportButtonsStyle,
                   onPressed: importInProgress ? null : urlListImport,
-                  icon: const IconLegacy(
+                  icon: const Icon(
                     Symbols.add_link_rounded,
                     fill: 1.0,
                     opticalSize: 20.0,
@@ -701,7 +701,7 @@ class _ImportExportPageState extends State<ImportExportPage> {
                 FilledButton.icon(
                   style: otherImportButtonsStyle,
                   onPressed: importInProgress ? null : runUrlImport,
-                  icon: const IconLegacy(
+                  icon: const Icon(
                     Symbols.dataset_linked_rounded,
                     fill: 1.0,
                     opticalSize: 20.0,
@@ -725,7 +725,7 @@ class _ImportExportPageState extends State<ImportExportPage> {
                       : () {
                           runMassSourceImport(source);
                         },
-                  icon: const IconLegacy(
+                  icon: const Icon(
                     Symbols.star_rounded,
                     fill: 1.0,
                     opticalSize: 20.0,
@@ -1050,7 +1050,7 @@ class _SelectionModalState extends State<SelectionModal> {
                                 mode: .externalApplication,
                               );
                             },
-                            icon: const IconLegacy(Symbols.link_rounded),
+                            icon: const Icon(Symbols.link_rounded),
                           )
                         : null,
                   ),

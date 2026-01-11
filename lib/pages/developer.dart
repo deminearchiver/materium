@@ -63,7 +63,7 @@ class DeveloperPageBackButton extends StatelessWidget {
             : colorTheme.onSurfaceVariant,
       ),
       onPressed: () => navigator.pop(),
-      icon: const IconLegacy(Symbols.arrow_back_rounded),
+      icon: const Icon(Symbols.arrow_back_rounded),
       tooltip: materialLocalization.backButtonTooltip,
     );
   }
@@ -143,7 +143,7 @@ class _DeveloperPageState extends State<DeveloperPage> {
                                 extendedColor: staticColors.cyan,
                                 pairing: defaultPairing,
                                 containerShape: RoundedPolygonBorder(
-                                  polygon: MaterialShapes.square,
+                                  polygon: MaterialShapes.slanted,
                                 ),
                                 child: const Icon(
                                   Symbols.markdown_rounded,
@@ -175,7 +175,7 @@ class _DeveloperPageState extends State<DeveloperPage> {
                                 extendedColor: staticColors.cyan,
                                 pairing: defaultPairing,
                                 containerShape: RoundedPolygonBorder(
-                                  polygon: MaterialShapes.square,
+                                  polygon: MaterialShapes.slanted,
                                 ),
                                 child: const Icon(
                                   Symbols.markdown_rounded,
@@ -245,38 +245,6 @@ class _DeveloperPageState extends State<DeveloperPage> {
                               headline: const Text("New settings experience"),
                               supportingText: const Text(
                                 "Try out new design for settings",
-                              ),
-                              trailing: const Icon(
-                                Symbols.keyboard_arrow_right_rounded,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                      ListItemContainer(
-                        child: MergeSemantics(
-                          child: ListItemInteraction(
-                            onTap: () => Navigator.of(context).push(
-                              MaterialPageRoute<void>(
-                                builder: (context) =>
-                                    const _DeveloperAddAppPage(),
-                              ),
-                            ),
-                            child: ListItemLayout(
-                              leading: CustomListItemLeading.fromExtendedColor(
-                                extendedColor: staticColors.blue,
-                                pairing: defaultPairing,
-                                containerShape: RoundedPolygonBorder(
-                                  polygon: MaterialShapes.cookie4Sided,
-                                ),
-                                child: const Icon(
-                                  Symbols.add_2_rounded,
-                                  fill: 1.0,
-                                ),
-                              ),
-                              headline: const Text("Add app page redesign"),
-                              supportingText: const Text(
-                                "The title says it all",
                               ),
                               trailing: const Icon(
                                 Symbols.keyboard_arrow_right_rounded,
@@ -443,7 +411,7 @@ class _ExperimentsPageState extends State<_ExperimentsPage> {
                                           toastLength: .LENGTH_SHORT,
                                         );
                                       },
-                                      icon: const IconLegacy(
+                                      icon: const Icon(
                                         Symbols.more_vert_rounded,
                                       ),
                                       tooltip:
@@ -485,7 +453,7 @@ class _ExperimentsPageState extends State<_ExperimentsPage> {
                                             toastLength: .LENGTH_SHORT,
                                           );
                                         },
-                                        icon: const IconLegacy(
+                                        icon: const Icon(
                                           Symbols.add_rounded,
                                           fill: 1.0,
                                         ),
@@ -506,163 +474,6 @@ class _ExperimentsPageState extends State<_ExperimentsPage> {
           ],
         ),
       ),
-    );
-  }
-}
-
-class _DeveloperAddAppPage extends StatefulWidget {
-  const _DeveloperAddAppPage({super.key});
-
-  @override
-  State<_DeveloperAddAppPage> createState() => _DeveloperAddAppPageState();
-}
-
-class _DeveloperAddAppPageState extends State<_DeveloperAddAppPage> {
-  @override
-  Widget build(BuildContext context) {
-    final padding = MediaQuery.paddingOf(context);
-
-    final colorTheme = ColorTheme.of(context);
-    final elevationTheme = ElevationTheme.of(context);
-    final shapeTheme = ShapeTheme.of(context);
-    final stateTheme = StateTheme.of(context);
-    final typescaleTheme = TypescaleTheme.of(context);
-
-    return SuperKeyboardBuilder(
-      builder: (context, mobileGeometry) {
-        // TODO: integrate padding with keyboard opening animation
-        return Scaffold(
-          backgroundColor: colorTheme.surfaceContainer,
-          body: SafeArea(
-            top: false,
-            bottom: false,
-            child: CustomScrollView(
-              slivers: [
-                CustomAppBar(
-                  leading: const Padding(
-                    padding: EdgeInsets.only(left: 8.0 - 4.0),
-                    child: DeveloperPageBackButton(),
-                  ),
-                  type: CustomAppBarType.largeFlexible,
-                  expandedContainerColor: colorTheme.surfaceContainer,
-                  collapsedContainerColor: colorTheme.surfaceContainer,
-                  collapsedPadding: const EdgeInsets.fromLTRB(
-                    8.0 + 40.0 + 8.0,
-                    0.0,
-                    16.0,
-                    0.0,
-                  ),
-                  title: const Text("Add app"),
-                ),
-                SliverFillRemaining(
-                  fillOverscroll: false,
-                  hasScrollBody: false,
-                  child: Flex.vertical(
-                    crossAxisAlignment: .stretch,
-                    children: [
-                      Flexible.tight(
-                        child: Flex.vertical(
-                          crossAxisAlignment: .stretch,
-                          children: [
-                            const Flexible.space(flex: 2.0),
-                            Padding(
-                              padding: const EdgeInsets.fromLTRB(
-                                16.0,
-                                0.0,
-                                16.0,
-                                0.0,
-                              ),
-                              child: ConstrainedBox(
-                                constraints: BoxConstraints(minHeight: 56.0),
-                                child: Material(
-                                  clipBehavior: Clip.antiAlias,
-                                  color: colorTheme.surfaceBright,
-                                  shape: CornersBorder.rounded(
-                                    corners: Corners.all(
-                                      shapeTheme.corner.extraLarge,
-                                    ),
-                                  ),
-                                  child: TextField(
-                                    style: typescaleTheme.bodyLarge.toTextStyle(
-                                      color: colorTheme.onSurface,
-                                    ),
-                                    decoration: InputDecoration(
-                                      border: InputBorder.none,
-                                      contentPadding: EdgeInsets.fromLTRB(
-                                        24.0,
-                                        16.0,
-                                        24.0,
-                                        16.0,
-                                      ),
-                                      hintText: "Search or type URL",
-                                      hintStyle: typescaleTheme.bodyLarge
-                                          .toTextStyle(
-                                            color: colorTheme.onSurfaceVariant,
-                                          ),
-                                    ),
-                                    maxLength: null,
-                                    maxLines: null,
-                                  ),
-                                ),
-                              ),
-                            ),
-                            const Flexible.space(flex: 3.0),
-                          ],
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.fromLTRB(
-                          16.0,
-                          16.0,
-                          16.0,
-                          16.0,
-                        ),
-                        child: Flex.vertical(
-                          crossAxisAlignment: .stretch,
-                          spacing: 8.0,
-                          children: [
-                            FilledButton(
-                              style: LegacyThemeFactory.createButtonStyle(
-                                colorTheme: colorTheme,
-                                elevationTheme: elevationTheme,
-                                shapeTheme: shapeTheme,
-                                stateTheme: stateTheme,
-                                typescaleTheme: typescaleTheme,
-                                size: .medium,
-                                shape: .round,
-                                color: .outlined,
-                              ),
-                              onPressed: () => Navigator.pop(context),
-                              child: Text("Cancel"),
-                            ),
-                            FilledButton(
-                              style: LegacyThemeFactory.createButtonStyle(
-                                colorTheme: colorTheme,
-                                elevationTheme: elevationTheme,
-                                shapeTheme: shapeTheme,
-                                stateTheme: stateTheme,
-                                typescaleTheme: typescaleTheme,
-                                size: .medium,
-                                shape: .round,
-                                color: .filled,
-                                textStyle: typescaleTheme.titleMediumEmphasized
-                                    .toTextStyle(),
-                              ),
-                              onPressed: null,
-                              child: Text("Next"),
-                            ),
-                          ],
-                        ),
-                      ),
-                      SizedBox(height: padding.bottom),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ),
-        );
-      },
     );
   }
 }
@@ -1690,7 +1501,7 @@ class _SettingsAppBarState extends State<SettingsAppBar> {
                           : colorTheme.onSurface,
                     ),
                   ),
-                  icon: const IconLegacy(Symbols.arrow_back_rounded),
+                  icon: const Icon(Symbols.arrow_back_rounded),
                 ),
                 const SizedBox(width: 8.0 - 4.0),
                 Flexible.tight(
@@ -1750,9 +1561,7 @@ class _SettingsAppBarState extends State<SettingsAppBar> {
                   menuChildren: [
                     MenuItemButton(
                       onPressed: () {},
-                      leadingIcon: const IconLegacy(
-                        Symbols.reset_settings_rounded,
-                      ),
+                      leadingIcon: const Icon(Symbols.reset_settings_rounded),
                       child: const Text("Reset settings"),
                     ),
                   ],
@@ -1794,7 +1603,7 @@ class _SettingsAppBarState extends State<SettingsAppBar> {
                             : colorTheme.onSurfaceVariant,
                       ),
                     ),
-                    icon: const IconLegacy(Symbols.more_vert_rounded),
+                    icon: const Icon(Symbols.more_vert_rounded),
                   ),
                 ),
                 const SizedBox(width: 8.0 - 4.0),
@@ -2156,7 +1965,7 @@ class _SettingsAppBarRoute<T extends Object?> extends PopupRoute<T> {
                       : colorTheme.onSurface,
                 ),
               ),
-              icon: const IconLegacy(Symbols.arrow_back_rounded),
+              icon: const Icon(Symbols.arrow_back_rounded),
             );
 
             final clearIconButton = IconButton(
@@ -2189,7 +1998,7 @@ class _SettingsAppBarRoute<T extends Object?> extends PopupRoute<T> {
                       : colorTheme.onSurfaceVariant,
                 ),
               ),
-              icon: const IconLegacy(Symbols.close_rounded),
+              icon: const Icon(Symbols.close_rounded),
             );
 
             return Align.topLeft(
@@ -2831,32 +2640,6 @@ class _MaterialDemoViewState extends State<_MaterialDemoView> {
                       ),
                   child: SliverList.list(
                     children: [
-                      if (kDebugMode)
-                        ListenableBuilder(
-                          listenable: Listenable.merge([_enabled, _selected]),
-                          // ignore: prefer_const_constructors
-                          builder: (context, child) => FittedBox(
-                            fit: .contain,
-                            // child: Checkbox.bistate(
-                            //   onCheckedChanged: _enabled.value
-                            //       ? (value) => _selected.value = value
-                            //       : null,
-                            //   checked: _selected.value,
-                            // ),
-                            // child: Switch(
-                            //   onCheckedChanged: _enabled.value
-                            //       ? (value) => _selected.value = value
-                            //       : null,
-                            //   checked: _selected.value,
-                            // ),
-                            // child: RadioButton(
-                            //   onTap: _enabled.value
-                            //       ? () => _selected.value = !_selected.value
-                            //       : null,
-                            //   selected: _selected.value,
-                            // ),
-                          ),
-                        ),
                       Padding(
                         padding: const EdgeInsets.fromLTRB(
                           16.0,
@@ -2886,20 +2669,15 @@ class _MaterialDemoViewState extends State<_MaterialDemoView> {
                             );
                           },
                           child: ListItemLayout(
-                            leading: SizedBox.square(
-                              dimension: 40.0,
-                              child: Material(
-                                clipBehavior: Clip.antiAlias,
-                                color: staticColors.yellow.colorFixed,
-                                shape: const StadiumBorder(),
-                                child: Align.center(
-                                  child: Icon(
-                                    Symbols.interests_rounded,
-                                    fill: 1.0,
-                                    color:
-                                        staticColors.yellow.onColorFixedVariant,
-                                  ),
-                                ),
+                            leading: CustomListItemLeading.fromExtendedColor(
+                              extendedColor: staticColors.yellow,
+                              pairing: defaultPairing,
+                              containerShape: RoundedPolygonBorder(
+                                polygon: MaterialShapes.pill,
+                              ),
+                              child: const Icon(
+                                Symbols.interests_rounded,
+                                fill: 1.0,
                               ),
                             ),
                             headline: const Text("Shape library"),
@@ -2929,20 +2707,15 @@ class _MaterialDemoViewState extends State<_MaterialDemoView> {
                             );
                           },
                           child: ListItemLayout(
-                            leading: SizedBox.square(
-                              dimension: 40.0,
-                              child: Material(
-                                clipBehavior: Clip.antiAlias,
-                                color: staticColors.yellow.colorFixed,
-                                shape: const StadiumBorder(),
-                                child: Align.center(
-                                  child: Icon(
-                                    Symbols.draw_abstract_rounded,
-                                    fill: 1.0,
-                                    color:
-                                        staticColors.yellow.onColorFixedVariant,
-                                  ),
-                                ),
+                            leading: CustomListItemLeading.fromExtendedColor(
+                              extendedColor: staticColors.yellow,
+                              pairing: defaultPairing,
+                              containerShape: RoundedPolygonBorder(
+                                polygon: MaterialShapes.clover4Leaf,
+                              ),
+                              child: const Icon(
+                                Symbols.draw_abstract_rounded,
+                                fill: 1.0,
                               ),
                             ),
                             headline: const Text("Shape morph"),
@@ -2983,38 +2756,26 @@ class _MaterialDemoViewState extends State<_MaterialDemoView> {
                                         timeDilation = 1.0;
                                       });
                                       Fluttertoast.showToast(
-                                        msg:
-                                            "Animation duration scale set to 1.0x",
+                                        msg: "Animation time scale set to 1.0x",
                                       );
                                     }
                                   : null,
                               child: ListItemLayout(
-                                leading: SizedBox.square(
-                                  dimension: 40.0,
-                                  child: Material(
-                                    clipBehavior: Clip.antiAlias,
-                                    color: staticColors.cyan.colorFixed,
-                                    shape: const StadiumBorder(),
-                                    child: Align.center(
-                                      child: Icon(
-                                        switch (_speed) {
-                                          < 1.0 =>
-                                            Symbols.timer_arrow_down_rounded,
-                                          > 1.0 =>
-                                            Symbols.timer_arrow_up_rounded,
-                                          _ => Symbols.timer_rounded,
-                                        },
-                                        fill: 1.0,
-                                        color: staticColors
-                                            .cyan
-                                            .onColorFixedVariant,
+                                leading:
+                                    CustomListItemLeading.fromExtendedColor(
+                                      extendedColor: staticColors.cyan,
+                                      pairing: defaultPairing,
+                                      containerShape: RoundedPolygonBorder(
+                                        polygon: MaterialShapes.cookie9Sided,
                                       ),
+                                      child: Icon(switch (_speed) {
+                                        < 1.0 =>
+                                          Symbols.timer_arrow_down_rounded,
+                                        > 1.0 => Symbols.timer_arrow_up_rounded,
+                                        _ => Symbols.timer_rounded,
+                                      }, fill: 1.0),
                                     ),
-                                  ),
-                                ),
-                                headline: const Text(
-                                  "Animation duration scale",
-                                ),
+                                headline: const Text("Animation time scale"),
                                 supportingText: _speed != 1.0
                                     ? const Text("Long press to reset")
                                     : const Text(
@@ -3045,7 +2806,14 @@ class _MaterialDemoViewState extends State<_MaterialDemoView> {
                           ],
                         ),
                       ),
-
+                      ListItemLayout(
+                        alignment: .top,
+                        leading: const Icon(Symbols.info_rounded, fill: 0.0),
+                        supportingText: Text(
+                          "Try slowing down animations and look at the loading indicators below "
+                          "to see shape morphing in all its beauty.",
+                        ),
+                      ),
                       Padding(
                         padding: const EdgeInsets.fromLTRB(
                           16.0,
@@ -3075,20 +2843,15 @@ class _MaterialDemoViewState extends State<_MaterialDemoView> {
                               trailingPadding: const .symmetric(
                                 vertical: (32.0 + 2 * 10.0 - 48.0) / 2.0,
                               ),
-                              leading: SizedBox.square(
-                                dimension: 40.0,
-                                child: Material(
-                                  clipBehavior: Clip.antiAlias,
-                                  color: staticColors.red.colorFixed,
-                                  shape: const StadiumBorder(),
-                                  child: Align.center(
-                                    child: Icon(
-                                      Symbols.ads_click_rounded,
-                                      fill: 1.0,
-                                      color:
-                                          staticColors.red.onColorFixedVariant,
-                                    ),
-                                  ),
+                              leading: CustomListItemLeading.fromExtendedColor(
+                                extendedColor: staticColors.red,
+                                pairing: defaultPairing,
+                                containerShape: RoundedPolygonBorder(
+                                  polygon: MaterialShapes.cookie4Sided,
+                                ),
+                                child: const Icon(
+                                  Symbols.ads_click_rounded,
+                                  fill: 1.0,
                                 ),
                               ),
                               headline: const Text("Enable basic input"),
@@ -3113,20 +2876,15 @@ class _MaterialDemoViewState extends State<_MaterialDemoView> {
                           crossAxisAlignment: .stretch,
                           children: [
                             ListItemLayout(
-                              leading: SizedBox.square(
-                                dimension: 40.0,
-                                child: Material(
-                                  clipBehavior: Clip.antiAlias,
-                                  color: staticColors.red.colorFixed,
-                                  shape: const StadiumBorder(),
-                                  child: Align.center(
-                                    child: Icon(
-                                      Symbols.check_box_rounded,
-                                      fill: 1.0,
-                                      color:
-                                          staticColors.red.onColorFixedVariant,
-                                    ),
-                                  ),
+                              leading: CustomListItemLeading.fromExtendedColor(
+                                extendedColor: staticColors.red,
+                                pairing: defaultPairing,
+                                containerShape: RoundedPolygonBorder(
+                                  polygon: MaterialShapes.square,
+                                ),
+                                child: const Icon(
+                                  Symbols.check_box_rounded,
+                                  fill: 1.0,
                                 ),
                               ),
                               headline: const Text("Basic input"),
@@ -4226,7 +3984,7 @@ class _ShapeLibraryViewState extends State<_ShapeLibraryView> {
                     ),
                   ),
                   onPressed: () => _controller.clear(),
-                  icon: const IconLegacy(Symbols.close_rounded),
+                  icon: const Icon(Symbols.close_rounded),
                 ),
               const SizedBox(width: 4.0),
             ],
@@ -4470,19 +4228,7 @@ class _ShapeLibraryViewState extends State<_ShapeLibraryView> {
                                       ),
                                       TextButton(
                                         onPressed: () async {
-                                          final pathData = _pathFromCubics(
-                                            repeatPath: false,
-                                            closePath: true,
-                                            cubics: polygon.cubics,
-                                            rotationPivotX: 0.5,
-                                            rotationPivotY: 0.5,
-                                          );
-                                          await SharePlus.instance.share(
-                                            ShareParams(
-                                              title: name,
-                                              text: pathData,
-                                            ),
-                                          );
+                                          Navigator.pop(context);
                                         },
                                         child: Text(
                                           materialLocalizations

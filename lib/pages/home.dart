@@ -44,32 +44,32 @@ class _HomePageState extends State<HomePage> {
   List<NavigationPageItem> pages = [
     NavigationPageItem(
       NavigationDestination(
-        icon: const IconLegacy(Symbols.apps_rounded, fill: 0.0),
-        selectedIcon: const IconLegacy(Symbols.apps_rounded, fill: 1.0),
+        icon: const Icon(Symbols.apps_rounded, fill: 0.0),
+        selectedIcon: const Icon(Symbols.apps_rounded, fill: 1.0),
         label: tr("appsString"),
       ),
       AppsPage(key: GlobalKey<AppsPageState>()),
     ),
     NavigationPageItem(
       NavigationDestination(
-        icon: const IconLegacy(Symbols.add_rounded, fill: 0.0),
-        selectedIcon: const IconLegacy(Symbols.add_rounded, fill: 1.0),
+        icon: const Icon(Symbols.add_rounded, fill: 0.0),
+        selectedIcon: const Icon(Symbols.add_rounded, fill: 1.0),
         label: tr("addApp"),
       ),
       AddAppPage(key: GlobalKey<AddAppPageState>()),
     ),
     NavigationPageItem(
       NavigationDestination(
-        icon: const IconLegacy(Symbols.swap_vert_rounded, fill: 0.0),
-        selectedIcon: const IconLegacy(Symbols.swap_vert_rounded, fill: 1.0),
+        icon: const Icon(Symbols.swap_vert_rounded, fill: 0.0),
+        selectedIcon: const Icon(Symbols.swap_vert_rounded, fill: 1.0),
         label: tr("importExport"),
       ),
       const ImportExportPage(),
     ),
     NavigationPageItem(
       NavigationDestination(
-        icon: const IconLegacy(Symbols.settings_rounded, fill: 0.0),
-        selectedIcon: const IconLegacy(Symbols.settings_rounded, fill: 1.0),
+        icon: const Icon(Symbols.settings_rounded, fill: 0.0),
+        selectedIcon: const Icon(Symbols.settings_rounded, fill: 1.0),
         label: tr("settings"),
       ),
       const SettingsPage(),

@@ -613,8 +613,8 @@ class AppsPageState extends State<AppsPage> with TickerProviderStateMixin {
                     },
               icon:
                   listedApps[index].app.additionalSettings["trackOnly"] == true
-                  ? const IconLegacy(Symbols.check_circle_rounded, fill: 1.0)
-                  : const IconLegacy(Symbols.install_mobile, fill: 1.0),
+                  ? const Icon(Symbols.check_circle_rounded, fill: 1.0)
+                  : const Icon(Symbols.install_mobile, fill: 1.0),
               tooltip:
                   listedApps[index].app.additionalSettings["trackOnly"] == true
                   ? tr("markUpdated")
@@ -1460,8 +1460,8 @@ class AppsPageState extends State<AppsPage> with TickerProviderStateMixin {
                       }
                     : null,
                 icon: item.app.additionalSettings["trackOnly"] == true
-                    ? const IconLegacy(Symbols.check_circle_rounded, fill: 1.0)
-                    : const IconLegacy(Symbols.install_mobile, fill: 1.0),
+                    ? const Icon(Symbols.check_circle_rounded, fill: 1.0)
+                    : const Icon(Symbols.install_mobile, fill: 1.0),
                 tooltip: item.app.additionalSettings["trackOnly"] == true
                     ? tr("markUpdated")
                     : tr("update"),
@@ -1497,10 +1497,7 @@ class AppsPageState extends State<AppsPage> with TickerProviderStateMixin {
                     //     (!isSelected && selectedAppIds.isEmpty) ||
                     //     (isSelected && selectedAppIds.length == 1),
                     onPressed: () => toggleAppSelected(item.app),
-                    leadingIcon: const IconLegacy(
-                      Symbols.check_rounded,
-                      fill: 1.0,
-                    ),
+                    leadingIcon: const Icon(Symbols.check_rounded, fill: 1.0),
                     child: isSelected
                         ? const Text("Selected")
                         : const Text("Select"),
@@ -1533,11 +1530,8 @@ class AppsPageState extends State<AppsPage> with TickerProviderStateMixin {
                           : null,
                       leadingIcon:
                           item.app.additionalSettings["trackOnly"] == true
-                          ? const IconLegacy(
-                              Symbols.check_circle_rounded,
-                              fill: 1.0,
-                            )
-                          : const IconLegacy(Symbols.install_mobile, fill: 1.0),
+                          ? const Icon(Symbols.check_circle_rounded, fill: 1.0)
+                          : const Icon(Symbols.install_mobile, fill: 1.0),
                       child: Text(
                         item.app.additionalSettings["trackOnly"] == true
                             ? tr("markUpdated")
@@ -1556,7 +1550,7 @@ class AppsPageState extends State<AppsPage> with TickerProviderStateMixin {
                       isLast: false,
                     ),
                     onPressed: showChanges,
-                    leadingIcon: const IconLegacy(
+                    leadingIcon: const Icon(
                       Symbols.menu_book_rounded,
                       fill: 1.0,
                     ),
@@ -1579,10 +1573,7 @@ class AppsPageState extends State<AppsPage> with TickerProviderStateMixin {
                           builder: (context) => AppPage(appId: item.app.id),
                         ),
                       ),
-                      leadingIcon: const IconLegacy(
-                        Symbols.edit_rounded,
-                        fill: 1.0,
-                      ),
+                      leadingIcon: const Icon(Symbols.edit_rounded, fill: 1.0),
                       child: const Text("Edit"),
                     ),
                   MenuItemButton(
@@ -1598,10 +1589,7 @@ class AppsPageState extends State<AppsPage> with TickerProviderStateMixin {
                     ),
                     onPressed: () =>
                         appsProvider.removeAppsWithModal(context, [item.app]),
-                    leadingIcon: const IconLegacy(
-                      Symbols.delete_rounded,
-                      fill: 1.0,
-                    ),
+                    leadingIcon: const Icon(Symbols.delete_rounded, fill: 1.0),
                     child: Text(tr("remove")),
                   ),
                 ],
@@ -1633,7 +1621,7 @@ class AppsPageState extends State<AppsPage> with TickerProviderStateMixin {
                       controller.open();
                     }
                   },
-                  icon: const IconLegacy(Symbols.more_vert_rounded),
+                  icon: const Icon(Symbols.more_vert_rounded),
                 ),
               );
 
@@ -2102,8 +2090,8 @@ class AppsPageState extends State<AppsPage> with TickerProviderStateMixin {
             ? clearSelected()
             : selectThese(listedApps.map((e) => e.app).toList()),
         icon: hasSelection
-            ? const IconLegacy(Symbols.deselect_rounded)
-            : const IconLegacy(Symbols.select_all_rounded),
+            ? const Icon(Symbols.deselect_rounded)
+            : const Icon(Symbols.select_all_rounded),
         tooltip: hasSelection
             ? selectedAppIds.length.toString()
             : listedApps.length.toString(),
@@ -2137,7 +2125,7 @@ class AppsPageState extends State<AppsPage> with TickerProviderStateMixin {
           selectedDisabledIconColor: unselectedDisabledContentColor,
         ),
         onPressed: getMassObtainFunction(),
-        icon: const IconLegacy(Symbols.download_rounded),
+        icon: const Icon(Symbols.download_rounded),
         tooltip: hasSelection
             ? tr("installUpdateSelectedApps")
             : tr("installUpdateApps"),
@@ -2173,7 +2161,7 @@ class AppsPageState extends State<AppsPage> with TickerProviderStateMixin {
               }
             : null,
 
-        icon: const IconLegacy(Symbols.delete_rounded, fill: 1.0),
+        icon: const Icon(Symbols.delete_rounded, fill: 1.0),
         tooltip: tr("removeSelectedApps"),
       );
 
@@ -2199,7 +2187,7 @@ class AppsPageState extends State<AppsPage> with TickerProviderStateMixin {
           selectedDisabledIconColor: selectedDisabledContentColor,
         ),
         onPressed: hasSelection ? launchCategorizeDialog() : null,
-        icon: const IconLegacy(Symbols.category_rounded, fill: 1.0),
+        icon: const Icon(Symbols.category_rounded, fill: 1.0),
         tooltip: tr("categorize"),
       );
 
@@ -2226,8 +2214,8 @@ class AppsPageState extends State<AppsPage> with TickerProviderStateMixin {
         ),
         onPressed: hasSelection ? pinSelectedApps : null,
         icon: hasPinnedSelection
-            ? const IconLegacy(Symbols.keep_off_rounded, fill: 1.0)
-            : const IconLegacy(Symbols.keep_rounded, fill: 1.0),
+            ? const Icon(Symbols.keep_off_rounded, fill: 1.0)
+            : const Icon(Symbols.keep_rounded, fill: 1.0),
         tooltip: hasPinnedSelection ? tr("unpinFromTop") : tr("pinToTop"),
       );
 
@@ -2253,7 +2241,7 @@ class AppsPageState extends State<AppsPage> with TickerProviderStateMixin {
           selectedDisabledIconColor: selectedDisabledContentColor,
         ),
         onPressed: hasSelection ? showMoreOptionsDialog : null,
-        icon: const IconLegacy(Symbols.more_horiz_rounded),
+        icon: const Icon(Symbols.more_horiz_rounded),
         tooltip: tr("more"),
       );
 
@@ -2279,7 +2267,7 @@ class AppsPageState extends State<AppsPage> with TickerProviderStateMixin {
           context,
           MaterialPageRoute<void>(builder: (context) => const AddAppPage()),
         ),
-        icon: const IconLegacy(Symbols.add_rounded),
+        icon: const Icon(Symbols.add_rounded),
         tooltip: tr("addApp"),
       );
 
@@ -2434,7 +2422,7 @@ class AppsPageState extends State<AppsPage> with TickerProviderStateMixin {
                                   filter = AppsFilter();
                                 });
                               },
-                        icon: IconLegacy(
+                        icon: Icon(
                           isFilterOff
                               ? Symbols.search_rounded
                               : Symbols.search_off_rounded,
@@ -2474,10 +2462,7 @@ class AppsPageState extends State<AppsPage> with TickerProviderStateMixin {
                             builder: (context) => const SettingsPage(),
                           ),
                         ),
-                        icon: const IconLegacy(
-                          Symbols.settings_rounded,
-                          fill: 1.0,
-                        ),
+                        icon: const Icon(Symbols.settings_rounded, fill: 1.0),
                         tooltip: tr("settings"),
                       ),
                     ),

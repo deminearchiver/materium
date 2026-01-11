@@ -625,14 +625,14 @@ class _AppPageState extends State<AppPage> {
                             handleAdditionalOptionChanges(values);
                           },
                     tooltip: tr('additionalOptions'),
-                    icon: const IconLegacy(Symbols.edit_rounded, fill: 1),
+                    icon: const Icon(Symbols.edit_rounded, fill: 1),
                   ),
                 if (app != null && app.installedInfo != null)
                   IconButton(
                     onPressed: () {
                       appsProvider.openAppSettings(app.app.id);
                     },
-                    icon: const IconLegacy(Symbols.settings_rounded, fill: 1),
+                    icon: const Icon(Symbols.settings_rounded, fill: 1),
                     tooltip: tr('settings'),
                   ),
                 // TODO: implement showAppWebpageFinal button in new toolbar
@@ -658,7 +658,7 @@ class _AppPageState extends State<AppPage> {
                         },
                       );
                     },
-                    icon: const IconLegacy(Symbols.more_horiz_rounded),
+                    icon: const Icon(Symbols.more_horiz_rounded),
                     tooltip: tr('more'),
                   ),
                 if (app?.app.installedVersion != null &&
@@ -670,7 +670,7 @@ class _AppPageState extends State<AppPage> {
                         ? null
                         : showMarkUpdatedDialog,
                     tooltip: tr('markUpdated'),
-                    icon: const IconLegacy(Symbols.done_rounded),
+                    icon: const Icon(Symbols.done_rounded),
                   ),
                 if ((!isVersionDetectionStandard || trackOnly) &&
                     app?.app.installedVersion != null &&
@@ -682,7 +682,7 @@ class _AppPageState extends State<AppPage> {
                             app!.app.installedVersion = null;
                             appsProvider.saveApps([app.app]);
                           },
-                    icon: const IconLegacy(Symbols.restore_rounded),
+                    icon: const Icon(Symbols.restore_rounded),
                     tooltip: tr('resetInstallStatus'),
                   ),
                 const SizedBox(width: 16.0),
@@ -704,7 +704,7 @@ class _AppPageState extends State<AppPage> {
                               });
                         },
                   tooltip: tr('remove'),
-                  icon: const IconLegacy(Symbols.delete_rounded, fill: 0),
+                  icon: const Icon(Symbols.delete_rounded, fill: 0),
                 ),
               ],
             ),
@@ -832,10 +832,7 @@ class _AppPageState extends State<AppPage> {
                                     handleAdditionalOptionChanges(values);
                                   },
                             style: toolbarIconButtonStyle,
-                            icon: const IconLegacy(
-                              Symbols.edit_rounded,
-                              fill: 1.0,
-                            ),
+                            icon: const Icon(Symbols.edit_rounded, fill: 1.0),
                             tooltip: tr("additionalOptions"),
                           ),
                         if (app != null && app.installedInfo != null) ...[
@@ -845,7 +842,7 @@ class _AppPageState extends State<AppPage> {
                               appsProvider.openAppSettings(app.app.id);
                             },
                             style: toolbarIconButtonStyle,
-                            icon: const IconLegacy(
+                            icon: const Icon(
                               Symbols.settings_rounded,
                               fill: 1.0,
                             ),
@@ -863,7 +860,7 @@ class _AppPageState extends State<AppPage> {
                                 ? null
                                 : showMarkUpdatedDialog,
                             style: toolbarIconButtonStyle,
-                            icon: const IconLegacy(Symbols.done_rounded),
+                            icon: const Icon(Symbols.done_rounded),
                             tooltip: tr("markUpdated"),
                           ),
                         ],
@@ -880,7 +877,7 @@ class _AppPageState extends State<AppPage> {
                                     appsProvider.saveApps([app.app]);
                                   },
                             style: toolbarIconButtonStyle,
-                            icon: const IconLegacy(Symbols.restore_rounded),
+                            icon: const Icon(Symbols.restore_rounded),
                             tooltip: tr("resetInstallStatus"),
                           ),
                         ],
@@ -1036,10 +1033,7 @@ class _AppPageState extends State<AppPage> {
                                 },
                           style: toolbarIconButtonStyle,
 
-                          icon: const IconLegacy(
-                            Symbols.delete_rounded,
-                            fill: 1.0,
-                          ),
+                          icon: const Icon(Symbols.delete_rounded, fill: 1.0),
                           tooltip: tr("remove"),
                         ),
                         if (false) ...[
@@ -1083,7 +1077,7 @@ class _AppPageState extends State<AppPage> {
                                       }
                                     },
                                     style: toolbarIconButtonStyle,
-                                    icon: const IconLegacy(Symbols.more_vert),
+                                    icon: const Icon(Symbols.more_vert),
                                     tooltip: tr("more"),
                                   ),
                             ),

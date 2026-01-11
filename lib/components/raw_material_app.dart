@@ -1,4 +1,4 @@
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/cupertino.dart' show DefaultCupertinoLocalizations;
 import 'package:materium/flutter.dart';
 
 // Examples can assume:
@@ -736,6 +736,6 @@ class _MaterialInspectorButton extends InspectorButton {
     key: buttonKey,
     style: _selectionButtonsIconStyle(context),
     onPressed: onPressed,
-    icon: IconLegacy(icon, semanticLabel: semanticsLabel),
+    icon: Icon(icon, semanticLabel: semanticsLabel),
   );
 }
