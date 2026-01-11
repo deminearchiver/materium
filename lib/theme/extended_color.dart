@@ -2,7 +2,7 @@ import 'package:material/material_color_utilities.dart';
 import 'package:materium/flutter.dart';
 
 extension on DynamicSchemeVariant {
-  Variant _toVariant() => switch (this) {
+  Variant get _asVariant => switch (this) {
     .monochrome => .monochrome,
     .neutral => .neutral,
     .tonalSpot => .tonalSpot,
@@ -184,7 +184,7 @@ abstract class ExtendedColor with Diagnosticable {
   }) => .fromDynamicScheme(
     .fromPalettesOrKeyColors(
       sourceColorHct: sourceColor._toHct(),
-      variant: variant._toVariant(),
+      variant: variant._asVariant,
       isDark: brightness == .dark, // Always exhaustive
       platform: platform,
       contrastLevel: contrastLevel,
