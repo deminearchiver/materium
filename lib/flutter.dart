@@ -974,3 +974,80 @@ extension ResultResultExtension<T extends Object?, E extends Object?>
 mixin ExternalChangeNotifier on ChangeNotifier {
   void notify() => notifyListeners();
 }
+
+class CornersFilledInputBorder extends InputBorder {
+  const CornersFilledInputBorder({
+    super.borderSide = .none,
+    required this.delegate,
+    this.corners = .none,
+  });
+
+  final CornersBorderDelegate delegate;
+  final CornersGeometry corners;
+
+  @override
+  CornersFilledInputBorder scale(double t) => CornersFilledInputBorder(
+    borderSide: borderSide.scale(t),
+    delegate: delegate.scale(t),
+    corners: corners * t,
+  );
+
+  @override
+  CornersFilledInputBorder copyWith({
+    BorderSide? borderSide,
+    CornersBorderDelegate? delegate,
+    CornersGeometry? corners,
+  }) => CornersFilledInputBorder(
+    borderSide: borderSide ?? this.borderSide,
+    delegate: delegate ?? this.delegate,
+    corners: corners ?? this.corners,
+  );
+
+  @override
+  bool get isOutline => false;
+
+  @override
+  EdgeInsetsGeometry get dimensions => .all(borderSide.width);
+
+  @override
+  Path getInnerPath(Rect rect, {TextDirection? textDirection}) =>
+      delegate.getInnerPath(
+        rect: rect,
+        side: borderSide,
+        borderRadius: corners.resolve(textDirection).toBorderRadius(rect.size),
+      );
+  @override
+  Path getOuterPath(Rect rect, {TextDirection? textDirection}) =>
+      delegate.getOuterPath(
+        rect: rect,
+        side: borderSide,
+        borderRadius: corners.resolve(textDirection).toBorderRadius(rect.size),
+      );
+
+  @override
+  void paint(
+    Canvas canvas,
+    Rect rect, {
+    double? gapStart,
+    double gapExtent = 0.0,
+    double gapPercentage = 0.0,
+    TextDirection? textDirection,
+  }) {}
+
+  @override
+  String toString() =>
+      "${objectRuntimeType(this, "CornersInputBorder")}"
+      "(borderSide: $borderSide, delegate: $delegate, corners: $corners)";
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      runtimeType == other.runtimeType &&
+          other is CornersFilledInputBorder &&
+          borderSide == other.borderSide &&
+          delegate == other.delegate &&
+          corners == other.corners;
+
+  @override
+  int get hashCode => Object.hash(runtimeType, borderSide, delegate, corners);
+}

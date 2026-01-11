@@ -1091,7 +1091,8 @@ class _SettingsPageState extends State<SettingsPage> {
                   horizontal: 16.0,
                   vertical: 10.0,
                 ),
-                border: CornersInputBorder.rounded(
+                border: CornersFilledInputBorder(
+                  delegate: .rounded,
                   corners: .all(shapeTheme.corner.large),
                 ),
                 filled: true,
@@ -1336,7 +1337,8 @@ class _SettingsPageState extends State<SettingsPage> {
                           horizontal: 16.0,
                           vertical: 10.0,
                         ),
-                        border: CornersInputBorder.rounded(
+                        border: CornersFilledInputBorder(
+                          delegate: .rounded,
                           corners: isSelected
                               ? .all(shapeTheme.corner.large)
                               : .directional(
@@ -1427,7 +1429,8 @@ class _SettingsPageState extends State<SettingsPage> {
                           horizontal: 16.0,
                           vertical: 10.0,
                         ),
-                        border: CornersInputBorder.rounded(
+                        border: CornersFilledInputBorder(
+                          delegate: .rounded,
                           corners: isSelected
                               ? .all(shapeTheme.corner.large)
                               : .directional(
@@ -1552,7 +1555,8 @@ class _SettingsPageState extends State<SettingsPage> {
                             horizontal: 16.0,
                             vertical: 10.0,
                           ),
-                          border: CornersInputBorder.rounded(
+                          border: CornersFilledInputBorder(
+                            delegate: .rounded,
                             corners: .directional(
                               topStart: shapeTheme.corner.large,
                               topEnd: shapeTheme.corner.extraSmall,
@@ -1646,7 +1650,8 @@ class _SettingsPageState extends State<SettingsPage> {
                             horizontal: 16.0,
                             vertical: 10.0,
                           ),
-                          border: CornersInputBorder.rounded(
+                          border: CornersFilledInputBorder(
+                            delegate: .rounded,
                             corners: .directional(
                               topStart: shapeTheme.corner.extraSmall,
                               topEnd: shapeTheme.corner.large,
@@ -2913,94 +2918,4 @@ class _LogsPageState extends State<_LogsPage> {
       ),
     );
   }
-}
-
-class CornersInputBorder extends InputBorder {
-  const CornersInputBorder({
-    super.borderSide = .none,
-    required this.delegate,
-    this.corners = .none,
-  });
-
-  const CornersInputBorder.rounded({
-    super.borderSide = .none,
-    this.corners = .none,
-  }) : delegate = .rounded;
-
-  const CornersInputBorder.cut({super.borderSide = .none, this.corners = .none})
-    : delegate = .cut;
-
-  const CornersInputBorder.superellipse({
-    super.borderSide = .none,
-    this.corners = .none,
-  }) : delegate = .superellipse;
-
-  final CornersBorderDelegate delegate;
-  final CornersGeometry corners;
-
-  @override
-  CornersInputBorder scale(double t) => CornersInputBorder(
-    borderSide: borderSide.scale(t),
-    delegate: delegate.scale(t),
-    corners: corners * t,
-  );
-
-  @override
-  CornersInputBorder copyWith({
-    BorderSide? borderSide,
-    CornersBorderDelegate? delegate,
-    CornersGeometry? corners,
-  }) => CornersInputBorder(
-    borderSide: borderSide ?? this.borderSide,
-    delegate: delegate ?? this.delegate,
-    corners: corners ?? this.corners,
-  );
-
-  @override
-  bool get isOutline => false;
-
-  @override
-  EdgeInsetsGeometry get dimensions => .all(borderSide.width);
-
-  @override
-  Path getInnerPath(Rect rect, {TextDirection? textDirection}) =>
-      delegate.getInnerPath(
-        rect: rect,
-        side: borderSide,
-        borderRadius: corners.resolve(textDirection).toBorderRadius(rect.size),
-      );
-  @override
-  Path getOuterPath(Rect rect, {TextDirection? textDirection}) =>
-      delegate.getOuterPath(
-        rect: rect,
-        side: borderSide,
-        borderRadius: corners.resolve(textDirection).toBorderRadius(rect.size),
-      );
-
-  @override
-  void paint(
-    Canvas canvas,
-    Rect rect, {
-    double? gapStart,
-    double gapExtent = 0.0,
-    double gapPercentage = 0.0,
-    TextDirection? textDirection,
-  }) {}
-
-  @override
-  String toString() =>
-      "${objectRuntimeType(this, "CornersInputBorder")}"
-      "(borderSide: $borderSide, delegate: $delegate, corners: $corners)";
-
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      runtimeType == other.runtimeType &&
-          other is CornersInputBorder &&
-          borderSide == other.borderSide &&
-          delegate == other.delegate &&
-          corners == other.corners;
-
-  @override
-  int get hashCode => Object.hash(runtimeType, borderSide, delegate, corners);
 }
