@@ -47,17 +47,7 @@ abstract final class LegacyThemeFactory {
           return colorTheme.outline;
         }),
       ),
-      iconTheme: IconThemeDataLegacy(
-        color: colorTheme.onSurface,
-        opacity: 1.0,
-        size: 24.0,
-        opticalSize: 24.0,
-        grade: 0.0,
-        fill: 1.0,
-        weight: 400.0,
-        applyTextScaling: false,
-        shadows: const [],
-      ),
+      iconTheme: IconThemeData.fallback(colorTheme: colorTheme).toLegacy(),
       navigationBarTheme: NavigationBarThemeData(
         backgroundColor: colorTheme.surfaceContainer,
         elevation: elevationTheme.level0,
