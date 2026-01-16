@@ -47,7 +47,7 @@ dependencies:
       ref: master
 
   # Hosted dependencies
-  meta: ^1.17.0
+  meta: ^1.18.0
   path_provider: ^2.1.5
   flutter_fgbg: ^0.7.1
   flutter_local_notifications: ^19.5.0
@@ -123,19 +123,19 @@ dependency_overrides:
   layout:
     git:
       url: https://github.com/deminearchiver/dart-flutter-packages.git
-      ref: fcb4a8c1749e6dc72221e72548d8b304efa555b9
+      ref: c1b4cc66c8893a5e3d866cc6991f46520e10d5a9
       path: packages/layout
   material:
     git:
       url: https://github.com/deminearchiver/dart-flutter-packages.git
-      ref: fcb4a8c1749e6dc72221e72548d8b304efa555b9
+      ref: c1b4cc66c8893a5e3d866cc6991f46520e10d5a9
       path: packages/material
 
   # Hosted dependencies
   archive: ^4.0.7 # fastforge uses outdated version
   device_info_plus: ^12.3.0 # Needed for unknown reasons
   material_color_utilities: ^0.13.0 # Flutter pinned dependency
-  meta: ^1.17.0 # Always use latest version
+  meta: ^1.18.0 # Always use latest version
   uuid: ^4.5.2 # fastforge uses outdated version
 
 flutter:
