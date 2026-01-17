@@ -27,6 +27,7 @@ import 'package:materium/app_sources/jenkins.dart';
 import 'package:materium/app_sources/liteapks.dart';
 import 'package:materium/app_sources/moddroid.dart';
 import 'package:materium/app_sources/neutroncode.dart';
+import 'package:materium/app_sources/rockmods.dart';
 import 'package:materium/app_sources/rustore.dart';
 import 'package:materium/app_sources/sourceforge.dart';
 import 'package:materium/app_sources/sourcehut.dart';
@@ -1129,14 +1130,15 @@ class SourceProvider {
     Uptodown(),
     HuaweiAppGallery(),
     Tencent(),
-    CoolApk(),
-    LiteApks(),
-    Moddroid(),
     VivoAppStore(),
-    Jenkins(),
-    ApkMirror(),
     RuStore(),
     Farsroid(),
+    CoolApk(),
+    RockMods(),
+    LiteApks(),
+    Moddroid(),
+    Jenkins(),
+    ApkMirror(),
     TelegramApp(),
     NeutronCode(),
     DirectApkLink(),
