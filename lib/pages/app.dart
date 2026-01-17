@@ -1577,43 +1577,52 @@ class _AppPageState extends State<AppPage> {
                         ? _AppPageAppBar(
                             expandedContainerColor: backgroundColor,
                             collapsedContainerColor: backgroundColor,
-                            icon: FutureBuilder(
-                              future: appsProvider
-                                  .updateAppIcon(app?.app.id, ignoreCache: true)
-                                  .then((_) => app?.icon),
-                              builder: (context, snapshot) {
-                                final bytes = snapshot.data;
-                                final iconTheme = IconTheme.of(context);
+                            icon: Tooltip(
+                              message: app?.name ?? "",
+                              child: FutureBuilder(
+                                future: appsProvider
+                                    .updateAppIcon(
+                                      app?.app.id,
+                                      ignoreCache: true,
+                                    )
+                                    .then((_) => app?.icon),
+                                builder: (context, snapshot) {
+                                  final bytes = snapshot.data;
+                                  final iconTheme = IconTheme.of(context);
 
-                                return Skeletonizer(
-                                  enabled: bytes == null,
-                                  effect: ShimmerEffect(
-                                    baseColor: colorTheme.surfaceContainerHigh,
-                                    highlightColor:
-                                        colorTheme.surfaceContainerHighest,
-                                  ),
-                                  child: SizedBox.square(
-                                    dimension: iconTheme.size,
-                                    child: Skeleton.leaf(
-                                      child: Material(
-                                        clipBehavior: .antiAlias,
-                                        shape: CornersBorder.rounded(
-                                          corners: .all(shapeTheme.corner.full),
+                                  return Skeletonizer(
+                                    enabled: bytes == null,
+                                    effect: ShimmerEffect(
+                                      baseColor:
+                                          colorTheme.surfaceContainerHigh,
+                                      highlightColor:
+                                          colorTheme.surfaceContainerHighest,
+                                    ),
+                                    child: SizedBox.square(
+                                      dimension: iconTheme.size,
+                                      child: Skeleton.leaf(
+                                        child: Material(
+                                          clipBehavior: .antiAlias,
+                                          shape: CornersBorder.rounded(
+                                            corners: .all(
+                                              shapeTheme.corner.full,
+                                            ),
+                                          ),
+                                          color: colorTheme
+                                              .surfaceContainerHighest,
+                                          child: bytes != null
+                                              ? Image.memory(
+                                                  bytes,
+                                                  fit: .cover,
+                                                  gaplessPlayback: true,
+                                                )
+                                              : const SizedBox.shrink(),
                                         ),
-                                        color:
-                                            colorTheme.surfaceContainerHighest,
-                                        child: bytes != null
-                                            ? Image.memory(
-                                                bytes,
-                                                fit: .cover,
-                                                gaplessPlayback: true,
-                                              )
-                                            : const SizedBox.shrink(),
                                       ),
                                     ),
-                                  ),
-                                );
-                              },
+                                  );
+                                },
+                              ),
                             ),
                             headline: Text(app?.name ?? tr("app")),
                             supportingText: Text(
@@ -1702,15 +1711,61 @@ class _AppPageAppBarState extends State<_AppPageAppBar> {
     final collapsedContainerColor =
         widget.collapsedContainerColor ?? colorTheme.surfaceContainer;
 
+    const collapsedContainerHeight = 96.0;
+    const collapsedIconSize = 48.0;
+    const expandedIconSize = 108.0;
+
+    final Widget headline = DefaultTextStyle.merge(
+      textAlign: .center,
+      maxLines: 2,
+      overflow: .ellipsis,
+      style: typescaleTheme.displaySmallEmphasized.toTextStyle(
+        color: colorTheme.onSurface,
+      ),
+      child: widget.headline,
+    );
+
+    final Widget supportingText = DefaultTextStyle.merge(
+      textAlign: .center,
+      maxLines: 2,
+      overflow: .ellipsis,
+      style: typescaleTheme.titleMedium.toTextStyle(
+        color: colorTheme.onSurfaceVariant,
+      ),
+      child: widget.supportingText,
+    );
+
+    final Widget header = Flex.vertical(
+      mainAxisSize: .min,
+      crossAxisAlignment: .stretch,
+      children: [
+        const SizedBox(height: 16.0),
+        headline,
+        const SizedBox(height: 8.0),
+        supportingText,
+        const SizedBox(height: 12.0),
+      ],
+    );
+
     return SliverDynamicHeader(
       minExtentPrototype: Padding(
         padding: .only(top: padding.top),
-        child: SizedBox(height: 96.0),
+        child: const SizedBox(height: collapsedContainerHeight),
       ),
-      // TODO(deminearchiver): make this dynamic
       maxExtentPrototype: Padding(
-        padding: .only(top: padding.top),
-        child: SizedBox(height: 308.0),
+        padding: .fromLTRB(
+          padding.left + 16.0,
+          padding.top,
+          padding.right + 16.0,
+          0.0,
+        ),
+        child: Flex.vertical(
+          children: [
+            const SizedBox(height: collapsedContainerHeight),
+            const SizedBox(height: expandedIconSize),
+            header,
+          ],
+        ),
       ),
       builder: (context, layoutInfo, child) {
         final minExtent = layoutInfo.minExtent - padding.top;
@@ -1725,9 +1780,6 @@ class _AppPageAppBarState extends State<_AppPageAppBar> {
 
         final expandedExtent = currentExtent - minExtent;
 
-        const collapsedIconSize = 48.0;
-        const expandedIconSize = 108.0;
-
         final collapsedFraction = clampDouble(
           (shrinkOffset - minShrinkOffset) /
               (maxShrinkOffset - minShrinkOffset),
@@ -1739,8 +1791,15 @@ class _AppPageAppBarState extends State<_AppPageAppBar> {
         );
 
         final collapsedIconFraction = clampDouble(
-          (clampDouble(shrinkOffset, 0.0, expandedIconSize) - minShrinkOffset) /
+          (shrinkOffset - minShrinkOffset) /
               (expandedIconSize - minShrinkOffset),
+          0.0,
+          1.0,
+        );
+
+        final collapsedHeaderFraction = clampDouble(
+          (shrinkOffset - expandedIconSize - minShrinkOffset) /
+              (maxShrinkOffset - expandedIconSize - minShrinkOffset),
           0.0,
           1.0,
         );
@@ -1754,6 +1813,20 @@ class _AppPageAppBarState extends State<_AppPageAppBar> {
         final iconSize = lerpDouble(
           expandedIconSize,
           collapsedIconSize,
+          collapsedIconFraction,
+        );
+
+        final headerOpacity = lerpDouble(1.0, 0.0, collapsedHeaderFraction);
+
+        final iconAreaPadding = lerpDouble(
+          minExtent,
+          0.0,
+          collapsedIconFraction,
+        );
+
+        final iconAreaHeight = lerpDouble(
+          expandedIconSize,
+          minExtent,
           collapsedIconFraction,
         );
 
@@ -1785,15 +1858,9 @@ class _AppPageAppBarState extends State<_AppPageAppBar> {
                   mainAxisAlignment: .end,
                   children: [
                     Padding(
-                      padding: .only(
-                        top: lerpDouble(minExtent, 0.0, collapsedIconFraction),
-                      ),
+                      padding: .only(top: iconAreaPadding),
                       child: SizedBox(
-                        height: lerpDouble(
-                          expandedIconSize,
-                          minExtent,
-                          collapsedIconFraction,
-                        ),
+                        height: iconAreaHeight,
                         child: OverflowBox(
                           alignment: .center,
                           minWidth: iconSize,
@@ -1809,28 +1876,20 @@ class _AppPageAppBarState extends State<_AppPageAppBar> {
                     ),
                     Flexible.tight(
                       child: ClipRect(
-                        child: OverflowBox(
-                          alignment: .bottomCenter,
-                          minHeight: 0.0,
-                          maxHeight: maxShrinkOffset,
-                          child: Padding(
-                            padding: .only(top: expandedIconSize),
-                            child: Flex.vertical(
-                              children: [
-                                const SizedBox(height: 16.0),
-                                DefaultTextStyle.merge(
-                                  style: typescaleTheme.displaySmallEmphasized
-                                      .toTextStyle(color: colorTheme.onSurface),
-                                  child: widget.headline,
-                                ),
-                                const SizedBox(height: 8.0),
-                                DefaultTextStyle.merge(
-                                  style: typescaleTheme.titleMedium.toTextStyle(
-                                    color: colorTheme.onSurfaceVariant,
-                                  ),
-                                  child: widget.supportingText,
-                                ),
-                              ],
+                        child: Opacity(
+                          opacity: headerOpacity,
+                          child: OverflowBox(
+                            alignment: .bottomCenter,
+                            minHeight: 0.0,
+                            maxHeight: maxShrinkOffset,
+                            child: Padding(
+                              padding: const .fromLTRB(
+                                16.0,
+                                expandedIconSize,
+                                16.0,
+                                0.0,
+                              ),
+                              child: header,
                             ),
                           ),
                         ),
@@ -1840,46 +1899,6 @@ class _AppPageAppBarState extends State<_AppPageAppBar> {
                 ),
               ),
             ],
-            // child: Flex.vertical(
-            //   crossAxisAlignment: .stretch,
-            //   children: [
-            //     SizedBox(
-            //       height: collapsedExtent,
-            //       child: Flex.horizontal(
-            //         children: [const DeveloperPageBackButton()],
-            //       ),
-            //     ),
-            //     SizedBox(
-            //       height: expandedExtent,
-            //       child: OverflowBox(
-            //         minHeight: maxShrinkOffset,
-            //         maxHeight: maxShrinkOffset,
-            //         child: Flex.vertical(
-            //           children: [
-            //             IconTheme.merge(
-            //               data: .from(
-            //                 size: lerpDouble(108.0, 48.0, collapsedFraction),
-            //               ),
-            //               child: widget.icon,
-            //             ),
-            //             Text(
-            //               "Materium",
-            //               style: typescaleTheme.displaySmallEmphasized
-            //                   .toTextStyle(color: colorTheme.onSurface),
-            //             ),
-            //             const SizedBox(height: 8.0),
-            //             Text(
-            //               "By deminearchiver",
-            //               style: typescaleTheme.titleMedium.toTextStyle(
-            //                 color: colorTheme.onSurfaceVariant,
-            //               ),
-            //             ),
-            //           ],
-            //         ),
-            //       ),
-            //     ),
-            //   ],
-            // ),
           ),
         );
       },
