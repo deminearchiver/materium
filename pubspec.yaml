@@ -121,12 +121,12 @@ dependency_overrides:
   layout:
     git:
       url: https://github.com/deminearchiver/dart-flutter-packages.git
-      ref: c1b4cc66c8893a5e3d866cc6991f46520e10d5a9
+      ref: 0ce775147c89b6c080b8ca7fd5840b0483dd079e
       path: packages/layout
   material:
     git:
       url: https://github.com/deminearchiver/dart-flutter-packages.git
-      ref: c1b4cc66c8893a5e3d866cc6991f46520e10d5a9
+      ref: 0ce775147c89b6c080b8ca7fd5840b0483dd079e
       path: packages/material
 
   # Hosted dependencies
