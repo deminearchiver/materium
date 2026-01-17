@@ -1,3 +1,4 @@
+import 'package:crypto/crypto.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:materium/components/custom_app_bar.dart';
 import 'package:materium/components/custom_refresh_indicator.dart';
@@ -17,6 +18,8 @@ import 'package:url_launcher/url_launcher_string.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:markdown/markdown.dart' as md;
+import 'package:android_package_manager/android_package_manager.dart'
+    hide LaunchMode;
 
 class AppPage extends StatefulWidget {
   const AppPage({
@@ -37,6 +40,41 @@ class _AppPageState extends State<AppPage> {
   bool _wasWebViewOpened = false;
   AppInMemory? prevApp;
   bool updating = false;
+  bool hasMultipleSigners = false;
+  List<String> certificateHashes = [];
+
+  Future<void> _loadAppHashes() async {
+    final pm = AndroidPackageManager();
+
+    final packageInfo = await pm.getPackageInfo(
+      packageName: prevApp?.app.id as String,
+      flags: PackageInfoFlags(const {.getSigningCertificates}),
+    );
+
+    final multipleSigners =
+        packageInfo?.signingInfo?.hasMultipleSigners ?? false;
+
+    // https://developer.android.com/reference/android/content/pm/SigningInfo#getApkContentsSigners()
+    final signatures = hasMultipleSigners
+        ? packageInfo?.signingInfo?.apkContentSigners
+        : packageInfo?.signingInfo?.signingCertificateHistory;
+
+    final hashes =
+        signatures?.map((signature) {
+          final digest = sha256.convert(signature);
+          return digest.bytes
+              .map((b) => b.toRadixString(16).padLeft(2, "0").toUpperCase())
+              .join(":");
+        }).toList() ??
+        <String>[];
+
+    if (!mounted) return;
+
+    setState(() {
+      hasMultipleSigners = multipleSigners;
+      certificateHashes = hashes;
+    });
+  }
 
   @override
   void initState() {
@@ -134,11 +172,13 @@ class _AppPageState extends State<AppPage> {
             overrideSource: app.app.overrideSource,
           )
         : null;
+    print("$areDownloadsRunning $prevApp $app $checkUpdateOnDetailPage");
     if (!areDownloadsRunning &&
         prevApp == null &&
         app != null &&
         checkUpdateOnDetailPage) {
       prevApp = app;
+      _loadAppHashes();
       getUpdate(app.app.id);
     }
     final trackOnly = app?.app.additionalSettings['trackOnly'] == true;
@@ -194,10 +234,10 @@ class _AppPageState extends State<AppPage> {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 24),
+            padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 0.0),
             child: Flex.vertical(
               children: [
-                const SizedBox(height: 8),
+                const SizedBox(height: 32.0),
                 Text(
                   versionLines,
                   textAlign: TextAlign.start,
@@ -226,7 +266,7 @@ class _AppPageState extends State<AppPage> {
                         ),
                       )
                     : const SizedBox.shrink(),
-                const SizedBox(height: 8),
+                const SizedBox(height: 40.0),
               ],
             ),
           ),
@@ -238,7 +278,7 @@ class _AppPageState extends State<AppPage> {
           if (app?.app.apkUrls.isNotEmpty == true ||
               app?.app.otherAssetUrls.isNotEmpty == true)
             Padding(
-              padding: const EdgeInsets.only(top: 8.0),
+              padding: const EdgeInsets.only(top: 4.0),
               child: Align.center(
                 widthFactor: 1.0,
                 heightFactor: 1.0,
@@ -248,11 +288,11 @@ class _AppPageState extends State<AppPage> {
                     minHeight: 32.0,
                   ),
                   child: Material(
-                    clipBehavior: Clip.antiAlias,
+                    clipBehavior: .antiAlias,
                     shape: CornersBorder.rounded(
-                      corners: Corners.all(shapeTheme.corner.medium),
+                      corners: .all(shapeTheme.corner.medium),
                     ),
-                    color: colorTheme.surfaceContainer,
+                    color: colorTheme.surfaceContainerHighest,
                     child: InkWell(
                       onTap: app?.app == null || updating
                           ? null
@@ -303,8 +343,45 @@ class _AppPageState extends State<AppPage> {
                 ),
               ),
             ),
-
-          const SizedBox(height: 48),
+          /* Certificate Hashes */
+          if (installed && certificateHashes.isNotEmpty)
+            Flex.vertical(
+              mainAxisSize: .min,
+              children: [
+                const SizedBox(height: 40),
+                Text(
+                  "${plural("certificateHash", certificateHashes.length)}"
+                  "${hasMultipleSigners ? " (${tr("multipleSigners")})" : ""}",
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(fontSize: 12),
+                ),
+                Flex.vertical(
+                  mainAxisSize: .min,
+                  children: certificateHashes.map((hash) {
+                    return GestureDetector(
+                      onLongPress: () {
+                        Clipboard.setData(ClipboardData(text: hash));
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(content: Text(tr("copiedToClipboard"))),
+                        );
+                      },
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 25,
+                          vertical: 0,
+                        ),
+                        child: Text(
+                          hash,
+                          textAlign: TextAlign.center,
+                          style: const TextStyle(fontSize: 12),
+                        ),
+                      ),
+                    );
+                  }).toList(),
+                ),
+              ],
+            ),
+          const SizedBox(height: 40.0),
           CategoryEditorSelector(
             alignment: WrapAlignment.center,
             preselected: app?.app.categories != null
@@ -322,7 +399,7 @@ class _AppPageState extends State<AppPage> {
             Flex.vertical(
               mainAxisSize: MainAxisSize.min,
               children: [
-                const SizedBox(height: 48),
+                const SizedBox(height: 32.0),
                 GestureDetector(
                   onLongPress: () {
                     Clipboard.setData(
@@ -373,7 +450,7 @@ class _AppPageState extends State<AppPage> {
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        SizedBox(height: small ? 5 : 20),
+        const SizedBox(height: 0.0),
         FutureBuilder(
           future: appsProvider.updateAppIcon(app?.app.id, ignoreCache: true),
           builder: (ctx, val) {
@@ -396,7 +473,7 @@ class _AppPageState extends State<AppPage> {
                 : Container();
           },
         ),
-        SizedBox(height: small ? 10 : 25),
+        SizedBox(height: small ? 10.0 : 24.0),
         Text(
           app?.name ?? tr('app'),
           textAlign: TextAlign.center,
@@ -419,34 +496,62 @@ class _AppPageState extends State<AppPage> {
                   color: colorTheme.onSurfaceVariant,
                 ),
         ),
-        const SizedBox(height: 24),
-        GestureDetector(
-          onTap: () {
-            if (app?.app.url != null) {
-              launchUrlString(
-                app?.app.url ?? '',
-                mode: LaunchMode.externalApplication,
-              );
-            }
-          },
-          onLongPress: () {
-            Clipboard.setData(ClipboardData(text: app?.app.url ?? ''));
-            ScaffoldMessenger.of(
-              context,
-            ).showSnackBar(SnackBar(content: Text(tr('copiedToClipboard'))));
-          },
-          child: Text(
-            app?.app.url ?? '',
-            textAlign: TextAlign.center,
-            style: typescaleTheme.labelSmall
-                .toTextStyle(color: colorTheme.primary)
-                .copyWith(decoration: TextDecoration.underline),
+        Padding(
+          padding: const .fromLTRB(16.0, 4.0, 16.0, 4.0),
+          child: Align.center(
+            widthFactor: 1.0,
+            heightFactor: 1.0,
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(
+                minWidth: 48.0,
+                minHeight: 32.0,
+              ),
+              child: Material(
+                clipBehavior: .antiAlias,
+                shape: CornersBorder.rounded(
+                  corners: .all(shapeTheme.corner.medium),
+                ),
+                color: colorTheme.surfaceContainerHighest,
+                child: InkWell(
+                  onTap: () {
+                    if (app?.app.url != null) {
+                      launchUrlString(
+                        app?.app.url ?? "",
+                        mode: LaunchMode.externalApplication,
+                      );
+                    }
+                  },
+                  onLongPress: () {
+                    Clipboard.setData(ClipboardData(text: app?.app.url ?? ""));
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text(tr("copiedToClipboard"))),
+                    );
+                  },
+                  child: Padding(
+                    padding: const .symmetric(horizontal: 12.0, vertical: 6.0),
+                    child: Text(
+                      app?.app.url ?? "",
+                      textAlign: .center,
+                      overflow: .ellipsis,
+                      maxLines: 2,
+                      style: typescaleTheme.labelLarge.toTextStyle(
+                        color: colorTheme.tertiary,
+                        decoration: .underline,
+                        decorationColor: colorTheme.tertiary,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
           ),
         ),
         Text(
           app?.app.id ?? '',
           textAlign: TextAlign.center,
-          style: typescaleTheme.labelSmall.toTextStyle(),
+          style: typescaleTheme.labelLarge.toTextStyle(
+            color: colorTheme.onSurfaceVariant,
+          ),
         ),
         getInfoColumn(),
         const SizedBox(height: 16.0),

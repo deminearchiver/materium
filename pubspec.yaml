@@ -1,6 +1,6 @@
 name: materium
 description: Get Android app updates straight from the source.
-version: 1.2.9+2325
+version: 1.2.10+2326
 repository: https://github.com/deminearchiver/materium
 publish_to: none
 

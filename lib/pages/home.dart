@@ -6,12 +6,14 @@ import 'package:materium/flutter.dart';
 import 'package:materium/components/generated_form_modal.dart';
 import 'package:materium/custom_errors.dart';
 import 'package:materium/pages/add_app.dart';
+import 'package:materium/pages/app.dart';
 import 'package:materium/pages/apps.dart';
 import 'package:materium/pages/import_export.dart';
 import 'package:materium/pages/settings.dart';
 import 'package:materium/providers/apps_provider.dart';
 import 'package:materium/providers/settings_new.dart';
 import 'package:materium/providers/settings_provider.dart';
+import 'package:materium/providers/source_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
@@ -82,6 +84,9 @@ class _HomePageState extends State<HomePage> {
         context,
         MaterialPageRoute<void>(builder: (context) => AddAppPage(input: data)),
       );
+
+      // Legacy code for top-level navigation system.
+
       // _switchToPage(1);
       // while ((pages[1].widget.key as GlobalKey<AddAppPageState>?)
       //         ?.currentState ==
@@ -92,13 +97,63 @@ class _HomePageState extends State<HomePage> {
       //     ?.linkFn(data);
     }
 
+    Future<void> goToExistingApp(String appId) async {
+      if (!context.mounted) return;
+
+      final appsProvider = context.read<AppsProvider>();
+
+      final app = appsProvider.apps[appId];
+      if (app == null) return;
+
+      Navigator.push(
+        context,
+        MaterialPageRoute<void>(
+          builder: (context) => AppPage(appId: app.app.id),
+        ),
+      );
+
+      // Legacy code for top-level navigation system.
+
+      // // Go to Apps page
+      // _switchToPage(0);
+      // while ((pages[0].widget.key as GlobalKey<AppsPageState>?)?.currentState ==
+      //     null) {
+      //   await Future.delayed(const Duration(microseconds: 1));
+      // }
+
+      // // Navigate to the app
+      // (pages[0].widget.key as GlobalKey<AppsPageState>?)?.currentState
+      //     ?.openAppById(appId);
+    }
+
     Future<void> interpretLink(Uri uri) async {
+      if (!context.mounted) return;
+
       _isLinkActivity = true;
       final action = uri.host;
       final data = uri.path.length > 1 ? uri.path.substring(1) : "";
       try {
         if (action == 'add') {
-          await goToAddApp(data);
+          // Ensure apps are loaded
+          final appsProvider = context.read<AppsProvider>();
+          while (appsProvider.loadingApps) {
+            await Future.delayed(const Duration(milliseconds: 10));
+          }
+
+          // See if we already have this app
+          final standardizedUrl = SourceProvider()
+              .getSource(data)
+              .standardizeUrl(data);
+
+          final existingApp = appsProvider.apps.values
+              .where((a) => a.app.url == standardizedUrl)
+              .firstOrNull;
+
+          if (existingApp != null) {
+            await goToExistingApp(existingApp.app.id);
+          } else {
+            await goToAddApp(data);
+          }
         } else if (action == 'app' || action == 'apps') {
           final dataStr = Uri.decodeComponent(data);
           if (await showDialog(
@@ -288,9 +343,7 @@ class _HomePageState extends State<HomePage> {
           },
         );
       }
-      if (!sp.googleVerificationWarningShown &&
-          DateTime.now().year >=
-              2026 /* Gives some time to translators between now and Jan */ ) {
+      if (!sp.googleVerificationWarningShown && DateTime.now().year == 2026) {
         if (!mounted) return;
         await showDialog(
           context: context,
