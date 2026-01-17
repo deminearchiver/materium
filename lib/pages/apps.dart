@@ -2424,8 +2424,9 @@ class AppsPageState extends State<AppsPage> with TickerProviderStateMixin {
                               },
                         icon: Icon(
                           isFilterOff
-                              ? Symbols.search_rounded
-                              : Symbols.search_off_rounded,
+                              ? Symbols.filter_alt_rounded
+                              : Symbols.filter_alt_off_rounded,
+                          fill: 1.0,
                         ),
                         tooltip: isFilterOff
                             ? tr('filterApps')
