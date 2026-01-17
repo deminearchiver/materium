@@ -5,8 +5,6 @@ repository: https://github.com/deminearchiver/materium
 publish_to: none
 
 workspace:
-  - dynamic_color
-  - dynamic_color/example
   - materium_tools
 
 environment:
