@@ -253,6 +253,7 @@ abstract final class LegacyThemeFactory {
     Color? contentColor,
     Color? unselectedContentColor,
     Color? selectedContentColor,
+    Color? outlineColor,
     EdgeInsetsGeometry? padding,
   }) {
     final isUnselectedNotDefault = isSelected == false;
@@ -388,14 +389,14 @@ abstract final class LegacyThemeFactory {
     };
     final side = switch (color) {
       .outlined when isUnselectedDefault => BorderSide(
-        style: BorderStyle.solid,
-        color: colorTheme.outlineVariant,
+        style: .solid,
+        color: outlineColor ?? colorTheme.outlineVariant,
         width: outlineWidth,
         strokeAlign: BorderSide.strokeAlignInside,
       ),
-      _ => BorderSide(
-        style: BorderStyle.none,
-        color: colorTheme.background,
+      _ => const BorderSide(
+        style: .none,
+        color: Colors.transparent,
         width: 0.0,
         strokeAlign: BorderSide.strokeAlignInside,
       ),
@@ -618,13 +619,13 @@ abstract final class LegacyThemeFactory {
     };
     final side = switch (color) {
       .outlined when isUnselectedDefault => BorderSide(
-        style: BorderStyle.solid,
+        style: .solid,
         color: outlineColor ?? colorTheme.outlineVariant,
         width: outlineWidth,
         strokeAlign: BorderSide.strokeAlignInside,
       ),
       _ => const BorderSide(
-        style: BorderStyle.none,
+        style: .none,
         color: Colors.transparent,
         width: 0.0,
         strokeAlign: BorderSide.strokeAlignInside,

@@ -1,3 +1,5 @@
+import 'dart:math' as math;
+
 import 'package:crypto/crypto.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:materium/components/custom_app_bar.dart';
@@ -1427,13 +1429,14 @@ class _AppPageState extends State<AppPage> {
                           stateTheme: stateTheme,
                           typescaleTheme: typescaleTheme,
                           size: .medium,
-                          color: .filled,
+                          color: showProgressIndicator ? .outlined : .filled,
                           textStyle: typescaleTheme.titleMediumEmphasized
                               .toTextStyle(),
                           disabledContainerColor: showProgressIndicator
-                              ? useBlackTheme
-                                    ? colorTheme.primaryContainer
-                                    : colorTheme.surfaceContainerHighest
+                              ? Colors.transparent
+                              : null,
+                          outlineColor: useBlackTheme
+                              ? colorTheme.outline
                               : null,
                           padding: .zero,
                         ),
@@ -1513,11 +1516,10 @@ class _AppPageState extends State<AppPage> {
                                               : null
                                         : 0.0,
                                     padding: .zero,
-                                    color: useBlackTheme
-                                        ? colorTheme.onPrimaryContainer
-                                        : colorTheme.primary,
-                                    backgroundColor:
-                                        colorTheme.surfaceContainer,
+                                    color: colorTheme.primary,
+                                    backgroundColor: useBlackTheme
+                                        ? colorTheme.primaryContainer
+                                        : colorTheme.secondaryContainer,
                                   ),
                                 ),
                               ),
@@ -1577,52 +1579,104 @@ class _AppPageState extends State<AppPage> {
                         ? _AppPageAppBar(
                             expandedContainerColor: backgroundColor,
                             collapsedContainerColor: backgroundColor,
-                            icon: Tooltip(
-                              message: app?.name ?? "",
-                              child: FutureBuilder(
-                                future: appsProvider
-                                    .updateAppIcon(
-                                      app?.app.id,
-                                      ignoreCache: true,
-                                    )
-                                    .then((_) => app?.icon),
-                                builder: (context, snapshot) {
-                                  final bytes = snapshot.data;
-                                  final iconTheme = IconTheme.of(context);
-
-                                  return Skeletonizer(
-                                    enabled: bytes == null,
-                                    effect: ShimmerEffect(
-                                      baseColor:
-                                          colorTheme.surfaceContainerHigh,
-                                      highlightColor:
-                                          colorTheme.surfaceContainerHighest,
-                                    ),
-                                    child: SizedBox.square(
-                                      dimension: iconTheme.size,
-                                      child: Skeleton.leaf(
-                                        child: Material(
-                                          clipBehavior: .antiAlias,
-                                          shape: CornersBorder.rounded(
+                            icon: FutureBuilder(
+                              future: appsProvider
+                                  .updateAppIcon(app?.app.id, ignoreCache: true)
+                                  .then((_) => app?.icon),
+                              builder: (context, snapshot) {
+                                final isLoading =
+                                    snapshot.connectionState != .done;
+                                final bytes = snapshot.data;
+                                final iconTheme = IconTheme.of(context);
+                                final isCollapsed = iconTheme.size <= 48.0;
+                                return Padding(
+                                  padding: .symmetric(
+                                    horizontal: 24.0 + 40.0 + 24.0,
+                                  ),
+                                  child: Align.center(
+                                    child: SizedBox(
+                                      width: .infinity,
+                                      height: math.max(
+                                        iconTheme.size,
+                                        48.0 + 8.0 * 2.0,
+                                      ),
+                                      child: Tooltip(
+                                        message: isCollapsed
+                                            ? app?.name ?? ""
+                                            : "",
+                                        child: InkWell(
+                                          customBorder: CornersBorder.rounded(
                                             corners: .all(
                                               shapeTheme.corner.full,
                                             ),
                                           ),
-                                          color: colorTheme
-                                              .surfaceContainerHighest,
-                                          child: bytes != null
-                                              ? Image.memory(
-                                                  bytes,
-                                                  fit: .cover,
-                                                  gaplessPlayback: true,
-                                                )
-                                              : const SizedBox.shrink(),
+                                          overlayColor: WidgetStateLayerColor(
+                                            color: WidgetStatePropertyAll(
+                                              colorTheme.onSurface,
+                                            ),
+                                            opacity: stateTheme
+                                                .asWidgetStateLayerOpacity,
+                                          ),
+                                          onTap: isCollapsed ? () {} : null,
+                                          child: OverflowBox(
+                                            alignment: .center,
+                                            minWidth: iconTheme.size,
+                                            maxWidth: iconTheme.size,
+                                            minHeight: iconTheme.size,
+                                            maxHeight: iconTheme.size,
+                                            child: Skeletonizer(
+                                              enabled: isLoading,
+                                              effect: ShimmerEffect(
+                                                baseColor: colorTheme
+                                                    .surfaceContainerHigh,
+                                                highlightColor: colorTheme
+                                                    .surfaceContainerHighest,
+                                              ),
+                                              child: Skeleton.leaf(
+                                                child: Material(
+                                                  clipBehavior: .antiAlias,
+                                                  shape: CornersBorder.rounded(
+                                                    corners: .all(
+                                                      shapeTheme.corner.full,
+                                                    ),
+                                                  ),
+                                                  color:
+                                                      !isLoading &&
+                                                          bytes != null
+                                                      ? useBlackTheme
+                                                            ? colorTheme
+                                                                  .surfaceContainerLow
+                                                            : colorTheme
+                                                                  .surfaceContainerHighest
+                                                      : Colors.transparent,
+                                                  child: !isLoading
+                                                      ? bytes != null
+                                                            ? Image.memory(
+                                                                bytes,
+                                                                fit: .cover,
+                                                                gaplessPlayback:
+                                                                    true,
+                                                              )
+                                                            : Icon(
+                                                                Symbols
+                                                                    .broken_image_rounded,
+                                                                // opticalSize:
+                                                                //     48.0,
+                                                                // size: 48.0,
+                                                                color: colorTheme
+                                                                    .primary,
+                                                              )
+                                                      : const SizedBox.shrink(),
+                                                ),
+                                              ),
+                                            ),
+                                          ),
                                         ),
                                       ),
                                     ),
-                                  );
-                                },
-                              ),
+                                  ),
+                                );
+                              },
                             ),
                             headline: Text(app?.name ?? tr("app")),
                             supportingText: Text(
@@ -1841,36 +1895,18 @@ class _AppPageAppBarState extends State<_AppPageAppBar> {
                 left: padding.left,
                 top: padding.top,
                 right: padding.right,
-                height: collapsedExtent,
-                child: Flex.horizontal(
-                  children: [
-                    const SizedBox(width: 24.0 - 4.0),
-                    DeveloperPageBackButton(),
-                  ],
-                ),
-              ),
-              Positioned(
-                left: padding.left,
-                top: padding.top,
-                right: padding.right,
                 height: currentExtent,
                 child: Flex.vertical(
+                  mainAxisSize: .min,
                   mainAxisAlignment: .end,
                   children: [
                     Padding(
                       padding: .only(top: iconAreaPadding),
                       child: SizedBox(
                         height: iconAreaHeight,
-                        child: OverflowBox(
-                          alignment: .center,
-                          minWidth: iconSize,
-                          maxWidth: iconSize,
-                          minHeight: iconSize,
-                          maxHeight: iconSize,
-                          child: IconTheme.merge(
-                            data: .from(size: iconSize),
-                            child: widget.icon,
-                          ),
+                        child: IconTheme.merge(
+                          data: .from(opticalSize: iconSize, size: iconSize),
+                          child: widget.icon,
                         ),
                       ),
                     ),
@@ -1898,13 +1934,24 @@ class _AppPageAppBarState extends State<_AppPageAppBar> {
                   ],
                 ),
               ),
+              Positioned(
+                left: padding.left,
+                top: padding.top,
+                right: padding.right,
+                height: collapsedExtent,
+                child: Flex.horizontal(
+                  children: [
+                    const SizedBox(width: 24.0 - 4.0),
+                    DeveloperPageBackButton(),
+                  ],
+                ),
+              ),
             ],
           ),
         );
       },
     );
-    // return SliverHeader(minExtent: minExtent, maxExtent: maxExtent, builder: builder);
   }
-}
 
-const Curve _kFastOutLinearIn = Cubic(0.4, 0.0, 1.0, 1.0);
+  static const Curve _kFastOutLinearIn = Cubic(0.4, 0.0, 1.0, 1.0);
+}
