@@ -244,8 +244,11 @@ abstract final class LegacyThemeFactory {
     TextStyle? textStyle,
     TextStyle? unselectedTextStyle,
     TextStyle? selectedTextStyle,
+    Color? disabledContainerColor,
     Color? containerColor,
+    Color? unselectedDisabledContainerColor,
     Color? unselectedContainerColor,
+    Color? selectedDisabledContainerColor,
     Color? selectedContainerColor,
     Color? contentColor,
     Color? unselectedContentColor,
@@ -366,9 +369,13 @@ abstract final class LegacyThemeFactory {
                 : colorTheme.onSurfaceVariant,
           .text => colorTheme.primary,
         };
-    final disabledBackgroundColor = colorTheme.onSurface.withValues(
-      alpha: 0.10,
-    );
+    final resolvedDisabledBackgroundColor =
+        switch (isSelected) {
+          null => disabledContainerColor,
+          false => unselectedDisabledContainerColor,
+          true => selectedDisabledContainerColor,
+        } ??
+        colorTheme.onSurface.withValues(alpha: 0.10);
     final disabledForegroundColor = colorTheme.onSurface.withValues(
       alpha: 0.38,
     );
@@ -394,10 +401,10 @@ abstract final class LegacyThemeFactory {
       ),
     };
     return ButtonStyle(
-      animationDuration: Duration.zero,
-      alignment: Alignment.center,
+      animationDuration: .zero,
+      alignment: .center,
       enableFeedback: true,
-      iconAlignment: IconAlignment.start,
+      iconAlignment: .start,
       mouseCursor: WidgetStateMouseCursor.clickable,
       tapTargetSize: tapTargetSize,
       elevation: const WidgetStatePropertyAll(0.0),
@@ -417,7 +424,7 @@ abstract final class LegacyThemeFactory {
       ),
       backgroundColor: WidgetStateProperty.resolveWith(
         (states) => states.contains(WidgetState.disabled)
-            ? disabledBackgroundColor
+            ? resolvedDisabledBackgroundColor
             : backgroundColor,
       ),
       foregroundColor: WidgetStateProperty.resolveWith(
