@@ -2,6 +2,7 @@ import 'package:crypto/crypto.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:materium/components/custom_app_bar.dart';
 import 'package:materium/components/custom_refresh_indicator.dart';
+import 'package:materium/components/sliver_dynamic_header.dart';
 import 'package:materium/flutter.dart';
 import 'package:flutter_markdown_plus/flutter_markdown_plus.dart';
 import 'package:materium/components/generated_form_modal.dart';
@@ -14,6 +15,7 @@ import 'package:materium/providers/apps_provider.dart';
 import 'package:materium/providers/settings_new.dart';
 import 'package:materium/providers/settings_provider.dart';
 import 'package:materium/providers/source_provider.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 import 'package:provider/provider.dart';
@@ -114,13 +116,19 @@ class _AppPageState extends State<AppPage> {
         ModalRoute.of(context)?.impliesAppBarDismissal ?? false;
 
     final colorTheme = ColorTheme.of(context);
+    final elevationTheme = ElevationTheme.of(context);
     final shapeTheme = ShapeTheme.of(context);
     final stateTheme = StateTheme.of(context);
     final typescaleTheme = TypescaleTheme.of(context);
+    final staticColors = StaticColors.of(context);
 
     final backgroundColor = useBlackTheme
         ? colorTheme.surface
         : colorTheme.surfaceContainer;
+
+    final developerMode = context.select<SettingsService, bool>(
+      (settings) => settings.developerMode.value,
+    );
 
     final showAppWebpage = context.select<SettingsProvider, bool>(
       (settingsProvider) => settingsProvider.showAppWebpage,
@@ -172,7 +180,6 @@ class _AppPageState extends State<AppPage> {
             overrideSource: app.app.overrideSource,
           )
         : null;
-    print("$areDownloadsRunning $prevApp $app $checkUpdateOnDetailPage");
     if (!areDownloadsRunning &&
         prevApp == null &&
         app != null &&
@@ -194,6 +201,13 @@ class _AppPageState extends State<AppPage> {
       _wasWebViewOpened = true;
       _webViewController.loadRequest(Uri.parse(app.app.url));
     }
+
+    final aboutText = app != null
+        ? switch (app.app.additionalSettings["about"]) {
+            final String value when value.isNotEmpty => value,
+            _ => null,
+          }
+        : null;
 
     Widget getInfoColumn() {
       var versionLines = '';
@@ -450,94 +464,100 @@ class _AppPageState extends State<AppPage> {
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        const SizedBox(height: 0.0),
-        FutureBuilder(
-          future: appsProvider.updateAppIcon(app?.app.id, ignoreCache: true),
-          builder: (ctx, val) {
-            return app?.icon != null
-                ? Flex.horizontal(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      GestureDetector(
-                        onTap: app == null
-                            ? null
-                            : () => pm.openApp(app.app.id),
-                        child: Image.memory(
-                          app!.icon!,
-                          height: small ? 70 : 150,
-                          gaplessPlayback: true,
+        if (!developerMode) ...[
+          FutureBuilder(
+            future: appsProvider.updateAppIcon(app?.app.id, ignoreCache: true),
+            builder: (ctx, val) {
+              return app?.icon != null
+                  ? Flex.horizontal(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        GestureDetector(
+                          onTap: app == null
+                              ? null
+                              : () => pm.openApp(app.app.id),
+                          child: Image.memory(
+                            app!.icon!,
+                            height: small ? 70 : 150,
+                            gaplessPlayback: true,
+                          ),
                         ),
-                      ),
-                    ],
+                      ],
+                    )
+                  : Container();
+            },
+          ),
+          SizedBox(height: small ? 10.0 : 24.0),
+          Text(
+            app?.name ?? tr('app'),
+            textAlign: TextAlign.center,
+            style: small
+                ? typescaleTheme.headlineSmallEmphasized.toTextStyle(
+                    color: colorTheme.onSurface,
                   )
-                : Container();
-          },
-        ),
-        SizedBox(height: small ? 10.0 : 24.0),
-        Text(
-          app?.name ?? tr('app'),
-          textAlign: TextAlign.center,
-          style: small
-              ? typescaleTheme.headlineSmallEmphasized.toTextStyle(
-                  color: colorTheme.onSurface,
-                )
-              : typescaleTheme.displaySmallEmphasized.toTextStyle(
-                  color: colorTheme.onSurface,
+                : typescaleTheme.displaySmallEmphasized.toTextStyle(
+                    color: colorTheme.onSurface,
+                  ),
+          ),
+          Text(
+            tr('byX', args: [app?.author ?? tr('unknown')]),
+            textAlign: TextAlign.center,
+            style: small
+                ? typescaleTheme.labelLarge.toTextStyle(
+                    color: colorTheme.onSurfaceVariant,
+                  )
+                : typescaleTheme.titleMedium.toTextStyle(
+                    color: colorTheme.onSurfaceVariant,
+                  ),
+          ),
+          Padding(
+            padding: const .fromLTRB(16.0, 4.0, 16.0, 4.0),
+            child: Align.center(
+              widthFactor: 1.0,
+              heightFactor: 1.0,
+              child: ConstrainedBox(
+                constraints: const BoxConstraints(
+                  minWidth: 48.0,
+                  minHeight: 32.0,
                 ),
-        ),
-        Text(
-          tr('byX', args: [app?.author ?? tr('unknown')]),
-          textAlign: TextAlign.center,
-          style: small
-              ? typescaleTheme.labelLarge.toTextStyle(
-                  color: colorTheme.onSurfaceVariant,
-                )
-              : typescaleTheme.titleMedium.toTextStyle(
-                  color: colorTheme.onSurfaceVariant,
-                ),
-        ),
-        Padding(
-          padding: const .fromLTRB(16.0, 4.0, 16.0, 4.0),
-          child: Align.center(
-            widthFactor: 1.0,
-            heightFactor: 1.0,
-            child: ConstrainedBox(
-              constraints: const BoxConstraints(
-                minWidth: 48.0,
-                minHeight: 32.0,
-              ),
-              child: Material(
-                clipBehavior: .antiAlias,
-                shape: CornersBorder.rounded(
-                  corners: .all(shapeTheme.corner.medium),
-                ),
-                color: colorTheme.surfaceContainerHighest,
-                child: InkWell(
-                  onTap: () {
-                    if (app?.app.url != null) {
-                      launchUrlString(
-                        app?.app.url ?? "",
-                        mode: LaunchMode.externalApplication,
+                child: Material(
+                  clipBehavior: .antiAlias,
+                  shape: CornersBorder.rounded(
+                    corners: .all(shapeTheme.corner.medium),
+                  ),
+                  color: colorTheme.surfaceContainerHighest,
+                  child: InkWell(
+                    onTap: () {
+                      if (app?.app.url != null) {
+                        launchUrlString(
+                          app?.app.url ?? "",
+                          mode: LaunchMode.externalApplication,
+                        );
+                      }
+                    },
+                    onLongPress: () {
+                      Clipboard.setData(
+                        ClipboardData(text: app?.app.url ?? ""),
                       );
-                    }
-                  },
-                  onLongPress: () {
-                    Clipboard.setData(ClipboardData(text: app?.app.url ?? ""));
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text(tr("copiedToClipboard"))),
-                    );
-                  },
-                  child: Padding(
-                    padding: const .symmetric(horizontal: 12.0, vertical: 6.0),
-                    child: Text(
-                      app?.app.url ?? "",
-                      textAlign: .center,
-                      overflow: .ellipsis,
-                      maxLines: 2,
-                      style: typescaleTheme.labelLarge.toTextStyle(
-                        color: colorTheme.tertiary,
-                        decoration: .underline,
-                        decorationColor: colorTheme.tertiary,
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text(tr("copiedToClipboard"))),
+                      );
+                    },
+                    child: Padding(
+                      padding: const .symmetric(
+                        horizontal: 12.0,
+                        vertical: 6.0,
+                      ),
+                      child: Text(
+                        app?.app.url ?? "",
+                        textAlign: .center,
+                        overflow: .ellipsis,
+                        maxLines: 2,
+                        style: typescaleTheme.labelLarge.toTextStyle(
+                          color: colorTheme.tertiary,
+                          decoration: .underline,
+                          decorationColor: colorTheme.tertiary,
+                        ),
                       ),
                     ),
                   ),
@@ -545,14 +565,131 @@ class _AppPageState extends State<AppPage> {
               ),
             ),
           ),
-        ),
-        Text(
-          app?.app.id ?? '',
-          textAlign: TextAlign.center,
-          style: typescaleTheme.labelLarge.toTextStyle(
-            color: colorTheme.onSurfaceVariant,
+          Text(
+            app?.app.id ?? '',
+            textAlign: TextAlign.center,
+            style: typescaleTheme.labelLarge.toTextStyle(
+              color: colorTheme.onSurfaceVariant,
+            ),
           ),
-        ),
+        ],
+        if (developerMode)
+          Padding(
+            padding: const .symmetric(horizontal: 24.0),
+            child: ListItemTheme.merge(
+              data: .from(
+                containerColor: .all(colorTheme.surface),
+                overlineTextStyle: .all(
+                  typescaleTheme.labelMedium.toTextStyle(
+                    color: colorTheme.onSurface,
+                  ),
+                ),
+                headlineTextStyle: .all(
+                  typescaleTheme.bodyLargeEmphasized.toTextStyle(
+                    color: colorTheme.primary,
+                  ),
+                ),
+                supportingTextStyle: .all(
+                  typescaleTheme.bodyMedium.toTextStyle(
+                    color: colorTheme.onSurfaceVariant,
+                  ),
+                ),
+              ),
+              child: Flex.vertical(
+                children: [
+                  if (aboutText != null)
+                    ListItemContainer(
+                      isFirst: true,
+                      child: ListItemInteraction(
+                        onLongPress: () {
+                          Clipboard.setData(ClipboardData(text: aboutText));
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(content: Text(tr("copiedToClipboard"))),
+                          );
+                        },
+                        child: ListItemLayout(
+                          leading: CustomListItemLeading.fromExtendedColor(
+                            extendedColor: staticColors.cyan,
+                            pairing: .variantOnFixed,
+                            child: const Icon(Symbols.info_rounded, fill: 1.0),
+                          ),
+                          overline: Text("About"),
+                          headline: Text(aboutText),
+                          supportingText: Text("Hold to copy"),
+                        ),
+                      ),
+                    ),
+                  const SizedBox(height: 2.0),
+                  ListItemContainer(
+                    isFirst: aboutText == null,
+                    child: ListItemInteraction(
+                      onTap: () {
+                        if (app?.app.url != null) {
+                          launchUrlString(
+                            app?.app.url ?? "",
+                            mode: LaunchMode.externalApplication,
+                          );
+                        }
+                      },
+                      onLongPress: () {
+                        Clipboard.setData(
+                          ClipboardData(text: app?.app.url ?? ""),
+                        );
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(content: Text(tr("copiedToClipboard"))),
+                        );
+                      },
+                      child: ListItemLayout(
+                        leading: CustomListItemLeading.fromExtendedColor(
+                          extendedColor: staticColors.blue,
+                          pairing: .variantOnFixed,
+                          child: const Icon(Symbols.link_rounded, fill: 1.0),
+                        ),
+                        overline: Text("App source URL"),
+                        headline: Text(
+                          app?.app.url ?? "",
+                          maxLines: 1,
+                          overflow: .ellipsis,
+                        ),
+                        supportingText: Text("Click to open, hold to copy"),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 2.0),
+                  ListItemContainer(
+                    isLast: true,
+                    child: ListItemInteraction(
+                      onLongPress: () {
+                        Clipboard.setData(
+                          ClipboardData(text: app?.app.id ?? ""),
+                        );
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(content: Text(tr("copiedToClipboard"))),
+                        );
+                      },
+                      child: ListItemLayout(
+                        leading: CustomListItemLeading.fromExtendedColor(
+                          extendedColor: staticColors.green,
+                          pairing: .variantOnFixed,
+                          child: const Icon(
+                            Symbols.package_2_rounded,
+                            fill: 1.0,
+                          ),
+                        ),
+                        overline: Text("App package name"),
+                        headline: Text(
+                          app?.app.id ?? "",
+                          maxLines: 1,
+                          overflow: .ellipsis,
+                        ),
+                        supportingText: Text("Hold to copy"),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
         getInfoColumn(),
         const SizedBox(height: 16.0),
       ],
@@ -561,8 +698,7 @@ class _AppPageState extends State<AppPage> {
     Widget getAppWebView() => app != null
         ? WebViewWidget(
             key: ObjectKey(_webViewController),
-            controller: _webViewController
-              ..setBackgroundColor(colorTheme.surface),
+            controller: _webViewController..setBackgroundColor(backgroundColor),
           )
         : Container();
 
@@ -858,95 +994,56 @@ class _AppPageState extends State<AppPage> {
 
     final padding = MediaQuery.paddingOf(context);
 
-    return Scaffold(
-      extendBody: false,
-      appBar: showAppWebpageFinal
-          ? AppBar(backgroundColor: backgroundColor)
-          : null,
-      backgroundColor: backgroundColor,
-      // TODO: replace with a Loading indicator
-      body: CustomRefreshIndicator(
-        onRefresh: () async {
-          if (kDebugMode) {
-            await Future.delayed(const Duration(seconds: 5));
-          }
-          if (app != null) {
-            return getUpdate(app.app.id);
-          }
-        },
-        edgeOffset: padding.top + 64.0,
-        displacement: 80.0,
-        child: showAppWebpageFinal
-            ? getAppWebView()
-            : CustomScrollView(
-                slivers: [
-                  CustomAppBar(
-                    type: .small,
-                    expandedContainerColor: backgroundColor,
-                    collapsedContainerColor: backgroundColor,
-                    collapsedPadding: showBackButton
-                        ? const .fromSTEB(8.0 + 40.0 + 8.0, 0.0, 16.0, 0.0)
-                        : null,
-                    leading: showBackButton
-                        ? const Padding(
-                            padding: .fromSTEB(8.0 - 4.0, 0.0, 8.0 - 4.0, 0.0),
-                            child: DeveloperPageBackButton(),
-                          )
-                        : null,
-                  ),
-                  SliverToBoxAdapter(
-                    child: Flex.vertical(children: [getFullInfoColumn()]),
-                  ),
-                ],
-              ),
-      ),
-      // bottomSheet: kDebugMode ? getBottomSheetMenu() : null,
-      bottomNavigationBar: Align.bottomCenter(
-        heightFactor: 1.0,
-        child: Material(
-          clipBehavior: Clip.antiAlias,
-          shape: CornersBorder.rounded(
-            corners: Corners.all(shapeTheme.corner.none),
-          ),
+    Widget buildFooter() {
+      Widget? oldFooter;
+      if (!developerMode) {
+        oldFooter = Material(
+          clipBehavior: .antiAlias,
+          shape: CornersBorder.rounded(corners: .all(shapeTheme.corner.none)),
           color: useBlackTheme
               ? backgroundColor
               : colorTheme.surfaceContainerHigh,
           child: Padding(
-            padding: EdgeInsets.only(bottom: padding.bottom),
+            padding: .fromLTRB(
+              padding.left,
+              0.0,
+              padding.right,
+              padding.bottom,
+            ),
             child: SizedBox(
-              width: double.infinity,
+              width: .infinity,
               height: 64.0,
               child: Flex.horizontal(
-                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisAlignment: .center,
                 children: [
                   const SizedBox(width: 16.0 - 4.0),
                   Flexible.tight(
                     child: Flex.horizontal(
-                      mainAxisAlignment: MainAxisAlignment.start,
+                      mainAxisAlignment: .start,
                       children: [
                         if (source != null &&
                             source
                                 .combinedAppSpecificSettingFormItems
                                 .isNotEmpty)
                           IconButton(
+                            style: toolbarIconButtonStyle,
                             onPressed: app?.downloadProgress != null || updating
                                 ? null
                                 : () async {
-                                    var values =
-                                        await showAdditionalOptionsDialog();
-                                    handleAdditionalOptionChanges(values);
+                                    handleAdditionalOptionChanges(
+                                      await showAdditionalOptionsDialog(),
+                                    );
                                   },
-                            style: toolbarIconButtonStyle,
                             icon: const Icon(Symbols.edit_rounded, fill: 1.0),
                             tooltip: tr("additionalOptions"),
                           ),
                         if (app != null && app.installedInfo != null) ...[
                           const SizedBox(width: 12.0 - 4.0 - 4.0),
                           IconButton(
+                            style: toolbarIconButtonStyle,
                             onPressed: () {
                               appsProvider.openAppSettings(app.app.id);
                             },
-                            style: toolbarIconButtonStyle,
                             icon: const Icon(
                               Symbols.settings_rounded,
                               fill: 1.0,
@@ -1101,8 +1198,7 @@ class _AppPageState extends State<AppPage> {
                                 ),
                                 child: LinearProgressIndicator(
                                   stopIndicatorColor: Colors.transparent,
-                                  value:
-                                      !kDebugMode && app!.downloadProgress! >= 0
+                                  value: app!.downloadProgress! >= 0
                                       ? clampDouble(
                                           app.downloadProgress! / 100,
                                           0.0,
@@ -1141,53 +1237,6 @@ class _AppPageState extends State<AppPage> {
                           icon: const Icon(Symbols.delete_rounded, fill: 1.0),
                           tooltip: tr("remove"),
                         ),
-                        if (false) ...[
-                          const SizedBox(width: 12.0 - 4.0 - 4.0),
-                          MenuButtonTheme(
-                            data: MenuButtonThemeData(
-                              style: ButtonStyle(
-                                padding: WidgetStatePropertyAll(
-                                  EdgeInsets.symmetric(horizontal: 12.0),
-                                ),
-                                textStyle: WidgetStatePropertyAll(
-                                  typescaleTheme.labelLarge.toTextStyle(),
-                                ),
-                              ),
-                            ),
-                            child: MenuAnchor(
-                              consumeOutsideTap: true,
-                              crossAxisUnconstrained: false,
-                              style: const MenuStyle(
-                                minimumSize: WidgetStatePropertyAll(
-                                  Size(112.0, 0.0),
-                                ),
-                                maximumSize: WidgetStatePropertyAll(
-                                  Size(280.0, double.infinity),
-                                ),
-                              ),
-                              menuChildren: [
-                                MenuItemButton(
-                                  onPressed: () {},
-                                  child: Text("AAA"),
-                                ),
-                              ],
-                              builder: (context, controller, child) =>
-                                  IconButton(
-                                    onPressed: () {
-                                      if (!kDebugMode) return;
-                                      if (controller.isOpen) {
-                                        controller.close();
-                                      } else {
-                                        controller.open();
-                                      }
-                                    },
-                                    style: toolbarIconButtonStyle,
-                                    icon: const Icon(Symbols.more_vert),
-                                    tooltip: tr("more"),
-                                  ),
-                            ),
-                          ),
-                        ],
                       ],
                     ),
                   ),
@@ -1196,8 +1245,647 @@ class _AppPageState extends State<AppPage> {
               ),
             ),
           ),
+        );
+      }
+
+      Widget? newFooter;
+      if (oldFooter == null || developerMode) {
+        final bottomPadding = oldFooter == null ? padding.bottom : 0.0;
+        newFooter = Material(
+          clipBehavior: .antiAlias,
+          shape: CornersBorder.rounded(corners: .all(shapeTheme.corner.none)),
+          color: backgroundColor,
+          child: Padding(
+            padding: .fromLTRB(padding.left, 0.0, padding.right, bottomPadding),
+            child: SizedBox(
+              width: .infinity,
+              height: 56.0 + 16.0 * 2.0,
+              child: Padding(
+                padding: const .all(16.0),
+                child: Flex.horizontal(
+                  children: [
+                    Padding(
+                      padding: const .directional(end: 8.0),
+                      child: IconButton(
+                        style: LegacyThemeFactory.createIconButtonStyle(
+                          colorTheme: colorTheme,
+                          elevationTheme: elevationTheme,
+                          shapeTheme: shapeTheme,
+                          stateTheme: stateTheme,
+                          size: .medium,
+                          color: .tonal,
+                          width: .narrow,
+                          containerColor: colorTheme.errorContainer,
+                          iconColor: colorTheme.onErrorContainer,
+                        ),
+                        onPressed: app?.downloadProgress != null || updating
+                            ? null
+                            : () {
+                                appsProvider
+                                    .removeAppsWithModal(
+                                      context,
+                                      app != null ? [app.app] : [],
+                                    )
+                                    .then((value) {
+                                      if (value == true && context.mounted) {
+                                        Navigator.of(context).pop();
+                                      }
+                                    });
+                              },
+                        icon: const Icon(Symbols.delete_rounded, fill: 1.0),
+                        tooltip: tr("remove"),
+                      ),
+                    ),
+                    if (app != null && app.installedInfo != null)
+                      Padding(
+                        padding: const .directional(end: 8.0),
+                        child: IconButton(
+                          style: LegacyThemeFactory.createIconButtonStyle(
+                            colorTheme: colorTheme,
+                            elevationTheme: elevationTheme,
+                            shapeTheme: shapeTheme,
+                            stateTheme: stateTheme,
+                            size: .medium,
+                            color: .standard,
+                            width: .narrow,
+                            containerColor: useBlackTheme
+                                ? colorTheme.surfaceContainer
+                                : colorTheme.surfaceContainerHighest,
+                            iconColor: useBlackTheme
+                                ? colorTheme.primary
+                                : colorTheme.onSurfaceVariant,
+                          ),
+                          onPressed: app.downloadProgress != null || updating
+                              ? null
+                              : () {
+                                  appsProvider.openAppSettings(app.app.id);
+                                },
+                          icon: const Icon(Symbols.settings_rounded, fill: 1.0),
+                          tooltip: tr("settings"),
+                        ),
+                      ),
+                    if (source != null &&
+                        source.combinedAppSpecificSettingFormItems.isNotEmpty)
+                      Padding(
+                        padding: const .directional(end: 8.0),
+                        child: IconButton(
+                          style: LegacyThemeFactory.createIconButtonStyle(
+                            colorTheme: colorTheme,
+                            elevationTheme: elevationTheme,
+                            shapeTheme: shapeTheme,
+                            stateTheme: stateTheme,
+                            size: .medium,
+                            color: .standard,
+                            width: .narrow,
+                            containerColor: useBlackTheme
+                                ? colorTheme.surfaceContainer
+                                : colorTheme.surfaceContainerHighest,
+                            iconColor: useBlackTheme
+                                ? colorTheme.primary
+                                : colorTheme.onSurfaceVariant,
+                          ),
+                          onPressed: app?.downloadProgress != null || updating
+                              ? null
+                              : () async {
+                                  handleAdditionalOptionChanges(
+                                    await showAdditionalOptionsDialog(),
+                                  );
+                                },
+                          icon: const Icon(Symbols.edit_rounded, fill: 1.0),
+                          tooltip: tr("additionalOptions"),
+                        ),
+                      ),
+                    if ((!isVersionDetectionStandard || trackOnly) &&
+                        app?.app.installedVersion != null &&
+                        app?.app.installedVersion == app?.app.latestVersion)
+                      Padding(
+                        padding: const .directional(end: 8.0),
+                        child: IconButton(
+                          style: LegacyThemeFactory.createIconButtonStyle(
+                            colorTheme: colorTheme,
+                            elevationTheme: elevationTheme,
+                            shapeTheme: shapeTheme,
+                            stateTheme: stateTheme,
+                            size: .medium,
+                            color: .standard,
+                            width: .narrow,
+                            containerColor: useBlackTheme
+                                ? colorTheme.surfaceContainer
+                                : colorTheme.surfaceContainerHighest,
+                            iconColor: useBlackTheme
+                                ? colorTheme.primary
+                                : colorTheme.onSurfaceVariant,
+                          ),
+                          onPressed: app?.app == null || updating
+                              ? null
+                              : () {
+                                  app!.app.installedVersion = null;
+                                  appsProvider.saveApps([app.app]);
+                                },
+                          icon: const Icon(Symbols.restore_rounded, fill: 1.0),
+                          tooltip: tr("resetInstallStatus"),
+                        ),
+                      ),
+                    if (app?.app.installedVersion != null &&
+                        app?.app.installedVersion != app?.app.latestVersion &&
+                        !isVersionDetectionStandard &&
+                        !trackOnly)
+                      Padding(
+                        padding: const .directional(end: 8.0),
+                        child: IconButton(
+                          style: LegacyThemeFactory.createIconButtonStyle(
+                            colorTheme: colorTheme,
+                            elevationTheme: elevationTheme,
+                            shapeTheme: shapeTheme,
+                            stateTheme: stateTheme,
+                            size: .medium,
+                            color: .tonal,
+                            width: .normal,
+                            containerColor: useBlackTheme
+                                ? colorTheme.primaryContainer
+                                : colorTheme.secondaryContainer,
+                            iconColor: useBlackTheme
+                                ? colorTheme.onPrimaryContainer
+                                : colorTheme.onSecondaryContainer,
+                          ),
+                          onPressed: app?.downloadProgress != null || updating
+                              ? null
+                              : showMarkUpdatedDialog,
+                          icon: const Icon(
+                            Symbols.check_circle_rounded,
+                            fill: 1.0,
+                          ),
+                          tooltip: tr("markUpdated"),
+                        ),
+                      ),
+                    Flexible.tight(
+                      child: FilledButton(
+                        style: LegacyThemeFactory.createButtonStyle(
+                          colorTheme: colorTheme,
+                          elevationTheme: elevationTheme,
+                          shapeTheme: shapeTheme,
+                          stateTheme: stateTheme,
+                          typescaleTheme: typescaleTheme,
+                          size: .medium,
+                          color: .filled,
+                          textStyle: typescaleTheme.titleMediumEmphasized
+                              .toTextStyle(),
+                          disabledContainerColor: showProgressIndicator
+                              ? useBlackTheme
+                                    ? colorTheme.primaryContainer
+                                    : colorTheme.surfaceContainerHighest
+                              : null,
+                          padding: .zero,
+                        ),
+                        onPressed:
+                            !updating &&
+                                (app?.app.installedVersion == null ||
+                                    app?.app.installedVersion !=
+                                        app?.app.latestVersion) &&
+                                !areDownloadsRunning
+                            ? () async {
+                                try {
+                                  final successMessage =
+                                      app?.app.installedVersion == null
+                                      ? tr("installed")
+                                      : tr("appsUpdated");
+                                  HapticFeedback.heavyImpact();
+                                  final res = await appsProvider
+                                      .downloadAndInstallLatestApps(
+                                        app?.app.id != null
+                                            ? [app!.app.id]
+                                            : [],
+                                        globalNavigatorKey.currentContext,
+                                      );
+                                  if (res.isNotEmpty && !trackOnly) {
+                                    if (context.mounted) {
+                                      showMessage(successMessage, context);
+                                    }
+                                  }
+                                  if (res.isNotEmpty && context.mounted) {
+                                    Navigator.pop(context);
+                                  }
+                                } catch (e) {
+                                  if (context.mounted) {
+                                    showError(e, context);
+                                  }
+                                }
+                              }
+                            : null,
+                        child: Stack(
+                          alignment: .center,
+                          children: [
+                            Visibility.maintain(
+                              visible: !showProgressIndicator,
+                              child: Padding(
+                                padding: const .symmetric(
+                                  horizontal: 24.0,
+                                  vertical: 16.0,
+                                ),
+                                child: Text(
+                                  app?.app.installedVersion == null
+                                      ? !trackOnly
+                                            ? tr('install')
+                                            : tr('markInstalled')
+                                      : !trackOnly
+                                      ? tr('update')
+                                      : tr('markUpdated'),
+                                ),
+                              ),
+                            ),
+                            Visibility.maintain(
+                              visible: showProgressIndicator,
+                              child: Padding(
+                                padding: const .symmetric(
+                                  horizontal: 8.0,
+                                  vertical: 8.0,
+                                ),
+                                child: SizedBox.square(
+                                  dimension: 40.0,
+                                  child: CircularProgressIndicator(
+                                    value: showProgressIndicator
+                                        ? app!.downloadProgress! >= 0
+                                              ? clampDouble(
+                                                  app.downloadProgress! / 100,
+                                                  0.0,
+                                                  1.0,
+                                                )
+                                              : null
+                                        : 0.0,
+                                    padding: .zero,
+                                    color: useBlackTheme
+                                        ? colorTheme.onPrimaryContainer
+                                        : colorTheme.primary,
+                                    backgroundColor:
+                                        colorTheme.surfaceContainer,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        );
+      }
+      return Flex.vertical(
+        mainAxisSize: .min,
+        crossAxisAlignment: .stretch,
+        children: [?newFooter, ?oldFooter],
+      );
+    }
+
+    return Scaffold(
+      extendBody: false,
+      appBar: showAppWebpageFinal
+          ? AppBar(
+              backgroundColor: backgroundColor,
+              toolbarHeight: 64.0,
+              leadingWidth: 8.0 + 40.0 + 8.0,
+              automaticallyImplyLeading: false,
+              leading: showBackButton
+                  ? Align.center(child: const DeveloperPageBackButton())
+                  : null,
+            )
+          : null,
+      backgroundColor: backgroundColor,
+      // TODO: replace with a Loading indicator
+      body: SafeArea(
+        top: false,
+        bottom: false,
+        child: CustomRefreshIndicator(
+          onRefresh: () async {
+            if (kDebugMode) {
+              await Future.delayed(const Duration(seconds: 5));
+            }
+            if (app != null) {
+              return getUpdate(app.app.id);
+            }
+          },
+          edgeOffset: developerMode ? padding.top : padding.top + 64.0,
+          displacement: developerMode ? (96.0 - 48.0) / 2.0 : 80.0,
+          child: showAppWebpageFinal
+              ? getAppWebView()
+              : CustomScrollView(
+                  slivers: [
+                    developerMode
+                        ? _AppPageAppBar(
+                            expandedContainerColor: backgroundColor,
+                            collapsedContainerColor: backgroundColor,
+                            icon: FutureBuilder(
+                              future: appsProvider
+                                  .updateAppIcon(app?.app.id, ignoreCache: true)
+                                  .then((_) => app?.icon),
+                              builder: (context, snapshot) {
+                                final bytes = snapshot.data;
+                                final iconTheme = IconTheme.of(context);
+
+                                return Skeletonizer(
+                                  enabled: bytes == null,
+                                  effect: ShimmerEffect(
+                                    baseColor: colorTheme.surfaceContainerHigh,
+                                    highlightColor:
+                                        colorTheme.surfaceContainerHighest,
+                                  ),
+                                  child: SizedBox.square(
+                                    dimension: iconTheme.size,
+                                    child: Skeleton.leaf(
+                                      child: Material(
+                                        clipBehavior: .antiAlias,
+                                        shape: CornersBorder.rounded(
+                                          corners: .all(shapeTheme.corner.full),
+                                        ),
+                                        color:
+                                            colorTheme.surfaceContainerHighest,
+                                        child: bytes != null
+                                            ? Image.memory(
+                                                bytes,
+                                                fit: .cover,
+                                                gaplessPlayback: true,
+                                              )
+                                            : const SizedBox.shrink(),
+                                      ),
+                                    ),
+                                  ),
+                                );
+                              },
+                            ),
+                            headline: Text(app?.name ?? tr("app")),
+                            supportingText: Text(
+                              tr("byX", args: [app?.author ?? tr("unknown")]),
+                            ),
+                          )
+                        : CustomAppBar(
+                            type: .small,
+                            expandedContainerColor: backgroundColor,
+                            collapsedContainerColor: backgroundColor,
+                            collapsedPadding: showBackButton
+                                ? const .fromSTEB(
+                                    8.0 + 40.0 + 8.0,
+                                    0.0,
+                                    16.0,
+                                    0.0,
+                                  )
+                                : null,
+                            leading: showBackButton
+                                ? const Padding(
+                                    padding: .fromSTEB(
+                                      8.0 - 4.0,
+                                      0.0,
+                                      8.0 - 4.0,
+                                      0.0,
+                                    ),
+                                    child: DeveloperPageBackButton(),
+                                  )
+                                : null,
+                          ),
+                    SliverToBoxAdapter(
+                      child: Flex.vertical(children: [getFullInfoColumn()]),
+                    ),
+                    // if (kDebugMode)
+                    //   SliverToBoxAdapter(
+                    //     child: SizedBox(height: MediaQuery.heightOf(context)),
+                    //   ),
+                  ],
+                ),
         ),
+      ),
+      // bottomSheet: kDebugMode ? getBottomSheetMenu() : null,
+      bottomNavigationBar: Align.bottomCenter(
+        heightFactor: 1.0,
+        child: buildFooter(),
       ),
     );
   }
 }
+
+class _AppPageAppBar extends StatefulWidget {
+  const _AppPageAppBar({
+    super.key,
+    this.expandedContainerColor,
+    this.collapsedContainerColor,
+    required this.icon,
+    required this.headline,
+    required this.supportingText,
+  });
+
+  final Color? expandedContainerColor;
+  final Color? collapsedContainerColor;
+
+  final Widget icon;
+  final Widget headline;
+  final Widget supportingText;
+
+  @override
+  State<_AppPageAppBar> createState() => _AppPageAppBarState();
+}
+
+class _AppPageAppBarState extends State<_AppPageAppBar> {
+  @override
+  Widget build(BuildContext context) {
+    final padding = MediaQuery.paddingOf(context);
+
+    final colorTheme = ColorTheme.of(context);
+    final shapeTheme = ShapeTheme.of(context);
+    final typescaleTheme = TypescaleTheme.of(context);
+
+    final showBackButton =
+        ModalRoute.of(context)?.impliesAppBarDismissal ?? false;
+
+    final expandedContainerColor =
+        widget.expandedContainerColor ?? colorTheme.surface;
+    final collapsedContainerColor =
+        widget.collapsedContainerColor ?? colorTheme.surfaceContainer;
+
+    return SliverDynamicHeader(
+      minExtentPrototype: Padding(
+        padding: .only(top: padding.top),
+        child: SizedBox(height: 96.0),
+      ),
+      // TODO(deminearchiver): make this dynamic
+      maxExtentPrototype: Padding(
+        padding: .only(top: padding.top),
+        child: SizedBox(height: 308.0),
+      ),
+      builder: (context, layoutInfo, child) {
+        final minExtent = layoutInfo.minExtent - padding.top;
+        final maxExtent = layoutInfo.maxExtent - padding.top;
+        final currentExtent = layoutInfo.currentExtent - padding.top;
+        final shrinkOffset = layoutInfo.shrinkOffset;
+
+        const minShrinkOffset = 0.0;
+        final maxShrinkOffset = maxExtent - minExtent;
+
+        final collapsedExtent = minExtent;
+
+        final expandedExtent = currentExtent - minExtent;
+
+        const collapsedIconSize = 48.0;
+        const expandedIconSize = 108.0;
+
+        final collapsedFraction = clampDouble(
+          (shrinkOffset - minShrinkOffset) /
+              (maxShrinkOffset - minShrinkOffset),
+          0.0,
+          1.0,
+        );
+        final containerColorFraction = _kFastOutLinearIn.transform(
+          collapsedFraction,
+        );
+
+        final collapsedIconFraction = clampDouble(
+          (clampDouble(shrinkOffset, 0.0, expandedIconSize) - minShrinkOffset) /
+              (expandedIconSize - minShrinkOffset),
+          0.0,
+          1.0,
+        );
+
+        final color = Color.lerp(
+          expandedContainerColor,
+          collapsedContainerColor,
+          containerColorFraction,
+        )!;
+
+        final iconSize = lerpDouble(
+          expandedIconSize,
+          collapsedIconSize,
+          collapsedIconFraction,
+        );
+
+        return Material(
+          clipBehavior: .antiAlias,
+          shape: CornersBorder.rounded(corners: .all(shapeTheme.corner.none)),
+          color: color,
+          child: Stack(
+            alignment: .topCenter,
+            children: [
+              Positioned(
+                left: padding.left,
+                top: padding.top,
+                right: padding.right,
+                height: collapsedExtent,
+                child: Flex.horizontal(
+                  children: [
+                    const SizedBox(width: 24.0 - 4.0),
+                    DeveloperPageBackButton(),
+                  ],
+                ),
+              ),
+              Positioned(
+                left: padding.left,
+                top: padding.top,
+                right: padding.right,
+                height: currentExtent,
+                child: Flex.vertical(
+                  mainAxisAlignment: .end,
+                  children: [
+                    Padding(
+                      padding: .only(
+                        top: lerpDouble(minExtent, 0.0, collapsedIconFraction),
+                      ),
+                      child: SizedBox(
+                        height: lerpDouble(
+                          expandedIconSize,
+                          minExtent,
+                          collapsedIconFraction,
+                        ),
+                        child: OverflowBox(
+                          alignment: .center,
+                          minWidth: iconSize,
+                          maxWidth: iconSize,
+                          minHeight: iconSize,
+                          maxHeight: iconSize,
+                          child: IconTheme.merge(
+                            data: .from(size: iconSize),
+                            child: widget.icon,
+                          ),
+                        ),
+                      ),
+                    ),
+                    Flexible.tight(
+                      child: ClipRect(
+                        child: OverflowBox(
+                          alignment: .bottomCenter,
+                          minHeight: 0.0,
+                          maxHeight: maxShrinkOffset,
+                          child: Padding(
+                            padding: .only(top: expandedIconSize),
+                            child: Flex.vertical(
+                              children: [
+                                const SizedBox(height: 16.0),
+                                DefaultTextStyle.merge(
+                                  style: typescaleTheme.displaySmallEmphasized
+                                      .toTextStyle(color: colorTheme.onSurface),
+                                  child: widget.headline,
+                                ),
+                                const SizedBox(height: 8.0),
+                                DefaultTextStyle.merge(
+                                  style: typescaleTheme.titleMedium.toTextStyle(
+                                    color: colorTheme.onSurfaceVariant,
+                                  ),
+                                  child: widget.supportingText,
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+            // child: Flex.vertical(
+            //   crossAxisAlignment: .stretch,
+            //   children: [
+            //     SizedBox(
+            //       height: collapsedExtent,
+            //       child: Flex.horizontal(
+            //         children: [const DeveloperPageBackButton()],
+            //       ),
+            //     ),
+            //     SizedBox(
+            //       height: expandedExtent,
+            //       child: OverflowBox(
+            //         minHeight: maxShrinkOffset,
+            //         maxHeight: maxShrinkOffset,
+            //         child: Flex.vertical(
+            //           children: [
+            //             IconTheme.merge(
+            //               data: .from(
+            //                 size: lerpDouble(108.0, 48.0, collapsedFraction),
+            //               ),
+            //               child: widget.icon,
+            //             ),
+            //             Text(
+            //               "Materium",
+            //               style: typescaleTheme.displaySmallEmphasized
+            //                   .toTextStyle(color: colorTheme.onSurface),
+            //             ),
+            //             const SizedBox(height: 8.0),
+            //             Text(
+            //               "By deminearchiver",
+            //               style: typescaleTheme.titleMedium.toTextStyle(
+            //                 color: colorTheme.onSurfaceVariant,
+            //               ),
+            //             ),
+            //           ],
+            //         ),
+            //       ),
+            //     ),
+            //   ],
+            // ),
+          ),
+        );
+      },
+    );
+    // return SliverHeader(minExtent: minExtent, maxExtent: maxExtent, builder: builder);
+  }
+}
+
+const Curve _kFastOutLinearIn = Cubic(0.4, 0.0, 1.0, 1.0);
