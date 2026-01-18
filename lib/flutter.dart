@@ -2,7 +2,7 @@ library;
 
 // SDK packages
 
-export 'package:flutter/foundation.dart';
+export 'package:flutter/foundation.dart' hide clampDouble;
 
 export 'package:flutter/services.dart';
 
