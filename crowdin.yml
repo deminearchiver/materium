@@ -1,0 +1,3 @@
+files:
+  - source: /assets/i18n/*.json
+    translation: /assets/i18n/%two_letters_code%.%file_extension%
