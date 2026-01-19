@@ -1,10 +1,7 @@
-import 'dart:collection';
 import 'dart:convert';
 
-import 'package:collection/collection.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:materium/components/custom_refresh_indicator.dart';
-import 'package:materium/components/custom_sliver_scrollbar.dart';
 import 'package:materium/flutter.dart';
 import 'package:flutter_markdown_plus/flutter_markdown_plus.dart';
 import 'package:materium/components/custom_app_bar.dart';
@@ -308,17 +305,18 @@ class AppsPageState extends State<AppsPage> with TickerProviderStateMixin {
               // Handle null dates: apps with unknown release dates are grouped at the end
               final aDate = a.app.releaseDate;
               final bDate = b.app.releaseDate;
+              final isDescending = settingsProvider.sortOrder == .descending;
               if (aDate == null && bDate == null) {
                 // Both null: sort by name for consistency
                 result = ((a.name + a.author).toLowerCase()).compareTo(
                   (b.name + b.author).toLowerCase(),
                 );
               } else if (aDate == null) {
-                // a has no date, push to end (ascending) or beginning (will be reversed for descending)
-                result = 1;
+                // a has no date, always push to end regardless of sort direction
+                result = isDescending ? -1 : 1;
               } else if (bDate == null) {
-                // b has no date, push to end
-                result = -1;
+                // b has no date, always push to end regardless of sort direction
+                result = isDescending ? 1 : -1;
               } else {
                 result = aDate.compareTo(bDate);
               }
