@@ -1,0 +1,41 @@
+{
+  "obtainium": "Obtainum",
+  "materium": "Materium",
+  "licensesPage": {
+    "title": "Open-source licenses",
+    "licenseCount": {
+      "zero": "No licenses",
+      "one": "$n license",
+      "other": "$n licenses"
+    }
+  },
+  "settingsPage": {
+    "sections": {
+      "other": {
+        "label": "Other"
+      },
+      "troubleshooting": {
+        "label": "Troubleshooting"
+      }
+    },
+    "items": {
+      "licenses": {
+        "labelText": "Open-source licenses",
+        "supportingText": "View licenses of open-source software"
+      },
+      "about": {
+        "label": "About Materium",
+        "description": "Information, socials and contributors"
+      },
+      "help": {
+        "label": "Help & support",
+        "description": "Get help, report a bug or request a feature"
+      },
+      "developerMode": {
+        "label": "For developers",
+        "description": "If you know, you know",
+        "disabledTooltip": "Developer must be enabled"
+      }
+    }
+  }
+}
