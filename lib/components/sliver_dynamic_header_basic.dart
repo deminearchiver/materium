@@ -2,18 +2,60 @@ import 'dart:math' as math;
 
 import 'package:materium/flutter.dart';
 
+@immutable
 class SliverDynamicHeaderLayoutInfo with Diagnosticable {
   const SliverDynamicHeaderLayoutInfo({
     required this.minExtent,
     required this.maxExtent,
     required this.currentExtent,
     required this.shrinkOffset,
-  });
+  }) : assert(minExtent >= 0.0 && maxExtent >= 0.0 && maxExtent >= minExtent),
+       assert(currentExtent >= minExtent && currentExtent <= maxExtent),
+       assert(shrinkOffset >= 0.0 && shrinkOffset <= maxExtent - minExtent);
 
+  /// The smallest size which the header is allowed to reach
+  /// when it shrinks at the start of the viewport.
   final double minExtent;
+
+  /// The size of the header when it is not shrinking at the top of the
+  /// viewport.
+  ///
+  /// This value is equal to or greater than [minExtent].
   final double maxExtent;
+
+  /// The current size of the header.
+  ///
+  /// This value is between [minExtent] and [maxExtent].
   final double currentExtent;
+
+  /// The distance from [maxExtent] towards [minExtent]
+  /// representing the current amount by which the sliver has been shrunk.
+  ///
+  /// When it is zero, the contents will be rendered with a dimension
+  /// of [maxExtent] in the main axis. When it equals the difference
+  /// between [maxExtent] and [minExtent] (a positive number), the contents will
+  /// be rendered with a dimension of [minExtent] in the main axis.
+  ///
+  /// The value will always be a positive number in that range.
   final double shrinkOffset;
+
+  SliverDynamicHeaderLayoutInfo copyWith({
+    double? minExtent,
+    double? maxExtent,
+    double? currentExtent,
+    double? shrinkOffset,
+  }) =>
+      minExtent != null ||
+          maxExtent != null ||
+          currentExtent != null ||
+          shrinkOffset != null
+      ? SliverDynamicHeaderLayoutInfo(
+          minExtent: minExtent ?? this.minExtent,
+          maxExtent: maxExtent ?? this.maxExtent,
+          currentExtent: currentExtent ?? this.currentExtent,
+          shrinkOffset: shrinkOffset ?? this.shrinkOffset,
+        )
+      : this;
 
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
@@ -138,33 +180,27 @@ class _RenderSliverDynamicHeader extends RenderSliver
     with
         SlottedContainerRenderObjectMixin<_SliverDynamicHeaderSlot, RenderBox>,
         RenderSliverHelpers {
-  RenderBox? get minExtentPrototype => childForSlot(.minExtent);
+  RenderBox? get _minExtentPrototype => childForSlot(.minExtent);
 
-  RenderBox? get maxExtentPrototype => childForSlot(.maxExtent);
+  RenderBox? get _maxExtentPrototype => childForSlot(.maxExtent);
 
-  RenderBox? get child => childForSlot(.child);
-
-  @override
-  Iterable<RenderBox> get children => <RenderBox>[
-    ?minExtentPrototype,
-    ?maxExtentPrototype,
-    ?child,
-  ];
-
-  double boxExtent(RenderBox box) {
-    assert(box.hasSize);
-    return switch (constraints.axis) {
-      .vertical => box.size.height,
-      .horizontal => box.size.width,
-    };
-  }
-
-  double get childExtent => child == null ? 0 : boxExtent(child!);
+  RenderBox? get _child => childForSlot(.child);
 
   @pragma("wasm:prefer-inline")
   @pragma("vm:prefer-inline")
   @pragma("dart2js:prefer-inline")
-  SliverPhysicalParentData _childParentData(RenderObject child) {
+  double _boxChildExtent(RenderBox child) {
+    assert(child.hasSize);
+    return switch (constraints.axis) {
+      .vertical => child.size.height,
+      .horizontal => child.size.width,
+    };
+  }
+
+  @pragma("wasm:prefer-inline")
+  @pragma("vm:prefer-inline")
+  @pragma("dart2js:prefer-inline")
+  SliverPhysicalParentData _boxChildParentData(RenderBox child) {
     assert(child.parentData != null);
     assert(child.parentData is SliverPhysicalParentData);
     return child.parentData! as SliverPhysicalParentData;
@@ -173,84 +209,65 @@ class _RenderSliverDynamicHeader extends RenderSliver
   @pragma("wasm:prefer-inline")
   @pragma("vm:prefer-inline")
   @pragma("dart2js:prefer-inline")
-  ValueBoxConstraints<SliverDynamicHeaderLayoutInfo> _boxConstraints(
+  ValueBoxConstraints<SliverDynamicHeaderLayoutInfo> _customConstraints(
     BoxConstraints constraints,
     SliverDynamicHeaderLayoutInfo info,
   ) => ValueBoxConstraints<SliverDynamicHeaderLayoutInfo>(constraints, info);
 
   @override
-  void setupParentData(RenderObject child) {
+  Iterable<RenderBox> get children => <RenderBox>[
+    ?_minExtentPrototype,
+    ?_maxExtentPrototype,
+    ?_child,
+  ];
+
+  @override
+  void setupParentData(RenderBox child) {
     if (child.parentData is! SliverPhysicalParentData) {
       child.parentData = SliverPhysicalParentData();
     }
   }
 
-  @protected
-  void setChildParentData(
-    RenderObject child,
-    SliverConstraints constraints,
-    SliverGeometry geometry,
-  ) {
-    final childParentData = _childParentData(child);
-    final direction = applyGrowthDirectionToAxisDirection(
-      constraints.axisDirection,
-      constraints.growthDirection,
-    );
-    childParentData.paintOffset = switch (direction) {
-      .up => Offset(
-        0.0,
-        -(geometry.scrollExtent -
-            (geometry.paintExtent + constraints.scrollOffset)),
-      ),
-      .right => Offset(-constraints.scrollOffset, 0.0),
-      .down => Offset(0.0, -constraints.scrollOffset),
-      .left => Offset(
-        -(geometry.scrollExtent -
-            (geometry.paintExtent + constraints.scrollOffset)),
-        0.0,
-      ),
-    };
-  }
-
-  @override
-  double childMainAxisPosition(covariant RenderObject child) => 0.0;
-
   @override
   void performLayout() {
-    final SliverConstraints constraints = this.constraints;
-    final BoxConstraints prototypeBoxConstraints = constraints
-        .asBoxConstraints();
+    final constraints = this.constraints;
+    final prototypeBoxConstraints = constraints.asBoxConstraints();
 
     var minExtent = 0.0;
-    if (minExtentPrototype case final minExtentPrototype?) {
+    if (_minExtentPrototype case final minExtentPrototype?) {
       minExtentPrototype.layout(prototypeBoxConstraints, parentUsesSize: true);
-      minExtent = boxExtent(minExtentPrototype);
+      minExtent = _boxChildExtent(minExtentPrototype);
     }
 
     var maxExtent = double.infinity;
-    if (maxExtentPrototype case final maxExtentPrototype?) {
+    if (_maxExtentPrototype case final maxExtentPrototype?) {
       maxExtentPrototype.layout(prototypeBoxConstraints, parentUsesSize: true);
-      maxExtent = boxExtent(maxExtentPrototype);
+      maxExtent = _boxChildExtent(maxExtentPrototype);
     }
 
     final scrollOffset = constraints.scrollOffset;
-    final shrinkOffset = math.min(scrollOffset, maxExtent);
-    final resolvedExtent = math.max(minExtent, maxExtent - shrinkOffset);
-    final resolvedShrinkOffset = maxExtent - resolvedExtent;
-    final boxConstraints = constraints.asBoxConstraints(
-      minExtent: resolvedExtent,
-      maxExtent: resolvedExtent,
-    );
-    final layoutInfo = SliverDynamicHeaderLayoutInfo(
-      minExtent: minExtent,
-      maxExtent: maxExtent,
-      currentExtent: resolvedExtent,
-      shrinkOffset: resolvedShrinkOffset,
-    );
-    child?.layout(
-      _boxConstraints(boxConstraints, layoutInfo),
-      parentUsesSize: true,
-    );
+
+    var childExtent = 0.0;
+    if (_child case final child?) {
+      final shrinkOffset = math.min(scrollOffset, maxExtent);
+      final resolvedExtent = math.max(minExtent, maxExtent - shrinkOffset);
+      final resolvedShrinkOffset = maxExtent - resolvedExtent;
+      final boxConstraints = constraints.asBoxConstraints(
+        minExtent: resolvedExtent,
+        maxExtent: resolvedExtent,
+      );
+      final layoutInfo = SliverDynamicHeaderLayoutInfo(
+        minExtent: minExtent,
+        maxExtent: maxExtent,
+        currentExtent: resolvedExtent,
+        shrinkOffset: resolvedShrinkOffset,
+      );
+      child.layout(
+        _customConstraints(boxConstraints, layoutInfo),
+        parentUsesSize: true,
+      );
+      childExtent = _boxChildExtent(child);
+    }
 
     final remainingPaintExtent = constraints.remainingPaintExtent;
     final layoutExtent = math.min(childExtent, maxExtent - scrollOffset);
@@ -272,14 +289,20 @@ class _RenderSliverDynamicHeader extends RenderSliver
   }
 
   @override
-  void applyPaintTransform(RenderObject child, Matrix4 transform) {
-    _childParentData(child).applyPaintTransform(transform);
+  double childMainAxisPosition(RenderBox child) => 0.0;
+
+  @override
+  void applyPaintTransform(RenderBox child, Matrix4 transform) {
+    _boxChildParentData(child).applyPaintTransform(transform);
   }
 
   @override
   void paint(PaintingContext context, Offset offset) {
-    if (child case final child? when geometry!.visible) {
-      context.paintChild(child, offset + _childParentData(child).paintOffset);
+    if (_child case final child? when geometry!.visible) {
+      context.paintChild(
+        child,
+        offset + _boxChildParentData(child).paintOffset,
+      );
     }
   }
 
@@ -290,9 +313,9 @@ class _RenderSliverDynamicHeader extends RenderSliver
     required double crossAxisPosition,
   }) {
     assert(geometry!.hitTestExtent > 0.0);
-    if (child case final child?) {
+    if (_child case final child?) {
       return hitTestBoxChild(
-        BoxHitTestResult.wrap(result),
+        .wrap(result),
         child,
         mainAxisPosition: mainAxisPosition,
         crossAxisPosition: crossAxisPosition,

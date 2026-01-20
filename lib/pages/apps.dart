@@ -2052,13 +2052,13 @@ class AppsPageState extends State<AppsPage> with TickerProviderStateMixin {
       final selectedDisabledContainerColor =
           (useBlackTheme || !hasSelection
                   ? colorTheme.onSurface
-                  : colorTheme.surface)
+                  : colorTheme.onPrimaryContainer)
               .withValues(alpha: useBlackTheme ? 0.12 : 0.1);
 
       final unselectedDisabledContentColor =
           (useBlackTheme || !hasSelection
                   ? colorTheme.onSurface
-                  : colorTheme.surface)
+                  : colorTheme.onPrimaryContainer)
               .withValues(alpha: 0.38);
 
       final selectedDisabledContentColor = unselectedDisabledContentColor;

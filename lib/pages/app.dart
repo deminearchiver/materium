@@ -3,7 +3,7 @@ import 'dart:math' as math;
 import 'package:easy_localization/easy_localization.dart';
 import 'package:materium/components/custom_app_bar.dart';
 import 'package:materium/components/custom_refresh_indicator.dart';
-import 'package:materium/components/sliver_dynamic_header.dart';
+import 'package:materium/components/sliver_dynamic_header_basic.dart';
 import 'package:materium/flutter.dart';
 import 'package:flutter_markdown_plus/flutter_markdown_plus.dart';
 import 'package:materium/components/generated_form_modal.dart';
@@ -269,7 +269,9 @@ class _AppPageState extends State<AppPage> {
                     shape: CornersBorder.rounded(
                       corners: .all(shapeTheme.corner.medium),
                     ),
-                    color: colorTheme.surfaceContainerHighest,
+                    color: useBlackTheme
+                        ? colorTheme.surfaceContainer
+                        : colorTheme.surfaceContainerHighest,
                     child: InkWell(
                       onTap: app?.app == null || updating
                           ? null
@@ -359,17 +361,20 @@ class _AppPageState extends State<AppPage> {
               ],
             ),
           const SizedBox(height: 40.0),
-          CategoryEditorSelector(
-            alignment: WrapAlignment.center,
-            preselected: app?.app.categories != null
-                ? app!.app.categories.toSet()
-                : {},
-            onSelected: (categories) {
-              if (app != null) {
-                app.app.categories = categories;
-                appsProvider.saveApps([app.app]);
-              }
-            },
+          Padding(
+            padding: const .symmetric(horizontal: 24.0),
+            child: CategoryEditorSelector(
+              alignment: WrapAlignment.center,
+              preselected: app?.app.categories != null
+                  ? app!.app.categories.toSet()
+                  : {},
+              onSelected: (categories) {
+                if (app != null) {
+                  app.app.categories = categories;
+                  appsProvider.saveApps([app.app]);
+                }
+              },
+            ),
           ),
           if (app?.app.additionalSettings['about'] is String &&
               (app?.app.additionalSettings['about']! as String).isNotEmpty)
@@ -548,12 +553,12 @@ class _AppPageState extends State<AppPage> {
                   ),
                 ),
                 headlineTextStyle: .all(
-                  typescaleTheme.bodyLargeEmphasized.toTextStyle(
+                  typescaleTheme.bodyMediumEmphasized.toTextStyle(
                     color: colorTheme.primary,
                   ),
                 ),
                 supportingTextStyle: .all(
-                  typescaleTheme.bodyMedium.toTextStyle(
+                  typescaleTheme.bodySmall.toTextStyle(
                     color: colorTheme.onSurfaceVariant,
                   ),
                 ),
@@ -574,11 +579,13 @@ class _AppPageState extends State<AppPage> {
                           leading: CustomListItemLeading.fromExtendedColor(
                             extendedColor: staticColors.cyan,
                             pairing: .variantOnFixed,
-                            child: const Icon(Symbols.info_rounded, fill: 1.0),
+                            child: const Icon(
+                              Symbols.format_quote_rounded,
+                              fill: 1.0,
+                            ),
                           ),
-                          overline: Text("About"),
+                          overline: Text(tr("about")),
                           headline: Text(aboutText),
-                          supportingText: Text("Hold to copy"),
                         ),
                       ),
                     ),
@@ -614,7 +621,7 @@ class _AppPageState extends State<AppPage> {
                           maxLines: 1,
                           overflow: .ellipsis,
                         ),
-                        supportingText: Text("Click to open, hold to copy"),
+                        // supportingText: Text("Click to open, hold to copy"),
                       ),
                     ),
                   ),
@@ -645,7 +652,7 @@ class _AppPageState extends State<AppPage> {
                           maxLines: 1,
                           overflow: .ellipsis,
                         ),
-                        supportingText: Text("Hold to copy"),
+                        // supportingText: Text("Hold to copy"),
                       ),
                     ),
                   ),
@@ -1390,6 +1397,7 @@ class _AppPageState extends State<AppPage> {
                           stateTheme: stateTheme,
                           typescaleTheme: typescaleTheme,
                           size: .medium,
+                          shape: showProgressIndicator ? .round : .square,
                           color: showProgressIndicator ? .outlined : .filled,
                           textStyle: typescaleTheme.titleMediumEmphasized
                               .toTextStyle(),

@@ -4,9 +4,11 @@ import 'package:hsluv/hsluv.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:materium/flutter.dart';
 import 'package:materium/components/generated_form_modal.dart';
+import 'package:materium/providers/settings_new.dart';
 import 'package:materium/providers/source_provider.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:collection/collection.dart';
+import 'package:provider/provider.dart';
 
 abstract class GeneratedFormItem {
   late String key;
@@ -494,9 +496,14 @@ class _GeneratedFormState extends State<GeneratedForm> {
   @override
   Widget build(BuildContext context) {
     final colorTheme = ColorTheme.of(context);
+    final elevationTheme = ElevationTheme.of(context);
     final shapeTheme = ShapeTheme.of(context);
     final stateTheme = StateTheme.of(context);
     final typescaleTheme = TypescaleTheme.of(context);
+
+    final useBlackTheme = context.select<SettingsService, bool>(
+      (settings) => settings.useBlackTheme.value,
+    );
 
     if (widget.key.toString() != initKey) {
       initForm();
@@ -585,8 +592,8 @@ class _GeneratedFormState extends State<GeneratedForm> {
                 alignment:
                     (widget.items[r][e] as GeneratedFormTagInput).alignment,
                 crossAxisAlignment: WrapCrossAlignment.center,
-                spacing: 12.0,
-                runSpacing: 8.0,
+                spacing: 18.0,
+                runSpacing: 0.0,
                 children: [
                   // (values[fieldKey] as Map<String, MapEntry<int, bool>>?)
                   //             ?.isEmpty ==
@@ -603,6 +610,28 @@ class _GeneratedFormState extends State<GeneratedForm> {
                           .map((e2) {
                             final isSelected = e2.value.value;
                             return FilledButton(
+                              style: LegacyThemeFactory.createButtonStyle(
+                                colorTheme: colorTheme,
+                                elevationTheme: elevationTheme,
+                                shapeTheme: shapeTheme,
+                                stateTheme: stateTheme,
+                                typescaleTheme: typescaleTheme,
+                                size: .extraSmall,
+                                color: useBlackTheme ? .tonal : .outlined,
+                                isSelected: isSelected,
+                                unselectedContainerColor: useBlackTheme
+                                    ? colorTheme.surfaceContainer
+                                    : null,
+                                unselectedContentColor: useBlackTheme
+                                    ? colorTheme.onSurface
+                                    : null,
+                                selectedContainerColor: useBlackTheme
+                                    ? colorTheme.primaryContainer
+                                    : null,
+                                selectedContentColor: useBlackTheme
+                                    ? colorTheme.onPrimaryContainer
+                                    : null,
+                              ),
                               onPressed: () {
                                 final value = !isSelected;
                                 setState(() {
@@ -621,7 +650,7 @@ class _GeneratedFormState extends State<GeneratedForm> {
                                               as GeneratedFormTagInput)
                                           .singleSelect &&
                                       value == true) {
-                                    for (var key
+                                    for (final key
                                         in (values[fieldKey]
                                                 as Map<
                                                   String,
@@ -648,76 +677,10 @@ class _GeneratedFormState extends State<GeneratedForm> {
                                   someValueChanged();
                                 });
                               },
-                              style: ButtonStyle(
-                                animationDuration: Duration.zero,
-                                elevation: const WidgetStatePropertyAll(0.0),
-                                shadowColor: WidgetStateColor.transparent,
-                                minimumSize: const WidgetStatePropertyAll(
-                                  Size(48.0, 40.0),
-                                ),
-                                fixedSize: const WidgetStatePropertyAll(null),
-                                maximumSize: const WidgetStatePropertyAll(
-                                  Size.infinite,
-                                ),
-                                padding: const WidgetStatePropertyAll(
-                                  EdgeInsets.symmetric(
-                                    horizontal: 16.0,
-                                    vertical: 10.0,
-                                  ),
-                                ),
-                                iconSize: const WidgetStatePropertyAll(20.0),
-                                shape: WidgetStatePropertyAll(
-                                  CornersBorder.rounded(
-                                    corners: Corners.all(
-                                      isSelected
-                                          ? shapeTheme.corner.medium
-                                          : shapeTheme.corner.full,
-                                    ),
-                                  ),
-                                ),
-                                overlayColor: WidgetStateLayerColor(
-                                  color: WidgetStatePropertyAll(
-                                    isSelected
-                                        ? colorTheme.onSecondary
-                                        : colorTheme.onSecondaryContainer,
-                                  ),
-                                  opacity: stateTheme.asWidgetStateLayerOpacity,
-                                ),
-                                backgroundColor:
-                                    WidgetStateProperty.resolveWith(
-                                      (states) =>
-                                          states.contains(WidgetState.disabled)
-                                          ? colorTheme.onSurface.withValues(
-                                              alpha: 0.1,
-                                            )
-                                          : isSelected
-                                          ? colorTheme.secondary
-                                          : colorTheme.secondaryContainer,
-                                    ),
-                                foregroundColor:
-                                    WidgetStateProperty.resolveWith(
-                                      (states) =>
-                                          states.contains(WidgetState.disabled)
-                                          ? colorTheme.onSurface.withValues(
-                                              alpha: 0.38,
-                                            )
-                                          : isSelected
-                                          ? colorTheme.onSecondary
-                                          : colorTheme.onSecondaryContainer,
-                                    ),
-                                textStyle: WidgetStateProperty.resolveWith(
-                                  (states) =>
-                                      (isSelected
-                                              ? typescaleTheme
-                                                    .labelLargeEmphasized
-                                              : typescaleTheme.labelLarge)
-                                          .toTextStyle(),
-                                ),
-                              ),
                               child: Text(
                                 e2.key,
                                 maxLines: 2,
-                                overflow: TextOverflow.ellipsis,
+                                overflow: .ellipsis,
                               ),
                             );
                             // return Padding(
@@ -794,249 +757,173 @@ class _GeneratedFormState extends State<GeneratedForm> {
                           ?.values
                           .where((e) => e.value)
                           .length ==
-                      1) ...[
-                    IconButton(
-                      onPressed: () {
-                        setState(() {
-                          final temp =
-                              values[fieldKey]
-                                  as Map<String, MapEntry<int, bool>>;
-                          // get selected category str where bool is true
-                          final oldEntry = temp.entries.firstWhere(
-                            (entry) => entry.value.value,
-                          );
-                          // generate new color, ensure it is not the same
-                          int newColor = oldEntry.value.key;
-                          while (oldEntry.value.key == newColor) {
-                            newColor = generateRandomLightColor().toARGB32();
-                          }
-                          // Update entry with new color, remain selected
-                          temp.update(
-                            oldEntry.key,
-                            (old) => MapEntry(newColor, old.value),
-                          );
-                          values[fieldKey] = temp;
-                          someValueChanged();
-                        });
-                      },
-                      style: ButtonStyle(
-                        animationDuration: Duration.zero,
-                        elevation: const WidgetStatePropertyAll(0.0),
-                        shadowColor: WidgetStateColor.transparent,
-                        minimumSize: const WidgetStatePropertyAll(Size.zero),
-                        fixedSize: const WidgetStatePropertyAll(
-                          Size(52.0, 40.0),
-                        ),
-                        maximumSize: const WidgetStatePropertyAll(
-                          Size.infinite,
-                        ),
-                        padding: const WidgetStatePropertyAll(EdgeInsets.zero),
-                        iconSize: const WidgetStatePropertyAll(24.0),
-                        shape: WidgetStatePropertyAll(
-                          CornersBorder.rounded(
-                            corners: Corners.all(shapeTheme.corner.full),
-                          ),
-                        ),
-                        overlayColor: WidgetStateLayerColor(
-                          color: WidgetStatePropertyAll(
-                            colorTheme.onSurfaceVariant,
-                          ),
-                          opacity: stateTheme.asWidgetStateLayerOpacity,
-                        ),
-                        backgroundColor: WidgetStateProperty.resolveWith(
-                          (states) => states.contains(WidgetState.disabled)
-                              ? colorTheme.onSurface.withValues(alpha: 0.1)
+                      1)
+                    Padding(
+                      padding: const .directional(end: 18.0 - 4.0 - 4.0),
+                      child: IconButton(
+                        style: LegacyThemeFactory.createIconButtonStyle(
+                          colorTheme: colorTheme,
+                          elevationTheme: elevationTheme,
+                          shapeTheme: shapeTheme,
+                          stateTheme: stateTheme,
+                          color: .standard,
+                          size: .extraSmall,
+                          width: .wide,
+                          containerColor: useBlackTheme
+                              ? colorTheme.surfaceContainer
                               : colorTheme.surfaceContainerHighest,
-                        ),
-                        iconColor: WidgetStateProperty.resolveWith(
-                          (states) => states.contains(WidgetState.disabled)
-                              ? colorTheme.onSurface.withValues(alpha: 0.38)
+                          iconColor: useBlackTheme
+                              ? colorTheme.primary
                               : colorTheme.onSurfaceVariant,
                         ),
+                        onPressed: () {
+                          setState(() {
+                            final temp =
+                                values[fieldKey]
+                                    as Map<String, MapEntry<int, bool>>;
+                            // get selected category str where bool is true
+                            final oldEntry = temp.entries.firstWhere(
+                              (entry) => entry.value.value,
+                            );
+                            // generate new color, ensure it is not the same
+                            int newColor = oldEntry.value.key;
+                            while (oldEntry.value.key == newColor) {
+                              newColor = generateRandomLightColor().toARGB32();
+                            }
+                            // Update entry with new color, remain selected
+                            temp.update(
+                              oldEntry.key,
+                              (old) => MapEntry(newColor, old.value),
+                            );
+                            values[fieldKey] = temp;
+                            someValueChanged();
+                          });
+                        },
+                        icon: const Icon(
+                          Symbols.format_color_fill_rounded,
+                          opticalSize: 20.0,
+                        ),
+                        tooltip: tr("colour"),
                       ),
-                      icon: const Icon(Symbols.format_color_fill_rounded),
-                      tooltip: tr('colour'),
                     ),
-                    const SizedBox(width: 12.0),
-                  ],
                   if ((values[fieldKey] as Map<String, MapEntry<int, bool>>?)
                           ?.values
                           .where((e) => e.value)
                           .isNotEmpty ==
-                      true) ...[
-                    IconButton(
-                      onPressed: () {
-                        void fn() {
-                          setState(() {
-                            final temp =
-                                values[fieldKey]
-                                      as Map<String, MapEntry<int, bool>>
-                                  ..removeWhere((key, value) => value.value);
-                            values[fieldKey] = temp;
-                            someValueChanged();
-                          });
-                        }
-
-                        if ((widget.items[r][e] as GeneratedFormTagInput)
-                                .deleteConfirmationMessage !=
-                            null) {
-                          final message =
-                              (widget.items[r][e] as GeneratedFormTagInput)
-                                  .deleteConfirmationMessage!;
-                          showDialog<Map<String, dynamic>?>(
-                            context: context,
-                            builder: (ctx) {
-                              return GeneratedFormModal(
-                                title: message.key,
-                                message: message.value,
-                                items: const [],
-                              );
-                            },
-                          ).then((value) {
-                            if (value != null) {
-                              fn();
-                            }
-                          });
-                        } else {
-                          fn();
-                        }
-                      },
-                      style: ButtonStyle(
-                        animationDuration: Duration.zero,
-                        elevation: const WidgetStatePropertyAll(0.0),
-                        shadowColor: WidgetStateColor.transparent,
-                        minimumSize: const WidgetStatePropertyAll(Size.zero),
-                        fixedSize: const WidgetStatePropertyAll(
-                          Size(52.0, 40.0),
-                        ),
-                        maximumSize: const WidgetStatePropertyAll(
-                          Size.infinite,
-                        ),
-                        padding: const WidgetStatePropertyAll(EdgeInsets.zero),
-                        iconSize: const WidgetStatePropertyAll(24.0),
-                        shape: WidgetStatePropertyAll(
-                          CornersBorder.rounded(
-                            corners: Corners.all(shapeTheme.corner.full),
-                          ),
-                        ),
-                        overlayColor: WidgetStateLayerColor(
-                          color: WidgetStatePropertyAll(
-                            colorTheme.onSurfaceVariant,
-                          ),
-                          opacity: stateTheme.asWidgetStateLayerOpacity,
-                        ),
-                        backgroundColor: WidgetStateProperty.resolveWith(
-                          (states) => states.contains(WidgetState.disabled)
-                              ? colorTheme.onSurface.withValues(alpha: 0.1)
+                      true)
+                    Padding(
+                      padding: const .directional(end: 18.0 - 4.0 - 4.0),
+                      child: IconButton(
+                        style: LegacyThemeFactory.createIconButtonStyle(
+                          colorTheme: colorTheme,
+                          elevationTheme: elevationTheme,
+                          shapeTheme: shapeTheme,
+                          stateTheme: stateTheme,
+                          color: .standard,
+                          size: .extraSmall,
+                          width: .wide,
+                          containerColor: useBlackTheme
+                              ? colorTheme.surfaceContainer
                               : colorTheme.surfaceContainerHighest,
-                        ),
-                        iconColor: WidgetStateProperty.resolveWith(
-                          (states) => states.contains(WidgetState.disabled)
-                              ? colorTheme.onSurface.withValues(alpha: 0.38)
+                          iconColor: useBlackTheme
+                              ? colorTheme.error
                               : colorTheme.onSurfaceVariant,
                         ),
+                        onPressed: () {
+                          void fn() {
+                            setState(() {
+                              final temp =
+                                  values[fieldKey]
+                                        as Map<String, MapEntry<int, bool>>
+                                    ..removeWhere((key, value) => value.value);
+                              values[fieldKey] = temp;
+                              someValueChanged();
+                            });
+                          }
+
+                          if ((widget.items[r][e] as GeneratedFormTagInput)
+                                  .deleteConfirmationMessage !=
+                              null) {
+                            final message =
+                                (widget.items[r][e] as GeneratedFormTagInput)
+                                    .deleteConfirmationMessage!;
+                            showDialog<Map<String, dynamic>?>(
+                              context: context,
+                              builder: (ctx) {
+                                return GeneratedFormModal(
+                                  title: message.key,
+                                  message: message.value,
+                                  items: const [],
+                                );
+                              },
+                            ).then((value) {
+                              if (value != null) {
+                                fn();
+                              }
+                            });
+                          } else {
+                            fn();
+                          }
+                        },
+                        icon: const Icon(
+                          Symbols.remove_rounded,
+                          opticalSize: 20.0,
+                        ),
+                        tooltip: tr("remove"),
                       ),
-                      icon: const Icon(Symbols.remove_rounded),
-                      tooltip: tr('remove'),
                     ),
-                    const SizedBox(width: 12.0),
-                  ],
                   if ((values[fieldKey] as Map<String, MapEntry<int, bool>>?)
                           ?.isEmpty ==
                       true)
-                    FilledButton.icon(
-                      onPressed: onAddPressed,
-                      style: ButtonStyle(
-                        animationDuration: Duration.zero,
-                        elevation: const WidgetStatePropertyAll(0.0),
-                        shadowColor: WidgetStateColor.transparent,
-                        minimumSize: const WidgetStatePropertyAll(
-                          Size(48.0, 40.0),
-                        ),
-                        fixedSize: const WidgetStatePropertyAll(null),
-                        maximumSize: const WidgetStatePropertyAll(
-                          Size.infinite,
-                        ),
-                        padding: const WidgetStatePropertyAll(
-                          EdgeInsets.symmetric(
-                            horizontal: 16.0,
-                            vertical: 10.0,
-                          ),
-                        ),
-                        iconSize: const WidgetStatePropertyAll(20.0),
-                        shape: WidgetStatePropertyAll(
-                          CornersBorder.rounded(
-                            corners: Corners.all(shapeTheme.corner.medium),
-                          ),
-                        ),
-
-                        overlayColor: WidgetStateLayerColor(
-                          color: WidgetStatePropertyAll(
-                            colorTheme.onSurfaceVariant,
-                          ),
-                          opacity: stateTheme.asWidgetStateLayerOpacity,
-                        ),
-                        backgroundColor: WidgetStateProperty.resolveWith(
-                          (states) => states.contains(WidgetState.disabled)
-                              ? colorTheme.onSurface.withValues(alpha: 0.1)
-                              : colorTheme.surfaceContainerHighest,
-                        ),
-                        foregroundColor: WidgetStateProperty.resolveWith(
-                          (states) => states.contains(WidgetState.disabled)
-                              ? colorTheme.onSurface.withValues(alpha: 0.38)
-                              : colorTheme.onSurfaceVariant,
-                        ),
-                        textStyle: WidgetStateProperty.resolveWith(
-                          (states) => typescaleTheme.labelLarge.toTextStyle(),
-                        ),
+                    FilledButton(
+                      style: LegacyThemeFactory.createButtonStyle(
+                        colorTheme: colorTheme,
+                        elevationTheme: elevationTheme,
+                        shapeTheme: shapeTheme,
+                        stateTheme: stateTheme,
+                        typescaleTheme: typescaleTheme,
+                        size: .extraSmall,
+                        shape: .square,
+                        containerColor: useBlackTheme
+                            ? colorTheme.surfaceContainer
+                            : colorTheme.surfaceContainerHighest,
+                        contentColor: useBlackTheme
+                            ? colorTheme.primary
+                            : colorTheme.onSurfaceVariant,
                       ),
-                      icon: const Icon(Symbols.add_rounded),
-                      label: Text(
-                        (widget.items[r][e] as GeneratedFormTagInput).label,
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
+                      onPressed: onAddPressed,
+                      child: Flex.horizontal(
+                        spacing: 4.0,
+                        children: [
+                          const Icon(Symbols.add_rounded, opticalSize: 20.0),
+                          Text(
+                            (widget.items[r][e] as GeneratedFormTagInput).label,
+                            maxLines: 2,
+                            overflow: .ellipsis,
+                          ),
+                        ],
                       ),
                     )
                   else
                     IconButton(
-                      onPressed: onAddPressed,
-                      style: ButtonStyle(
-                        animationDuration: Duration.zero,
-                        elevation: const WidgetStatePropertyAll(0.0),
-                        shadowColor: WidgetStateColor.transparent,
-                        minimumSize: const WidgetStatePropertyAll(Size.zero),
-                        fixedSize: const WidgetStatePropertyAll(
-                          Size(52.0, 40.0),
-                        ),
-                        maximumSize: const WidgetStatePropertyAll(
-                          Size.infinite,
-                        ),
-                        padding: const WidgetStatePropertyAll(EdgeInsets.zero),
-                        iconSize: const WidgetStatePropertyAll(24.0),
-                        shape: WidgetStatePropertyAll(
-                          CornersBorder.rounded(
-                            corners: Corners.all(shapeTheme.corner.full),
-                          ),
-                        ),
-                        overlayColor: WidgetStateLayerColor(
-                          color: WidgetStatePropertyAll(
-                            colorTheme.onSurfaceVariant,
-                          ),
-                          opacity: stateTheme.asWidgetStateLayerOpacity,
-                        ),
-                        backgroundColor: WidgetStateProperty.resolveWith(
-                          (states) => states.contains(WidgetState.disabled)
-                              ? colorTheme.onSurface.withValues(alpha: 0.1)
-                              : colorTheme.surfaceContainerHighest,
-                        ),
-                        iconColor: WidgetStateProperty.resolveWith(
-                          (states) => states.contains(WidgetState.disabled)
-                              ? colorTheme.onSurface.withValues(alpha: 0.38)
-                              : colorTheme.onSurfaceVariant,
-                        ),
+                      style: LegacyThemeFactory.createIconButtonStyle(
+                        colorTheme: colorTheme,
+                        elevationTheme: elevationTheme,
+                        shapeTheme: shapeTheme,
+                        stateTheme: stateTheme,
+                        color: .standard,
+                        size: .extraSmall,
+                        width: .wide,
+                        containerColor: useBlackTheme
+                            ? colorTheme.surfaceContainer
+                            : colorTheme.surfaceContainerHighest,
+                        iconColor: useBlackTheme
+                            ? colorTheme.primary
+                            : colorTheme.onSurfaceVariant,
                       ),
-                      icon: const Icon(Symbols.add_rounded),
-                      tooltip: tr('add'),
+                      onPressed: onAddPressed,
+                      icon: const Icon(Symbols.add_rounded, opticalSize: 20.0),
+                      tooltip: tr("add"),
                     ),
                 ],
               ),

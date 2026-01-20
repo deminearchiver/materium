@@ -200,6 +200,25 @@ class _ObtainiumState extends State<Obtainium> {
         child: child,
       );
 
+  Widget _buildComponentThemes(BuildContext context, Widget child) {
+    final useBlackTheme = context.select<SettingsService, bool>(
+      (settings) => settings.useBlackTheme.value,
+    );
+
+    final colorTheme = ColorTheme.of(context);
+
+    return LoadingIndicatorTheme.merge(
+      data: .from(
+        indicatorColor: useBlackTheme ? colorTheme.primary : null,
+        containedContainerColor: useBlackTheme
+            ? colorTheme.surfaceContainerHigh
+            : null,
+        containedIndicatorColor: useBlackTheme ? colorTheme.primary : null,
+      ),
+      child: child,
+    );
+  }
+
   Widget _buildLegacyThemes(BuildContext context, Widget child) =>
       ListenableBuilder(
         listenable: _themeListenable,
@@ -229,7 +248,12 @@ class _ObtainiumState extends State<Obtainium> {
       );
 
   Widget _buildThemes(BuildContext context, Widget child) => CombiningBuilder(
-    builders: [_buildReferenceThemes, _buildSystemThemes, _buildLegacyThemes],
+    builders: [
+      _buildReferenceThemes,
+      _buildSystemThemes,
+      _buildComponentThemes,
+      _buildLegacyThemes,
+    ],
     child: child,
   );
 
