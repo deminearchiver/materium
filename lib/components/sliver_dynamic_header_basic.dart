@@ -91,7 +91,6 @@ typedef SliverDynamicHeaderBuilder =
     Widget Function(
       BuildContext context,
       SliverDynamicHeaderLayoutInfo layoutInfo,
-      Widget? child,
     );
 
 class SliverDynamicHeader extends StatelessWidget {
@@ -102,7 +101,6 @@ class SliverDynamicHeader extends StatelessWidget {
     required this.minExtentPrototype,
     required this.maxExtentPrototype,
     required this.builder,
-    this.child,
   });
 
   /// Laid out once to define the minimum size of this sliver along the
@@ -124,12 +122,10 @@ class SliverDynamicHeader extends StatelessWidget {
 
   final SliverDynamicHeaderBuilder builder;
 
-  final Widget? child;
-
   Widget _buildLayout(
     BuildContext context,
     ValueBoxConstraints<SliverDynamicHeaderLayoutInfo> constraints,
-  ) => builder(context, constraints.value, child);
+  ) => builder(context, constraints.value);
 
   @override
   Widget build(BuildContext context) => _SliverDynamicHeader(

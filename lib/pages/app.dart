@@ -1790,7 +1790,7 @@ class _AppPageAppBarState extends State<_AppPageAppBar> {
           ],
         ),
       ),
-      builder: (context, layoutInfo, child) {
+      builder: (context, layoutInfo) {
         final minExtent = layoutInfo.minExtent - padding.top;
         final maxExtent = layoutInfo.maxExtent - padding.top;
         final currentExtent = layoutInfo.currentExtent - padding.top;
