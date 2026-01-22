@@ -1630,6 +1630,9 @@ class _SettingsAppBarRoute<T extends Object?> extends PopupRoute<T> {
   final GlobalKey containerKey;
   final GlobalKey textKey;
 
+  bool _externalOffstage = false;
+  bool _internalOffstage = false;
+
   final GlobalKey _viewKey = GlobalKey();
   final GlobalKey _textFieldKey = GlobalKey();
 
@@ -1739,6 +1742,13 @@ class _SettingsAppBarRoute<T extends Object?> extends PopupRoute<T> {
     setState(() => _sharedElementVisible = sharedElementVisible);
   }
 
+  void _setOffstageInternally() {
+    super.offstage = _externalOffstage || _internalOffstage;
+    // It's necessary to call changedInternalState to get the backdrop to
+    // update.
+    changedInternalState();
+  }
+
   @override
   Color? get barrierColor => null;
 
@@ -1759,9 +1769,29 @@ class _SettingsAppBarRoute<T extends Object?> extends PopupRoute<T> {
       : const DurationThemeData.fallback().medium2;
 
   @override
+  set offstage(bool value) {
+    _externalOffstage = value;
+    _setOffstageInternally();
+  }
+
+  @override
   void install() {
     super.install();
     animation?.addListener(_animationListener);
+  }
+
+  @override
+  TickerFuture didPush() {
+    _internalOffstage = true;
+    _setOffstageInternally();
+
+    // Render one frame offstage in the final position so that we can take
+    // measurements of its layout and then animate to them.
+    SchedulerBinding.instance.addPostFrameCallback((_) {
+      _internalOffstage = false;
+      _setOffstageInternally();
+    });
+    return super.didPush();
   }
 
   @override
