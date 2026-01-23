@@ -1533,7 +1533,7 @@ class _SettingsAppBarState extends State<SettingsAppBar> {
                                 Flexible.tight(
                                   child: Align.center(
                                     child: Text(
-                                      "Search Settings",
+                                      "Search settings",
                                       key: _textKey,
                                       textAlign: TextAlign.center,
                                       overflow: TextOverflow.ellipsis,
@@ -1817,6 +1817,7 @@ class _SettingsAppBarRoute<T extends Object?> extends PopupRoute<T> {
     final screenCorners = ScreenCorners.of(context);
 
     final colorTheme = ColorTheme.of(context);
+    final elevationTheme = ElevationTheme.of(context);
     final shapeTheme = ShapeTheme.of(context);
     final stateTheme = StateTheme.of(context);
     final typescaleTheme = TypescaleTheme.of(context);
@@ -1957,77 +1958,34 @@ class _SettingsAppBarRoute<T extends Object?> extends PopupRoute<T> {
 
             final shape = ShapeBorder.lerp(
               CornersBorder.rounded(
-                corners: Corners.all(
-                  Corner.circular(beginContainerRect.shortestSide / 2.0),
-                ),
+                corners: .all(.circular(beginContainerRect.shortestSide / 2.0)),
               ),
               viewShape,
               _curvedAnimation.value,
             )!;
 
             final backIconButton = IconButton(
-              onPressed: () => Navigator.of(context).pop(),
-              style: ButtonStyle(
-                elevation: const WidgetStatePropertyAll(0.0),
-                shadowColor: WidgetStateColor.transparent,
-                minimumSize: const WidgetStatePropertyAll(Size.zero),
-                fixedSize: const WidgetStatePropertyAll(Size(40.0, 40.0)),
-                maximumSize: const WidgetStatePropertyAll(Size.infinite),
-                padding: const WidgetStatePropertyAll(EdgeInsets.zero),
-                iconSize: const WidgetStatePropertyAll(24.0),
-                shape: WidgetStatePropertyAll(
-                  CornersBorder.rounded(
-                    corners: Corners.all(shapeTheme.corner.full),
-                  ),
-                ),
-                overlayColor: WidgetStateLayerColor(
-                  color: WidgetStatePropertyAll(colorTheme.onSurfaceVariant),
-                  opacity: stateTheme.asWidgetStateLayerOpacity,
-                ),
-                backgroundColor: WidgetStateProperty.resolveWith(
-                  (states) => states.contains(WidgetState.disabled)
-                      ? colorTheme.onSurface.withValues(alpha: 0.1)
-                      : Colors.transparent,
-                ),
-                iconColor: WidgetStateProperty.resolveWith(
-                  (states) => states.contains(WidgetState.disabled)
-                      ? colorTheme.onSurface.withValues(alpha: 0.38)
-                      : colorTheme.onSurface,
-                ),
+              style: LegacyThemeFactory.createIconButtonStyle(
+                colorTheme: colorTheme,
+                elevationTheme: elevationTheme,
+                shapeTheme: shapeTheme,
+                stateTheme: stateTheme,
+                color: .standard,
+                iconColor: colorTheme.onSurface,
               ),
+              onPressed: () => navigator?.pop(),
               icon: const Icon(Symbols.arrow_back_rounded),
             );
 
             final clearIconButton = IconButton(
-              onPressed: () {},
-              style: ButtonStyle(
-                elevation: const WidgetStatePropertyAll(0.0),
-                shadowColor: WidgetStateColor.transparent,
-                minimumSize: const WidgetStatePropertyAll(Size.zero),
-                fixedSize: const WidgetStatePropertyAll(Size(40.0, 40.0)),
-                maximumSize: const WidgetStatePropertyAll(Size.infinite),
-                padding: const WidgetStatePropertyAll(EdgeInsets.zero),
-                iconSize: const WidgetStatePropertyAll(24.0),
-                shape: WidgetStatePropertyAll(
-                  CornersBorder.rounded(
-                    corners: Corners.all(shapeTheme.corner.full),
-                  ),
-                ),
-                overlayColor: WidgetStateLayerColor(
-                  color: WidgetStatePropertyAll(colorTheme.onSurfaceVariant),
-                  opacity: stateTheme.asWidgetStateLayerOpacity,
-                ),
-                backgroundColor: WidgetStateProperty.resolveWith(
-                  (states) => states.contains(WidgetState.disabled)
-                      ? colorTheme.onSurface.withValues(alpha: 0.1)
-                      : Colors.transparent,
-                ),
-                iconColor: WidgetStateProperty.resolveWith(
-                  (states) => states.contains(WidgetState.disabled)
-                      ? colorTheme.onSurface.withValues(alpha: 0.38)
-                      : colorTheme.onSurfaceVariant,
-                ),
+              style: LegacyThemeFactory.createIconButtonStyle(
+                colorTheme: colorTheme,
+                elevationTheme: elevationTheme,
+                shapeTheme: shapeTheme,
+                stateTheme: stateTheme,
+                color: .standard,
               ),
+              onPressed: () {},
               icon: const Icon(Symbols.close_rounded),
             );
 
@@ -2038,7 +1996,7 @@ class _SettingsAppBarRoute<T extends Object?> extends PopupRoute<T> {
                   width: containerRect.width,
                   height: containerRect.height,
                   child: Material(
-                    clipBehavior: Clip.antiAlias,
+                    clipBehavior: .antiAlias,
                     color: containerColor,
                     shape: shape,
                     child: OverflowBox(
@@ -2117,7 +2075,7 @@ class _SettingsAppBarRoute<T extends Object?> extends PopupRoute<T> {
                                                           border:
                                                               InputBorder.none,
                                                           hintText:
-                                                              "Search Settings",
+                                                              "Search settings",
                                                           hintStyle: typescaleTheme
                                                               .bodyLarge
                                                               .toTextStyle(
@@ -2195,7 +2153,7 @@ class _SettingsAppBarRoute<T extends Object?> extends PopupRoute<T> {
                                     (72.0 - beginTextRect.height) / 2.0,
                                 left: textRect.left - containerRect.left,
                                 child: Text(
-                                  "Search Settings",
+                                  "Search settings",
                                   textAlign: TextAlign.start,
                                   style: typescaleTheme.bodyLarge.toTextStyle(
                                     color: colorTheme.onSurfaceVariant,
