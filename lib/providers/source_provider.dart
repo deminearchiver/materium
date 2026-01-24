@@ -42,20 +42,13 @@ import 'package:materium/providers/logs_provider.dart';
 import 'package:materium/providers/settings_provider.dart';
 
 class AppNames {
-  late String author;
-  late String name;
-
   AppNames(this.author, this.name);
+
+  String author;
+  String name;
 }
 
 class APKDetails {
-  late String version;
-  late List<MapEntry<String, String>> apkUrls;
-  late AppNames names;
-  late DateTime? releaseDate;
-  late String? changeLog;
-  late List<MapEntry<String, String>> allAssetUrls;
-
   APKDetails(
     this.version,
     this.apkUrls,
@@ -64,6 +57,13 @@ class APKDetails {
     this.changeLog,
     this.allAssetUrls = const [],
   });
+
+  String version;
+  List<MapEntry<String, String>> apkUrls;
+  AppNames names;
+  DateTime? releaseDate;
+  String? changeLog;
+  List<MapEntry<String, String>> allAssetUrls;
 }
 
 List<List<String>> stringMapListTo2DList(

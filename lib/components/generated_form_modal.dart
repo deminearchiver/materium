@@ -1,6 +1,8 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:materium/flutter.dart';
 import 'package:materium/components/generated_form.dart';
+import 'package:materium/providers/settings_new.dart';
+import 'package:provider/provider.dart';
 
 class GeneratedFormModal extends StatefulWidget {
   const GeneratedFormModal({
@@ -38,12 +40,18 @@ class _GeneratedFormModalState extends State<GeneratedFormModal> {
 
   @override
   Widget build(BuildContext context) {
+    final useBlackTheme = context.select<SettingsService, bool>(
+      (settings) => settings.useBlackTheme.value,
+    );
     final colorTheme = ColorTheme.of(context);
     final elevationTheme = ElevationTheme.of(context);
     final shapeTheme = ShapeTheme.of(context);
     final stateTheme = StateTheme.of(context);
     final typescaleTheme = TypescaleTheme.of(context);
     return AlertDialog(
+      backgroundColor: useBlackTheme
+          ? colorTheme.surfaceContainerLow
+          : colorTheme.surfaceContainerHigh,
       scrollable: true,
       title: Text(
         widget.title,

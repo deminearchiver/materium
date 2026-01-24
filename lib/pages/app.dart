@@ -1,5 +1,6 @@
 import 'dart:math' as math;
 
+import 'package:collection/collection.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:materium/components/custom_app_bar.dart';
 import 'package:materium/components/custom_refresh_indicator.dart';
@@ -22,6 +23,154 @@ import 'package:webview_flutter/webview_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:markdown/markdown.dart' as md;
 
+typedef _SegmentedListItemContainerBuilder =
+    Widget Function(
+      BuildContext context,
+      bool isFirst,
+      bool isLast,
+      Widget child,
+    );
+
+extension type const _SegmentedListItemData._(
+  ({
+    Key? key,
+    bool visible,
+    _SegmentedListItemContainerBuilder? containerBuilder,
+    Widget content,
+  })
+  _
+) {
+  const _SegmentedListItemData({
+    Key? key,
+    bool visible = true,
+    _SegmentedListItemContainerBuilder? containerBuilder,
+    required Widget content,
+  }) : this._((
+         key: key,
+         visible: visible,
+         containerBuilder: containerBuilder,
+         content: content,
+       ));
+
+  Key? get key => _.key;
+
+  bool get visible => _.visible;
+
+  _SegmentedListItemContainerBuilder? get containerBuilder =>
+      _.containerBuilder;
+
+  Widget get content => _.content;
+}
+
+class _SegmentedList extends StatefulWidget {
+  const _SegmentedList({
+    super.key,
+    this.spacing,
+    this.builder = defaultBuilder,
+    this.header,
+    this.items = const [],
+  });
+
+  final double? spacing;
+  final Widget Function(BuildContext context, List<Widget> children) builder;
+  final _SegmentedListItemData? header;
+  final List<_SegmentedListItemData> items;
+
+  @override
+  State<_SegmentedList> createState() => _SegmentedListState();
+
+  static Widget defaultBuilder(BuildContext context, List<Widget> children) =>
+      Flex.vertical(
+        mainAxisSize: .min,
+        crossAxisAlignment: .stretch,
+        children: children,
+      );
+}
+
+class _SegmentedListState extends State<_SegmentedList> {
+  late int _visibleCount;
+  int? _firstIndex;
+  int? _lastIndex;
+
+  void _updateIndices() {
+    _visibleCount = 0;
+    _firstIndex = null;
+    _lastIndex = null;
+
+    for (var index = 0; index < widget.items.length; index++) {
+      final item = widget.items[index];
+      if (item.visible) {
+        _visibleCount++;
+        _firstIndex ??= index;
+        _lastIndex = index;
+      }
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _updateIndices();
+  }
+
+  @override
+  void didUpdateWidget(covariant _SegmentedList oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (!listEquals(widget.items, oldWidget.items)) {
+      _updateIndices();
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final spacing = widget.spacing ?? 2.0;
+    final header = widget.header;
+    final items = widget.items;
+
+    final children = List<Widget>.filled(
+      header != null ? items.length + 1 : items.length,
+      const _NullWidget(),
+    );
+
+    if (header != null) {
+      children[0] = _SegmentedListItem(
+        key: header.key,
+        isFirst: true,
+        isLast: true,
+        spacing: 0.0,
+        isVisible: _visibleCount > 0,
+        containerBuilder: header.containerBuilder,
+        content: header.content,
+      );
+    }
+
+    for (var index = 0; index < items.length; index++) {
+      final item = items[index];
+      final isFirst = index == _firstIndex;
+      final isLast = index == _lastIndex;
+      final childIndex = header != null ? index + 1 : index;
+      children[childIndex] = _SegmentedListItem(
+        key: item.key,
+        isFirst: isFirst,
+        isLast: isLast,
+        spacing: spacing,
+        isVisible: item.visible,
+        containerBuilder: item.containerBuilder,
+        content: item.content,
+      );
+    }
+
+    return widget.builder(context, children);
+  }
+}
+
+class _NullWidget extends Widget {
+  const _NullWidget();
+
+  @override
+  Element createElement() => throw UnimplementedError();
+}
+
 class AppPage extends StatefulWidget {
   const AppPage({
     super.key,
@@ -41,6 +190,14 @@ class _AppPageState extends State<AppPage> {
   bool _wasWebViewOpened = false;
   AppInMemory? prevApp;
   bool updating = false;
+
+  Future<void> _copyText(String text) async {
+    await Clipboard.setData(ClipboardData(text: text));
+    if (!mounted) return;
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(SnackBar(content: Text(tr("copiedToClipboard"))));
+  }
 
   @override
   void initState() {
@@ -172,44 +329,654 @@ class _AppPageState extends State<AppPage> {
           }
         : null;
 
-    Widget getInfoColumn() {
-      var versionLines = '';
-      final installed = app?.app.installedVersion != null;
-      final upToDate = app?.app.installedVersion == app?.app.latestVersion;
-      if (installed) {
-        versionLines = '${app?.app.installedVersion} ${tr('installed')}';
-        if (upToDate) {
-          versionLines += '/${tr('latest')}';
-        }
-      } else {
-        versionLines = tr('notInstalled');
-      }
-      if (!upToDate) {
-        versionLines += '\n${app?.app.latestVersion} ${tr('latest')}';
-      }
-      String infoLines = tr(
-        'lastUpdateCheckX',
+    final installedVersion = app?.app.installedVersion;
+    final latestVersion = app?.app.latestVersion;
+    final isInstalled = installedVersion != null;
+    final isUpToDate = installedVersion == latestVersion;
+
+    final apkUrls = app?.app.apkUrls ?? const [];
+    final otherAssetUrls = app?.app.otherAssetUrls ?? const [];
+    final apkText = apkUrls.isNotEmpty
+        ? apkUrls.length == 1
+              ? apkUrls.single.key
+              : plural("apk", apkUrls.length)
+        : null;
+
+    final versionLines = [
+      if (isInstalled) ...[
+        "${app?.app.installedVersion} ${tr("installed")}${isUpToDate ? "/${tr("latest")}" : ""}",
+        if (!isUpToDate) "${app?.app.latestVersion} ${tr("latest")}",
+      ] else
+        tr("notInstalled"),
+    ].join("\n");
+
+    final infoLines = [
+      if (installedVersionIsEstimate) tr("pseudoVersionInUse"),
+      if (trackOnly) tr("xIsTrackOnly", args: [tr("app")]),
+      tr(
+        "lastUpdateCheckX",
         args: [
           app?.app.lastUpdateCheck == null
-              ? tr('never')
-              : '${app?.app.lastUpdateCheck?.toLocal()}',
+              ? tr("never")
+              : "${app?.app.lastUpdateCheck?.toLocal()}",
         ],
+      ),
+      if ((app?.app.apkUrls.length ?? 0) > 0)
+        ?(app?.app.apkUrls.length == 1
+            ? app?.app.apkUrls[0].key
+            : plural("apk", app?.app.apkUrls.length ?? 0)),
+    ].join("\n");
+
+    final changeLogFn = app != null ? getChangeLogFn(context, app.app) : null;
+
+    final Widget list;
+    if (developerMode) {
+      list = Padding(
+        padding: const .symmetric(horizontal: 24.0),
+        child: Skeletonizer(
+          enabled: app?.downloadProgress != null || updating,
+          effect: ShimmerEffect(
+            baseColor: colorTheme.surfaceContainer,
+            highlightColor: colorTheme.surfaceContainerHighest,
+          ),
+          child: ListItemTheme.merge(
+            data: .from(
+              containerColor: .all(colorTheme.surface),
+              leadingIconTheme: .all(
+                .from(
+                  color: useBlackTheme
+                      ? colorTheme.primary
+                      : colorTheme.onSurfaceVariant,
+                ),
+              ),
+              overlineTextStyle: .all(
+                typescaleTheme.labelMedium.toTextStyle(
+                  color: colorTheme.onSurfaceVariant,
+                ),
+              ),
+              headlineTextStyle: .all(
+                typescaleTheme.bodyMediumEmphasized.toTextStyle(
+                  color: colorTheme.onSurface,
+                ),
+              ),
+              supportingTextStyle: .all(
+                typescaleTheme.bodySmall.toTextStyle(
+                  color: colorTheme.onSurfaceVariant,
+                ),
+              ),
+            ),
+            child: Flex.vertical(
+              crossAxisAlignment: .stretch,
+              children: [
+                _SegmentedList(
+                  items: [
+                    _SegmentedListItemData(
+                      visible: aboutText != null,
+                      containerBuilder: (context, isFirst, isLast, child) =>
+                          ListItemContainer(
+                            isFirst: isFirst,
+                            isLast: isLast,
+                            child: ListItemInteraction(
+                              onLongPress: () => _copyText(aboutText ?? ""),
+                              child: child,
+                            ),
+                          ),
+                      content: ListItemLayout(
+                        leading: const Icon(
+                          Symbols.format_quote_rounded,
+                          fill: 1.0,
+                        ),
+                        overline: Text(tr("about")),
+                        headline: Text(aboutText ?? ""),
+                      ),
+                    ),
+                  ],
+                ),
+                _SegmentedList(
+                  header: _SegmentedListItemData(
+                    content: Skeleton.keep(
+                      child: ListItemLayout(
+                        minHeight: 0.0,
+                        padding: const .fromLTRB(16.0, 20.0, 16.0, 8.0),
+                        contentPadding: .zero,
+                        headline: Text(
+                          "Install status",
+                          style: typescaleTheme.labelLarge.toTextStyle(
+                            color: colorTheme.onSurfaceVariant,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                  items: [
+                    _SegmentedListItemData(
+                      containerBuilder: (context, isFirst, isLast, child) =>
+                          ListItemContainer(
+                            isFirst: isFirst,
+                            isLast: isLast,
+                            child: ListItemInteraction(
+                              onLongPress: isInstalled
+                                  ? () => _copyText(installedVersion)
+                                  : null,
+                              child: child,
+                            ),
+                          ),
+                      content: ListItemLayout(
+                        leading: const Icon(Symbols.info_rounded, fill: 1.0),
+                        overline: const Text("Installed version"),
+                        headline: Text(
+                          isInstalled ? installedVersion : tr("notInstalled"),
+                        ),
+                        trailing: isInstalled
+                            ? SizedBox(
+                                width: 40.0,
+                                child: Align.center(
+                                  child: Skeleton.leaf(
+                                    child: Tooltip(
+                                      message: isUpToDate
+                                          ? "Latest version installed"
+                                          : "Newer version available",
+                                      child: SizedBox(
+                                        width: 32.0,
+                                        height: 40.0,
+                                        child: Material(
+                                          clipBehavior: .antiAlias,
+                                          shape: CornersBorder.rounded(
+                                            corners: .all(
+                                              shapeTheme.corner.full,
+                                            ),
+                                          ),
+                                          color: colorTheme.surfaceContainer,
+                                          child: isUpToDate
+                                              ? Icon(
+                                                  Symbols.check_rounded,
+                                                  color: colorTheme.primary,
+                                                )
+                                              : Icon(
+                                                  Symbols.close_rounded,
+                                                  color: colorTheme.error,
+                                                ),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              )
+                            : null,
+                      ),
+                    ),
+                    _SegmentedListItemData(
+                      containerBuilder: (context, isFirst, isLast, child) =>
+                          ListItemContainer(
+                            isFirst: isFirst,
+                            isLast: isLast,
+                            child: ListItemInteraction(
+                              onLongPress: () => _copyText(latestVersion ?? ""),
+                              child: child,
+                            ),
+                          ),
+                      content: ListItemLayout(
+                        padding: const .directional(
+                          start: 16.0,
+                          end: 16.0 - 4.0,
+                        ),
+                        trailingPadding: const .symmetric(vertical: 10.0 - 4.0),
+                        trailingSpace: 12.0 - 4.0,
+                        leading: const Icon(
+                          Symbols.release_alert_rounded,
+                          fill: 1.0,
+                        ),
+                        overline: const Text("Latest version"),
+                        headline: Text(latestVersion ?? ""),
+                        supportingText:
+                            changeLogFn != null || app?.app.releaseDate != null
+                            ? Text(
+                                app?.app.releaseDate == null
+                                    ? tr("changes")
+                                    : app!.app.releaseDate!
+                                          .toLocal()
+                                          .toString(),
+                              )
+                            : null,
+                        trailing: IconButton(
+                          style: LegacyThemeFactory.createIconButtonStyle(
+                            colorTheme: colorTheme,
+                            elevationTheme: elevationTheme,
+                            shapeTheme: shapeTheme,
+                            stateTheme: stateTheme,
+                            color: .tonal,
+                            width: .normal,
+                            containerColor: useBlackTheme
+                                ? colorTheme.primaryContainer
+                                : colorTheme.secondaryContainer,
+                            iconColor: useBlackTheme
+                                ? colorTheme.onPrimaryContainer
+                                : colorTheme.onSecondaryContainer,
+                          ),
+                          onPressed:
+                              changeLogFn != null ||
+                                  app?.app.releaseDate != null
+                              ? changeLogFn
+                              : null,
+                          icon: const Icon(Symbols.update_rounded, fill: 0.0),
+                        ),
+                      ),
+                    ),
+                    _SegmentedListItemData(
+                      containerBuilder: (context, isFirst, isLast, child) =>
+                          ListItemContainer(
+                            isFirst: isFirst,
+                            isLast: isLast,
+                            child: ListItemInteraction(
+                              onLongPress: app?.app.lastUpdateCheck != null
+                                  ? () => _copyText(
+                                      "${app?.app.lastUpdateCheck?.toLocal()}",
+                                    )
+                                  : null,
+                              child: child,
+                            ),
+                          ),
+                      content: ListItemLayout(
+                        leading: const Icon(
+                          Symbols.schedule_rounded,
+                          fill: 1.0,
+                        ),
+                        overline: const Text("Last update check"),
+                        headline: Text(
+                          app?.app.lastUpdateCheck == null
+                              ? tr("never")
+                              : "${app?.app.lastUpdateCheck?.toLocal()}",
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                _SegmentedList(
+                  header: _SegmentedListItemData(
+                    content: Skeleton.keep(
+                      child: ListItemLayout(
+                        minHeight: 0.0,
+                        padding: const .fromLTRB(16.0, 20.0, 16.0, 8.0),
+                        contentPadding: .zero,
+                        headline: Text(
+                          "Metadata",
+                          style: typescaleTheme.labelLarge.toTextStyle(
+                            color: colorTheme.onSurfaceVariant,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                  items: [
+                    _SegmentedListItemData(
+                      visible: app?.app.url != null,
+                      containerBuilder: (context, isFirst, isLast, child) =>
+                          ListItemContainer(
+                            isFirst: isFirst,
+                            isLast: isLast,
+                            child: ListItemInteraction(
+                              onLongPress: () => _copyText(app?.app.url ?? ""),
+                              child: child,
+                            ),
+                          ),
+                      content: ListItemLayout(
+                        padding: const .directional(
+                          start: 16.0,
+                          end: 16.0 - 4.0,
+                        ),
+                        trailingPadding: const .symmetric(vertical: 10.0 - 4.0),
+                        trailingSpace: 12.0 - 4.0,
+                        leading: const Icon(Symbols.link_rounded, fill: 1.0),
+                        overline: const Text("Source URL"),
+                        headline: Text(app?.app.url ?? ""),
+                        trailing: IconButton(
+                          style: LegacyThemeFactory.createIconButtonStyle(
+                            colorTheme: colorTheme,
+                            elevationTheme: elevationTheme,
+                            shapeTheme: shapeTheme,
+                            stateTheme: stateTheme,
+                            color: .tonal,
+                            width: .normal,
+                            containerColor: useBlackTheme
+                                ? colorTheme.primaryContainer
+                                : colorTheme.secondaryContainer,
+                            iconColor: useBlackTheme
+                                ? colorTheme.onPrimaryContainer
+                                : colorTheme.onSecondaryContainer,
+                          ),
+                          onPressed: () {
+                            if (app?.app.url != null) {
+                              launchUrlString(
+                                app?.app.url ?? "",
+                                mode: .externalApplication,
+                              );
+                            }
+                          },
+                          icon: const Icon(
+                            Symbols.open_in_new_rounded,
+                            fill: 0.0,
+                          ),
+                        ),
+                      ),
+                    ),
+                    _SegmentedListItemData(
+                      visible: app?.app.id != null,
+                      containerBuilder: (context, isFirst, isLast, child) =>
+                          ListItemContainer(
+                            isFirst: isFirst,
+                            isLast: isLast,
+                            child: ListItemInteraction(
+                              onLongPress: () => _copyText(app?.app.id ?? ""),
+                              child: child,
+                            ),
+                          ),
+                      content: ListItemLayout(
+                        leading: const Icon(
+                          Symbols.package_2_rounded,
+                          fill: 1.0,
+                        ),
+                        overline: const Text("Package name"),
+                        headline: Text(app?.app.id ?? ""),
+                      ),
+                    ),
+                    _SegmentedListItemData(
+                      visible: installedVersionIsEstimate,
+                      containerBuilder: (context, isFirst, isLast, child) =>
+                          ListItemContainer(
+                            isFirst: isFirst,
+                            isLast: isLast,
+                            child: child,
+                          ),
+                      content: ListItemLayout(
+                        leading: const Icon(
+                          Symbols.manufacturing_rounded,
+                          fill: 1.0,
+                        ),
+                        headline: Text(tr("pseudoVersionInUse")),
+                      ),
+                    ),
+                    _SegmentedListItemData(
+                      visible: trackOnly,
+                      containerBuilder: (context, isFirst, isLast, child) =>
+                          ListItemContainer(
+                            isFirst: isFirst,
+                            isLast: isLast,
+                            child: child,
+                          ),
+                      content: ListItemLayout(
+                        leading: const Icon(
+                          Symbols.notifications_active_rounded,
+                          fill: 1.0,
+                        ),
+                        headline: Text(tr("xIsTrackOnly", args: [tr("app")])),
+                      ),
+                    ),
+                    _SegmentedListItemData(
+                      visible:
+                          apkUrls.isNotEmpty == true ||
+                          app?.app.otherAssetUrls.isNotEmpty == true,
+                      containerBuilder: (context, isFirst, isLast, child) =>
+                          ListItemContainer(
+                            isFirst: isFirst,
+                            isLast: isLast,
+                            child: ListItemInteraction(
+                              onLongPress: apkUrls.isNotEmpty
+                                  ? () => _copyText(
+                                      apkUrls.isNotEmpty
+                                          ? apkUrls.length == 1
+                                                ? apkUrls.single.key
+                                                : "${apkUrls.length}"
+                                          : "${otherAssetUrls.length}",
+                                    )
+                                  : null,
+                              child: child,
+                            ),
+                          ),
+                      content: ListItemLayout(
+                        padding: const .directional(
+                          start: 16.0,
+                          end: 16.0 - 4.0,
+                        ),
+                        trailingPadding: const .symmetric(vertical: 10.0 - 4.0),
+                        trailingSpace: 12.0 - 4.0,
+                        leading: const Icon(Symbols.android_rounded, fill: 1.0),
+                        overline: Text(
+                          apkUrls.isNotEmpty
+                              ? apkUrls.length > 1
+                                    ? "APKs"
+                                    : "APK"
+                              : "Assets",
+                        ),
+                        headline: Text(
+                          apkUrls.isNotEmpty
+                              ? apkUrls.length == 1
+                                    ? apkUrls.single.key
+                                    : "${apkUrls.length}"
+                              : "${otherAssetUrls.length}",
+                        ),
+                        trailing: IconButton(
+                          style: LegacyThemeFactory.createIconButtonStyle(
+                            colorTheme: colorTheme,
+                            elevationTheme: elevationTheme,
+                            shapeTheme: shapeTheme,
+                            stateTheme: stateTheme,
+                            color: .tonal,
+                            width: .normal,
+                            containerColor: useBlackTheme
+                                ? colorTheme.primaryContainer
+                                : colorTheme.secondaryContainer,
+                            iconColor: useBlackTheme
+                                ? colorTheme.onPrimaryContainer
+                                : colorTheme.onSecondaryContainer,
+                          ),
+                          onPressed:
+                              app?.app != null &&
+                                  !updating &&
+                                  (apkUrls.isNotEmpty ||
+                                      otherAssetUrls.isNotEmpty)
+                              ? () async {
+                                  try {
+                                    await appsProvider.downloadAppAssets([
+                                      app!.app.id,
+                                    ], context);
+                                  } catch (e) {
+                                    if (context.mounted) {
+                                      showError(e, context);
+                                    }
+                                  }
+                                }
+                              : null,
+                          icon: const Icon(Symbols.download_rounded, fill: 0.0),
+                          tooltip: "Download release asset",
+                        ),
+                      ),
+                    ),
+                    _SegmentedListItemData(
+                      visible: app != null && app.certificateHashes.isNotEmpty,
+                      containerBuilder: (context, isFirst, isLast, child) =>
+                          ListItemContainer(
+                            isFirst: isFirst,
+                            isLast: isLast,
+                            child: child,
+                          ),
+                      content: Flex.vertical(
+                        mainAxisSize: .min,
+                        crossAxisAlignment: .stretch,
+                        children: [
+                          ListItemLayout(
+                            leading: const Icon(
+                              Symbols.verified_rounded,
+                              fill: 1.0,
+                            ),
+                            headline: const Text("Certificate hashes"),
+                            supportingText: (app?.hasMultipleSigners ?? false)
+                                ? Text(tr("multipleSigners"))
+                                : null,
+                          ),
+                          ...?app?.certificateHashes.map(
+                            (hash) => ListItemInteraction(
+                              stateLayerShape: .all(
+                                CornersBorder.rounded(
+                                  corners: .all(shapeTheme.corner.none),
+                                ),
+                              ),
+                              onLongPress: () => _copyText(hash),
+                              child: ListItemLayout(
+                                leading: const SizedBox.square(
+                                  dimension: 24.0,
+                                  child: Text("·", textAlign: .center),
+                                ),
+                                headline: Text(hash),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 8.0),
+                Skeleton.keep(
+                  child: ListItemLayout(
+                    alignment: .top,
+                    leading: const SizedBox(
+                      width: 24.0,
+                      child: Icon(
+                        Symbols.lightbulb_2_rounded,
+                        fill: 1.0,
+                        opticalSize: 20.0,
+                        size: 20.0,
+                      ),
+                    ),
+                    supportingText: Text(
+                      "Tap and hold an item to copy its contents as text.",
+                      style: typescaleTheme.bodyMedium.toTextStyle(
+                        color: colorTheme.onSurfaceVariant,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
       );
-      if (trackOnly) {
-        infoLines = '${tr('xIsTrackOnly', args: [tr('app')])}\n$infoLines';
-      }
-      if (installedVersionIsEstimate) {
-        infoLines = '${tr('pseudoVersionInUse')}\n$infoLines';
-      }
-      if ((app?.app.apkUrls.length ?? 0) > 0) {
-        infoLines =
-            '$infoLines\n${app?.app.apkUrls.length == 1 ? app?.app.apkUrls[0].key : plural('apk', app?.app.apkUrls.length ?? 0)}';
-      }
-      final changeLogFn = app != null ? getChangeLogFn(context, app.app) : null;
-      return Flex.vertical(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
+    } else {
+      list = Flex.vertical(
+        mainAxisSize: .min,
+        crossAxisAlignment: .stretch,
+        children: [],
+      );
+    }
+
+    Widget getFullInfoColumn({bool small = false}) => Flex.vertical(
+      mainAxisAlignment: .center,
+      crossAxisAlignment: .stretch,
+      children: [
+        if (!developerMode) ...[
+          FutureBuilder(
+            future: appsProvider.updateAppIcon(app?.app.id, ignoreCache: true),
+            builder: (ctx, val) {
+              return app?.icon != null
+                  ? Flex.horizontal(
+                      mainAxisAlignment: .center,
+                      children: [
+                        GestureDetector(
+                          onTap: app == null
+                              ? null
+                              : () => pm.openApp(app.app.id),
+                          child: Image.memory(
+                            app!.icon!,
+                            height: small ? 70 : 150,
+                            gaplessPlayback: true,
+                          ),
+                        ),
+                      ],
+                    )
+                  : Container();
+            },
+          ),
+          SizedBox(height: small ? 10.0 : 24.0),
+          Text(
+            app?.name ?? tr('app'),
+            textAlign: .center,
+            style: small
+                ? typescaleTheme.headlineSmallEmphasized.toTextStyle(
+                    color: colorTheme.onSurface,
+                  )
+                : typescaleTheme.displaySmallEmphasized.toTextStyle(
+                    color: colorTheme.onSurface,
+                  ),
+          ),
+          Text(
+            tr('byX', args: [app?.author ?? tr('unknown')]),
+            textAlign: .center,
+            style: small
+                ? typescaleTheme.labelLarge.toTextStyle(
+                    color: colorTheme.onSurfaceVariant,
+                  )
+                : typescaleTheme.titleMedium.toTextStyle(
+                    color: colorTheme.onSurfaceVariant,
+                  ),
+          ),
+          Padding(
+            padding: const .fromLTRB(16.0, 4.0, 16.0, 4.0),
+            child: Align.center(
+              widthFactor: 1.0,
+              heightFactor: 1.0,
+              child: ConstrainedBox(
+                constraints: const BoxConstraints(
+                  minWidth: 48.0,
+                  minHeight: 32.0,
+                ),
+                child: Material(
+                  clipBehavior: .antiAlias,
+                  shape: CornersBorder.rounded(
+                    corners: .all(shapeTheme.corner.medium),
+                  ),
+                  color: colorTheme.surfaceContainerHighest,
+                  child: InkWell(
+                    onTap: () {
+                      if (app?.app.url != null) {
+                        launchUrlString(
+                          app?.app.url ?? "",
+                          mode: .externalApplication,
+                        );
+                      }
+                    },
+                    onLongPress: () => _copyText(app?.app.url ?? ""),
+                    child: Padding(
+                      padding: const .symmetric(
+                        horizontal: 12.0,
+                        vertical: 6.0,
+                      ),
+                      child: Text(
+                        app?.app.url ?? "",
+                        textAlign: .center,
+                        overflow: .ellipsis,
+                        maxLines: 2,
+                        style: typescaleTheme.labelLarge.toTextStyle(
+                          color: colorTheme.tertiary,
+                          decoration: .underline,
+                          decorationColor: colorTheme.tertiary,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+          Text(
+            app?.app.id ?? '',
+            textAlign: .center,
+            style: typescaleTheme.labelLarge.toTextStyle(
+              color: colorTheme.onSurfaceVariant,
+            ),
+          ),
+        ],
+        list,
+        if (!developerMode)
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 0.0),
             child: Flex.vertical(
@@ -217,29 +984,24 @@ class _AppPageState extends State<AppPage> {
                 const SizedBox(height: 32.0),
                 Text(
                   versionLines,
-                  textAlign: TextAlign.start,
-                  style: Theme.of(
-                    context,
-                  ).textTheme.bodyLarge!.copyWith(fontWeight: FontWeight.bold),
+                  textAlign: .start,
+                  style: typescaleTheme.bodyLargeEmphasized.toTextStyle(
+                    color: colorTheme.onSurface,
+                  ),
                 ),
                 changeLogFn != null || app?.app.releaseDate != null
                     ? GestureDetector(
                         onTap: changeLogFn,
                         child: Text(
                           app?.app.releaseDate == null
-                              ? tr('changes')
+                              ? tr("changes")
                               : app!.app.releaseDate!.toLocal().toString(),
-                          textAlign: TextAlign.center,
-                          style: typescaleTheme.labelSmall
-                              .toTextStyle()
-                              .copyWith(
-                                decoration: changeLogFn != null
-                                    ? TextDecoration.underline
-                                    : null,
-                                fontStyle: changeLogFn != null
-                                    ? FontStyle.italic
-                                    : null,
-                              ),
+                          textAlign: .center,
+                          style: typescaleTheme.labelLarge.toTextStyle(
+                            color: colorTheme.onSurfaceVariant,
+                            decoration: changeLogFn != null ? .underline : null,
+                            decorationColor: colorTheme.onSurfaceVariant,
+                          ),
                         ),
                       )
                     : const SizedBox.shrink(),
@@ -247,12 +1009,16 @@ class _AppPageState extends State<AppPage> {
               ],
             ),
           ),
+        if (!developerMode)
           Text(
             infoLines,
-            textAlign: TextAlign.center,
-            style: const TextStyle(fontStyle: FontStyle.italic, fontSize: 12),
+            textAlign: .center,
+            style: typescaleTheme.bodyMedium.toTextStyle(
+              color: colorTheme.onSurfaceVariant,
+            ),
           ),
-          if (app?.app.apkUrls.isNotEmpty == true ||
+        if (!developerMode)
+          if (apkUrls.isNotEmpty == true ||
               app?.app.otherAssetUrls.isNotEmpty == true)
             Padding(
               padding: const EdgeInsets.only(top: 4.0),
@@ -298,15 +1064,15 @@ class _AppPageState extends State<AppPage> {
                           vertical: 6.0,
                         ),
                         child: Flex.horizontal(
-                          mainAxisSize: MainAxisSize.min,
-                          mainAxisAlignment: MainAxisAlignment.center,
+                          mainAxisSize: .min,
+                          mainAxisAlignment: .center,
                           children: [
                             Flexible.loose(
                               child: Text(
                                 tr(
-                                  'downloadX',
+                                  "downloadX",
                                   args: [
-                                    lowerCaseIfEnglish(tr('releaseAsset')),
+                                    lowerCaseIfEnglish(tr("releaseAsset")),
                                   ],
                                 ),
                                 style: typescaleTheme.labelLarge.toTextStyle(
@@ -322,7 +1088,7 @@ class _AppPageState extends State<AppPage> {
                 ),
               ),
             ),
-          /* Certificate Hashes */
+        if (!developerMode)
           if (app != null && app.certificateHashes.isNotEmpty)
             Flex.vertical(
               mainAxisSize: .min,
@@ -331,70 +1097,87 @@ class _AppPageState extends State<AppPage> {
                 Text(
                   "${plural("certificateHash", app.certificateHashes.length)}"
                   "${app.hasMultipleSigners ? " (${tr("multipleSigners")})" : ""}",
-                  textAlign: TextAlign.center,
+                  textAlign: .center,
                   style: const TextStyle(fontSize: 12),
                 ),
                 Flex.vertical(
                   mainAxisSize: .min,
-                  children: app.certificateHashes.map((hash) {
-                    return GestureDetector(
-                      onLongPress: () {
-                        Clipboard.setData(ClipboardData(text: hash));
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(content: Text(tr("copiedToClipboard"))),
-                        );
-                      },
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 25,
-                          vertical: 0,
+                  children: app.certificateHashes
+                      .map(
+                        (hash) => GestureDetector(
+                          onLongPress: () => _copyText(hash),
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 25,
+                              vertical: 0,
+                            ),
+                            child: Text(
+                              hash,
+                              textAlign: .center,
+                              style: const TextStyle(fontSize: 12),
+                            ),
+                          ),
                         ),
-                        child: Text(
-                          hash,
-                          textAlign: TextAlign.center,
-                          style: const TextStyle(fontSize: 12),
-                        ),
-                      ),
-                    );
-                  }).toList(),
+                      )
+                      .toList(),
                 ),
               ],
             ),
-          const SizedBox(height: 40.0),
-          Padding(
-            padding: const .symmetric(horizontal: 24.0),
-            child: CategoryEditorSelector(
-              alignment: WrapAlignment.center,
-              preselected: app?.app.categories != null
-                  ? app!.app.categories.toSet()
-                  : {},
-              onSelected: (categories) {
-                if (app != null) {
-                  app.app.categories = categories;
-                  appsProvider.saveApps([app.app]);
-                }
-              },
-            ),
-          ),
+        Padding(
+          padding: const .symmetric(horizontal: 24.0),
+          child: developerMode
+              ? Material(
+                  shape: CornersBorder.rounded(
+                    corners: .all(shapeTheme.corner.large),
+                  ),
+                  color: colorTheme.surface,
+                  child: Padding(
+                    padding: const .symmetric(
+                      horizontal: 16.0,
+                      vertical: 16.0 - 8.0,
+                    ),
+                    child: CategoryEditorSelector(
+                      showLabelWhenNotEmpty: false,
+                      alignment: WrapAlignment.center,
+                      preselected: app?.app.categories != null
+                          ? app!.app.categories.toSet()
+                          : {},
+                      onSelected: (categories) {
+                        if (app != null) {
+                          app.app.categories = categories;
+                          appsProvider.saveApps([app.app]);
+                        }
+                      },
+                    ),
+                  ),
+                )
+              : Padding(
+                  padding: const .only(top: 40.0),
+                  child: CategoryEditorSelector(
+                    alignment: WrapAlignment.center,
+                    preselected: app?.app.categories != null
+                        ? app!.app.categories.toSet()
+                        : {},
+                    onSelected: (categories) {
+                      if (app != null) {
+                        app.app.categories = categories;
+                        appsProvider.saveApps([app.app]);
+                      }
+                    },
+                  ),
+                ),
+        ),
+        if (!developerMode)
           if (app?.app.additionalSettings['about'] is String &&
               (app?.app.additionalSettings['about']! as String).isNotEmpty)
             Flex.vertical(
-              mainAxisSize: MainAxisSize.min,
+              mainAxisSize: .min,
               children: [
                 const SizedBox(height: 32.0),
                 GestureDetector(
-                  onLongPress: () {
-                    Clipboard.setData(
-                      ClipboardData(
-                        text:
-                            app.app.additionalSettings['about'] as String? ??
-                            '',
-                      ),
-                    );
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text(tr('copiedToClipboard'))),
-                    );
-                  },
+                  onLongPress: () => _copyText(
+                    app.app.additionalSettings['about'] as String? ?? '',
+                  ),
                   child: Markdown(
                     physics: const NeverScrollableScrollPhysics(),
                     shrinkWrap: true,
@@ -407,10 +1190,7 @@ class _AppPageState extends State<AppPage> {
                     data: app!.app.additionalSettings['about']! as String,
                     onTapLink: (text, href, title) {
                       if (href != null) {
-                        launchUrlString(
-                          href,
-                          mode: LaunchMode.externalApplication,
-                        );
+                        launchUrlString(href, mode: .externalApplication);
                       }
                     },
                     extensionSet: md.ExtensionSet(
@@ -424,243 +1204,6 @@ class _AppPageState extends State<AppPage> {
                 ),
               ],
             ),
-        ],
-      );
-    }
-
-    Widget getFullInfoColumn({bool small = false}) => Flex.vertical(
-      mainAxisAlignment: MainAxisAlignment.center,
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        if (!developerMode) ...[
-          FutureBuilder(
-            future: appsProvider.updateAppIcon(app?.app.id, ignoreCache: true),
-            builder: (ctx, val) {
-              return app?.icon != null
-                  ? Flex.horizontal(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        GestureDetector(
-                          onTap: app == null
-                              ? null
-                              : () => pm.openApp(app.app.id),
-                          child: Image.memory(
-                            app!.icon!,
-                            height: small ? 70 : 150,
-                            gaplessPlayback: true,
-                          ),
-                        ),
-                      ],
-                    )
-                  : Container();
-            },
-          ),
-          SizedBox(height: small ? 10.0 : 24.0),
-          Text(
-            app?.name ?? tr('app'),
-            textAlign: TextAlign.center,
-            style: small
-                ? typescaleTheme.headlineSmallEmphasized.toTextStyle(
-                    color: colorTheme.onSurface,
-                  )
-                : typescaleTheme.displaySmallEmphasized.toTextStyle(
-                    color: colorTheme.onSurface,
-                  ),
-          ),
-          Text(
-            tr('byX', args: [app?.author ?? tr('unknown')]),
-            textAlign: TextAlign.center,
-            style: small
-                ? typescaleTheme.labelLarge.toTextStyle(
-                    color: colorTheme.onSurfaceVariant,
-                  )
-                : typescaleTheme.titleMedium.toTextStyle(
-                    color: colorTheme.onSurfaceVariant,
-                  ),
-          ),
-          Padding(
-            padding: const .fromLTRB(16.0, 4.0, 16.0, 4.0),
-            child: Align.center(
-              widthFactor: 1.0,
-              heightFactor: 1.0,
-              child: ConstrainedBox(
-                constraints: const BoxConstraints(
-                  minWidth: 48.0,
-                  minHeight: 32.0,
-                ),
-                child: Material(
-                  clipBehavior: .antiAlias,
-                  shape: CornersBorder.rounded(
-                    corners: .all(shapeTheme.corner.medium),
-                  ),
-                  color: colorTheme.surfaceContainerHighest,
-                  child: InkWell(
-                    onTap: () {
-                      if (app?.app.url != null) {
-                        launchUrlString(
-                          app?.app.url ?? "",
-                          mode: LaunchMode.externalApplication,
-                        );
-                      }
-                    },
-                    onLongPress: () {
-                      Clipboard.setData(
-                        ClipboardData(text: app?.app.url ?? ""),
-                      );
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text(tr("copiedToClipboard"))),
-                      );
-                    },
-                    child: Padding(
-                      padding: const .symmetric(
-                        horizontal: 12.0,
-                        vertical: 6.0,
-                      ),
-                      child: Text(
-                        app?.app.url ?? "",
-                        textAlign: .center,
-                        overflow: .ellipsis,
-                        maxLines: 2,
-                        style: typescaleTheme.labelLarge.toTextStyle(
-                          color: colorTheme.tertiary,
-                          decoration: .underline,
-                          decorationColor: colorTheme.tertiary,
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            ),
-          ),
-          Text(
-            app?.app.id ?? '',
-            textAlign: TextAlign.center,
-            style: typescaleTheme.labelLarge.toTextStyle(
-              color: colorTheme.onSurfaceVariant,
-            ),
-          ),
-        ],
-        if (developerMode)
-          Padding(
-            padding: const .symmetric(horizontal: 24.0),
-            child: ListItemTheme.merge(
-              data: .from(
-                containerColor: .all(colorTheme.surface),
-                overlineTextStyle: .all(
-                  typescaleTheme.labelMedium.toTextStyle(
-                    color: colorTheme.onSurface,
-                  ),
-                ),
-                headlineTextStyle: .all(
-                  typescaleTheme.bodyMediumEmphasized.toTextStyle(
-                    color: colorTheme.primary,
-                  ),
-                ),
-                supportingTextStyle: .all(
-                  typescaleTheme.bodySmall.toTextStyle(
-                    color: colorTheme.onSurfaceVariant,
-                  ),
-                ),
-              ),
-              child: Flex.vertical(
-                children: [
-                  if (aboutText != null)
-                    ListItemContainer(
-                      isFirst: true,
-                      child: ListItemInteraction(
-                        onLongPress: () {
-                          Clipboard.setData(ClipboardData(text: aboutText));
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(content: Text(tr("copiedToClipboard"))),
-                          );
-                        },
-                        child: ListItemLayout(
-                          leading: CustomListItemLeading.fromExtendedColor(
-                            extendedColor: staticColors.cyan,
-                            pairing: .variantOnFixed,
-                            child: const Icon(
-                              Symbols.format_quote_rounded,
-                              fill: 1.0,
-                            ),
-                          ),
-                          overline: Text(tr("about")),
-                          headline: Text(aboutText),
-                        ),
-                      ),
-                    ),
-                  const SizedBox(height: 2.0),
-                  ListItemContainer(
-                    isFirst: aboutText == null,
-                    child: ListItemInteraction(
-                      onTap: () {
-                        if (app?.app.url != null) {
-                          launchUrlString(
-                            app?.app.url ?? "",
-                            mode: LaunchMode.externalApplication,
-                          );
-                        }
-                      },
-                      onLongPress: () {
-                        Clipboard.setData(
-                          ClipboardData(text: app?.app.url ?? ""),
-                        );
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(content: Text(tr("copiedToClipboard"))),
-                        );
-                      },
-                      child: ListItemLayout(
-                        leading: CustomListItemLeading.fromExtendedColor(
-                          extendedColor: staticColors.blue,
-                          pairing: .variantOnFixed,
-                          child: const Icon(Symbols.link_rounded, fill: 1.0),
-                        ),
-                        overline: Text("App source URL"),
-                        headline: Text(
-                          app?.app.url ?? "",
-                          maxLines: 1,
-                          overflow: .ellipsis,
-                        ),
-                        // supportingText: Text("Click to open, hold to copy"),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 2.0),
-                  ListItemContainer(
-                    isLast: true,
-                    child: ListItemInteraction(
-                      onLongPress: () {
-                        Clipboard.setData(
-                          ClipboardData(text: app?.app.id ?? ""),
-                        );
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(content: Text(tr("copiedToClipboard"))),
-                        );
-                      },
-                      child: ListItemLayout(
-                        leading: CustomListItemLeading.fromExtendedColor(
-                          extendedColor: staticColors.green,
-                          pairing: .variantOnFixed,
-                          child: const Icon(
-                            Symbols.package_2_rounded,
-                            fill: 1.0,
-                          ),
-                        ),
-                        overline: Text("App package name"),
-                        headline: Text(
-                          app?.app.id ?? "",
-                          maxLines: 1,
-                          overflow: .ellipsis,
-                        ),
-                        // supportingText: Text("Hold to copy"),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-        getInfoColumn(),
         const SizedBox(height: 16.0),
       ],
     );
@@ -819,12 +1362,12 @@ class _AppPageState extends State<AppPage> {
         MediaQuery.of(context).padding.bottom,
       ),
       child: Flex.vertical(
-        mainAxisSize: MainAxisSize.min,
+        mainAxisSize: .min,
         children: [
           Padding(
             padding: const EdgeInsets.fromLTRB(16, 8, 16, 0),
             child: Flex.horizontal(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              mainAxisAlignment: .spaceEvenly,
               children: [
                 if (source != null &&
                     source.combinedAppSpecificSettingFormItems.isNotEmpty)
@@ -1185,7 +1728,7 @@ class _AppPageState extends State<AppPage> {
                   const SizedBox(width: 12.0 - 4.0),
                   Flexible.tight(
                     child: Flex.horizontal(
-                      mainAxisAlignment: MainAxisAlignment.end,
+                      mainAxisAlignment: .end,
                       children: [
                         IconButton(
                           onPressed: app?.downloadProgress != null || updating
@@ -1531,9 +2074,9 @@ class _AppPageState extends State<AppPage> {
         bottom: false,
         child: CustomRefreshIndicator(
           onRefresh: () async {
-            if (kDebugMode) {
-              await Future.delayed(const Duration(seconds: 5));
-            }
+            // if (kDebugMode) {
+            //   await Future.delayed(const Duration(seconds: 5));
+            // }
             if (app != null) {
               return getUpdate(app.app.id);
             }
@@ -1546,8 +2089,47 @@ class _AppPageState extends State<AppPage> {
                   slivers: [
                     developerMode
                         ? _AppPageAppBar(
+                            collapsedPadding: .symmetric(
+                              horizontal: 24.0 - 4.0,
+                            ),
                             expandedContainerColor: backgroundColor,
                             collapsedContainerColor: backgroundColor,
+                            leading: DeveloperPageBackButton(
+                              style: LegacyThemeFactory.createIconButtonStyle(
+                                colorTheme: colorTheme,
+                                elevationTheme: elevationTheme,
+                                shapeTheme: shapeTheme,
+                                stateTheme: stateTheme,
+                                color: .standard,
+                                width: .normal,
+                                containerColor: useBlackTheme
+                                    ? colorTheme.surfaceContainer
+                                    : colorTheme.surfaceContainerHighest,
+                                iconColor: useBlackTheme
+                                    ? colorTheme.primary
+                                    : colorTheme.onSurfaceVariant,
+                              ),
+                            ),
+                            trailing: IconButton(
+                              style: LegacyThemeFactory.createIconButtonStyle(
+                                colorTheme: colorTheme,
+                                elevationTheme: elevationTheme,
+                                shapeTheme: shapeTheme,
+                                stateTheme: stateTheme,
+                                color: .standard,
+                                width: .normal,
+                                containerColor: useBlackTheme
+                                    ? colorTheme.surfaceContainer
+                                    : colorTheme.surfaceContainerHighest,
+                                iconColor: useBlackTheme
+                                    ? colorTheme.primary
+                                    : colorTheme.onSurfaceVariant,
+                              ),
+                              onPressed: app == null
+                                  ? null
+                                  : () => pm.openApp(app.app.id),
+                              icon: const Icon(Symbols.open_in_new_rounded),
+                            ),
                             icon: FutureBuilder(
                               future: appsProvider
                                   .updateAppIcon(app?.app.id, ignoreCache: true)
@@ -1701,17 +2283,23 @@ class _AppPageAppBar extends StatefulWidget {
     super.key,
     this.expandedContainerColor,
     this.collapsedContainerColor,
+    this.collapsedPadding,
+    this.leading,
     required this.icon,
     required this.headline,
     required this.supportingText,
+    this.trailing,
   });
 
   final Color? expandedContainerColor;
   final Color? collapsedContainerColor;
+  final EdgeInsetsGeometry? collapsedPadding;
 
+  final Widget? leading;
   final Widget icon;
   final Widget headline;
   final Widget supportingText;
+  final Widget? trailing;
 
   @override
   State<_AppPageAppBar> createState() => _AppPageAppBarState();
@@ -1720,14 +2308,17 @@ class _AppPageAppBar extends StatefulWidget {
 class _AppPageAppBarState extends State<_AppPageAppBar> {
   @override
   Widget build(BuildContext context) {
+    final useBlackTheme = context.select<SettingsService, bool>(
+      (settings) => settings.useBlackTheme.value,
+    );
+
     final padding = MediaQuery.paddingOf(context);
 
     final colorTheme = ColorTheme.of(context);
+    final elevationTheme = ElevationTheme.of(context);
     final shapeTheme = ShapeTheme.of(context);
+    final stateTheme = StateTheme.of(context);
     final typescaleTheme = TypescaleTheme.of(context);
-
-    final showBackButton =
-        ModalRoute.of(context)?.impliesAppBarDismissal ?? false;
 
     final expandedContainerColor =
         widget.expandedContainerColor ?? colorTheme.surface;
@@ -1908,11 +2499,17 @@ class _AppPageAppBarState extends State<_AppPageAppBar> {
                 top: padding.top,
                 right: padding.right,
                 height: collapsedExtent,
-                child: Flex.horizontal(
-                  children: [
-                    const SizedBox(width: 24.0 - 4.0),
-                    DeveloperPageBackButton(),
-                  ],
+                child: Padding(
+                  padding:
+                      widget.collapsedPadding ??
+                      const .symmetric(horizontal: 24.0),
+                  child: Flex.horizontal(
+                    children: [
+                      ?widget.leading,
+                      const Flexible.space(),
+                      ?widget.trailing,
+                    ],
+                  ),
                 ),
               ),
             ],
@@ -1923,4 +2520,127 @@ class _AppPageAppBarState extends State<_AppPageAppBar> {
   }
 
   static const Curve _kFastOutLinearIn = Cubic(0.4, 0.0, 1.0, 1.0);
+}
+
+class _SegmentedListItem extends StatefulWidget {
+  const _SegmentedListItem({
+    super.key,
+    this.isFirst = false,
+    this.isLast = false,
+    this.spacing,
+    this.isVisible = true,
+    required this.containerBuilder,
+    required this.content,
+  });
+
+  final bool isFirst;
+  final bool isLast;
+  final double? spacing;
+  final bool isVisible;
+  final _SegmentedListItemContainerBuilder? containerBuilder;
+  final Widget content;
+
+  @override
+  State<_SegmentedListItem> createState() => _SegmentedListItemState();
+}
+
+class _SegmentedListItemState extends State<_SegmentedListItem>
+    with SingleTickerProviderStateMixin {
+  double get _spacing => widget.spacing ?? 2.0;
+
+  double get _heightFactor => widget.isVisible ? 1.0 : 0.0;
+
+  EdgeInsetsGeometry get _margin => widget.isVisible
+      ? .only(
+          top: widget.isFirst ? 0.0 : _spacing / 2.0,
+          bottom: widget.isLast ? 0.0 : _spacing / 2.0,
+        )
+      : .zero;
+
+  late AnimationController _controller;
+
+  final Tween<double> _heightFactorTween = Tween<double>();
+  late Animation<double> _heightFactorAnimation;
+
+  final Tween<EdgeInsetsGeometry> _marginTween = EdgeInsetsGeometryTween();
+  late Animation<EdgeInsetsGeometry> _marginAnimation;
+
+  void _update({
+    required double heightFactor,
+    required EdgeInsetsGeometry margin,
+  }) {
+    if (heightFactor == _heightFactorTween.end && margin == _marginTween.end) {
+      return;
+    }
+
+    _heightFactorTween.begin = _heightFactorAnimation.value;
+    _heightFactorTween.end = heightFactor;
+
+    _marginTween.begin = _marginAnimation.value;
+    _marginTween.end = margin;
+
+    if (_heightFactorTween.begin == _heightFactorTween.end &&
+        _marginTween.begin == _marginTween.end) {
+      return;
+    }
+
+    _controller.value = 0.0;
+    _controller.animateTo(
+      1.0,
+      duration: const DurationThemeData.fallback().long2,
+      curve: const EasingThemeData.fallback().standard,
+    );
+  }
+
+  @override
+  void initState() {
+    super.initState();
+
+    _heightFactorTween.begin = _heightFactorTween.end = _heightFactor;
+    _marginTween.begin = _marginTween.end = _margin;
+
+    _controller = AnimationController(vsync: this, value: 1.0);
+    _heightFactorAnimation = _heightFactorTween.animate(_controller);
+    _marginAnimation = _marginTween.animate(_controller);
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    _update(heightFactor: _heightFactor, margin: _margin);
+    final Widget content = AnimatedBuilder(
+      animation: _controller,
+      builder: (context, child) => Opacity(
+        opacity: _heightFactorAnimation.value,
+        child: Align.center(
+          widthFactor: 1.0,
+          heightFactor: _heightFactorAnimation.value,
+          child: child!,
+        ),
+      ),
+      child: widget.content,
+    );
+    final Widget container =
+        widget.containerBuilder?.call(
+          context,
+          widget.isFirst,
+          widget.isLast,
+          content,
+        ) ??
+        content;
+
+    return AnimatedBuilder(
+      animation: _controller,
+      builder: (context, child) => IgnorePointer(
+        ignoring: _heightFactor < 1.0,
+        child: Padding(padding: _marginAnimation.value, child: child!),
+      ),
+      child: container,
+    );
+  }
 }

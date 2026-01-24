@@ -30,7 +30,9 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
 class DeveloperPageBackButton extends StatelessWidget {
-  const DeveloperPageBackButton({super.key});
+  const DeveloperPageBackButton({super.key, this.style});
+
+  final ButtonStyle? style;
 
   @override
   Widget build(BuildContext context) {
@@ -40,29 +42,30 @@ class DeveloperPageBackButton extends StatelessWidget {
 
     final materialLocalization = MaterialLocalizations.of(context);
 
-    final navigator = Navigator.of(context);
-    final route = ModalRoute.of(context);
+    final canPop = ModalRoute.of(context)?.impliesAppBarDismissal ?? false;
 
     final colorTheme = ColorTheme.of(context);
     final elevationTheme = ElevationTheme.of(context);
     final shapeTheme = ShapeTheme.of(context);
     final stateTheme = StateTheme.of(context);
 
+    final fallbackStyle = LegacyThemeFactory.createIconButtonStyle(
+      colorTheme: colorTheme,
+      elevationTheme: elevationTheme,
+      shapeTheme: shapeTheme,
+      stateTheme: stateTheme,
+      color: .standard,
+      containerColor: useBlackTheme
+          ? colorTheme.surfaceContainer
+          : colorTheme.surfaceContainerHighest,
+      iconColor: useBlackTheme
+          ? colorTheme.primary
+          : colorTheme.onSurfaceVariant,
+    );
+
     return IconButton(
-      style: LegacyThemeFactory.createIconButtonStyle(
-        colorTheme: colorTheme,
-        elevationTheme: elevationTheme,
-        shapeTheme: shapeTheme,
-        stateTheme: stateTheme,
-        color: .standard,
-        containerColor: useBlackTheme
-            ? colorTheme.surfaceContainer
-            : colorTheme.surfaceContainerHighest,
-        iconColor: useBlackTheme
-            ? colorTheme.primary
-            : colorTheme.onSurfaceVariant,
-      ),
-      onPressed: () => navigator.pop(),
+      style: style?.merge(fallbackStyle) ?? fallbackStyle,
+      onPressed: canPop ? () => Navigator.pop(context) : null,
       icon: const Icon(Symbols.arrow_back_rounded),
       tooltip: materialLocalization.backButtonTooltip,
     );
