@@ -374,7 +374,7 @@ class _AppPageState extends State<AppPage> {
       list = Padding(
         padding: const .symmetric(horizontal: 24.0),
         child: Skeletonizer(
-          enabled: app?.downloadProgress != null || updating,
+          enabled: updating,
           effect: ShimmerEffect(
             baseColor: colorTheme.surfaceContainer,
             highlightColor: colorTheme.surfaceContainerHighest,
