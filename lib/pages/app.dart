@@ -4,6 +4,7 @@ import 'package:collection/collection.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:materium/components/custom_app_bar.dart';
 import 'package:materium/components/custom_refresh_indicator.dart';
+import 'package:materium/components/expressive_list_bullet.dart';
 import 'package:materium/components/sliver_dynamic_header_basic.dart';
 import 'package:materium/flutter.dart';
 import 'package:flutter_markdown_plus/flutter_markdown_plus.dart';
@@ -813,8 +814,8 @@ class _AppPageState extends State<AppPage> {
                                 ? Text(tr("multipleSigners"))
                                 : null,
                           ),
-                          ...?app?.certificateHashes.map(
-                            (hash) => ListItemInteraction(
+                          ...?app?.certificateHashes.mapIndexed(
+                            (index, hash) => ListItemInteraction(
                               stateLayerShape: .all(
                                 CornersBorder.rounded(
                                   corners: .all(shapeTheme.corner.none),
@@ -822,11 +823,23 @@ class _AppPageState extends State<AppPage> {
                               ),
                               onLongPress: () => _copyText(hash),
                               child: ListItemLayout(
-                                leading: const SizedBox.square(
-                                  dimension: 24.0,
-                                  child: Text("·", textAlign: .center),
+                                alignment: .top,
+                                leading: SizedBox(
+                                  width: 24.0,
+                                  // Keep in sync with line height
+                                  height: 20.0,
+                                  child: ExpressiveListBullet.indexed(
+                                    index: index,
+                                  ),
                                 ),
-                                headline: Text(hash),
+                                headline: Text(
+                                  hash,
+                                  style: typescaleTheme.bodyMediumEmphasized
+                                      .mergeWith(
+                                        font: const [FontFamily.firaCode],
+                                      )
+                                      .toTextStyle(),
+                                ),
                               ),
                             ),
                           ),
