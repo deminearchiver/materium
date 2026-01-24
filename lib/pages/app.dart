@@ -2,6 +2,7 @@ import 'dart:math' as math;
 
 import 'package:collection/collection.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:materium/components/custom_app_bar.dart';
 import 'package:materium/components/custom_refresh_indicator.dart';
 import 'package:materium/components/expressive_list_bullet.dart';
@@ -373,7 +374,7 @@ class _AppPageState extends State<AppPage> {
     final Widget list;
     if (developerMode) {
       list = Padding(
-        padding: const .symmetric(horizontal: 24.0),
+        padding: const .symmetric(horizontal: 8.0),
         child: Skeletonizer(
           enabled: updating,
           effect: ShimmerEffect(
@@ -396,12 +397,12 @@ class _AppPageState extends State<AppPage> {
                 ),
               ),
               headlineTextStyle: .all(
-                typescaleTheme.bodyMediumEmphasized.toTextStyle(
+                typescaleTheme.bodyLargeEmphasized.toTextStyle(
                   color: colorTheme.onSurface,
                 ),
               ),
               supportingTextStyle: .all(
-                typescaleTheme.bodySmall.toTextStyle(
+                typescaleTheme.bodyMedium.toTextStyle(
                   color: colorTheme.onSurfaceVariant,
                 ),
               ),
@@ -428,7 +429,40 @@ class _AppPageState extends State<AppPage> {
                           fill: 1.0,
                         ),
                         overline: Text(tr("about")),
-                        headline: Text(aboutText ?? ""),
+                        // headline: Text(aboutText ?? ""),
+                        headline: MarkdownBody(
+                          data: aboutText ?? "",
+                          styleSheet: MarkdownStyleSheet(
+                            p: typescaleTheme.bodyLarge.toTextStyle(
+                              color: colorTheme.onSurface,
+                            ),
+                            a: TextStyle(
+                              color: colorTheme.tertiary,
+                              decoration: .underline,
+                              decorationColor: colorTheme.tertiary,
+                            ),
+                            strong: const TextStyle(fontWeight: .w700),
+                            em: const TextStyle(fontStyle: .italic),
+                            code: typescaleTheme.bodyLarge
+                                .toTextStyle()
+                                .copyWith(
+                                  fontFamily: FontFamily.firaCode,
+                                  backgroundColor: colorTheme.surfaceContainer,
+                                ),
+                            codeblockDecoration: ShapeDecoration(
+                              shape: CornersBorder.rounded(
+                                corners: .all(shapeTheme.corner.medium),
+                              ),
+                              color: colorTheme.surfaceContainer,
+                            ),
+                          ),
+                          onTapLink: (text, href, title) {
+                            if (href != null) {
+                              launchUrlString(href, mode: .externalApplication);
+                            }
+                          },
+                          extensionSet: md.ExtensionSet.gitHubFlavored,
+                        ),
                       ),
                     ),
                   ],
@@ -486,12 +520,15 @@ class _AppPageState extends State<AppPage> {
                                             corners: .all(
                                               shapeTheme.corner.full,
                                             ),
+                                            // side: BorderSide(
+                                            //   color: colorTheme.outlineVariant,
+                                            // ),
                                           ),
                                           color: colorTheme.surfaceContainer,
                                           child: isUpToDate
                                               ? Icon(
                                                   Symbols.check_rounded,
-                                                  color: colorTheme.primary,
+                                                  color: colorTheme.secondary,
                                                 )
                                               : Icon(
                                                   Symbols.close_rounded,
@@ -681,38 +718,6 @@ class _AppPageState extends State<AppPage> {
                       ),
                     ),
                     _SegmentedListItemData(
-                      visible: installedVersionIsEstimate,
-                      containerBuilder: (context, isFirst, isLast, child) =>
-                          ListItemContainer(
-                            isFirst: isFirst,
-                            isLast: isLast,
-                            child: child,
-                          ),
-                      content: ListItemLayout(
-                        leading: const Icon(
-                          Symbols.manufacturing_rounded,
-                          fill: 1.0,
-                        ),
-                        headline: Text(tr("pseudoVersionInUse")),
-                      ),
-                    ),
-                    _SegmentedListItemData(
-                      visible: trackOnly,
-                      containerBuilder: (context, isFirst, isLast, child) =>
-                          ListItemContainer(
-                            isFirst: isFirst,
-                            isLast: isLast,
-                            child: child,
-                          ),
-                      content: ListItemLayout(
-                        leading: const Icon(
-                          Symbols.notifications_active_rounded,
-                          fill: 1.0,
-                        ),
-                        headline: Text(tr("xIsTrackOnly", args: [tr("app")])),
-                      ),
-                    ),
-                    _SegmentedListItemData(
                       visible:
                           apkUrls.isNotEmpty == true ||
                           app?.app.otherAssetUrls.isNotEmpty == true,
@@ -720,76 +725,137 @@ class _AppPageState extends State<AppPage> {
                           ListItemContainer(
                             isFirst: isFirst,
                             isLast: isLast,
-                            child: ListItemInteraction(
-                              onLongPress: apkUrls.isNotEmpty
-                                  ? () => _copyText(
-                                      apkUrls.isNotEmpty
-                                          ? apkUrls.length == 1
-                                                ? apkUrls.single.key
-                                                : "${apkUrls.length}"
-                                          : "${otherAssetUrls.length}",
-                                    )
+                            child: child,
+                          ),
+                      content: Flex.vertical(
+                        mainAxisSize: .min,
+                        crossAxisAlignment: .stretch,
+                        children: [
+                          ListItemLayout(
+                            padding: const .directional(
+                              start: 16.0,
+                              end: 16.0 - 4.0,
+                            ),
+                            trailingPadding: const .symmetric(
+                              vertical: 10.0 - 4.0,
+                            ),
+                            trailingSpace: 12.0 - 4.0,
+                            leading: const Icon(
+                              Symbols.android_rounded,
+                              fill: 1.0,
+                            ),
+                            overline: const Text("Release assets"),
+                            headline: Text(
+                              <String>[
+                                if (apkUrls.isNotEmpty)
+                                  <String>[
+                                    "${apkUrls.length}",
+                                    apkUrls.length > 1 ? "APKs" : "APK",
+                                  ].join(" "),
+                                if (otherAssetUrls.isNotEmpty)
+                                  <String>[
+                                    "${otherAssetUrls.length}",
+                                    otherAssetUrls.length > 1
+                                        ? "assets"
+                                        : "asset",
+                                  ].join(" "),
+                              ].join(" & "),
+                            ),
+                            trailing: IconButton(
+                              style: LegacyThemeFactory.createIconButtonStyle(
+                                colorTheme: colorTheme,
+                                elevationTheme: elevationTheme,
+                                shapeTheme: shapeTheme,
+                                stateTheme: stateTheme,
+                                color: .tonal,
+                                width: .normal,
+                                containerColor: useBlackTheme
+                                    ? colorTheme.primaryContainer
+                                    : colorTheme.secondaryContainer,
+                                iconColor: useBlackTheme
+                                    ? colorTheme.onPrimaryContainer
+                                    : colorTheme.onSecondaryContainer,
+                              ),
+                              onPressed:
+                                  app?.app != null &&
+                                      !updating &&
+                                      (apkUrls.isNotEmpty ||
+                                          otherAssetUrls.isNotEmpty)
+                                  ? () async {
+                                      try {
+                                        await appsProvider.downloadAppAssets([
+                                          app!.app.id,
+                                        ], context);
+                                      } catch (e) {
+                                        if (context.mounted) {
+                                          showError(e, context);
+                                        }
+                                      }
+                                    }
                                   : null,
-                              child: child,
+                              icon: const Icon(
+                                Symbols.download_rounded,
+                                fill: 0.0,
+                              ),
+                              tooltip: "Download release asset",
                             ),
                           ),
-                      content: ListItemLayout(
-                        padding: const .directional(
-                          start: 16.0,
-                          end: 16.0 - 4.0,
-                        ),
-                        trailingPadding: const .symmetric(vertical: 10.0 - 4.0),
-                        trailingSpace: 12.0 - 4.0,
-                        leading: const Icon(Symbols.android_rounded, fill: 1.0),
-                        overline: Text(
-                          apkUrls.isNotEmpty
-                              ? apkUrls.length > 1
-                                    ? "APKs"
-                                    : "APK"
-                              : "Assets",
-                        ),
-                        headline: Text(
-                          apkUrls.isNotEmpty
-                              ? apkUrls.length == 1
-                                    ? apkUrls.single.key
-                                    : "${apkUrls.length}"
-                              : "${otherAssetUrls.length}",
-                        ),
-                        trailing: IconButton(
-                          style: LegacyThemeFactory.createIconButtonStyle(
-                            colorTheme: colorTheme,
-                            elevationTheme: elevationTheme,
-                            shapeTheme: shapeTheme,
-                            stateTheme: stateTheme,
-                            color: .tonal,
-                            width: .normal,
-                            containerColor: useBlackTheme
-                                ? colorTheme.primaryContainer
-                                : colorTheme.secondaryContainer,
-                            iconColor: useBlackTheme
-                                ? colorTheme.onPrimaryContainer
-                                : colorTheme.onSecondaryContainer,
-                          ),
-                          onPressed:
-                              app?.app != null &&
-                                  !updating &&
-                                  (apkUrls.isNotEmpty ||
-                                      otherAssetUrls.isNotEmpty)
-                              ? () async {
-                                  try {
-                                    await appsProvider.downloadAppAssets([
-                                      app!.app.id,
-                                    ], context);
-                                  } catch (e) {
-                                    if (context.mounted) {
-                                      showError(e, context);
-                                    }
-                                  }
-                                }
-                              : null,
-                          icon: const Icon(Symbols.download_rounded, fill: 0.0),
-                          tooltip: "Download release asset",
-                        ),
+                          ...apkUrls
+                              .followedBy(otherAssetUrls)
+                              .take(3)
+                              .mapIndexed(
+                                (index, value) => ListItemInteraction(
+                                  stateLayerShape: .all(
+                                    CornersBorder.rounded(
+                                      corners: .all(shapeTheme.corner.none),
+                                    ),
+                                  ),
+                                  onLongPress: () => _copyText(value.key),
+                                  child: ListItemLayout(
+                                    alignment: .middle,
+                                    leading: SizedBox(
+                                      width: 24.0,
+                                      height: 20.0,
+                                      child: ExpressiveListBullet.indexed(
+                                        index: index,
+                                      ),
+                                    ),
+                                    headline: Text(
+                                      value.key,
+                                      style: const TextStyle(
+                                        fontFamily: FontFamily.firaCode,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                          if (apkUrls
+                              .followedBy(otherAssetUrls)
+                              .skip(3)
+                              .isNotEmpty)
+                            ListItemLayout(
+                              trailingPadding: .symmetric(vertical: 10.0 - 8.0),
+                              trailing: TextButton(
+                                style: LegacyThemeFactory.createButtonStyle(
+                                  colorTheme: colorTheme,
+                                  elevationTheme: elevationTheme,
+                                  shapeTheme: shapeTheme,
+                                  stateTheme: stateTheme,
+                                  typescaleTheme: typescaleTheme,
+                                  size: .extraSmall,
+                                  color: .text,
+                                ),
+                                onPressed: () async {
+                                  await Fluttertoast.cancel();
+                                  await Fluttertoast.showToast(
+                                    msg: "Not yet implemented",
+                                    toastLength: .LENGTH_SHORT,
+                                  );
+                                },
+                                child: Text("View all"),
+                              ),
+                            ),
+                        ],
                       ),
                     ),
                     _SegmentedListItemData(
@@ -846,6 +912,38 @@ class _AppPageState extends State<AppPage> {
                         ],
                       ),
                     ),
+                    _SegmentedListItemData(
+                      visible: installedVersionIsEstimate,
+                      containerBuilder: (context, isFirst, isLast, child) =>
+                          ListItemContainer(
+                            isFirst: isFirst,
+                            isLast: isLast,
+                            child: child,
+                          ),
+                      content: ListItemLayout(
+                        leading: const Icon(
+                          Symbols.manufacturing_rounded,
+                          fill: 1.0,
+                        ),
+                        headline: Text(tr("pseudoVersionInUse")),
+                      ),
+                    ),
+                    _SegmentedListItemData(
+                      visible: trackOnly,
+                      containerBuilder: (context, isFirst, isLast, child) =>
+                          ListItemContainer(
+                            isFirst: isFirst,
+                            isLast: isLast,
+                            child: child,
+                          ),
+                      content: ListItemLayout(
+                        leading: const Icon(
+                          Symbols.notifications_active_rounded,
+                          fill: 1.0,
+                        ),
+                        headline: Text(tr("xIsTrackOnly", args: [tr("app")])),
+                      ),
+                    ),
                   ],
                 ),
                 const SizedBox(height: 8.0),
@@ -856,7 +954,7 @@ class _AppPageState extends State<AppPage> {
                       width: 24.0,
                       child: Icon(
                         Symbols.lightbulb_2_rounded,
-                        fill: 1.0,
+                        fill: 0.0,
                         opticalSize: 20.0,
                         size: 20.0,
                       ),
@@ -1137,7 +1235,7 @@ class _AppPageState extends State<AppPage> {
               ],
             ),
         Padding(
-          padding: const .symmetric(horizontal: 24.0),
+          padding: const .symmetric(horizontal: 8.0),
           child: developerMode
               ? Material(
                   shape: CornersBorder.rounded(

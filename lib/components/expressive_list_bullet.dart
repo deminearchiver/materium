@@ -56,18 +56,15 @@ class _ExpressiveListBulletPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     final center = size.center(.zero);
-    final paint = Paint()..color = color;
-
+    final paint = Paint()
+      ..style = .fill
+      ..color = color;
     canvas
-      // Save the canvas before applying the transform
       ..save()
-      // Rotate the canvas around the size's center
       ..translate(center.dx, center.dy)
       ..rotate(rotation)
       ..translate(-center.dx, -center.dy)
-      // Draw the processed path onto the canvas
       ..drawPath(_path, paint)
-      // Restore the canvas after applying the transform
       ..restore();
   }
 

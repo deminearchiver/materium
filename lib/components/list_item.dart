@@ -608,7 +608,7 @@ class ListItemLayout extends StatelessWidget {
     this.headline,
     this.supportingText,
     this.trailing,
-  }) : assert(overline != null || headline != null || supportingText != null);
+  });
 
   final double? minHeight;
   final double? maxHeight;
