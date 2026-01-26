@@ -1514,7 +1514,7 @@ class _SettingsAppBarState extends State<SettingsAppBar> {
                       height: 56.0,
                       child: Material(
                         clipBehavior: Clip.antiAlias,
-                        color: colorTheme.surfaceBright,
+                        color: colorTheme.surfaceContainerHighest,
                         shape: CornersBorder.rounded(
                           corners: Corners.all(shapeTheme.corner.full),
                         ),
@@ -1832,8 +1832,8 @@ class _SettingsAppBarRoute<T extends Object?> extends PopupRoute<T> {
     )!;
 
     final containerColor = Color.lerp(
-      colorTheme.surfaceBright,
-      colorTheme.surfaceContainerHigh,
+      colorTheme.surfaceContainerHighest,
+      colorTheme.surfaceContainerLow,
       _curvedAnimation.value,
     )!;
 
@@ -2129,7 +2129,7 @@ class _SettingsAppBarRoute<T extends Object?> extends PopupRoute<T> {
                                             isFirst: index == 0,
                                             opticalCenterEnabled: false,
                                             containerColor: .all(
-                                              colorTheme.surfaceContainerLow,
+                                              Colors.transparent,
                                             ),
                                             child: ListItemInteraction(
                                               onTap: () => navigator?.pop(),
@@ -2261,14 +2261,15 @@ class _Settings2ViewState extends State<Settings2View> {
           // ),
           const SettingsAppBar(),
           ListItemTheme.merge(
-            data: CustomThemeFactory.createListItemTheme(
-              colorTheme: colorTheme,
-              elevationTheme: elevationTheme,
-              shapeTheme: shapeTheme,
-              stateTheme: stateTheme,
-              typescaleTheme: typescaleTheme,
-              color: .settings,
-            ),
+            data: const .from(),
+            // data: CustomThemeFactory.createListItemTheme(
+            //   colorTheme: colorTheme,
+            //   elevationTheme: elevationTheme,
+            //   shapeTheme: shapeTheme,
+            //   stateTheme: stateTheme,
+            //   typescaleTheme: typescaleTheme,
+            //   color: .settings,
+            // ),
             child: SliverList.list(
               children: [
                 const SizedBox(height: 16 - 4.0),

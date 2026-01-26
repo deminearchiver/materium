@@ -1,6 +1,7 @@
 import 'dart:math' as math;
 
 import 'package:materium/flutter.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 
 const _kRotationMultiplier = math.pi / 5.0;
 
@@ -25,6 +26,7 @@ class ExpressiveListBullet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final shapeTheme = ShapeTheme.of(context);
     final iconTheme = IconTheme.of(context);
 
     final opacity = iconTheme.opacity;
@@ -33,13 +35,27 @@ class ExpressiveListBullet extends StatelessWidget {
       color = color.withValues(alpha: color.a * opacity);
     }
 
+    const size = 8.0;
+
     return ExcludeSemantics(
       child: Align.center(
-        child: CustomPaint(
-          size: const .square(8.0),
-          painter: _ExpressiveListBulletPainter(
-            rotation: rotation,
-            color: color,
+        child: Skeleton.leaf(
+          child: Skeleton.replace(
+            width: size,
+            height: size,
+            replacement: Material(
+              shape: CornersBorder.rounded(
+                corners: .all(shapeTheme.corner.full),
+              ),
+              color: color,
+            ),
+            child: CustomPaint(
+              size: const .square(size),
+              painter: _ExpressiveListBulletPainter(
+                rotation: rotation,
+                color: color,
+              ),
+            ),
           ),
         ),
       ),

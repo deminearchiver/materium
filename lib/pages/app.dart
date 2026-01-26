@@ -822,9 +822,11 @@ class _AppPageState extends State<AppPage> {
                                     ),
                                     headline: Text(
                                       value.key,
-                                      style: const TextStyle(
-                                        fontFamily: FontFamily.firaCode,
-                                      ),
+                                      style: typescaleTheme.bodyMediumEmphasized
+                                          .mergeWith(
+                                            font: const [FontFamily.firaCode],
+                                          )
+                                          .toTextStyle(),
                                     ),
                                   ),
                                 ),
@@ -834,7 +836,9 @@ class _AppPageState extends State<AppPage> {
                               .skip(3)
                               .isNotEmpty)
                             ListItemLayout(
-                              trailingPadding: .symmetric(vertical: 10.0 - 8.0),
+                              trailingPadding: const .symmetric(
+                                vertical: 10.0 - 4.0,
+                              ),
                               trailing: TextButton(
                                 style: LegacyThemeFactory.createButtonStyle(
                                   colorTheme: colorTheme,
@@ -842,7 +846,7 @@ class _AppPageState extends State<AppPage> {
                                   shapeTheme: shapeTheme,
                                   stateTheme: stateTheme,
                                   typescaleTheme: typescaleTheme,
-                                  size: .extraSmall,
+                                  size: .small,
                                   color: .text,
                                 ),
                                 onPressed: () async {
