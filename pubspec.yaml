@@ -117,20 +117,15 @@ dev_dependencies:
 
 dependency_overrides:
   # Git dependencies
-  libmonet:
-    git:
-      url: https://github.com/deminearchiver/dart-flutter-packages.git
-      ref: f85d828f78ec8c9bdb23db8a0beebefd4faf440c
-      path: packages/libmonet
   layout:
     git:
       url: https://github.com/deminearchiver/dart-flutter-packages.git
-      ref: f85d828f78ec8c9bdb23db8a0beebefd4faf440c
+      ref: 49155cdc05171bd7e82c1ee9677403d4fc62eca5
       path: packages/layout
   material:
     git:
       url: https://github.com/deminearchiver/dart-flutter-packages.git
-      ref: f85d828f78ec8c9bdb23db8a0beebefd4faf440c
+      ref: 49155cdc05171bd7e82c1ee9677403d4fc62eca5
       path: packages/material
 
   # Hosted dependencies
