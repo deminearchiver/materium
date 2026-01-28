@@ -10,12 +10,13 @@ export 'package:flutter/physics.dart';
 
 export 'package:flutter/rendering.dart'
     hide
-        RenderPadding,
+        ChildLayoutHelper,
         FlexParentData,
-        RenderFlex,
         FloatingHeaderSnapConfiguration,
+        OverScrollHeaderStretchConfiguration,
         PersistentHeaderShowOnScreenConfiguration,
-        OverScrollHeaderStretchConfiguration;
+        RenderFlex,
+        RenderPadding;
 
 export 'package:flutter/material.dart'
     hide
@@ -66,12 +67,12 @@ export 'package:flutter/material.dart'
 // Third-party packages
 
 export 'package:meta/meta.dart';
-export 'package:material_symbols_icons/material_symbols_icons.dart';
 
 // Internal packages
 
 export 'package:layout/layout.dart';
 export 'package:material/material.dart';
+export 'package:material/material_symbols.dart';
 
 // Adjacent libraries
 

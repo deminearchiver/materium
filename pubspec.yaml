@@ -76,7 +76,6 @@ dependencies:
   battery_plus: ^7.0.0
   flutter_charset_detector: ^5.0.0
   flutter_foreground_task: ^9.2.0
-  material_symbols_icons: ^4.2892.0
   flutter_markdown_plus: ^1.0.7
   skeletonizer: ^2.1.2
   super_keyboard: ^0.3.1
@@ -121,12 +120,12 @@ dependency_overrides:
   layout:
     git:
       url: https://github.com/deminearchiver/dart-flutter-packages.git
-      ref: 49155cdc05171bd7e82c1ee9677403d4fc62eca5
+      ref: 2002578ae83579e4579f9ff75b70e8cec4912b1e
       path: packages/layout
   material:
     git:
       url: https://github.com/deminearchiver/dart-flutter-packages.git
-      ref: 49155cdc05171bd7e82c1ee9677403d4fc62eca5
+      ref: 2002578ae83579e4579f9ff75b70e8cec4912b1e
       path: packages/material
 
   # Hosted dependencies
