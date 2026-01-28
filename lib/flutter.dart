@@ -66,13 +66,10 @@ export 'package:flutter/material.dart'
 
 // Third-party packages
 
-export 'package:meta/meta.dart';
-
-// Internal packages
-
 export 'package:layout/layout.dart';
 export 'package:material/material.dart';
 export 'package:material/material_symbols.dart';
+export 'package:meta/meta.dart';
 
 // Adjacent libraries
 
@@ -94,8 +91,6 @@ export 'theme/typography.dart';
 import 'package:dynamic_color_ffi/dynamic_color_ffi.dart';
 import 'package:materium/flutter.dart';
 import 'package:screen_corners_ffi/screen_corners_ffi.dart';
-
-// Shared utilities
 
 @immutable
 class CombiningBuilder extends StatelessWidget {
