@@ -6,8 +6,7 @@ repository: https://github.com/deminearchiver/materium
 issue_tracker: https://github.com/deminearchiver/materium/issues
 publish_to: none
 
-workspace:
-  - materium_tools
+workspace: []
 
 environment:
   sdk: ^3.10.0
