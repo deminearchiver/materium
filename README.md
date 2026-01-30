@@ -143,7 +143,6 @@ Materium allows you to install and update apps directly from their releases page
 - [CoolApk](https://coolapk.com/)
 - [RockMods](https://rockmods.net/)
 - [LiteAPKs](https://liteapks.com/)
-- [Moddroid](https://moddroid.com/)
 - Jenkins Jobs
 - [APKMirror](https://apkmirror.com/) (Track-Only)
 
