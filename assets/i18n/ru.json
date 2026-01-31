@@ -1,0 +1,41 @@
+{
+  "obtainium": "Obtainum",
+  "materium": "Materium",
+  "licensesPage": {
+    "title": "Лицензии открытого ПО",
+    "licenseCount": {
+      "zero": "Нет лицензий",
+      "one": "$n лицензия",
+      "other": "$n лицензий"
+    }
+  },
+  "settingsPage": {
+    "sections": {
+      "other": {
+        "label": "Other"
+      },
+      "troubleshooting": {
+        "label": "Troubleshooting"
+      }
+    },
+    "items": {
+      "licenses": {
+        "labelText": "Лицензии открытого ПО",
+        "supportingText": "View licenses of open-source software"
+      },
+      "about": {
+        "label": "О Materium",
+        "description": "Information, socials and contributors"
+      },
+      "help": {
+        "label": "Help & support",
+        "description": "Get help, report a bug or request a feature"
+      },
+      "developerMode": {
+        "label": "Для разработчиков",
+        "description": "Ты знаешь, что с этим делать",
+        "disabledTooltip": "Developer must be enabled"
+      }
+    }
+  }
+}
