@@ -105,7 +105,7 @@ dependencies:
 
 dev_dependencies:
   # Hosted dependencies
-  deminearchiver_lints: ^2.1.1
+  deminearchiver_lints: ^2.1.2
   build_runner: ^2.10.5
   json_serializable: ^6.11.2
   freezed: ^3.2.3
@@ -121,12 +121,12 @@ dependency_overrides:
   layout:
     git:
       url: https://github.com/deminearchiver/dart-flutter-packages.git
-      ref: aa104c7f5c8e6b51ffb762a3224b4689673afa2b
+      ref: 2e2efd67f045b9183b4398a702bfd5cc75a4230c
       path: packages/layout
   material:
     git:
       url: https://github.com/deminearchiver/dart-flutter-packages.git
-      ref: aa104c7f5c8e6b51ffb762a3224b4689673afa2b
+      ref: 2e2efd67f045b9183b4398a702bfd5cc75a4230c
       path: packages/material
 
   # Hosted dependencies
