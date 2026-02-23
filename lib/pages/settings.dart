@@ -1457,6 +1457,25 @@ class _SettingsPageState extends State<SettingsPage> {
                             shapeTheme: shapeTheme,
                             stateTheme: stateTheme,
                             typescaleTheme: typescaleTheme,
+                            isFirst: false,
+                            isLast: true,
+                            isSelected: themeVariant == .monochrome,
+                          ),
+                          value: .monochrome,
+                          leadingIcon: const Icon(
+                            Symbols.tonality_rounded,
+                            fill: 1.0,
+                          ),
+                          // TODO: rename
+                          label: "Monochrome (experimental)",
+                        ),
+                        DropdownMenuEntry(
+                          style: LegacyThemeFactory.createMenuButtonStyle(
+                            colorTheme: colorTheme,
+                            elevationTheme: elevationTheme,
+                            shapeTheme: shapeTheme,
+                            stateTheme: stateTheme,
+                            typescaleTheme: typescaleTheme,
                             isFirst: true,
                             isLast: false,
                             isSelected: themeVariant == .calm,
@@ -1521,6 +1540,25 @@ class _SettingsPageState extends State<SettingsPage> {
                             fill: 1.0,
                           ),
                           label: "Creative",
+                        ),
+                        DropdownMenuEntry(
+                          style: LegacyThemeFactory.createMenuButtonStyle(
+                            colorTheme: colorTheme,
+                            elevationTheme: elevationTheme,
+                            shapeTheme: shapeTheme,
+                            stateTheme: stateTheme,
+                            typescaleTheme: typescaleTheme,
+                            isFirst: false,
+                            isLast: true,
+                            isSelected: themeVariant == .cmf,
+                          ),
+                          value: .cmf,
+                          leadingIcon: const Icon(
+                            Symbols.design_services_rounded,
+                            fill: 1.0,
+                          ),
+                          // TODO: rename
+                          label: "CMF (experimental)",
                         ),
                       ],
                       onSelected: (value) {

@@ -258,7 +258,7 @@ class StaticColors extends InheritedTheme {
       contrastLevel: highContarst ? 1.0 : 0.0,
       platform: .phone,
       variant: .tonalSpot,
-      specVersion: .spec2025,
+      specVersion: .spec2026,
     ).harmonizeWith(colorTheme.primary);
   }
 }

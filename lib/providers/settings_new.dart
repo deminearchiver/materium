@@ -6,10 +6,14 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 enum ThemeVariant {
   system(null),
+  // TODO: slate, silver, shadow, obsidian, carbon, steel
+  monochrome(.monochrome),
   calm(.neutral),
   pastel(.tonalSpot),
   juicy(.vibrant),
-  creative(.expressive);
+  creative(.expressive),
+  // TODO: pristine, studio, classic, sleek, organic
+  cmf(.cmf);
 
   const ThemeVariant(this.dynamicSchemeVariantOrNull);
 
@@ -21,10 +25,12 @@ enum ThemeVariant {
 
   static ThemeVariant? fromDynamicSchemeVariant(DynamicSchemeVariant value) =>
       switch (value) {
+        .monochrome => .monochrome,
         .neutral => .calm,
         .tonalSpot => .pastel,
         .vibrant => .juicy,
         .expressive => .creative,
+        .cmf => .cmf,
         _ => null,
       };
 }

@@ -422,7 +422,7 @@ class _ObtainiumState extends State<Obtainium> {
   }
 
   // static const _platform = DynamicSchemePlatform.phone;
-  static const _specVersion = DynamicSchemeSpecVersion.spec2025;
+  static const _specVersion = DynamicSchemeSpecVersion.spec2026;
   static const _typography = TypographyDefaults.material3Expressive2026;
 }
 
