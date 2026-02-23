@@ -664,7 +664,7 @@ class _AppPageState extends State<AppPage> {
                         ),
                         trailingPadding: const .symmetric(vertical: 10.0 - 4.0),
                         trailingSpace: 12.0 - 4.0,
-                        leading: const Icon(Symbols.link_rounded, fill: 1.0),
+                        leading: const Icon(Symbols.link_2_rounded, fill: 1.0),
                         overline: const Text("Source URL"),
                         headline: Text(app?.app.url ?? ""),
                         trailing: IconButton(

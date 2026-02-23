@@ -1,28 +1,12 @@
 import 'package:material/material_color_utilities.dart';
 import 'package:materium/flutter.dart';
 
-extension on DynamicSchemeVariant {
-  Variant get _asVariant => switch (this) {
-    .monochrome => .monochrome,
-    .neutral => .neutral,
-    .tonalSpot => .tonalSpot,
-    .vibrant => .vibrant,
-    .expressive => .expressive,
-    .fidelity => .fidelity,
-    .content => .content,
-    .rainbow => .rainbow,
-    .fruitSalad => .fruitSalad,
-  };
-}
-
 Color _harmonizeColor(Color designColor, Color sourceColor) =>
     designColor != sourceColor
     ? Color(Blend.harmonize(designColor.toARGB32(), sourceColor.toARGB32()))
     : designColor;
 
 extension on Color {
-  Hct _toHct() => .fromInt(toARGB32());
-
   Color _harmonizeWith(Color sourceColor) => _harmonizeColor(this, sourceColor);
 }
 
@@ -174,27 +158,27 @@ abstract class ExtendedColor with Diagnosticable {
     DynamicSchemePlatform platform = DynamicScheme.defaultPlatform,
     double contrastLevel = 0.0,
     DynamicSchemeSpecVersion? specVersion = DynamicScheme.defaultSpecVersion,
-    Color? primaryPaletteKeyColor,
-    Color? secondaryPaletteKeyColor,
-    Color? tertiaryPaletteKeyColor,
-    Color? neutralPaletteKeyColor,
-    Color? neutralVariantPaletteKeyColor,
-    Color? errorPaletteKeyColor,
+    // Color? primaryPaletteKeyColor,
+    // Color? secondaryPaletteKeyColor,
+    // Color? tertiaryPaletteKeyColor,
+    // Color? neutralPaletteKeyColor,
+    // Color? neutralVariantPaletteKeyColor,
+    // Color? errorPaletteKeyColor,
     ExtendedColorPalette palette = .primary,
   }) => .fromDynamicScheme(
-    .fromPalettesOrKeyColors(
-      sourceColorHct: sourceColor._toHct(),
-      variant: variant._asVariant,
+    .withDefaults(
+      sourceColor: .fromArgb(sourceColor.toARGB32()),
+      variant: variant,
       isDark: brightness == .dark, // Always exhaustive
       platform: platform,
       contrastLevel: contrastLevel,
       specVersion: specVersion,
-      primaryPaletteKeyColor: primaryPaletteKeyColor?._toHct(),
-      secondaryPaletteKeyColor: secondaryPaletteKeyColor?._toHct(),
-      tertiaryPaletteKeyColor: tertiaryPaletteKeyColor?._toHct(),
-      neutralPaletteKeyColor: neutralPaletteKeyColor?._toHct(),
-      neutralVariantPaletteKeyColor: neutralVariantPaletteKeyColor?._toHct(),
-      errorPaletteKeyColor: errorPaletteKeyColor?._toHct(),
+      // primaryPaletteKeyColor: primaryPaletteKeyColor?._toHct(),
+      // secondaryPaletteKeyColor: secondaryPaletteKeyColor?._toHct(),
+      // tertiaryPaletteKeyColor: tertiaryPaletteKeyColor?._toHct(),
+      // neutralPaletteKeyColor: neutralPaletteKeyColor?._toHct(),
+      // neutralVariantPaletteKeyColor: neutralVariantPaletteKeyColor?._toHct(),
+      // errorPaletteKeyColor: errorPaletteKeyColor?._toHct(),
     ),
     palette: palette,
   );

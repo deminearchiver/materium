@@ -34,6 +34,8 @@ export 'package:flutter/material.dart'
         // ---
         // package:material
         // ---
+        DynamicSchemeVariant,
+        // ---
         WidgetStateProperty,
         WidgetStatesConstraint,
         WidgetStateMap,
