@@ -297,3 +297,34 @@ class _MarkdownWidgetBuilder extends CustomMarkdownWidget {
   Widget build(BuildContext context, List<Widget>? children) =>
       builder(context, children);
 }
+
+class SliverMarkdown extends MarkdownWidget {
+  /// Creates a scrolling widget that parses and displays Markdown.
+  const SliverMarkdown({
+    super.key,
+    required super.data,
+    super.selectable,
+    super.styleSheet,
+    super.styleSheetTheme = null,
+    super.syntaxHighlighter,
+    super.onSelectionChanged,
+    super.onTapLink,
+    super.onTapText,
+    super.imageDirectory,
+    super.blockSyntaxes,
+    super.inlineSyntaxes,
+    super.extensionSet,
+    super.imageBuilder,
+    super.checkboxBuilder,
+    super.bulletBuilder,
+    super.builders,
+    super.paddingBuilders,
+    super.listItemCrossAxisAlignment,
+    super.softLineBreak,
+  });
+
+  @override
+  Widget build(BuildContext context, List<Widget>? children) {
+    return SliverList.list(children: children ?? const []);
+  }
+}
