@@ -617,20 +617,20 @@ class _GeneratedFormState extends State<GeneratedForm> {
                                 stateTheme: stateTheme,
                                 typescaleTheme: typescaleTheme,
                                 size: .extraSmall,
-                                color: useBlackTheme ? .tonal : .outlined,
+                                color: useBlackTheme ? .tonal : .filled,
                                 isSelected: isSelected,
                                 unselectedContainerColor: useBlackTheme
                                     ? colorTheme.surfaceContainer
-                                    : null,
+                                    : colorTheme.surfaceContainer,
                                 unselectedContentColor: useBlackTheme
                                     ? colorTheme.onSurface
-                                    : null,
+                                    : colorTheme.onSurfaceVariant,
                                 selectedContainerColor: useBlackTheme
                                     ? colorTheme.primaryContainer
-                                    : null,
+                                    : colorTheme.tertiaryContainer,
                                 selectedContentColor: useBlackTheme
                                     ? colorTheme.onPrimaryContainer
-                                    : null,
+                                    : colorTheme.onTertiaryContainer,
                               ),
                               onPressed: () {
                                 final value = !isSelected;
@@ -771,7 +771,7 @@ class _GeneratedFormState extends State<GeneratedForm> {
                           width: .wide,
                           containerColor: useBlackTheme
                               ? colorTheme.surfaceContainer
-                              : colorTheme.surfaceContainerHighest,
+                              : colorTheme.surfaceContainer,
                           iconColor: useBlackTheme
                               ? colorTheme.primary
                               : colorTheme.onSurfaceVariant,
@@ -819,14 +819,14 @@ class _GeneratedFormState extends State<GeneratedForm> {
                           elevationTheme: elevationTheme,
                           shapeTheme: shapeTheme,
                           stateTheme: stateTheme,
-                          color: .standard,
+                          color: .tonal,
                           size: .extraSmall,
                           width: .wide,
                           containerColor: useBlackTheme
                               ? colorTheme.surfaceContainer
-                              : colorTheme.surfaceContainerHighest,
+                              : colorTheme.surfaceContainer,
                           iconColor: useBlackTheme
-                              ? colorTheme.error
+                              ? colorTheme.primary
                               : colorTheme.onSurfaceVariant,
                         ),
                         onPressed: () {
@@ -886,7 +886,7 @@ class _GeneratedFormState extends State<GeneratedForm> {
                         shape: .square,
                         containerColor: useBlackTheme
                             ? colorTheme.surfaceContainer
-                            : colorTheme.surfaceContainerHighest,
+                            : colorTheme.surfaceContainer,
                         contentColor: useBlackTheme
                             ? colorTheme.primary
                             : colorTheme.onSurfaceVariant,
@@ -916,7 +916,7 @@ class _GeneratedFormState extends State<GeneratedForm> {
                         width: .wide,
                         containerColor: useBlackTheme
                             ? colorTheme.surfaceContainer
-                            : colorTheme.surfaceContainerHighest,
+                            : colorTheme.surfaceContainer,
                         iconColor: useBlackTheme
                             ? colorTheme.primary
                             : colorTheme.onSurfaceVariant,
