@@ -295,6 +295,9 @@ class $AssetsTranslationsGen {
   /// File path: assets/translations/fr.json
   String get fr => 'assets/translations/fr.json';
 
+  /// File path: assets/translations/gl.json
+  String get gl => 'assets/translations/gl.json';
+
   /// File path: assets/translations/hu.json
   String get hu => 'assets/translations/hu.json';
 
@@ -362,6 +365,7 @@ class $AssetsTranslationsGen {
     es,
     fa,
     fr,
+    gl,
     hu,
     id,
     it,
