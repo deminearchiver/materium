@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:easy_localization/easy_localization.dart';
+import 'package:materium/components/custom_markdown.dart';
 import 'package:materium/components/custom_refresh_indicator.dart';
 import 'package:materium/flutter.dart';
 import 'package:flutter_markdown_plus/flutter_markdown_plus.dart';
@@ -11,6 +12,7 @@ import 'package:materium/custom_errors.dart';
 import 'package:materium/main.dart';
 import 'package:materium/pages/add_app.dart';
 import 'package:materium/pages/app.dart';
+import 'package:materium/pages/developer.dart';
 import 'package:materium/pages/settings.dart';
 import 'package:materium/providers/apps_provider.dart';
 import 'package:materium/providers/settings_new.dart';
@@ -21,115 +23,58 @@ import 'package:share_plus/share_plus.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 import 'package:markdown/markdown.dart' as md;
 
+class AppsFilter {
+  AppsFilter({
+    this.nameFilter = "",
+    this.authorFilter = "",
+    this.idFilter = "",
+    this.includeUptodate = true,
+    this.includeNonInstalled = true,
+    this.categoryFilter = const {},
+    this.sourceFilter = "",
+  });
+
+  String nameFilter;
+  String authorFilter;
+  String idFilter;
+  bool includeUptodate;
+  bool includeNonInstalled;
+  Set<String> categoryFilter;
+  String sourceFilter;
+
+  Map<String, Object?> toFormValuesMap() => {
+    "appName": nameFilter,
+    "author": authorFilter,
+    "appId": idFilter,
+    "upToDateApps": includeUptodate,
+    "nonInstalledApps": includeNonInstalled,
+    "sourceFilter": sourceFilter,
+  };
+
+  void setFormValuesFromMap(Map<String, Object?> values) {
+    nameFilter = values["appName"]! as String;
+    authorFilter = values["author"]! as String;
+    idFilter = values["appId"]! as String;
+    includeUptodate = values["upToDateApps"] as bool;
+    includeNonInstalled = values["nonInstalledApps"] as bool;
+    sourceFilter = values["sourceFilter"] as String;
+  }
+
+  bool isIdenticalTo(AppsFilter other, SettingsProvider settingsProvider) =>
+      authorFilter.trim() == other.authorFilter.trim() &&
+      nameFilter.trim() == other.nameFilter.trim() &&
+      idFilter.trim() == other.idFilter.trim() &&
+      includeUptodate == other.includeUptodate &&
+      includeNonInstalled == other.includeNonInstalled &&
+      settingsProvider.setEqual(categoryFilter, other.categoryFilter) &&
+      sourceFilter.trim() == other.sourceFilter.trim();
+}
+
 class AppsPage extends StatefulWidget {
   const AppsPage({super.key});
 
   @override
   State<AppsPage> createState() => AppsPageState();
-}
-
-void showChangeLogDialog(
-  BuildContext context,
-  App app,
-  String? changesUrl,
-  AppSource appSource,
-  String changeLog,
-) {
-  showDialog(
-    context: context,
-    builder: (context) {
-      // TODO: completely redesign this dialog, turning it into a bottom sheet
-      return GeneratedFormModal(
-        title: tr('changes'),
-        items: const [],
-        message: app.latestVersion,
-        additionalWidgets: [
-          changesUrl != null
-              ? GestureDetector(
-                  child: Text(
-                    changesUrl,
-                    style: const TextStyle(
-                      decoration: TextDecoration.underline,
-                      fontStyle: FontStyle.italic,
-                    ),
-                  ),
-                  onTap: () {
-                    launchUrlString(
-                      changesUrl,
-                      mode: LaunchMode.externalApplication,
-                    );
-                  },
-                )
-              : const SizedBox.shrink(),
-          changesUrl != null
-              ? const SizedBox(height: 16)
-              : const SizedBox.shrink(),
-          appSource.changeLogIfAnyIsMarkDown
-              ? SizedBox(
-                  width: MediaQuery.of(context).size.width,
-                  height: MediaQuery.of(context).size.height - 350,
-                  // TODO: create markdown styles for M3E
-                  child: Markdown(
-                    styleSheet: MarkdownStyleSheet(
-                      blockquoteDecoration: BoxDecoration(
-                        color: Theme.of(context).cardColor,
-                      ),
-                    ),
-                    data: changeLog,
-                    onTapLink: (text, href, title) {
-                      if (href != null) {
-                        launchUrlString(
-                          href.startsWith('http://') ||
-                                  href.startsWith('https://')
-                              ? href
-                              : '${Uri.parse(app.url).origin}/$href',
-                          mode: LaunchMode.externalApplication,
-                        );
-                      }
-                    },
-                    extensionSet: md.ExtensionSet(
-                      md.ExtensionSet.gitHubFlavored.blockSyntaxes,
-                      [
-                        md.EmojiSyntax(),
-                        ...md.ExtensionSet.gitHubFlavored.inlineSyntaxes,
-                      ],
-                    ),
-                  ),
-                )
-              : Text(changeLog),
-        ],
-        singleNullReturnButton: tr('ok'),
-      );
-    },
-  );
-}
-
-void Function()? getChangeLogFn(BuildContext context, App app) {
-  final appSource = SourceProvider().getSource(
-    app.url,
-    overrideSource: app.overrideSource,
-  );
-  var changesUrl = appSource.changeLogPageFromStandardUrl(app.url);
-  var changeLog = app.changeLog;
-  if (changeLog?.split('\n').length == 1) {
-    if (RegExp(
-      '(http|ftp|https)://([\\w_-]+(?:(?:\\.[\\w_-]+)+))([\\w.,@?^=%&:/~+#-]*[\\w@?^=%&/~+#-])?',
-    ).hasMatch(changeLog!)) {
-      if (changesUrl == null) {
-        changesUrl = changeLog;
-        changeLog = null;
-      }
-    }
-  }
-  return (changeLog == null && changesUrl == null)
-      ? null
-      : () {
-          if (changeLog != null) {
-            showChangeLogDialog(context, app, changesUrl, appSource, changeLog);
-          } else {
-            launchUrlString(changesUrl!, mode: LaunchMode.externalApplication);
-          }
-        };
 }
 
 class AppsPageState extends State<AppsPage> with TickerProviderStateMixin {
@@ -1707,7 +1652,7 @@ class AppsPageState extends State<AppsPage> with TickerProviderStateMixin {
                                         : useBlackTheme
                                         ? colorTheme.surface
                                         : colorTheme.surfaceContainer,
-                                    child: child!,
+                                    child: child,
                                   ),
                                   child: Stack(
                                     fit: .expand,
@@ -1751,39 +1696,41 @@ class AppsPageState extends State<AppsPage> with TickerProviderStateMixin {
                                           );
                                         },
                                       ),
-                                      InkWell(
-                                        overlayColor: WidgetStateLayerColor(
-                                          color: WidgetStatePropertyAll(
-                                            isSelected
-                                                ? useBlackTheme
-                                                      ? colorTheme
-                                                            .onPrimaryContainer
-                                                      : colorTheme
-                                                            .onSecondaryContainer
-                                                : useBlackTheme
-                                                ? colorTheme.primary
-                                                : colorTheme.onSurface,
-                                          ),
-                                          opacity: stateTheme
-                                              .asWidgetStateLayerOpacity,
-                                        ),
-                                        onTap: () {
-                                          toggleAppSelected(item.app);
-                                        },
-                                        onDoubleTap: () {
-                                          pm.openApp(item.app.id);
-                                        },
-                                        onLongPress: () {
-                                          Navigator.of(context).push(
-                                            MaterialPageRoute<void>(
-                                              builder: (context) => AppPage(
-                                                appId: item.app.id,
-                                                showOppositeOfPreferredView:
-                                                    true,
-                                              ),
+                                      Material.raw(
+                                        child: InkWell(
+                                          overlayColor: WidgetStateLayerColor(
+                                            color: WidgetStatePropertyAll(
+                                              isSelected
+                                                  ? useBlackTheme
+                                                        ? colorTheme
+                                                              .onPrimaryContainer
+                                                        : colorTheme
+                                                              .onSecondaryContainer
+                                                  : useBlackTheme
+                                                  ? colorTheme.primary
+                                                  : colorTheme.onSurface,
                                             ),
-                                          );
-                                        },
+                                            opacity: stateTheme
+                                                .asWidgetStateLayerOpacity,
+                                          ),
+                                          onTap: () {
+                                            toggleAppSelected(item.app);
+                                          },
+                                          onDoubleTap: () {
+                                            pm.openApp(item.app.id);
+                                          },
+                                          onLongPress: () {
+                                            Navigator.of(context).push(
+                                              MaterialPageRoute<void>(
+                                                builder: (context) => AppPage(
+                                                  appId: item.app.id,
+                                                  showOppositeOfPreferredView:
+                                                      true,
+                                                ),
+                                              ),
+                                            );
+                                          },
+                                        ),
                                       ),
                                       TweenAnimationBuilder<double>(
                                         tween: Tween<double>(
@@ -1800,6 +1747,7 @@ class AppsPageState extends State<AppsPage> with TickerProviderStateMixin {
                                                   2.0,
                                                   value,
                                                 ),
+                                                trackGap: 2.0,
                                                 value:
                                                     progress != null &&
                                                         progress >= 0.0
@@ -2500,49 +2448,257 @@ class AppsPageState extends State<AppsPage> with TickerProviderStateMixin {
   }
 }
 
-class AppsFilter {
-  AppsFilter({
-    this.nameFilter = "",
-    this.authorFilter = "",
-    this.idFilter = "",
-    this.includeUptodate = true,
-    this.includeNonInstalled = true,
-    this.categoryFilter = const {},
-    this.sourceFilter = "",
+class AppChangelogPage extends StatefulWidget {
+  const AppChangelogPage({
+    super.key,
+    required this.app,
+    required this.appSource,
+    required this.changelog,
+    this.changelogUrl,
   });
 
-  String nameFilter;
-  String authorFilter;
-  String idFilter;
-  bool includeUptodate;
-  bool includeNonInstalled;
-  Set<String> categoryFilter;
-  String sourceFilter;
+  final App app;
+  final AppSource appSource;
+  final String changelog;
+  final String? changelogUrl;
 
-  Map<String, Object?> toFormValuesMap() => {
-    "appName": nameFilter,
-    "author": authorFilter,
-    "appId": idFilter,
-    "upToDateApps": includeUptodate,
-    "nonInstalledApps": includeNonInstalled,
-    "sourceFilter": sourceFilter,
-  };
+  @override
+  State<AppChangelogPage> createState() => _AppChangelogPageState();
+}
 
-  void setFormValuesFromMap(Map<String, Object?> values) {
-    nameFilter = values["appName"]! as String;
-    authorFilter = values["author"]! as String;
-    idFilter = values["appId"]! as String;
-    includeUptodate = values["upToDateApps"] as bool;
-    includeNonInstalled = values["nonInstalledApps"] as bool;
-    sourceFilter = values["sourceFilter"] as String;
+class _AppChangelogPageState extends State<AppChangelogPage> {
+  Future<void> _copyText(String text) async {
+    await Clipboard.setData(ClipboardData(text: text));
+    if (!mounted) return;
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(SnackBar(content: Text(tr("copiedToClipboard"))));
   }
 
-  bool isIdenticalTo(AppsFilter other, SettingsProvider settingsProvider) =>
-      authorFilter.trim() == other.authorFilter.trim() &&
-      nameFilter.trim() == other.nameFilter.trim() &&
-      idFilter.trim() == other.idFilter.trim() &&
-      includeUptodate == other.includeUptodate &&
-      includeNonInstalled == other.includeNonInstalled &&
-      settingsProvider.setEqual(categoryFilter, other.categoryFilter) &&
-      sourceFilter.trim() == other.sourceFilter.trim();
+  @override
+  Widget build(BuildContext context) {
+    final useBlackTheme = context.select<SettingsService, bool>(
+      (settings) => settings.useBlackTheme.value,
+    );
+
+    final padding = MediaQuery.paddingOf(context);
+
+    final colorTheme = ColorTheme.of(context);
+    final elevationTheme = ElevationTheme.of(context);
+    final shapeTheme = ShapeTheme.of(context);
+    final stateTheme = StateTheme.of(context);
+    final typescaleTheme = TypescaleTheme.of(context);
+
+    final backgroundColor = useBlackTheme
+        ? colorTheme.surface
+        : colorTheme.surfaceContainer;
+
+    final app = widget.app;
+    final appSource = widget.appSource;
+    final changelogUrl = widget.changelogUrl;
+
+    return Scaffold(
+      backgroundColor: backgroundColor,
+      body: SafeArea(
+        top: false,
+        bottom: false,
+        child: CustomScrollView(
+          slivers: [
+            CustomAppBar(
+              type: .small,
+              expandedContainerColor: backgroundColor,
+              collapsedContainerColor: backgroundColor,
+              collapsedPadding: const .fromSTEB(
+                8.0 + 40.0 + 8.0,
+                0.0,
+                16.0,
+                0.0,
+              ),
+              leading: const Padding(
+                padding: .fromSTEB(8.0 - 4.0, 0.0, 8.0 - 4.0, 0.0),
+                child: DeveloperPageBackButton(),
+              ),
+              title: Text("Changelog", textAlign: .start),
+              subtitle: Text(
+                app.overrideName ?? app.finalName,
+                textAlign: .start,
+              ),
+            ),
+            SliverPadding(
+              padding: .symmetric(horizontal: 8.0),
+              sliver: SliverList.list(
+                children: [
+                  Padding(
+                    padding: const .fromLTRB(16.0, 8.0, 16.0, 8.0),
+                    child: Text(
+                      "Info",
+                      style: typescaleTheme.labelLarge.toTextStyle(
+                        color: colorTheme.onSurfaceVariant,
+                      ),
+                    ),
+                  ),
+                  ListItemContainer(
+                    isFirst: true,
+                    isLast: changelogUrl == null,
+                    child: ListItemInteraction(
+                      onLongPress: () => _copyText(app.latestVersion),
+                      child: ListItemLayout(
+                        leading: const Icon(
+                          Symbols.new_releases_rounded,
+                          fill: 1.0,
+                        ),
+                        overline: const Text("Latest version"),
+                        headline: Text(app.latestVersion),
+                      ),
+                    ),
+                  ),
+                  if (changelogUrl != null) ...[
+                    const SizedBox(height: 2.0),
+                    ListItemContainer(
+                      isLast: true,
+                      child: ListItemInteraction(
+                        onLongPress: () => _copyText(changelogUrl),
+                        child: ListItemLayout(
+                          padding: const .directional(
+                            start: 16.0,
+                            end: 16.0 - (48.0 - 40.0) / 2.0,
+                          ),
+                          trailingPadding: const .symmetric(
+                            vertical: 10.0 - (48.0 - 40.0) / 2.0,
+                          ),
+                          leading: const Icon(Symbols.link_2_rounded),
+                          headline: Text("Changelog URL"),
+                          supportingText: Text(
+                            changelogUrl,
+                            maxLines: 1,
+                            overflow: .ellipsis,
+                          ),
+                          trailing: IconButton(
+                            style: LegacyThemeFactory.createIconButtonStyle(
+                              colorTheme: colorTheme,
+                              elevationTheme: elevationTheme,
+                              shapeTheme: shapeTheme,
+                              stateTheme: stateTheme,
+                              color: .tonal,
+                            ),
+                            onPressed: () async {
+                              await launchUrlString(
+                                changelogUrl,
+                                mode: .externalApplication,
+                              );
+                            },
+                            icon: const Icon(Symbols.open_in_new_rounded),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                  if (appSource.changeLogIfAnyIsMarkDown) ...[
+                    Padding(
+                      padding: const .fromLTRB(16.0, 20.0, 16.0, 8.0),
+                      child: Text(
+                        "Changelog",
+                        style: typescaleTheme.labelLarge.toTextStyle(
+                          color: colorTheme.onSurfaceVariant,
+                        ),
+                      ),
+                    ),
+                    Material(
+                      shape: CornersBorder.rounded(
+                        corners: .all(shapeTheme.corner.large),
+                      ),
+                      color: colorTheme.surface,
+                      child: Padding(
+                        padding: const .symmetric(
+                          horizontal: 16.0,
+                          vertical: 16.0,
+                        ),
+                        child: MarkdownBody(
+                          data: widget.changelog,
+                          styleSheet: MarkdownThemeFactory.defaultStylesheetOf(
+                            colorTheme: colorTheme,
+                            typescaleTheme: typescaleTheme,
+                          ),
+                          onTapLink: (text, href, title) async {
+                            if (href != null) {
+                              await launchUrlString(
+                                href.startsWith('http://') ||
+                                        href.startsWith('https://')
+                                    ? href
+                                    : '${Uri.parse(app.url).origin}/$href',
+                                mode: LaunchMode.externalApplication,
+                              );
+                            }
+                          },
+                          extensionSet: .gitHubFlavored,
+                        ),
+                      ),
+                    ),
+                  ],
+                ],
+              ),
+            ),
+            SliverToBoxAdapter(child: SizedBox(height: 16.0 + padding.bottom)),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+Future<void> showChangelogPage(
+  BuildContext context,
+  App app,
+  String? changelogUrl,
+  AppSource appSource,
+  String changelog,
+) async {
+  await Navigator.push(
+    context,
+    MaterialPageRoute<void>(
+      builder: (context) => AppChangelogPage(
+        app: app,
+        appSource: appSource,
+        changelog: changelog,
+        changelogUrl: changelogUrl,
+      ),
+    ),
+  );
+}
+
+Future<void> Function()? getChangeLogFn(BuildContext context, App app) {
+  final appSource = SourceProvider().getSource(
+    app.url,
+    overrideSource: app.overrideSource,
+  );
+  var changesUrl = appSource.changeLogPageFromStandardUrl(app.url);
+  var changeLog = app.changeLog;
+  if (changeLog?.split('\n').length == 1) {
+    if (RegExp(
+      '(http|ftp|https)://([\\w_-]+(?:(?:\\.[\\w_-]+)+))([\\w.,@?^=%&:/~+#-]*[\\w@?^=%&/~+#-])?',
+    ).hasMatch(changeLog!)) {
+      if (changesUrl == null) {
+        changesUrl = changeLog;
+        changeLog = null;
+      }
+    }
+  }
+  return (changeLog == null && changesUrl == null)
+      ? null
+      : () async {
+          if (changeLog != null) {
+            await showChangelogPage(
+              context,
+              app,
+              changesUrl,
+              appSource,
+              changeLog,
+            );
+          } else {
+            await launchUrlString(
+              changesUrl!,
+              mode: LaunchMode.externalApplication,
+            );
+          }
+        };
 }
