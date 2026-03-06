@@ -1678,7 +1678,7 @@ class AppsPageState extends State<AppsPage> with TickerProviderStateMixin {
                         padding: const .directional(start: 16.0, end: 0.0),
                         leading: ExcludeFocus(
                           child: SizedBox.square(
-                            dimension: 56.0,
+                            dimension: 40.0,
                             child: FutureBuilder(
                               future: appsProvider
                                   .updateAppIcon(item.app.id)
@@ -1693,15 +1693,9 @@ class AppsPageState extends State<AppsPage> with TickerProviderStateMixin {
                                   curve: listItemEasing,
                                   builder: (context, value, child) => Material(
                                     clipBehavior: .antiAlias,
-                                    shape: ShapeBorder.lerp(
-                                      CornersBorder.rounded(
-                                        corners: .all(shapeTheme.corner.small),
-                                      ),
-                                      CornersBorder.rounded(
-                                        corners: .all(shapeTheme.corner.full),
-                                      ),
-                                      value,
-                                    )!,
+                                    shape: CornersBorder.rounded(
+                                      corners: .all(shapeTheme.corner.full),
+                                    ),
                                     color: isSelected
                                         ? bytes != null
                                               ? useBlackTheme
@@ -1725,11 +1719,9 @@ class AppsPageState extends State<AppsPage> with TickerProviderStateMixin {
                                         duration: listItemDuration,
                                         curve: listItemEasing,
                                         builder: (context, value, _) {
-                                          final size = lerpDouble(
-                                            40.0,
-                                            28.0,
-                                            value,
-                                          );
+                                          final size = bytes != null
+                                              ? lerpDouble(40.0, 24.0, value)
+                                              : 24.0;
                                           return Align.center(
                                             child: bytes != null
                                                 ? SizedBox.square(
@@ -1802,10 +1794,10 @@ class AppsPageState extends State<AppsPage> with TickerProviderStateMixin {
                                         builder: (context, value, _) =>
                                             value > 0.0
                                             ? CircularProgressIndicator(
-                                                padding: const .all(0.0),
+                                                padding: .zero,
                                                 strokeWidth: lerpDouble(
                                                   0.0,
-                                                  4.0,
+                                                  2.0,
                                                   value,
                                                 ),
                                                 value:
