@@ -1879,6 +1879,15 @@ class _AppPageState extends State<AppPage> {
       Widget? newFooter;
       if (oldFooter == null || developerMode) {
         final bottomPadding = oldFooter == null ? padding.bottom : 0.0;
+        final showMarkUpdatedButton =
+            app?.app.installedVersion != null &&
+            app?.app.installedVersion != app?.app.latestVersion &&
+            !isVersionDetectionStandard &&
+            !trackOnly;
+        final showResetInstallStatusButton =
+            (!isVersionDetectionStandard || trackOnly) &&
+            app?.app.installedVersion != null &&
+            app?.app.installedVersion == app?.app.latestVersion;
         newFooter = Material(
           clipBehavior: .antiAlias,
           shape: CornersBorder.rounded(corners: .all(shapeTheme.corner.none)),
@@ -1983,67 +1992,68 @@ class _AppPageState extends State<AppPage> {
                           tooltip: tr("additionalOptions"),
                         ),
                       ),
-                    if ((!isVersionDetectionStandard || trackOnly) &&
-                        app?.app.installedVersion != null &&
-                        app?.app.installedVersion == app?.app.latestVersion)
+                    if (showMarkUpdatedButton || showResetInstallStatusButton)
                       Padding(
                         padding: const .directional(end: 8.0),
-                        child: IconButton(
-                          style: LegacyThemeFactory.createIconButtonStyle(
-                            colorTheme: colorTheme,
-                            elevationTheme: elevationTheme,
-                            shapeTheme: shapeTheme,
-                            stateTheme: stateTheme,
-                            size: .medium,
-                            color: .standard,
-                            width: .narrow,
-                            containerColor: useBlackTheme
-                                ? colorTheme.surfaceContainer
-                                : colorTheme.surfaceContainerHighest,
-                            iconColor: useBlackTheme
-                                ? colorTheme.primary
-                                : colorTheme.onSurfaceVariant,
+                        child: TweenAnimationBuilder<double>(
+                          tween: Tween<double>(
+                            end: showMarkUpdatedButton ? 1.0 : 0.0,
                           ),
-                          onPressed: app?.app == null || updating
-                              ? null
-                              : () {
-                                  app!.app.installedVersion = null;
-                                  appsProvider.saveApps([app.app]);
-                                },
-                          icon: const Icon(Symbols.restore_rounded, fill: 1.0),
-                          tooltip: tr("resetInstallStatus"),
-                        ),
-                      ),
-                    if (app?.app.installedVersion != null &&
-                        app?.app.installedVersion != app?.app.latestVersion &&
-                        !isVersionDetectionStandard &&
-                        !trackOnly)
-                      Padding(
-                        padding: const .directional(end: 8.0),
-                        child: IconButton(
-                          style: LegacyThemeFactory.createIconButtonStyle(
-                            colorTheme: colorTheme,
-                            elevationTheme: elevationTheme,
-                            shapeTheme: shapeTheme,
-                            stateTheme: stateTheme,
-                            size: .medium,
-                            color: .tonal,
-                            width: .normal,
-                            containerColor: useBlackTheme
-                                ? colorTheme.primaryContainer
-                                : colorTheme.secondaryContainer,
-                            iconColor: useBlackTheme
-                                ? colorTheme.onPrimaryContainer
-                                : colorTheme.onSecondaryContainer,
+                          duration: const DurationThemeData.fallback().medium2,
+                          curve: const EasingThemeData.fallback().standard,
+                          builder: (context, value, child) => IconButton(
+                            style:
+                                LegacyThemeFactory.createIconButtonStyle(
+                                  colorTheme: colorTheme,
+                                  elevationTheme: elevationTheme,
+                                  shapeTheme: shapeTheme,
+                                  stateTheme: stateTheme,
+                                  size: .medium,
+                                  color: .standard,
+                                  width: showMarkUpdatedButton
+                                      ? .normal
+                                      : .narrow,
+                                  containerColor: showMarkUpdatedButton
+                                      ? useBlackTheme
+                                            ? colorTheme.primaryContainer
+                                            : colorTheme.secondaryContainer
+                                      : useBlackTheme
+                                      ? colorTheme.surfaceContainer
+                                      : colorTheme.surfaceContainerHighest,
+                                  iconColor: showMarkUpdatedButton
+                                      ? useBlackTheme
+                                            ? colorTheme.onPrimaryContainer
+                                            : colorTheme.onSecondaryContainer
+                                      : useBlackTheme
+                                      ? colorTheme.primary
+                                      : colorTheme.onSurfaceVariant,
+                                ).copyWith(
+                                  fixedSize: WidgetStatePropertyAll(
+                                    Size(lerpDouble(48.0, 56.0, value), 56.0),
+                                  ),
+                                ),
+                            onPressed: app != null && !updating
+                                ? showMarkUpdatedButton
+                                      ? app.downloadProgress == null
+                                            ? showMarkUpdatedDialog
+                                            : null
+                                      : () async {
+                                          app.app.installedVersion = null;
+                                          await appsProvider.saveApps([
+                                            app.app,
+                                          ]);
+                                        }
+                                : null,
+                            icon: showMarkUpdatedButton
+                                ? const Icon(
+                                    Symbols.check_circle_rounded,
+                                    fill: 1.0,
+                                  )
+                                : const Icon(
+                                    Symbols.restore_rounded,
+                                    fill: 1.0,
+                                  ),
                           ),
-                          onPressed: app?.downloadProgress != null || updating
-                              ? null
-                              : showMarkUpdatedDialog,
-                          icon: const Icon(
-                            Symbols.check_circle_rounded,
-                            fill: 1.0,
-                          ),
-                          tooltip: tr("markUpdated"),
                         ),
                       ),
                     Flexible.tight(
