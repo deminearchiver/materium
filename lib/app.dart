@@ -156,7 +156,7 @@ class _ObtainiumState extends State<Obtainium> {
               : .phone;
 
           var colorTheme = ColorThemeData.fromSeed(
-            sourceColor: sourceColor,
+            sourceColor: ColorThemeSourceColor.fromColor(sourceColor),
             brightness: brightness,
             contrastLevel: contrastLevel,
             variant: variant,
