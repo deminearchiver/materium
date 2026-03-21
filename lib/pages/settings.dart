@@ -161,22 +161,39 @@ class _SettingsPageState extends State<SettingsPage> {
     }
   }
 
-  void _onUseShizukuChanged(bool useShizuku) {
+  // void _onUseShizukuChanged(bool useShizuku) {
+  //   if (useShizuku) {
+  //     ShizukuApkInstaller().checkPermission().then((resCode) {
+  //       _settingsProvider.useShizuku = resCode!.startsWith("granted");
+  //       if (!mounted) return;
+  //       switch (resCode) {
+  //         case "services_not_found":
+  //           showError(ObtainiumError(tr("shizukuBinderNotFound")), context);
+  //         case "old_shizuku":
+  //           showError(ObtainiumError(tr("shizukuOld")), context);
+  //         case "old_android_with_adb":
+  //           showError(ObtainiumError(tr("shizukuOldAndroidWithADB")), context);
+  //         case "denied":
+  //           showError(ObtainiumError(tr("cancelled")), context);
+  //       }
+  //     });
+  //   } else {
+  //     _settingsProvider.useShizuku = false;
+  //   }
+  // }
+  Future<void> _onUseShizukuChanged(bool useShizuku) async {
     if (useShizuku) {
-      ShizukuApkInstaller.checkPermission().then((resCode) {
-        _settingsProvider.useShizuku = resCode!.startsWith("granted");
-        if (!mounted) return;
-        switch (resCode) {
-          case "binder_not_found":
-            showError(ObtainiumError(tr("shizukuBinderNotFound")), context);
-          case "old_shizuku":
-            showError(ObtainiumError(tr("shizukuOld")), context);
-          case "old_android_with_adb":
-            showError(ObtainiumError(tr("shizukuOldAndroidWithADB")), context);
-          case "denied":
-            showError(ObtainiumError(tr("cancelled")), context);
-        }
-      });
+      final response = await ShizukuApkInstaller().checkPermission();
+      _settingsProvider.useShizuku = response!.startsWith("granted");
+      if (!mounted) return;
+      final message = switch (response) {
+        "services_not_found" => tr("shizukuBinderNotFound"),
+        "old_shizuku" => tr("shizukuOld"),
+        "old_android_with_adb" => tr("shizukuOldAndroidWithADB"),
+        "denied" => tr("cancelled"),
+        _ => null,
+      };
+      if (message != null) showError(ObtainiumError(message), context);
     } else {
       _settingsProvider.useShizuku = false;
     }

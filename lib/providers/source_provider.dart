@@ -12,6 +12,7 @@ import 'package:html/dom.dart';
 import 'package:materium/app_sources/apkmirror.dart';
 import 'package:materium/app_sources/apkpure.dart';
 import 'package:materium/app_sources/aptoide.dart';
+import 'package:materium/app_sources/apk4free.dart';
 import 'package:materium/app_sources/codeberg.dart';
 import 'package:materium/app_sources/coolapk.dart';
 import 'package:materium/app_sources/direct_apk_link.dart';
@@ -526,7 +527,10 @@ Future<List<MapEntry<String, String>>> filterApksByArch(
     var abis = DeviceInfo.androidInfo!.supportedAbis;
     for (var abi in abis) {
       var urls2 = apkUrls
-          .where((element) => RegExp('.*$abi.*').hasMatch(element.key))
+          .where(
+            (element) =>
+                RegExp('.*$abi.*', caseSensitive: false).hasMatch(element.key),
+          )
           .toList();
       if (urls2.isNotEmpty && urls2.length < apkUrls.length) {
         apkUrls = urls2;
@@ -1131,6 +1135,7 @@ class SourceProvider {
     Tencent(),
     VivoAppStore(),
     RuStore(),
+    Apk4Free(),
     Farsroid(),
     CoolApk(),
     RockMods(),
