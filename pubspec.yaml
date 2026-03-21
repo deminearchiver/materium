@@ -23,12 +23,12 @@ dependencies:
   layout:
     git:
       url: https://github.com/deminearchiver/dart-flutter-packages.git
-      ref: 4170bce54823d4cf135c90fd76c46becde6be749
+      ref: b72e8b6904b99ee32364f8b1b670cd1a24f45662
       path: packages/layout
   material:
     git:
       url: https://github.com/deminearchiver/dart-flutter-packages.git
-      ref: 4170bce54823d4cf135c90fd76c46becde6be749
+      ref: b72e8b6904b99ee32364f8b1b670cd1a24f45662
       path: packages/material
   android_package_installer: # TODO: See if PR will be accepted (dev may not be active), else remove this comment
     git:
@@ -48,7 +48,7 @@ dependencies:
       ref: master
 
   # Hosted dependencies
-  meta: ^1.18.1
+  meta: ^1.18.2
   path_provider: ^2.1.5
   flutter_fgbg: ^0.7.1
   flutter_local_notifications: ^21.0.0
@@ -73,7 +73,7 @@ dependencies:
   app_links: ^7.0.0
   background_fetch: ^1.5.0
   flex_color_picker: ^3.8.0
-  markdown: ^7.3.0
+  markdown: ^7.3.1
   flutter_typeahead: ^5.2.0
   battery_plus: ^7.0.0
   flutter_charset_detector: ^5.0.0
@@ -99,21 +99,21 @@ dependencies:
   device_info_ffi: ^1.0.3
   dynamic_color_ffi: ^1.0.2
   screen_corners_ffi: ^1.0.2
-  slang: ^4.13.0
-  slang_flutter: ^4.13.0
+  slang: ^4.14.0
+  slang_flutter: ^4.14.0
   rhttp: ^0.15.1
   pub_semver: ^2.2.0
 
 dev_dependencies:
   # Hosted dependencies
   deminearchiver_lints: ^2.1.2
-  build_runner: ^2.12.2
+  build_runner: ^2.13.1
   json_serializable: ^6.13.0
   freezed: ^3.2.5
   flutter_gen_runner: ^5.13.0+1
   drift_dev: ^2.31.0
   retrofit_generator: ^10.2.3
-  slang_build_runner: ^4.13.0
+  slang_build_runner: ^4.14.0
   fastforge: ^0.6.6
   pubspec_generator: ^5.0.1
 
