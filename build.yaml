@@ -12,8 +12,8 @@ targets:
             parse_animation: true
 
           fonts:
-              outputs:
-                package_parameter_enabled: false
+            outputs:
+              package_parameter_enabled: false
 
           assets:
             outputs:
@@ -53,3 +53,5 @@ targets:
           format:
             enabled: true
             width: 80
+
+          timestamp: false
