@@ -89,4 +89,5 @@ export 'theme/static_colors.dart';
 export 'theme/theme.dart';
 export 'theme/typography.dart';
 export 'extensions.dart';
+export 'motor.dart';
 export 'optional.dart';
