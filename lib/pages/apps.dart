@@ -1603,6 +1603,287 @@ class AppsPageState extends State<AppsPage> with TickerProviderStateMixin {
                 checked: isSelected,
               );
 
+              final Widget listItemLayout = ListItemLayout(
+                padding: const .directional(start: 16.0, end: 0.0),
+                leading: ExcludeFocus(
+                  child: SizedBox.square(
+                    dimension: 40.0,
+                    child: FutureBuilder(
+                      future: appsProvider
+                          .updateAppIcon(item.app.id)
+                          .then((_) => item.icon),
+                      builder: (context, snapshot) {
+                        final bytes = snapshot.data;
+                        return Material(
+                          clipBehavior: .antiAlias,
+                          shape: CornersBorder.rounded(
+                            corners: .all(shapeTheme.corner.full),
+                          ),
+                          color: isSelected
+                              ? bytes != null
+                                    ? useBlackTheme
+                                          ? colorTheme.primaryContainer
+                                          : colorTheme.secondaryContainer
+                                    : Colors.transparent
+                              : useBlackTheme
+                              ? colorTheme.surface
+                              : colorTheme.surfaceContainer,
+                          child: Stack(
+                            fit: .expand,
+                            children: [
+                              SingleMotionBuilder(
+                                motion: _springTheme.defaultEffects.toMotion(
+                                  snapToEnd: true,
+                                ),
+                                value: progress != null ? 1.0 : 0.0,
+                                builder: (context, value, _) {
+                                  final size = bytes != null
+                                      ? lerpDouble(40.0, 24.0, value)
+                                      : 24.0;
+                                  return Align.center(
+                                    child: bytes != null
+                                        ? SizedBox.square(
+                                            dimension: size,
+                                            child: Image.memory(
+                                              bytes,
+                                              gaplessPlayback: true,
+                                              fit: .contain,
+                                            ),
+                                          )
+                                        : Icon(
+                                            Symbols.broken_image_rounded,
+                                            opticalSize: size,
+                                            size: size,
+                                            color: isSelected
+                                                ? useBlackTheme
+                                                      ? colorTheme
+                                                            .onPrimaryContainer
+                                                      : colorTheme
+                                                            .onSecondaryContainer
+                                                : useBlackTheme
+                                                ? colorTheme.primary
+                                                : colorTheme.onSurfaceVariant,
+                                          ),
+                                  );
+                                },
+                              ),
+                              Material.raw(
+                                child: InkWell(
+                                  overlayColor: WidgetStateLayerColor(
+                                    color: WidgetStatePropertyAll(
+                                      isSelected
+                                          ? useBlackTheme
+                                                ? colorTheme.onPrimaryContainer
+                                                : colorTheme
+                                                      .onSecondaryContainer
+                                          : useBlackTheme
+                                          ? colorTheme.primary
+                                          : colorTheme.onSurface,
+                                    ),
+                                    opacity:
+                                        stateTheme.asWidgetStateLayerOpacity,
+                                  ),
+                                  onTap: () {
+                                    toggleAppSelected(item.app);
+                                  },
+                                  onDoubleTap: () {
+                                    pm.openApp(item.app.id);
+                                  },
+                                  onLongPress: () {
+                                    Navigator.of(context).push(
+                                      MaterialPageRoute<void>(
+                                        builder: (context) => AppPage(
+                                          appId: item.app.id,
+                                          showOppositeOfPreferredView: true,
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                ),
+                              ),
+                              SingleMotionBuilder(
+                                motion: _springTheme.defaultEffects.toMotion(
+                                  snapToEnd: true,
+                                ),
+                                value: progress != null ? 1.0 : 0.0,
+                                builder: (context, value, _) => value > 0.0
+                                    ? CircularProgressIndicator(
+                                        padding: .zero,
+                                        strokeWidth: lerpDouble(
+                                          0.0,
+                                          2.0,
+                                          value,
+                                        ),
+                                        trackGap: 2.0,
+                                        value:
+                                            progress != null && progress >= 0.0
+                                            ? clampDouble(
+                                                progress / 100.0,
+                                                0.0,
+                                                1.0,
+                                              )
+                                            : null,
+                                      )
+                                    : const SizedBox.shrink(),
+                              ),
+                            ],
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                ),
+                overline: Text(
+                  tr("byX", args: [item.author]),
+                  maxLines: 1,
+                  overflow: .ellipsis,
+                  softWrap: false,
+                  style: TextStyle(
+                    color: isSelected
+                        ? useBlackTheme
+                              ? colorTheme.onPrimaryContainer.withValues(
+                                  alpha: 0.9,
+                                )
+                              : colorTheme.onSecondaryContainer
+                        : useBlackTheme
+                        ? colorTheme.onSurfaceVariant
+                        : null,
+                  ),
+                ),
+                headline: Text(
+                  item.name,
+                  maxLines: 1,
+                  overflow: .ellipsis,
+                  softWrap: false,
+                  style:
+                      (isInstalled
+                              ? typescaleTheme.bodyLargeEmphasized
+                              : typescaleTheme.bodyLarge)
+                          .toTextStyle(
+                            color: isSelected
+                                ? useBlackTheme
+                                      ? colorTheme.onPrimaryContainer
+                                      : colorTheme.onSecondaryContainer
+                                : colorTheme.onSurface,
+                          ),
+                ),
+                supportingText: Text(
+                  installedVersion != null
+                      ? hasUpdate
+                            ? "$installedVersion → ${item.app.latestVersion}"
+                            : installedVersion
+                      : tr("notInstalled"),
+                  style: typescaleTheme.bodySmall.toTextStyle().copyWith(
+                    fontFamily: installedVersion != null
+                        ? FontFamily.googleSansCode
+                        : null,
+                    color: isSelected
+                        ? useBlackTheme
+                              ? colorTheme.onPrimaryContainer.withValues(
+                                  alpha: 0.9,
+                                )
+                              : colorTheme.onSecondaryContainer
+                        : hasUpdate
+                        ? colorTheme.onSurface
+                        : colorTheme.onSurfaceVariant,
+                  ),
+                ),
+                trailing: Flex.horizontal(
+                  children: [
+                    SingleMotionBuilder(
+                      value: hasUpdate && selectedAppIds.isEmpty ? 1.0 : 0.0,
+                      motion: _listItemMotion,
+                      builder: (context, value, child) => Visibility(
+                        visible: value > 0.0,
+                        child: Opacity(
+                          opacity: clampDouble(value, 0.0, 1.0),
+                          child: Align.centerEnd(
+                            widthFactor: math.max(0.0, value),
+                            child: Transform.scale(
+                              scale: math.max(0.0, value),
+                              alignment: .centerEnd,
+                              child: child,
+                            ),
+                          ),
+                        ),
+                      ),
+                      child: Padding(
+                        padding: const .directional(end: 12.0 - 8.0),
+                        child: updateButton,
+                      ),
+                    ),
+                    overflowButton,
+                    AnimatedBuilder(
+                      animation: _hasSelectionController,
+                      builder: (context, child) {
+                        final value = _hasSelectionController.value;
+                        return Padding(
+                          padding: .directional(
+                            end: lerpDouble(16.0 - 8.0, 16.0 - 4.0, value),
+                          ),
+                          child: Visibility(
+                            visible: value > 0.0,
+                            child: Opacity(
+                              opacity: clampDouble(value, 0.0, 1.0),
+                              child: Align.centerStart(
+                                widthFactor: math.max(0.0, value),
+                                child: child,
+                              ),
+                            ),
+                          ),
+                        );
+                      },
+                      child: checkbox,
+                    ),
+                  ],
+                ),
+              );
+
+              final Widget listItemInteraction = ListItemInteraction(
+                stateLayerColor: .all(
+                  isSelected
+                      ? useBlackTheme
+                            ? colorTheme.onPrimaryContainer
+                            : colorTheme.onSecondaryContainer
+                      : useBlackTheme
+                      ? colorTheme.onPrimaryContainer
+                      : colorTheme.onSurface,
+                ),
+                onTap: () {
+                  if (selectedAppIds.isNotEmpty) {
+                    toggleAppSelected(item.app);
+                  } else {
+                    Navigator.of(context).push(
+                      MaterialPageRoute<void>(
+                        builder: (context) => AppPage(appId: item.app.id),
+                      ),
+                    );
+                  }
+                },
+                onLongPress: () => toggleAppSelected(item.app),
+                child: listItemLayout,
+              );
+
+              final Widget listItemContainer = ListItemContainer(
+                isFirst: isFirst,
+                isLast: isLast,
+                containerShape: .all(
+                  isSelected
+                      ? CornersBorder.rounded(
+                          corners: Corners.all(shapeTheme.corner.large),
+                        )
+                      : null,
+                ),
+                containerColor: .all(
+                  isSelected
+                      ? useBlackTheme
+                            ? colorTheme.primaryContainer
+                            : colorTheme.secondaryContainer
+                      : null,
+                ),
+                child: listItemInteraction,
+              );
+
               return KeyedSubtree(
                 key: ValueKey(item.app.id),
                 child: Padding(
@@ -1610,293 +1891,7 @@ class AppsPageState extends State<AppsPage> with TickerProviderStateMixin {
                     top: isFirst ? 0.0 : spacing / 2.0,
                     bottom: isLast ? 0.0 : spacing / 2.0,
                   ),
-                  child: ListItemContainer(
-                    isFirst: isFirst,
-                    isLast: isLast,
-                    containerShape: .all(
-                      isSelected
-                          ? CornersBorder.rounded(
-                              corners: Corners.all(shapeTheme.corner.large),
-                            )
-                          : null,
-                    ),
-                    containerColor: .all(
-                      isSelected
-                          ? useBlackTheme
-                                ? colorTheme.primaryContainer
-                                : colorTheme.secondaryContainer
-                          : null,
-                    ),
-                    child: ListItemInteraction(
-                      stateLayerColor: .all(
-                        isSelected
-                            ? useBlackTheme
-                                  ? colorTheme.onPrimaryContainer
-                                  : colorTheme.onSecondaryContainer
-                            : useBlackTheme
-                            ? colorTheme.onPrimaryContainer
-                            : colorTheme.onSurface,
-                      ),
-                      onTap: () {
-                        if (selectedAppIds.isNotEmpty) {
-                          toggleAppSelected(item.app);
-                        } else {
-                          Navigator.of(context).push(
-                            MaterialPageRoute<void>(
-                              builder: (context) => AppPage(appId: item.app.id),
-                            ),
-                          );
-                        }
-                      },
-                      onLongPress: () => toggleAppSelected(item.app),
-                      child: ListItemLayout(
-                        padding: const .directional(start: 16.0, end: 0.0),
-                        leading: ExcludeFocus(
-                          child: SizedBox.square(
-                            dimension: 40.0,
-                            child: FutureBuilder(
-                              future: appsProvider
-                                  .updateAppIcon(item.app.id)
-                                  .then((_) => item.icon),
-                              builder: (context, snapshot) {
-                                final bytes = snapshot.data;
-                                return Material(
-                                  clipBehavior: .antiAlias,
-                                  shape: CornersBorder.rounded(
-                                    corners: .all(shapeTheme.corner.full),
-                                  ),
-                                  color: isSelected
-                                      ? bytes != null
-                                            ? useBlackTheme
-                                                  ? colorTheme.primaryContainer
-                                                  : colorTheme
-                                                        .secondaryContainer
-                                            : Colors.transparent
-                                      : useBlackTheme
-                                      ? colorTheme.surface
-                                      : colorTheme.surfaceContainer,
-                                  child: Stack(
-                                    fit: .expand,
-                                    children: [
-                                      SingleMotionBuilder(
-                                        motion: _springTheme.defaultEffects
-                                            .toMotion(snapToEnd: true),
-                                        value: progress != null ? 1.0 : 0.0,
-                                        builder: (context, value, _) {
-                                          final size = bytes != null
-                                              ? lerpDouble(40.0, 24.0, value)
-                                              : 24.0;
-                                          return Align.center(
-                                            child: bytes != null
-                                                ? SizedBox.square(
-                                                    dimension: size,
-                                                    child: Image.memory(
-                                                      bytes,
-                                                      gaplessPlayback: true,
-                                                      fit: .contain,
-                                                    ),
-                                                  )
-                                                : Icon(
-                                                    Symbols
-                                                        .broken_image_rounded,
-                                                    opticalSize: size,
-                                                    size: size,
-                                                    color: isSelected
-                                                        ? useBlackTheme
-                                                              ? colorTheme
-                                                                    .onPrimaryContainer
-                                                              : colorTheme
-                                                                    .onSecondaryContainer
-                                                        : useBlackTheme
-                                                        ? colorTheme.primary
-                                                        : colorTheme
-                                                              .onSurfaceVariant,
-                                                  ),
-                                          );
-                                        },
-                                      ),
-                                      Material.raw(
-                                        child: InkWell(
-                                          overlayColor: WidgetStateLayerColor(
-                                            color: WidgetStatePropertyAll(
-                                              isSelected
-                                                  ? useBlackTheme
-                                                        ? colorTheme
-                                                              .onPrimaryContainer
-                                                        : colorTheme
-                                                              .onSecondaryContainer
-                                                  : useBlackTheme
-                                                  ? colorTheme.primary
-                                                  : colorTheme.onSurface,
-                                            ),
-                                            opacity: stateTheme
-                                                .asWidgetStateLayerOpacity,
-                                          ),
-                                          onTap: () {
-                                            toggleAppSelected(item.app);
-                                          },
-                                          onDoubleTap: () {
-                                            pm.openApp(item.app.id);
-                                          },
-                                          onLongPress: () {
-                                            Navigator.of(context).push(
-                                              MaterialPageRoute<void>(
-                                                builder: (context) => AppPage(
-                                                  appId: item.app.id,
-                                                  showOppositeOfPreferredView:
-                                                      true,
-                                                ),
-                                              ),
-                                            );
-                                          },
-                                        ),
-                                      ),
-                                      SingleMotionBuilder(
-                                        motion: _springTheme.defaultEffects
-                                            .toMotion(snapToEnd: true),
-                                        value: progress != null ? 1.0 : 0.0,
-                                        builder: (context, value, _) =>
-                                            value > 0.0
-                                            ? CircularProgressIndicator(
-                                                padding: .zero,
-                                                strokeWidth: lerpDouble(
-                                                  0.0,
-                                                  2.0,
-                                                  value,
-                                                ),
-                                                trackGap: 2.0,
-                                                value:
-                                                    progress != null &&
-                                                        progress >= 0.0
-                                                    ? clampDouble(
-                                                        progress / 100.0,
-                                                        0.0,
-                                                        1.0,
-                                                      )
-                                                    : null,
-                                              )
-                                            : const SizedBox.shrink(),
-                                      ),
-                                    ],
-                                  ),
-                                );
-                              },
-                            ),
-                          ),
-                        ),
-                        overline: Text(
-                          tr("byX", args: [item.author]),
-                          maxLines: 1,
-                          overflow: .ellipsis,
-                          softWrap: false,
-                          style: TextStyle(
-                            color: isSelected
-                                ? useBlackTheme
-                                      ? colorTheme.onPrimaryContainer
-                                            .withValues(alpha: 0.9)
-                                      : colorTheme.onSecondaryContainer
-                                : useBlackTheme
-                                ? colorTheme.onSurfaceVariant
-                                : null,
-                          ),
-                        ),
-                        headline: Text(
-                          item.name,
-                          maxLines: 1,
-                          overflow: .ellipsis,
-                          softWrap: false,
-                          style:
-                              (isInstalled
-                                      ? typescaleTheme.bodyLargeEmphasized
-                                      : typescaleTheme.bodyLarge)
-                                  .toTextStyle(
-                                    color: isSelected
-                                        ? useBlackTheme
-                                              ? colorTheme.onPrimaryContainer
-                                              : colorTheme.onSecondaryContainer
-                                        : colorTheme.onSurface,
-                                  ),
-                        ),
-                        supportingText: Text(
-                          installedVersion != null
-                              ? hasUpdate
-                                    ? "$installedVersion → ${item.app.latestVersion}"
-                                    : installedVersion
-                              : tr("notInstalled"),
-                          style: typescaleTheme.bodySmall
-                              .toTextStyle()
-                              .copyWith(
-                                fontFamily: installedVersion != null
-                                    ? FontFamily.googleSansCode
-                                    : null,
-                                color: isSelected
-                                    ? useBlackTheme
-                                          ? colorTheme.onPrimaryContainer
-                                                .withValues(alpha: 0.9)
-                                          : colorTheme.onSecondaryContainer
-                                    : hasUpdate
-                                    ? colorTheme.onSurface
-                                    : colorTheme.onSurfaceVariant,
-                              ),
-                        ),
-                        trailing: Flex.horizontal(
-                          children: [
-                            SingleMotionBuilder(
-                              value: hasUpdate && selectedAppIds.isEmpty
-                                  ? 1.0
-                                  : 0.0,
-                              motion: _listItemMotion,
-                              builder: (context, value, child) => Visibility(
-                                visible: value > 0.0,
-                                child: Opacity(
-                                  opacity: clampDouble(value, 0.0, 1.0),
-                                  child: Align.centerEnd(
-                                    widthFactor: math.max(0.0, value),
-                                    child: Transform.scale(
-                                      scale: math.max(0.0, value),
-                                      alignment: .centerEnd,
-                                      child: child,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              child: Padding(
-                                padding: const .directional(end: 12.0 - 8.0),
-                                child: updateButton,
-                              ),
-                            ),
-                            overflowButton,
-                            AnimatedBuilder(
-                              animation: _hasSelectionController,
-                              builder: (context, child) {
-                                final value = _hasSelectionController.value;
-                                return Padding(
-                                  padding: .directional(
-                                    end: lerpDouble(
-                                      16.0 - 8.0,
-                                      16.0 - 4.0,
-                                      value,
-                                    ),
-                                  ),
-                                  child: Visibility(
-                                    visible: value > 0.0,
-                                    child: Opacity(
-                                      opacity: clampDouble(value, 0.0, 1.0),
-                                      child: Align.centerStart(
-                                        widthFactor: math.max(0.0, value),
-                                        child: child,
-                                      ),
-                                    ),
-                                  ),
-                                );
-                              },
-                              child: checkbox,
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
+                  child: listItemContainer,
                 ),
               );
             },
