@@ -1,4 +1,6 @@
+import 'dart:async';
 import 'dart:convert';
+import 'dart:math' as math;
 
 import 'package:easy_localization/easy_localization.dart';
 import 'package:materium/components/custom_markdown.dart';
@@ -117,9 +119,37 @@ class AppsPageState extends State<AppsPage> with TickerProviderStateMixin {
   final GlobalKey<CustomRefreshIndicatorState> _refreshIndicatorKey =
       GlobalKey<CustomRefreshIndicatorState>();
 
+  late SpringThemeData _springTheme;
+  late Motion _listItemMotion;
+
   late final ScrollController scrollController = ScrollController();
 
   final sourceProvider = SourceProvider();
+
+  late SingleMotionController _hasSelectionController;
+
+  @override
+  void initState() {
+    super.initState();
+    _hasSelectionController = SingleMotionController(
+      motion: const .none(),
+      vsync: this,
+    );
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _springTheme = SpringTheme.of(context);
+    _listItemMotion = _springTheme.defaultSpatial.toMotion(snapToEnd: true);
+    _hasSelectionController.motion = _listItemMotion;
+  }
+
+  @override
+  void dispose() {
+    _hasSelectionController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -374,15 +404,18 @@ class AppsPageState extends State<AppsPage> with TickerProviderStateMixin {
 
     final hasPinnedSelection = selectedApps.any((element) => element.pinned);
 
+    unawaited(
+      _hasSelectionController.animateTo(selectedAppIds.isNotEmpty ? 1.0 : 0.0),
+    );
+
     Widget buildLinearProgressIndicator(
       Widget Function(BuildContext context, Size preferredSize, Widget child)
       builder,
     ) {
       final isVisible = refreshingSince != null || appsProvider.loadingApps;
-      return TweenAnimationBuilder<double>(
-        tween: Tween<double>(end: isVisible ? 1.0 : 0.0),
-        duration: const DurationThemeData.fallback().medium2,
-        curve: const EasingThemeData.fallback().standard,
+      return SingleMotionBuilder(
+        value: isVisible ? 1.0 : 0.0,
+        motion: _springTheme.defaultEffects.toMotion(snapToEnd: true),
         builder: (context, heightFactor, _) {
           if (heightFactor == 0.0) {
             _progressIndicatorValueCache = 0.0;
@@ -409,25 +442,22 @@ class AppsPageState extends State<AppsPage> with TickerProviderStateMixin {
           _progressIndicatorValueCache = newValue;
           final Widget child = SizedBox.fromSize(
             size: size,
-            child: TweenAnimationBuilder<double>(
-              tween: Tween<double>(end: newValue ?? 0.0),
-              duration: const DurationThemeData.fallback().short4,
-              curve: const EasingThemeData.fallback().standard,
-              builder: (context, value, _) {
-                return size.height > 0.0
-                    ? LinearProgressIndicator(
-                        value: newValue != null ? value : null,
-                        borderRadius: .circular(size.height / 2.0),
-                        trackGap: 4.0,
-                        stopIndicatorRadius: 2.0,
-                        backgroundColor: useBlackTheme
-                            ? colorTheme.surfaceContainer
-                            : colorTheme.secondaryContainer,
-                        color: colorTheme.primary,
-                        minHeight: size.height,
-                      )
-                    : const SizedBox.shrink();
-              },
+            child: SingleMotionBuilder(
+              value: newValue ?? 0.0,
+              motion: _springTheme.slowEffects.toMotion(snapToEnd: true),
+              builder: (context, value, _) => size.height > 0.0
+                  ? LinearProgressIndicator(
+                      value: newValue != null ? value : null,
+                      borderRadius: .circular(size.height / 2.0),
+                      trackGap: 4.0,
+                      stopIndicatorRadius: 2.0,
+                      backgroundColor: useBlackTheme
+                          ? colorTheme.surfaceContainer
+                          : colorTheme.secondaryContainer,
+                      color: colorTheme.primary,
+                      minHeight: size.height,
+                    )
+                  : const SizedBox.shrink(),
             ),
           );
           return builder(context, size, child);
@@ -1630,39 +1660,28 @@ class AppsPageState extends State<AppsPage> with TickerProviderStateMixin {
                                   .then((_) => item.icon),
                               builder: (context, snapshot) {
                                 final bytes = snapshot.data;
-                                return TweenAnimationBuilder<double>(
-                                  tween: Tween<double>(
-                                    end: progress != null ? 1.0 : 0.0,
+                                return Material(
+                                  clipBehavior: .antiAlias,
+                                  shape: CornersBorder.rounded(
+                                    corners: .all(shapeTheme.corner.full),
                                   ),
-                                  duration: listItemDuration,
-                                  curve: listItemEasing,
-                                  builder: (context, value, child) => Material(
-                                    clipBehavior: .antiAlias,
-                                    shape: CornersBorder.rounded(
-                                      corners: .all(shapeTheme.corner.full),
-                                    ),
-                                    color: isSelected
-                                        ? bytes != null
-                                              ? useBlackTheme
-                                                    ? colorTheme
-                                                          .primaryContainer
-                                                    : colorTheme
-                                                          .secondaryContainer
-                                              : Colors.transparent
-                                        : useBlackTheme
-                                        ? colorTheme.surface
-                                        : colorTheme.surfaceContainer,
-                                    child: child,
-                                  ),
+                                  color: isSelected
+                                      ? bytes != null
+                                            ? useBlackTheme
+                                                  ? colorTheme.primaryContainer
+                                                  : colorTheme
+                                                        .secondaryContainer
+                                            : Colors.transparent
+                                      : useBlackTheme
+                                      ? colorTheme.surface
+                                      : colorTheme.surfaceContainer,
                                   child: Stack(
                                     fit: .expand,
                                     children: [
-                                      TweenAnimationBuilder<double>(
-                                        tween: Tween<double>(
-                                          end: progress != null ? 1.0 : 0.0,
-                                        ),
-                                        duration: listItemDuration,
-                                        curve: listItemEasing,
+                                      SingleMotionBuilder(
+                                        motion: _springTheme.defaultEffects
+                                            .toMotion(snapToEnd: true),
+                                        value: progress != null ? 1.0 : 0.0,
                                         builder: (context, value, _) {
                                           final size = bytes != null
                                               ? lerpDouble(40.0, 24.0, value)
@@ -1732,12 +1751,10 @@ class AppsPageState extends State<AppsPage> with TickerProviderStateMixin {
                                           },
                                         ),
                                       ),
-                                      TweenAnimationBuilder<double>(
-                                        tween: Tween<double>(
-                                          end: progress != null ? 1.0 : 0.0,
-                                        ),
-                                        duration: listItemDuration,
-                                        curve: listItemEasing,
+                                      SingleMotionBuilder(
+                                        motion: _springTheme.defaultEffects
+                                            .toMotion(snapToEnd: true),
+                                        value: progress != null ? 1.0 : 0.0,
                                         builder: (context, value, _) =>
                                             value > 0.0
                                             ? CircularProgressIndicator(
@@ -1824,24 +1841,21 @@ class AppsPageState extends State<AppsPage> with TickerProviderStateMixin {
                         ),
                         trailing: Flex.horizontal(
                           children: [
-                            TweenAnimationBuilder<double>(
-                              tween: Tween<double>(
-                                end: hasUpdate && selectedAppIds.isEmpty
-                                    ? 1.0
-                                    : 0.0,
-                              ),
-                              duration: listItemDuration,
-                              curve: listItemEasing,
+                            SingleMotionBuilder(
+                              value: hasUpdate && selectedAppIds.isEmpty
+                                  ? 1.0
+                                  : 0.0,
+                              motion: _listItemMotion,
                               builder: (context, value, child) => Visibility(
                                 visible: value > 0.0,
                                 child: Opacity(
-                                  opacity: value,
+                                  opacity: clampDouble(value, 0.0, 1.0),
                                   child: Align.centerEnd(
-                                    widthFactor: value,
+                                    widthFactor: math.max(0.0, value),
                                     child: Transform.scale(
-                                      scale: value,
-                                      alignment: AlignmentDirectional.centerEnd,
-                                      child: child!,
+                                      scale: math.max(0.0, value),
+                                      alignment: .centerEnd,
+                                      child: child,
                                     ),
                                   ),
                                 ),
@@ -1852,38 +1866,31 @@ class AppsPageState extends State<AppsPage> with TickerProviderStateMixin {
                               ),
                             ),
                             overflowButton,
-                            TweenAnimationBuilder<double>(
-                              tween: Tween<double>(
-                                end: selectedAppIds.isNotEmpty ? 1.0 : 0.0,
-                              ),
-                              duration: listItemDuration,
-                              curve: listItemEasing,
-                              builder: (context, value, child) => Visibility(
-                                visible: value > 0.0,
-                                child: Opacity(
-                                  opacity: value,
-                                  child: Align.centerStart(
-                                    widthFactor: value,
-                                    child: child!,
+                            AnimatedBuilder(
+                              animation: _hasSelectionController,
+                              builder: (context, child) {
+                                final value = _hasSelectionController.value;
+                                return Padding(
+                                  padding: .directional(
+                                    end: lerpDouble(
+                                      16.0 - 8.0,
+                                      16.0 - 4.0,
+                                      value,
+                                    ),
                                   ),
-                                ),
-                              ),
-
+                                  child: Visibility(
+                                    visible: value > 0.0,
+                                    child: Opacity(
+                                      opacity: clampDouble(value, 0.0, 1.0),
+                                      child: Align.centerStart(
+                                        widthFactor: math.max(0.0, value),
+                                        child: child,
+                                      ),
+                                    ),
+                                  ),
+                                );
+                              },
                               child: checkbox,
-                            ),
-                            TweenAnimationBuilder<double>(
-                              tween: Tween<double>(
-                                end: selectedAppIds.isNotEmpty ? 1.0 : 0.0,
-                              ),
-                              duration: listItemDuration,
-                              curve: listItemEasing,
-                              builder: (context, value, _) => SizedBox(
-                                width: lerpDouble(
-                                  16.0 - 8.0,
-                                  16.0 - 4.0,
-                                  value,
-                                ),
-                              ),
                             ),
                           ],
                         ),
@@ -2254,27 +2261,26 @@ class AppsPageState extends State<AppsPage> with TickerProviderStateMixin {
               children: hasApps
                   ? [
                       toolbar,
-                      TweenAnimationBuilder<double>(
-                        tween: Tween<double>(
-                          end: selectedAppIds.isEmpty ? 1.0 : 0.0,
-                        ),
-                        duration: const DurationThemeData.fallback().long2,
-                        curve: const EasingThemeData.fallback().emphasized,
-                        builder: (context, value, child) => Visibility(
-                          visible: value > 0.0,
-                          child: Opacity(
-                            opacity: value,
-                            child: Align.center(
-                              widthFactor: value,
-                              heightFactor: 1.0,
-                              child: Transform.scale(
-                                scale: value,
-                                alignment: AlignmentDirectional.center,
-                                child: child!,
+                      AnimatedBuilder(
+                        animation: _hasSelectionController,
+                        builder: (context, child) {
+                          final value = 1.0 - _hasSelectionController.value;
+                          return Visibility(
+                            visible: value > 0.0,
+                            child: Opacity(
+                              opacity: clampDouble(value, 0.0, 1.0),
+                              child: Align.center(
+                                widthFactor: math.max(0.0, value),
+                                heightFactor: 1.0,
+                                child: Transform.scale(
+                                  scale: math.max(0.0, value),
+                                  alignment: .center,
+                                  child: child,
+                                ),
                               ),
                             ),
-                          ),
-                        ),
+                          );
+                        },
                         child: Padding(
                           padding: const .directional(start: 8.0),
                           child: floatingActionButton,
