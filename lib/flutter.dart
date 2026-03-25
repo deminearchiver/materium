@@ -72,6 +72,7 @@ export 'package:layout/layout.dart';
 export 'package:material/material.dart';
 export 'package:material/material_symbols.dart';
 export 'package:meta/meta.dart';
+export 'package:motor/motor.dart';
 
 // Adjacent libraries
 
@@ -89,5 +90,4 @@ export 'theme/static_colors.dart';
 export 'theme/theme.dart';
 export 'theme/typography.dart';
 export 'extensions.dart';
-export 'motor.dart';
 export 'optional.dart';

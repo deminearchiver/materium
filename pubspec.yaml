@@ -23,12 +23,12 @@ dependencies:
   layout:
     git:
       url: https://github.com/deminearchiver/dart-flutter-packages.git
-      ref: 90fc79eff8fbd7df2d312139fe947efe99fa4127
+      ref: d2650727ffe21c467f0d44ed51605d2513519850
       path: packages/layout
   material:
     git:
       url: https://github.com/deminearchiver/dart-flutter-packages.git
-      ref: 90fc79eff8fbd7df2d312139fe947efe99fa4127
+      ref: d2650727ffe21c467f0d44ed51605d2513519850
       path: packages/material
   android_package_installer: # TODO: See if PR will be accepted (dev may not be active), else remove this comment
     git:
