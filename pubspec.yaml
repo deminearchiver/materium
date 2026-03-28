@@ -101,7 +101,7 @@ dependencies:
   screen_corners_ffi: ^1.0.2
   slang: ^4.14.0
   slang_flutter: ^4.14.0
-  rhttp: ^0.15.1
+  # rhttp: ^0.15.1
   pub_semver: ^2.2.0
   motor: ^1.1.0
 

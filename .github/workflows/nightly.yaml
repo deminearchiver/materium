@@ -47,11 +47,11 @@ jobs:
       - name: Build release APKs
         run: flutter build apk --release --split-per-abi
 
-      - name: Delete previous nightly version
-        uses: ClementTsang/delete-tag-and-release@v0.4.0
-        with:
-          tag_name: "nightly"
-          delete_release: true
+      # - name: Delete previous nightly version
+      #   uses: ClementTsang/delete-tag-and-release@v0.4.0
+      #   with:
+      #     tag_name: "nightly"
+      #     delete_release: true
 
       - name: Create nightly release
         id: create_release
