@@ -36,6 +36,10 @@ class DeveloperPageBackButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final developerMode = context.select<SettingsService, bool>(
+      (settings) => settings.developerMode.value,
+    );
+
     final useBlackTheme = context.select<SettingsService, bool>(
       (settings) => settings.useBlackTheme.value,
     );
@@ -49,26 +53,66 @@ class DeveloperPageBackButton extends StatelessWidget {
     final shapeTheme = ShapeTheme.of(context);
     final stateTheme = StateTheme.of(context);
 
-    final fallbackStyle = LegacyThemeFactory.createIconButtonStyle(
-      colorTheme: colorTheme,
-      elevationTheme: elevationTheme,
-      shapeTheme: shapeTheme,
-      stateTheme: stateTheme,
-      color: .standard,
-      containerColor: useBlackTheme
-          ? colorTheme.surfaceContainer
-          : colorTheme.surfaceContainerHighest,
-      iconColor: useBlackTheme
-          ? colorTheme.primary
-          : colorTheme.onSurfaceVariant,
-    );
+    final enabledContainerColor = useBlackTheme
+        ? colorTheme.surfaceContainer
+        : colorTheme.surfaceContainerHighest;
 
-    return IconButton(
-      style: style?.merge(fallbackStyle) ?? fallbackStyle,
-      onPressed: canPop ? () => Navigator.pop(context) : null,
-      icon: const Icon(Symbols.arrow_back_rounded),
-      tooltip: materialLocalization.backButtonTooltip,
-    );
+    final enabledIconColor = useBlackTheme
+        ? colorTheme.primary
+        : colorTheme.onSurfaceVariant;
+
+    if (developerMode) {
+      return Tooltip(
+        message: materialLocalization.backButtonTooltip,
+        child: Button<IconButtonSettings>(
+          style:
+              IconButtonDefaults.styleFrom(
+                colorTheme: colorTheme,
+                elevationTheme: elevationTheme,
+                shapeTheme: shapeTheme,
+                stateTheme: stateTheme,
+              ).mergeWith(
+                containerColor: .resolveWith(
+                  (states) => switch (states) {
+                    ButtonEnabledStates() => enabledContainerColor,
+                    _ => null,
+                  },
+                ),
+                iconTheme: .resolveWith(
+                  (states) => switch (states) {
+                    ButtonEnabledStates() => .from(color: enabledIconColor),
+                    _ => null,
+                  },
+                ),
+              ),
+          settings: const .new(
+            size: .small,
+            shape: .round,
+            color: .standard,
+            width: .normal,
+          ),
+          onTap: canPop ? () => Navigator.pop(context) : null,
+          child: const ButtonLayout(icon: Icon(Symbols.arrow_back_rounded)),
+        ),
+      );
+    } else {
+      final fallbackStyle = LegacyThemeFactory.createIconButtonStyle(
+        colorTheme: colorTheme,
+        elevationTheme: elevationTheme,
+        shapeTheme: shapeTheme,
+        stateTheme: stateTheme,
+        color: .standard,
+        containerColor: enabledContainerColor,
+        iconColor: enabledIconColor,
+      );
+
+      return IconButton(
+        style: style?.merge(fallbackStyle) ?? fallbackStyle,
+        onPressed: canPop ? () => Navigator.pop(context) : null,
+        icon: const Icon(Symbols.arrow_back_rounded),
+        tooltip: materialLocalization.backButtonTooltip,
+      );
+    }
   }
 }
 
@@ -2775,6 +2819,32 @@ class _MaterialDemoViewState extends State<_MaterialDemoView> {
                           "to see shape morphing in all its beauty.",
                         ),
                       ),
+                      ListenableBuilder(
+                        listenable: _enabled,
+                        builder: (context, _) => Align.center(
+                          child: Button(
+                            style: ButtonDefaults.styleFrom(
+                              colorTheme: colorTheme,
+                              elevationTheme: elevationTheme,
+                              shapeTheme: shapeTheme,
+                              stateTheme: stateTheme,
+                              typescaleTheme: typescaleTheme,
+                            ),
+                            settings: const ButtonSettings(
+                              size: .extraLarge,
+                              shape: .round,
+                              color: .tonal,
+                            ),
+                            isSelected: _enabled.value,
+                            onTap: () => _enabled.value = !_enabled.value,
+                            child: ButtonLayout(
+                              icon: const Icon(Symbols.star_rounded),
+                              label: const Text("Favorite"),
+                            ),
+                          ),
+                        ),
+                      ),
+
                       Padding(
                         padding: const EdgeInsets.fromLTRB(
                           16.0,

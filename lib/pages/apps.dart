@@ -2282,7 +2282,7 @@ class AppsPageState extends State<AppsPage> with TickerProviderStateMixin {
                         ),
                       ),
                     ]
-                  : [floatingActionButton],
+                  : const [],
             ),
           ),
         ),
@@ -2294,6 +2294,225 @@ class AppsPageState extends State<AppsPage> with TickerProviderStateMixin {
     final backgroundColor = useBlackTheme
         ? colorTheme.surface
         : colorTheme.surfaceContainer;
+
+    Widget? buildSliverFillRemaining() {
+      if (listedApps.isNotEmpty) return null;
+
+      final isLoading = appsProvider.loadingApps;
+      final noAppsForFilter = hasApps && !isLoading;
+      final noApps = !hasApps && !isLoading;
+
+      return SliverFillRemaining(
+        fillOverscroll: false,
+        hasScrollBody: false,
+        child: true || hasApps
+            ? Padding(
+                padding: const .symmetric(horizontal: 24.0),
+                child: Align.center(
+                  child: ConstrainedBox(
+                    constraints: const BoxConstraints(maxWidth: 560.0),
+                    child: Material(
+                      clipBehavior: .antiAlias,
+                      shape: CornersBorder.rounded(
+                        corners: .all(shapeTheme.corner.extraLarge),
+                      ),
+                      color: colorTheme.surface,
+                      child: Padding(
+                        padding: const .all(24.0),
+                        child: Flex.vertical(
+                          mainAxisSize: .min,
+                          crossAxisAlignment: .stretch,
+                          children: [
+                            isLoading
+                                ? Align.center(
+                                    child: SizedBox.square(
+                                      dimension: 36.0,
+                                      child: IndeterminateLoadingIndicator(
+                                        contained: false,
+                                      ),
+                                    ),
+                                  )
+                                : Icon(
+                                    Symbols.block_rounded,
+                                    fill: 0.0,
+                                    opticalSize: 36.0,
+                                    size: 36.0,
+                                    color: colorTheme.secondary,
+                                  ),
+                            const SizedBox(height: 16.0),
+                            Text(
+                              isLoading
+                                  ? tr("pleaseWait")
+                                  : noAppsForFilter
+                                  ? tr("noAppsForFilter")
+                                  : tr("noApps"),
+                              textAlign: .center,
+                              style: typescaleTheme.headlineMediumEmphasized
+                                  .toTextStyle(color: colorTheme.onSurface),
+                            ),
+                            SingleMotionBuilder(
+                              value:
+                                  (noAppsForFilter && !isFilterOff) || (noApps)
+                                  ? 1.0
+                                  : 0.0,
+                              motion: const SpringThemeData.expressive()
+                                  .defaultSpatial
+                                  .toMotion(snapToEnd: true),
+                              builder: (context, value, child) => Align.center(
+                                heightFactor: math.max(0.0, value),
+                                child: Opacity(
+                                  opacity: clampDouble(value, 0.0, 1.0),
+                                  child: Transform.scale(
+                                    alignment: .center,
+                                    scale: math.max(0.0, value),
+                                    child: child,
+                                  ),
+                                ),
+                              ),
+                              child: Padding(
+                                padding: const .only(top: 16.0),
+                                child: FilledButton(
+                                  style: noApps
+                                      ? LegacyThemeFactory.createButtonStyle(
+                                          colorTheme: colorTheme,
+                                          elevationTheme: elevationTheme,
+                                          shapeTheme: shapeTheme,
+                                          stateTheme: stateTheme,
+                                          typescaleTheme: typescaleTheme,
+                                          size: .large,
+                                          shape: .square,
+                                          containerColor:
+                                              colorTheme.primaryContainer,
+                                          contentColor:
+                                              colorTheme.onPrimaryContainer,
+                                          textStyle: typescaleTheme
+                                              .headlineSmallEmphasized
+                                              .toTextStyle(),
+                                        )
+                                      : LegacyThemeFactory.createButtonStyle(
+                                          colorTheme: colorTheme,
+                                          elevationTheme: elevationTheme,
+                                          shapeTheme: shapeTheme,
+                                          stateTheme: stateTheme,
+                                          typescaleTheme: typescaleTheme,
+                                          size: noApps ? .large : .medium,
+                                          shape: noApps ? .square : .round,
+                                          color: .tonal,
+                                          textStyle: typescaleTheme
+                                              .titleMediumEmphasized
+                                              .toTextStyle(),
+                                        ),
+                                  onPressed: noApps
+                                      ? () => Navigator.push(
+                                          context,
+                                          MaterialPageRoute<void>(
+                                            builder: (context) =>
+                                                const AddAppPage(),
+                                          ),
+                                        )
+                                      : () {
+                                          if (isFilterOff) return;
+                                          setState(() {
+                                            filter = AppsFilter();
+                                          });
+                                        },
+                                  child: noApps
+                                      ? Flex.horizontal(
+                                          mainAxisSize: .min,
+                                          spacing: 12.0,
+                                          children: [
+                                            const Icon(
+                                              Symbols.add_rounded,
+                                              fill: 1.0,
+                                              opticalSize: 32.0,
+                                              size: 32.0,
+                                            ),
+                                            Text(tr("addApp")),
+                                          ],
+                                        )
+                                      : const Flex.horizontal(
+                                          mainAxisSize: .min,
+                                          spacing: 8.0,
+                                          children: [
+                                            Icon(
+                                              Symbols.clear_rounded,
+                                              fill: 1.0,
+                                              opticalSize: 24.0,
+                                              size: 24.0,
+                                            ),
+                                            Text("Clear filters"),
+                                          ],
+                                        ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              )
+            : appsProvider.loadingApps
+            ? Flex.vertical(
+                mainAxisSize: .min,
+                mainAxisAlignment: .center,
+                crossAxisAlignment: .stretch,
+                children: [
+                  const Align.center(
+                    child: SizedBox.square(
+                      dimension: 64.0,
+                      child: IndeterminateLoadingIndicator(contained: false),
+                    ),
+                  ),
+                  const SizedBox(height: 4.0),
+                  Text(
+                    tr("pleaseWait"),
+                    textAlign: .center,
+                    style: typescaleTheme.bodyLarge.toTextStyle(
+                      color: colorTheme.onSurface,
+                    ),
+                  ),
+                ],
+              )
+            : Align.center(
+                child: FilledButton(
+                  style: LegacyThemeFactory.createButtonStyle(
+                    colorTheme: colorTheme,
+                    elevationTheme: elevationTheme,
+                    shapeTheme: shapeTheme,
+                    stateTheme: stateTheme,
+                    typescaleTheme: typescaleTheme,
+                    size: .large,
+                    shape: .square,
+                    color: .filled,
+                    containerColor: colorTheme.primaryContainer,
+                    contentColor: colorTheme.onPrimaryContainer,
+                    textStyle: typescaleTheme.headlineSmallEmphasized
+                        .toTextStyle(),
+                  ),
+                  onPressed: () => Navigator.push(
+                    context,
+                    MaterialPageRoute<void>(
+                      builder: (context) => const AddAppPage(),
+                    ),
+                  ),
+                  child: Flex.horizontal(
+                    mainAxisSize: .min,
+                    spacing: 12.0,
+                    children: [
+                      const Icon(
+                        Symbols.add_rounded,
+                        opticalSize: 32.0,
+                        size: 32.0,
+                      ),
+                      Text(tr("addApp")),
+                    ],
+                  ),
+                ),
+              ),
+      );
+    }
 
     return Scaffold(
       backgroundColor: backgroundColor,
@@ -2419,22 +2638,7 @@ class AppsPageState extends State<AppsPage> with TickerProviderStateMixin {
                   ),
                 ),
                 getDisplayedList(),
-                if (listedApps.isEmpty)
-                  SliverFillRemaining(
-                    fillOverscroll: false,
-                    hasScrollBody: false,
-                    child: Align.center(
-                      child: Text(
-                        !hasApps
-                            ? appsProvider.loadingApps
-                                  ? tr("pleaseWait")
-                                  : tr("noApps")
-                            : tr("noAppsForFilter"),
-                        style: typescaleTheme.headlineMedium.toTextStyle(),
-                        textAlign: TextAlign.center,
-                      ),
-                    ),
-                  ),
+                ?buildSliverFillRemaining(),
                 if (hasApps)
                   SliverToBoxAdapter(
                     child: SizedBox(height: toolbar.preferredSize.height),

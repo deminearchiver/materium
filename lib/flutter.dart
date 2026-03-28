@@ -79,6 +79,7 @@ export 'package:motor/motor.dart';
 export 'assets/assets.gen.dart';
 export 'assets/fonts.dart';
 export 'assets/fonts.gen.dart';
+export 'components/buttons/buttons.dart';
 export 'components/combining_builder.dart';
 export 'components/inverse_center_optically.dart';
 export 'components/list_item.dart';

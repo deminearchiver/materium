@@ -2,17 +2,7 @@ import 'dart:math' as math;
 
 import 'package:materium/flutter.dart';
 
-enum LegacyButtonSize { extraSmall, small, medium, large, extraLarge }
-
-enum LegacyButtonShape { round, square }
-
-enum LegacyButtonColor { elevated, filled, tonal, outlined, text }
-
 enum LegacyMenuVariant { standard, vibrant }
-
-enum LegacyIconButtonWidth { narrow, normal, wide }
-
-enum LegacyIconButtonColor { filled, tonal, outlined, standard }
 
 enum LegacyTextFieldType { filled, outlined }
 
@@ -236,9 +226,9 @@ abstract final class LegacyThemeFactory {
     required ShapeThemeData shapeTheme,
     required StateThemeData stateTheme,
     required TypescaleThemeData typescaleTheme,
-    LegacyButtonSize size = .small,
-    LegacyButtonShape shape = .round,
-    LegacyButtonColor color = .filled,
+    ButtonSize size = .small,
+    ButtonShape shape = .round,
+    ButtonColor color = .filled,
     bool? isSelected,
     MaterialTapTargetSize tapTargetSize = .padded,
     TextStyle? textStyle,
@@ -442,14 +432,14 @@ abstract final class LegacyThemeFactory {
     required ElevationThemeData elevationTheme,
     required ShapeThemeData shapeTheme,
     required StateThemeData stateTheme,
-    LegacyButtonSize size = .small,
-    LegacyButtonShape shape = .round,
-    LegacyIconButtonWidth width = .normal,
-    LegacyIconButtonColor color = .filled,
+    ButtonSize size = .small,
+    ButtonShape shape = .round,
+    IconButtonWidth width = .normal,
+    IconButtonColor color = .filled,
     bool? isSelected,
     MaterialTapTargetSize tapTargetSize = .padded,
-    LegacyButtonShape? unselectedShape,
-    LegacyButtonShape? selectedShape,
+    ButtonShape? unselectedShape,
+    ButtonShape? selectedShape,
     Color? disabledContainerColor,
     Color? containerColor,
     Color? unselectedDisabledContainerColor,
