@@ -125,6 +125,8 @@ dependency_overrides:
   material_color_utilities: ^0.13.0 # Flutter pinned dependency
   meta: ^1.18.0 # Always use latest version
   uuid: ^4.5.2 # fastforge uses outdated version
+  super_editor: 0.3.0-dev.50
+  super_keyboard: ^0.3.1
 
 flutter:
   uses-material-design: true
