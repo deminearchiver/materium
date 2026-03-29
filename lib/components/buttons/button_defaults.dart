@@ -228,7 +228,10 @@ abstract final class ButtonDefaults {
         final fill = switch (states) {
           ToggleButtonStates(isSelected: false) => 0.0,
           ToggleButtonStates(isSelected: true) => 1.0,
-          _ => null,
+          _ => switch (states.settings.color) {
+            .filled => 1.0,
+            _ => null,
+          },
         };
         final size = switch (states.settings.size) {
           .extraSmall => 20.0,
@@ -453,7 +456,10 @@ abstract final class IconButtonDefaults {
         final fill = switch (states) {
           ToggleButtonStates(isSelected: false) => 0.0,
           ToggleButtonStates(isSelected: true) => 1.0,
-          _ => null,
+          _ => switch (states.settings.color) {
+            .filled => 1.0,
+            _ => null,
+          },
         };
         final size = switch (states.settings.size) {
           .extraSmall => 20.0,
