@@ -220,7 +220,7 @@ abstract final class LegacyThemeFactory {
     );
   }
 
-  static ButtonStyle createButtonStyle({
+  static ButtonStyleLegacy createButtonStyle({
     required ColorThemeData colorTheme,
     required ElevationThemeData elevationTheme,
     required ShapeThemeData shapeTheme,
@@ -391,7 +391,7 @@ abstract final class LegacyThemeFactory {
         strokeAlign: BorderSide.strokeAlignInside,
       ),
     };
-    return ButtonStyle(
+    return ButtonStyleLegacy(
       animationDuration: .zero,
       alignment: .center,
       enableFeedback: true,
@@ -427,7 +427,7 @@ abstract final class LegacyThemeFactory {
     );
   }
 
-  static ButtonStyle createIconButtonStyle({
+  static ButtonStyleLegacy createIconButtonStyle({
     required ColorThemeData colorTheme,
     required ElevationThemeData elevationTheme,
     required ShapeThemeData shapeTheme,
@@ -621,7 +621,7 @@ abstract final class LegacyThemeFactory {
         strokeAlign: BorderSide.strokeAlignInside,
       ),
     };
-    return ButtonStyle(
+    return ButtonStyleLegacy(
       animationDuration: Duration.zero,
       alignment: Alignment.center,
       enableFeedback: true,
@@ -682,7 +682,7 @@ abstract final class LegacyThemeFactory {
     );
   }
 
-  static ButtonStyle createMenuButtonStyle({
+  static ButtonStyleLegacy createMenuButtonStyle({
     required ColorThemeData colorTheme,
     required ElevationThemeData elevationTheme,
     required ShapeThemeData shapeTheme,
@@ -760,7 +760,7 @@ abstract final class LegacyThemeFactory {
         return 0.0;
       }),
     );
-    return ButtonStyle(
+    return ButtonStyleLegacy(
       animationDuration: Duration.zero,
       minimumSize: const WidgetStatePropertyAll(Size(0.0, 44.0)),
       maximumSize: const WidgetStatePropertyAll(Size(double.infinity, 44.0)),

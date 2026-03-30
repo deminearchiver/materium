@@ -391,11 +391,10 @@ class _ButtonStylePartial<S extends Object?> extends ButtonStylePartial<S> {
   final ButtonStateProperty<TextStyle?, S>? labelTextStyle;
 }
 
-abstract class ButtonStyleConcrete<S extends Object?>
-    extends ButtonStylePartial<S> {
-  const ButtonStyleConcrete();
+abstract class ButtonStyle<S extends Object?> extends ButtonStylePartial<S> {
+  const ButtonStyle();
 
-  const factory ButtonStyleConcrete.from({
+  const factory ButtonStyle.from({
     required ButtonStateProperty<Size, S> minTapTargetSize,
     required ButtonStateProperty<BoxConstraints, S> constraints,
     required ButtonStateProperty<EdgeInsetsGeometry, S> padding,
@@ -409,7 +408,7 @@ abstract class ButtonStyleConcrete<S extends Object?>
     required ButtonStateProperty<double, S> stateLayerOpacity,
     required ButtonStateProperty<IconThemeDataPartial, S> iconTheme,
     required ButtonStateProperty<TextStyle, S> labelTextStyle,
-  }) = _ButtonStyleConcrete<S>;
+  }) = _ButtonStyle<S>;
 
   @override
   ButtonStateProperty<Size, S> get minTapTargetSize;
@@ -451,7 +450,7 @@ abstract class ButtonStyleConcrete<S extends Object?>
   ButtonStateProperty<TextStyle, S> get labelTextStyle;
 
   @override
-  ButtonStyleConcrete<S> copyWith({
+  ButtonStyle<S> copyWith({
     covariant ButtonStateProperty<Size, S>? minTapTargetSize,
     covariant ButtonStateProperty<BoxConstraints, S>? constraints,
     covariant ButtonStateProperty<EdgeInsetsGeometry, S>? padding,
@@ -498,7 +497,7 @@ abstract class ButtonStyleConcrete<S extends Object?>
       : this;
 
   @override
-  ButtonStyleConcrete<S> mergeWith({
+  ButtonStyle<S> mergeWith({
     ButtonStateProperty<Size?, S>? minTapTargetSize,
     ButtonStateProperty<BoxConstraints?, S>? constraints,
     ButtonStateProperty<EdgeInsetsGeometry?, S>? padding,
@@ -582,7 +581,7 @@ abstract class ButtonStyleConcrete<S extends Object?>
       : this;
 
   @override
-  ButtonStyleConcrete<S> merge(ButtonStylePartial<S>? other) => other != null
+  ButtonStyle<S> merge(ButtonStylePartial<S>? other) => other != null
       ? mergeWith(
           minTapTargetSize: other.minTapTargetSize,
           constraints: other.constraints,
@@ -688,7 +687,7 @@ abstract class ButtonStyleConcrete<S extends Object?>
   bool operator ==(Object other) =>
       identical(this, other) ||
       runtimeType == other.runtimeType &&
-          other is ButtonStyleConcrete<S> &&
+          other is ButtonStyle<S> &&
           minTapTargetSize == other.minTapTargetSize &&
           constraints == other.constraints &&
           padding == other.padding &&
@@ -722,8 +721,8 @@ abstract class ButtonStyleConcrete<S extends Object?>
   );
 }
 
-class _ButtonStyleConcrete<S extends Object?> extends ButtonStyleConcrete<S> {
-  const _ButtonStyleConcrete({
+class _ButtonStyle<S extends Object?> extends ButtonStyle<S> {
+  const _ButtonStyle({
     required this.minTapTargetSize,
     required this.constraints,
     required this.padding,

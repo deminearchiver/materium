@@ -64,7 +64,15 @@ export 'package:flutter/material.dart'
         // ---
         Switch,
         SwitchTheme,
-        SwitchThemeData;
+        SwitchThemeData,
+        /// ---
+        ButtonStyle,
+        IconButton,
+        IconButtonTheme,
+        IconButtonThemeData,
+        FloatingActionButton,
+        FloatingActionButtonTheme,
+        FloatingActionButtonThemeData;
 
 // Third-party packages
 

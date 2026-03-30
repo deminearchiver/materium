@@ -30,9 +30,7 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
 class DeveloperPageBackButton extends StatelessWidget {
-  const DeveloperPageBackButton({super.key, this.style});
-
-  final ButtonStyle? style;
+  const DeveloperPageBackButton({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -53,66 +51,43 @@ class DeveloperPageBackButton extends StatelessWidget {
     final shapeTheme = ShapeTheme.of(context);
     final stateTheme = StateTheme.of(context);
 
-    final enabledContainerColor = useBlackTheme
-        ? colorTheme.surfaceContainer
-        : colorTheme.surfaceContainerHighest;
-
-    final enabledIconColor = useBlackTheme
-        ? colorTheme.primary
-        : colorTheme.onSurfaceVariant;
-
-    if (developerMode) {
-      return Tooltip(
-        message: materialLocalization.backButtonTooltip,
-        child: Button<IconButtonSettings>(
-          style:
-              IconButtonDefaults.styleFrom(
-                colorTheme: colorTheme,
-                elevationTheme: elevationTheme,
-                shapeTheme: shapeTheme,
-                stateTheme: stateTheme,
-              ).mergeWith(
-                containerColor: .resolveWith(
-                  (states) => switch (states) {
-                    ButtonEnabledStates() => enabledContainerColor,
-                    _ => null,
-                  },
-                ),
-                iconTheme: .resolveWith(
-                  (states) => switch (states) {
-                    ButtonEnabledStates() => .from(color: enabledIconColor),
-                    _ => null,
-                  },
-                ),
-              ),
-          settings: const .new(
-            size: .small,
-            shape: .round,
-            color: .standard,
-            width: .normal,
+    return Tooltip(
+      message: materialLocalization.backButtonTooltip,
+      child: IconButton(
+        style: .from(
+          containerColor: .resolveWith(
+            (states) => switch (states) {
+              ButtonDisabledStates() => null,
+              _ =>
+                useBlackTheme
+                    ? colorTheme.surfaceContainer
+                    : colorTheme.surfaceContainerHighest,
+            },
           ),
-          onTap: canPop ? () => Navigator.pop(context) : null,
-          child: const ButtonLayout(icon: Icon(Symbols.arrow_back_rounded)),
+          stateLayerColor: .all(
+            useBlackTheme ? colorTheme.primary : colorTheme.onSurfaceVariant,
+          ),
+          iconTheme: .resolveWith(
+            (states) => switch (states) {
+              ButtonDisabledStates() => null,
+              _ => .from(
+                color: useBlackTheme
+                    ? colorTheme.primary
+                    : colorTheme.onSurfaceVariant,
+              ),
+            },
+          ),
         ),
-      );
-    } else {
-      final fallbackStyle = LegacyThemeFactory.createIconButtonStyle(
-        colorTheme: colorTheme,
-        elevationTheme: elevationTheme,
-        shapeTheme: shapeTheme,
-        stateTheme: stateTheme,
-        color: .standard,
-        containerColor: enabledContainerColor,
-        iconColor: enabledIconColor,
-      );
-
-      return IconButton(
-        style: style?.merge(fallbackStyle) ?? fallbackStyle,
-        onPressed: canPop ? () => Navigator.pop(context) : null,
+        settings: const .new(
+          size: .small,
+          shape: .round,
+          color: .standard,
+          width: .normal,
+        ),
+        onTap: canPop ? () => Navigator.pop(context) : null,
         icon: const Icon(Symbols.arrow_back_rounded),
-        tooltip: materialLocalization.backButtonTooltip,
-      );
-    }
+      ),
+    );
   }
 }
 
@@ -437,7 +412,7 @@ class _ExperimentsPageState extends State<_ExperimentsPage> {
                                     padding: .symmetric(
                                       // horizontal: 12.0 - 4.0 - 4.0,
                                     ),
-                                    child: IconButton(
+                                    child: IconButtonLegacy(
                                       style:
                                           LegacyThemeFactory.createIconButtonStyle(
                                             colorTheme: colorTheme,
@@ -475,7 +450,7 @@ class _ExperimentsPageState extends State<_ExperimentsPage> {
                                       padding: .directional(
                                         end: 12.0 - 4.0 - 4.0,
                                       ),
-                                      child: IconButton(
+                                      child: IconButtonLegacy(
                                         style:
                                             LegacyThemeFactory.createIconButtonStyle(
                                               colorTheme: colorTheme,
@@ -610,7 +585,7 @@ class _DeveloperMarkdown1PageState extends State<DeveloperMarkdown1Page> {
             subtitle: Text("flutter_markdown_plus"),
             trailing: Padding(
               padding: EdgeInsets.only(right: 8.0 - 4.0),
-              child: IconButton.filledTonal(
+              child: IconButtonLegacy.filledTonal(
                 onPressed: () => _scrollController.animateTo(
                   0.0,
                   duration: const DurationThemeData.fallback().extraLong4,
@@ -1485,9 +1460,9 @@ class _SettingsAppBarState extends State<SettingsAppBar> {
             child: Flex.horizontal(
               children: [
                 const SizedBox(width: 8.0 - 4.0),
-                IconButton(
+                IconButtonLegacy(
                   onPressed: () => Navigator.of(context).pop(),
-                  style: ButtonStyle(
+                  style: ButtonStyleLegacy(
                     elevation: const WidgetStatePropertyAll(0.0),
                     shadowColor: WidgetStateColor.transparent,
                     minimumSize: const WidgetStatePropertyAll(Size.zero),
@@ -1581,7 +1556,7 @@ class _SettingsAppBarState extends State<SettingsAppBar> {
                       child: const Text("Reset settings"),
                     ),
                   ],
-                  builder: (context, controller, child) => IconButton(
+                  builder: (context, controller, child) => IconButtonLegacy(
                     onPressed: () {
                       if (controller.isOpen) {
                         controller.close();
@@ -1589,7 +1564,7 @@ class _SettingsAppBarState extends State<SettingsAppBar> {
                         controller.open();
                       }
                     },
-                    style: ButtonStyle(
+                    style: ButtonStyleLegacy(
                       elevation: const WidgetStatePropertyAll(0.0),
                       shadowColor: WidgetStateColor.transparent,
                       minimumSize: const WidgetStatePropertyAll(Size.zero),
@@ -1980,7 +1955,7 @@ class _SettingsAppBarRoute<T extends Object?> extends PopupRoute<T> {
               _curvedAnimation.value,
             )!;
 
-            final backIconButton = IconButton(
+            final backIconButton = IconButtonLegacy(
               style: LegacyThemeFactory.createIconButtonStyle(
                 colorTheme: colorTheme,
                 elevationTheme: elevationTheme,
@@ -1993,7 +1968,7 @@ class _SettingsAppBarRoute<T extends Object?> extends PopupRoute<T> {
               icon: const Icon(Symbols.arrow_back_rounded),
             );
 
-            final clearIconButton = IconButton(
+            final clearIconButton = IconButtonLegacy(
               style: LegacyThemeFactory.createIconButtonStyle(
                 colorTheme: colorTheme,
                 elevationTheme: elevationTheme,
@@ -2819,32 +2794,31 @@ class _MaterialDemoViewState extends State<_MaterialDemoView> {
                           "to see shape morphing in all its beauty.",
                         ),
                       ),
-                      ListenableBuilder(
-                        listenable: _enabled,
-                        builder: (context, _) => Align.center(
-                          child: Button(
-                            style: ButtonDefaults.styleFrom(
-                              colorTheme: colorTheme,
-                              elevationTheme: elevationTheme,
-                              shapeTheme: shapeTheme,
-                              stateTheme: stateTheme,
-                              typescaleTheme: typescaleTheme,
-                            ),
-                            settings: const ButtonSettings(
-                              size: .extraLarge,
-                              shape: .round,
-                              color: .tonal,
-                            ),
-                            isSelected: _enabled.value,
-                            onTap: () => _enabled.value = !_enabled.value,
-                            child: ButtonLayout(
-                              icon: const Icon(Symbols.star_rounded),
-                              label: const Text("Favorite"),
-                            ),
-                          ),
-                        ),
-                      ),
-
+                      // ListenableBuilder(
+                      //   listenable: _enabled,
+                      //   builder: (context, _) => Align.center(
+                      //     child: ButtonContainer(
+                      //       style: Button.defaultStyleFrom(
+                      //         colorTheme: colorTheme,
+                      //         elevationTheme: elevationTheme,
+                      //         shapeTheme: shapeTheme,
+                      //         stateTheme: stateTheme,
+                      //         typescaleTheme: typescaleTheme,
+                      //       ),
+                      //       settings: const ButtonSettings(
+                      //         size: .extraLarge,
+                      //         shape: .round,
+                      //         color: .tonal,
+                      //       ),
+                      //       isSelected: _enabled.value,
+                      //       onTap: () => _enabled.value = !_enabled.value,
+                      //       child: ButtonContent(
+                      //         icon: const Icon(Symbols.star_rounded),
+                      //         label: const Text("Favorite"),
+                      //       ),
+                      //     ),
+                      //   ),
+                      // ),
                       Padding(
                         padding: const EdgeInsets.fromLTRB(
                           16.0,
@@ -3983,8 +3957,8 @@ class _ShapeLibraryViewState extends State<_ShapeLibraryView> {
                 ),
               ),
               if (_controller.text.isNotEmpty)
-                IconButton(
-                  style: ButtonStyle(
+                IconButtonLegacy(
+                  style: ButtonStyleLegacy(
                     elevation: const WidgetStatePropertyAll(0.0),
                     shadowColor: WidgetStateColor.transparent,
                     minimumSize: const WidgetStatePropertyAll(Size.zero),

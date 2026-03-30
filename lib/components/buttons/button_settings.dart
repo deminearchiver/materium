@@ -155,8 +155,8 @@ class IconToggleButtonSettings with Diagnosticable {
 }
 
 @immutable
-class FLoatingActionButtonSettings with Diagnosticable {
-  const FLoatingActionButtonSettings({
+class FloatingActionButtonSettings with Diagnosticable {
+  const FloatingActionButtonSettings({
     this.size = .small,
     this.color = .primaryContainer,
   });
@@ -168,7 +168,7 @@ class FLoatingActionButtonSettings with Diagnosticable {
   bool operator ==(Object other) =>
       identical(this, other) ||
       runtimeType == other.runtimeType &&
-          other is FLoatingActionButtonSettings &&
+          other is FloatingActionButtonSettings &&
           size == other.size &&
           color == other.color;
 

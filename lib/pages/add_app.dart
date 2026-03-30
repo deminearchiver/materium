@@ -330,59 +330,83 @@ class AddAppPageState extends State<AddAppPage> {
                 pickedSource != null &&
                 (pickedSource!.combinedAppSpecificSettingFormItems.isEmpty ||
                     additionalSettingsValid);
-            return IconButton(
-              style: LegacyThemeFactory.createIconButtonStyle(
-                colorTheme: colorTheme,
-                elevationTheme: elevationTheme,
-                shapeTheme: shapeTheme,
-                stateTheme: stateTheme,
-                size: .medium,
-                shape: .square,
-                width: .wide,
+            return Tooltip(
+              message: tr("add"),
+              child: IconButton.custom(
+                // style: LegacyThemeFactory.createIconButtonStyle(
+                //   colorTheme: colorTheme,
+                //   elevationTheme: elevationTheme,
+                //   shapeTheme: shapeTheme,
+                //   stateTheme: stateTheme,
+                //   size: .medium,
+                //   shape: .square,
+                //   width: .wide,
+                //   isSelected: isSelected,
+                //   unselectedContainerColor: colorTheme.primary,
+                //   unselectedIconColor: colorTheme.onPrimary,
+                //   selectedContainerColor: colorTheme.surfaceContainer,
+                //   selectedIconColor: colorTheme.primary,
+                //   // selectedContainerColor: colorTheme.errorContainer,
+                //   // selectedIconColor: colorTheme.onErrorContainer,
+                //   padding: .zero,
+                // ),
+                style: .from(
+                  containerColor: .resolveWith(
+                    (states) => switch (states) {
+                      ButtonDisabledStates() => null,
+                      ToggleButtonStates(isSelected: true) =>
+                        colorTheme.surfaceContainer,
+                      _ => colorTheme.primary,
+                    },
+                  ),
+                  iconTheme: .resolveWith(
+                    (states) => .from(
+                      color: switch (states) {
+                        ButtonDisabledStates() => null,
+                        ToggleButtonStates(isSelected: true) =>
+                          colorTheme.primary,
+                        _ => colorTheme.onPrimary,
+                      },
+                    ),
+                  ),
+                ),
                 isSelected: isSelected,
-                unselectedContainerColor: colorTheme.primary,
-                unselectedIconColor: colorTheme.onPrimary,
-                selectedContainerColor: colorTheme.surfaceContainer,
-                selectedIconColor: colorTheme.primary,
-                // selectedContainerColor: colorTheme.errorContainer,
-                // selectedIconColor: colorTheme.onErrorContainer,
-                padding: .zero,
-              ),
-              onPressed: canAddApp || isSelected
-                  ? () {
-                      if (canAddApp) {
-                        HapticFeedback.selectionClick();
-                        addApp();
+                settings: const .new(
+                  size: .medium,
+                  shape: .square,
+                  width: .wide,
+                ),
+                onTap: canAddApp || isSelected
+                    ? () {
+                        if (canAddApp) {
+                          HapticFeedback.selectionClick();
+                          addApp();
+                        }
                       }
-                    }
-                  : null,
-              icon: Stack(
-                fit: .expand,
-                children: [
-                  isSelected
-                      // ? const Icon(Symbols.close_rounded)
-                      ? const Icon(Symbols.add_rounded)
-                      : const Icon(Symbols.add_rounded),
-                  if (isSelected)
-                    Positioned.fill(
-                      child: Align.center(
-                        child: SizedBox.square(
-                          dimension: 40.0,
-                          child: Builder(
-                            builder: (context) => CircularProgressIndicator(
-                              value: null,
-                              padding: .zero,
-                              strokeWidth: 2.0,
-                              backgroundColor: Colors.transparent,
-                              color: IconTheme.of(context).color,
+                    : null,
+                child: Stack(
+                  children: [
+                    const ButtonContent(icon: Icon(Symbols.add_rounded)),
+                    if (isSelected)
+                      Positioned.fill(
+                        child: Align.center(
+                          child: SizedBox.square(
+                            dimension: 40.0,
+                            child: Builder(
+                              builder: (context) => CircularProgressIndicator(
+                                value: null,
+                                padding: .zero,
+                                strokeWidth: 2.0,
+                                backgroundColor: Colors.transparent,
+                                color: IconTheme.of(context).color,
+                              ),
                             ),
                           ),
                         ),
                       ),
-                    ),
-                ],
+                  ],
+                ),
               ),
-              tooltip: tr("add"),
             );
           },
         ),
@@ -636,59 +660,66 @@ class AddAppPageState extends State<AddAppPage> {
           builder: (context) {
             final isSelected = _searching;
             final canSearch = searchQuery.isNotEmpty && !doingSomething;
-            return IconButton(
-              style: LegacyThemeFactory.createIconButtonStyle(
-                colorTheme: colorTheme,
-                elevationTheme: elevationTheme,
-                shapeTheme: shapeTheme,
-                stateTheme: stateTheme,
-                size: .medium,
-                shape: .square,
-                width: .wide,
-                isSelected: _searching,
-                unselectedContainerColor: colorTheme.primary,
-                unselectedIconColor: colorTheme.onPrimary,
-                selectedContainerColor: colorTheme.surfaceContainer,
-                selectedIconColor: colorTheme.primary,
-                // selectedContainerColor: colorTheme.errorContainer,
-                // selectedIconColor: colorTheme.onErrorContainer,
-                padding: .zero,
-              ),
-              onPressed: canSearch || isSelected
-                  ? () {
-                      if (canSearch) {
-                        HapticFeedback.selectionClick();
-                        runSearch();
+            return Tooltip(
+              message: tr("search"),
+              child: IconButton.custom(
+                style: .from(
+                  containerColor: .resolveWith(
+                    (states) => switch (states) {
+                      ButtonDisabledStates() => null,
+                      ToggleButtonStates(isSelected: true) =>
+                        colorTheme.surfaceContainer,
+                      _ => colorTheme.primary,
+                    },
+                  ),
+                  iconTheme: .resolveWith(
+                    (states) => .from(
+                      color: switch (states) {
+                        ButtonDisabledStates() => null,
+                        ToggleButtonStates(isSelected: true) =>
+                          colorTheme.primary,
+                        _ => colorTheme.onPrimary,
+                      },
+                    ),
+                  ),
+                ),
+                settings: const .new(
+                  size: .medium,
+                  shape: .square,
+                  width: .wide,
+                ),
+                isSelected: isSelected,
+                onTap: canSearch || isSelected
+                    ? () {
+                        if (canSearch) {
+                          HapticFeedback.selectionClick();
+                          runSearch();
+                        }
                       }
-                    }
-                  : null,
-              icon: Stack(
-                fit: .expand,
-                children: [
-                  isSelected
-                      // ? const Icon(Symbols.close_rounded)
-                      ? const Icon(Symbols.search_rounded)
-                      : const Icon(Symbols.search_rounded),
-                  if (isSelected)
-                    Positioned.fill(
-                      child: Align.center(
-                        child: SizedBox.square(
-                          dimension: 40.0,
-                          child: Builder(
-                            builder: (context) => CircularProgressIndicator(
-                              value: null,
-                              padding: .zero,
-                              strokeWidth: 2.0,
-                              backgroundColor: Colors.transparent,
-                              color: IconTheme.of(context).color,
+                    : null,
+                child: Stack(
+                  children: [
+                    const ButtonContent(icon: Icon(Symbols.search_rounded)),
+                    if (isSelected)
+                      Positioned.fill(
+                        child: Align.center(
+                          child: SizedBox.square(
+                            dimension: 40.0,
+                            child: Builder(
+                              builder: (context) => CircularProgressIndicator(
+                                value: null,
+                                padding: .zero,
+                                strokeWidth: 2.0,
+                                backgroundColor: Colors.transparent,
+                                color: IconTheme.of(context).color,
+                              ),
                             ),
                           ),
                         ),
                       ),
-                    ),
-                ],
+                  ],
+                ),
               ),
-              tooltip: tr("search"),
             );
           },
         ),
@@ -935,105 +966,136 @@ class AddAppPageState extends State<AddAppPage> {
                       padding: const .fromSTEB(8.0 - 4.0, 0.0, 8.0 - 4.0, 0.0),
                       child: Flex.horizontal(
                         children: [
-                          IconButton(
-                            style: LegacyThemeFactory.createIconButtonStyle(
-                              colorTheme: colorTheme,
-                              elevationTheme: elevationTheme,
-                              shapeTheme: shapeTheme,
-                              stateTheme: stateTheme,
-                              color: .standard,
-                              containerColor: useBlackTheme
-                                  ? colorTheme.surfaceContainer
-                                  : Colors.transparent,
-                              // containerColor: useBlackTheme
-                              //     ? Colors.transparent
-                              //     : colorTheme.surfaceContainerHighest,
-                              iconColor: useBlackTheme
-                                  ? colorTheme.primary
-                                  : colorTheme.onSurfaceVariant,
-                            ),
-                            onPressed: () {
-                              showDialog(
-                                context: context,
-                                builder: (context) {
-                                  return GeneratedFormModal(
-                                    singleNullReturnButton: tr('ok'),
-                                    title: tr('supportedSources'),
-                                    items: const [],
-                                    additionalWidgets: [
-                                      ...sourceProvider.sources.map(
-                                        (e) => Padding(
-                                          padding: const EdgeInsets.symmetric(
-                                            vertical: 4,
-                                          ),
-                                          child: GestureDetector(
-                                            onTap: e.hosts.isNotEmpty
-                                                ? () {
-                                                    launchUrlString(
-                                                      'https://${e.hosts[0]}',
-                                                      mode: LaunchMode
-                                                          .externalApplication,
-                                                    );
-                                                  }
-                                                : null,
-                                            child: Text(
-                                              '${e.name}${e.enforceTrackOnly ? ' ${tr('trackOnlyInBrackets')}' : ''}${e.canSearch ? ' ${tr('searchableInBrackets')}' : ''}',
-                                              style: TextStyle(
-                                                decoration: e.hosts.isNotEmpty
-                                                    ? TextDecoration.underline
-                                                    : TextDecoration.none,
+                          Tooltip(
+                            message: tr("supportedSources"),
+                            child: IconButton(
+                              style: .from(
+                                containerColor: .resolveWith(
+                                  (states) => switch (states) {
+                                    ButtonDisabledStates() => null,
+                                    _ =>
+                                      useBlackTheme
+                                          ? colorTheme.surfaceContainer
+                                          : Colors.transparent,
+                                  },
+                                ),
+                                iconTheme: .resolveWith(
+                                  (states) => .from(
+                                    color: switch (states) {
+                                      ButtonDisabledStates() => null,
+                                      _ =>
+                                        useBlackTheme
+                                            ? colorTheme.primary
+                                            : colorTheme.onSurfaceVariant,
+                                    },
+                                  ),
+                                ),
+                              ),
+                              settings: const .new(
+                                size: .small,
+                                shape: .round,
+                                color: .standard,
+                                width: .normal,
+                              ),
+                              onTap: () {
+                                showDialog(
+                                  context: context,
+                                  builder: (context) {
+                                    return GeneratedFormModal(
+                                      singleNullReturnButton: tr('ok'),
+                                      title: tr('supportedSources'),
+                                      items: const [],
+                                      additionalWidgets: [
+                                        ...sourceProvider.sources.map(
+                                          (e) => Padding(
+                                            padding: const EdgeInsets.symmetric(
+                                              vertical: 4,
+                                            ),
+                                            child: GestureDetector(
+                                              onTap: e.hosts.isNotEmpty
+                                                  ? () {
+                                                      launchUrlString(
+                                                        'https://${e.hosts[0]}',
+                                                        mode: LaunchMode
+                                                            .externalApplication,
+                                                      );
+                                                    }
+                                                  : null,
+                                              child: Text(
+                                                '${e.name}${e.enforceTrackOnly ? ' ${tr('trackOnlyInBrackets')}' : ''}${e.canSearch ? ' ${tr('searchableInBrackets')}' : ''}',
+                                                style: TextStyle(
+                                                  decoration: e.hosts.isNotEmpty
+                                                      ? TextDecoration.underline
+                                                      : TextDecoration.none,
+                                                ),
                                               ),
                                             ),
                                           ),
                                         ),
-                                      ),
-                                      const SizedBox(height: 16),
-                                      Text(
-                                        '${tr('note')}:',
-                                        style: const TextStyle(
-                                          fontWeight: FontWeight.bold,
+                                        const SizedBox(height: 16),
+                                        Text(
+                                          '${tr('note')}:',
+                                          style: const TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                          ),
                                         ),
-                                      ),
-                                      const SizedBox(height: 4),
-                                      Text(
-                                        tr(
-                                          'selfHostedNote',
-                                          args: [tr('overrideSource')],
+                                        const SizedBox(height: 4),
+                                        Text(
+                                          tr(
+                                            'selfHostedNote',
+                                            args: [tr('overrideSource')],
+                                          ),
                                         ),
-                                      ),
-                                    ],
-                                  );
-                                },
-                              );
-                            },
-                            icon: const Icon(Symbols.list_alt_rounded),
-                            tooltip: tr("supportedSources"),
-                          ),
-                          IconButton(
-                            style: LegacyThemeFactory.createIconButtonStyle(
-                              colorTheme: colorTheme,
-                              elevationTheme: elevationTheme,
-                              shapeTheme: shapeTheme,
-                              stateTheme: stateTheme,
-                              color: .standard,
-                              containerColor: useBlackTheme
-                                  ? colorTheme.surfaceContainer
-                                  : Colors.transparent,
-                              // containerColor: useBlackTheme
-                              //     ? Colors.transparent
-                              //     : colorTheme.surfaceContainerHighest,
-                              iconColor: useBlackTheme
-                                  ? colorTheme.primary
-                                  : colorTheme.onSurfaceVariant,
+                                      ],
+                                    );
+                                  },
+                                );
+                              },
+                              icon: const Icon(Symbols.list_alt_rounded),
                             ),
-                            onPressed: () {
-                              launchUrlString(
-                                "https://apps.obtainium.imranr.dev/",
-                                mode: .externalApplication,
-                              );
-                            },
-                            icon: const Icon(Symbols.crowdsource_rounded),
-                            tooltip: tr("crowdsourcedConfigsShort"),
+                          ),
+                          Tooltip(
+                            message: tr("crowdsourcedConfigsShort"),
+                            child: IconButton(
+                              style: .from(
+                                containerColor: .resolveWith(
+                                  (states) => switch (states) {
+                                    ButtonDisabledStates() => null,
+                                    _ =>
+                                      useBlackTheme
+                                          ? colorTheme.surfaceContainer
+                                          : Colors.transparent,
+                                  },
+                                ),
+                                iconTheme: .resolveWith(
+                                  (states) => .from(
+                                    color: switch (states) {
+                                      ButtonDisabledStates() => null,
+                                      _ =>
+                                        useBlackTheme
+                                            ? colorTheme.primary
+                                            : colorTheme.onSurfaceVariant,
+                                    },
+                                  ),
+                                ),
+                              ),
+                              settings: const .new(
+                                size: .small,
+                                shape: .round,
+                                color: .standard,
+                                width: .normal,
+                              ),
+                              onTap: () {
+                                launchUrlString(
+                                  "https://apps.obtainium.imranr.dev/",
+                                  mode: .externalApplication,
+                                );
+                              },
+                              icon: const Icon(
+                                Symbols.crowdsource_rounded,
+                                fill: 0.0,
+                              ),
+                            ),
                           ),
                         ],
                       ),

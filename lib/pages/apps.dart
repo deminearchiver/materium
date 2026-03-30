@@ -554,7 +554,7 @@ class AppsPageState extends State<AppsPage> with TickerProviderStateMixin {
         spacing: 8.0,
         children: [
           if (hasUpdate)
-            IconButton(
+            IconButtonLegacy(
               style: LegacyThemeFactory.createIconButtonStyle(
                 colorTheme: colorTheme,
                 elevationTheme: elevationTheme,
@@ -1401,43 +1401,51 @@ class AppsPageState extends State<AppsPage> with TickerProviderStateMixin {
                   isInstalled && installedVersion != item.app.latestVersion;
               final isSelected = selectedAppIds.contains(item.app.id);
 
-              final Widget updateButton = IconButton(
-                style: LegacyThemeFactory.createIconButtonStyle(
-                  colorTheme: colorTheme,
-                  elevationTheme: elevationTheme,
-                  shapeTheme: shapeTheme,
-                  stateTheme: stateTheme,
-                  size: .small,
-                  shape: .round,
-                  color: .tonal,
-                  width: .wide,
-                  containerColor: useBlackTheme
-                      ? colorTheme.primaryContainer
-                      : null,
-                  iconColor: useBlackTheme
-                      ? colorTheme.onPrimaryContainer
-                      : null,
-                ),
-                onPressed: !appsProvider.areDownloadsRunning()
-                    ? () {
-                        appsProvider
-                            .downloadAndInstallLatestApps([
-                              item.app.id,
-                            ], globalNavigatorKey.currentContext)
-                            .catchError((e) {
-                              if (context.mounted) {
-                                showError(e, context);
-                              }
-                              return <String>[];
-                            });
-                      }
-                    : null,
-                icon: item.app.additionalSettings["trackOnly"] == true
-                    ? const Icon(Symbols.check_circle_rounded, fill: 1.0)
-                    : const Icon(Symbols.install_mobile, fill: 1.0),
-                tooltip: item.app.additionalSettings["trackOnly"] == true
+              final Widget updateButton = Tooltip(
+                message: item.app.additionalSettings["trackOnly"] == true
                     ? tr("markUpdated")
                     : tr("update"),
+                child: IconButton(
+                  style: .from(
+                    containerColor: .resolveWith(
+                      (states) => switch (states) {
+                        ButtonDisabledStates() => null,
+                        _ => useBlackTheme ? colorTheme.primaryContainer : null,
+                      },
+                    ),
+                    stateLayerColor: .all(
+                      useBlackTheme ? colorTheme.onPrimaryContainer : null,
+                    ),
+                    iconTheme: .resolveWith(
+                      (states) => switch (states) {
+                        ButtonDisabledStates() => null,
+                        _ => .from(
+                          color: useBlackTheme
+                              ? colorTheme.onPrimaryContainer
+                              : null,
+                        ),
+                      },
+                    ),
+                  ),
+                  settings: const .new(color: .tonal, width: .wide),
+                  onTap: !appsProvider.areDownloadsRunning()
+                      ? () {
+                          appsProvider
+                              .downloadAndInstallLatestApps([
+                                item.app.id,
+                              ], globalNavigatorKey.currentContext)
+                              .catchError((e) {
+                                if (context.mounted) {
+                                  showError(e, context);
+                                }
+                                return <String>[];
+                              });
+                        }
+                      : null,
+                  icon: item.app.additionalSettings["trackOnly"] == true
+                      ? const Icon(Symbols.check_circle_rounded, fill: 1.0)
+                      : const Icon(Symbols.install_mobile, fill: 1.0),
+                ),
               );
 
               final LegacyMenuVariant menuVariant = useBlackTheme
@@ -1567,27 +1575,42 @@ class AppsPageState extends State<AppsPage> with TickerProviderStateMixin {
                   ),
                 ],
                 builder: (context, controller, child) => IconButton(
-                  style: LegacyThemeFactory.createIconButtonStyle(
-                    colorTheme: colorTheme,
-                    elevationTheme: elevationTheme,
-                    shapeTheme: shapeTheme,
-                    stateTheme: stateTheme,
-                    size: .small,
-                    shape: .round,
-                    color: .standard,
-                    width: .narrow,
-                    containerColor: isSelected || useBlackTheme
-                        ? Colors.transparent
-                        : colorTheme.surfaceContainer,
-                    iconColor: isSelected
-                        ? useBlackTheme
-                              ? colorTheme.onPrimaryContainer
-                              : colorTheme.onSecondaryContainer
-                        : useBlackTheme
-                        ? colorTheme.onSurface
-                        : colorTheme.onSurfaceVariant,
+                  style: .from(
+                    containerColor: .resolveWith(
+                      (states) => switch (states) {
+                        ButtonDisabledStates() => null,
+                        _ =>
+                          isSelected || useBlackTheme
+                              ? Colors.transparent
+                              : colorTheme.surfaceContainer,
+                      },
+                    ),
+                    stateLayerColor: .all(
+                      isSelected
+                          ? useBlackTheme
+                                ? colorTheme.onPrimaryContainer
+                                : colorTheme.onSecondaryContainer
+                          : useBlackTheme
+                          ? colorTheme.onSurface
+                          : colorTheme.onSurfaceVariant,
+                    ),
+                    iconTheme: .resolveWith(
+                      (states) => switch (states) {
+                        ButtonDisabledStates() => null,
+                        _ => .from(
+                          color: isSelected
+                              ? useBlackTheme
+                                    ? colorTheme.onPrimaryContainer
+                                    : colorTheme.onSecondaryContainer
+                              : useBlackTheme
+                              ? colorTheme.onSurface
+                              : colorTheme.onSurfaceVariant,
+                        ),
+                      },
+                    ),
                   ),
-                  onPressed: () {
+                  settings: const .new(color: .standard, width: .narrow),
+                  onTap: () {
                     if (controller.isOpen) {
                       controller.close();
                     } else {
@@ -1596,11 +1619,6 @@ class AppsPageState extends State<AppsPage> with TickerProviderStateMixin {
                   },
                   icon: const Icon(Symbols.more_vert_rounded),
                 ),
-              );
-
-              final Widget checkbox = Checkbox.bistate(
-                onCheckedChanged: (value) => toggleAppSelected(item.app),
-                checked: isSelected,
               );
 
               final Widget listItemLayout = ListItemLayout(
@@ -1833,7 +1851,11 @@ class AppsPageState extends State<AppsPage> with TickerProviderStateMixin {
                           ),
                         );
                       },
-                      child: checkbox,
+                      child: Checkbox.bistate(
+                        onCheckedChanged: (value) =>
+                            toggleAppSelected(item.app),
+                        checked: isSelected,
+                      ),
                     ),
                   ],
                 ),
@@ -2005,7 +2027,7 @@ class AppsPageState extends State<AppsPage> with TickerProviderStateMixin {
 
       final selectedDisabledContentColor = unselectedDisabledContentColor;
 
-      final Widget selectButton = IconButton(
+      final Widget selectButton = IconButtonLegacy(
         style: LegacyThemeFactory.createIconButtonStyle(
           colorTheme: colorTheme,
           elevationTheme: elevationTheme,
@@ -2037,7 +2059,7 @@ class AppsPageState extends State<AppsPage> with TickerProviderStateMixin {
             : listedApps.length.toString(),
       );
 
-      final Widget downloadButton = IconButton(
+      final Widget downloadButton = IconButtonLegacy(
         style: LegacyThemeFactory.createIconButtonStyle(
           colorTheme: colorTheme,
           elevationTheme: elevationTheme,
@@ -2071,7 +2093,7 @@ class AppsPageState extends State<AppsPage> with TickerProviderStateMixin {
             : tr("installUpdateApps"),
       );
 
-      final Widget removeButton = IconButton(
+      final Widget removeButton = IconButtonLegacy(
         style: LegacyThemeFactory.createIconButtonStyle(
           colorTheme: colorTheme,
           elevationTheme: elevationTheme,
@@ -2105,7 +2127,7 @@ class AppsPageState extends State<AppsPage> with TickerProviderStateMixin {
         tooltip: tr("removeSelectedApps"),
       );
 
-      final Widget categorizeButton = IconButton(
+      final Widget categorizeButton = IconButtonLegacy(
         style: LegacyThemeFactory.createIconButtonStyle(
           colorTheme: colorTheme,
           elevationTheme: elevationTheme,
@@ -2131,7 +2153,7 @@ class AppsPageState extends State<AppsPage> with TickerProviderStateMixin {
         tooltip: tr("categorize"),
       );
 
-      final Widget pinButton = IconButton(
+      final Widget pinButton = IconButtonLegacy(
         style: LegacyThemeFactory.createIconButtonStyle(
           colorTheme: colorTheme,
           elevationTheme: elevationTheme,
@@ -2159,7 +2181,7 @@ class AppsPageState extends State<AppsPage> with TickerProviderStateMixin {
         tooltip: hasPinnedSelection ? tr("unpinFromTop") : tr("pinToTop"),
       );
 
-      final Widget moreButton = IconButton(
+      final Widget moreButton = IconButtonLegacy(
         style: LegacyThemeFactory.createIconButtonStyle(
           colorTheme: colorTheme,
           elevationTheme: elevationTheme,
@@ -2185,7 +2207,7 @@ class AppsPageState extends State<AppsPage> with TickerProviderStateMixin {
         tooltip: tr("more"),
       );
 
-      final Widget floatingActionButton = IconButton(
+      final Widget floatingActionButton = IconButtonLegacy(
         style: LegacyThemeFactory.createIconButtonStyle(
           colorTheme: colorTheme,
           elevationTheme: elevationTheme,
@@ -2551,44 +2573,62 @@ class AppsPageState extends State<AppsPage> with TickerProviderStateMixin {
                     ),
                     leading: Padding(
                       padding: const .fromSTEB(8.0, 0.0, 8.0, 0.0),
-                      child: IconButton(
-                        style: LegacyThemeFactory.createIconButtonStyle(
-                          colorTheme: colorTheme,
-                          elevationTheme: elevationTheme,
-                          shapeTheme: shapeTheme,
-                          stateTheme: stateTheme,
-                          color: .standard,
-                          width: .wide,
-                          isSelected: !isFilterOff,
-                          unselectedContainerColor: useBlackTheme
-                              ? colorTheme.surfaceContainer
-                              : colorTheme.surfaceContainerHighest,
-                          unselectedIconColor: useBlackTheme
-                              ? colorTheme.primary
-                              : colorTheme.onSurfaceVariant,
-                          selectedContainerColor: useBlackTheme
-                              ? colorTheme.primaryContainer
-                              : colorTheme.tertiaryContainer,
-                          selectedIconColor: useBlackTheme
-                              ? colorTheme.onPrimaryContainer
-                              : colorTheme.onTertiaryContainer,
-                        ),
-                        onPressed: isFilterOff
-                            ? showFilterDialog
-                            : () {
-                                setState(() {
-                                  filter = AppsFilter();
-                                });
+                      child: Tooltip(
+                        message: isFilterOff
+                            ? tr("filterApps")
+                            : "${tr("filter")} - ${tr("remove")}",
+                        child: IconButton(
+                          style: .from(
+                            containerColor: .resolveWith(
+                              (states) => switch (states) {
+                                ButtonDisabledStates() => null,
+                                ToggleButtonStates(isSelected: true) =>
+                                  useBlackTheme
+                                      ? colorTheme.primaryContainer
+                                      : colorTheme.tertiaryContainer,
+                                _ =>
+                                  useBlackTheme
+                                      ? colorTheme.surfaceContainer
+                                      : colorTheme.surfaceContainerHighest,
                               },
-                        icon: Icon(
-                          isFilterOff
-                              ? Symbols.filter_alt_rounded
-                              : Symbols.filter_alt_off_rounded,
-                          fill: 1.0,
+                            ),
+                            iconTheme: .resolveWith(
+                              (states) => .from(
+                                color: switch (states) {
+                                  ButtonDisabledStates() => null,
+                                  ToggleButtonStates(isSelected: true) =>
+                                    useBlackTheme
+                                        ? colorTheme.onPrimaryContainer
+                                        : colorTheme.onTertiaryContainer,
+                                  _ =>
+                                    useBlackTheme
+                                        ? colorTheme.primary
+                                        : colorTheme.onSurfaceVariant,
+                                },
+                              ),
+                            ),
+                          ),
+                          settings: const .new(
+                            size: .small,
+                            shape: .round,
+                            color: .standard,
+                            width: .wide,
+                          ),
+                          isSelected: !isFilterOff,
+                          onTap: isFilterOff
+                              ? showFilterDialog
+                              : () {
+                                  setState(() {
+                                    filter = AppsFilter();
+                                  });
+                                },
+                          icon: Icon(
+                            isFilterOff
+                                ? Symbols.filter_alt_rounded
+                                : Symbols.filter_alt_off_rounded,
+                            fill: 1.0,
+                          ),
                         ),
-                        tooltip: isFilterOff
-                            ? tr('filterApps')
-                            : '${tr('filter')} - ${tr('remove')}',
                       ),
                     ),
                     title: const Text(
@@ -2600,29 +2640,45 @@ class AppsPageState extends State<AppsPage> with TickerProviderStateMixin {
                     ),
                     trailing: Padding(
                       padding: const .fromSTEB(8.0, 0.0, 8.0, 0.0),
-                      child: IconButton(
-                        style: LegacyThemeFactory.createIconButtonStyle(
-                          colorTheme: colorTheme,
-                          elevationTheme: elevationTheme,
-                          shapeTheme: shapeTheme,
-                          stateTheme: stateTheme,
-                          color: .standard,
-                          width: .wide,
-                          containerColor: useBlackTheme
-                              ? colorTheme.surfaceContainer
-                              : colorTheme.surfaceContainerHighest,
-                          iconColor: useBlackTheme
-                              ? colorTheme.primary
-                              : colorTheme.onSurfaceVariant,
-                        ),
-                        onPressed: () => Navigator.push(
-                          context,
-                          MaterialPageRoute<void>(
-                            builder: (context) => const SettingsPage(),
+                      child: Tooltip(
+                        message: tr("settings"),
+                        child: IconButton(
+                          style: .from(
+                            containerColor: .resolveWith(
+                              (states) => switch (states) {
+                                ButtonDisabledStates() => null,
+                                _ =>
+                                  useBlackTheme
+                                      ? colorTheme.surfaceContainer
+                                      : colorTheme.surfaceContainerHighest,
+                              },
+                            ),
+                            iconTheme: .resolveWith(
+                              (states) => .from(
+                                color: switch (states) {
+                                  ButtonDisabledStates() => null,
+                                  _ =>
+                                    useBlackTheme
+                                        ? colorTheme.primary
+                                        : colorTheme.onSurfaceVariant,
+                                },
+                              ),
+                            ),
                           ),
+                          settings: const .new(
+                            size: .small,
+                            shape: .round,
+                            color: .standard,
+                            width: .wide,
+                          ),
+                          onTap: () => Navigator.push(
+                            context,
+                            MaterialPageRoute<void>(
+                              builder: (context) => const SettingsPage(),
+                            ),
+                          ),
+                          icon: const Icon(Symbols.settings_rounded, fill: 1.0),
                         ),
-                        icon: const Icon(Symbols.settings_rounded, fill: 1.0),
-                        tooltip: tr("settings"),
                       ),
                     ),
                     bottom: PreferredSize(
@@ -2779,14 +2835,34 @@ class _AppChangelogPageState extends State<AppChangelogPage> {
                             overflow: .ellipsis,
                           ),
                           trailing: IconButton(
-                            style: LegacyThemeFactory.createIconButtonStyle(
-                              colorTheme: colorTheme,
-                              elevationTheme: elevationTheme,
-                              shapeTheme: shapeTheme,
-                              stateTheme: stateTheme,
-                              color: .tonal,
+                            style: .from(
+                              containerColor: .resolveWith(
+                                (states) => switch (states) {
+                                  ButtonDisabledStates() => null,
+                                  _ =>
+                                    useBlackTheme
+                                        ? colorTheme.primaryContainer
+                                        : colorTheme.secondaryContainer,
+                                },
+                              ),
+                              stateLayerColor: .all(
+                                useBlackTheme
+                                    ? colorTheme.onPrimaryContainer
+                                    : colorTheme.onSecondaryContainer,
+                              ),
+                              iconTheme: .resolveWith(
+                                (states) => switch (states) {
+                                  ButtonDisabledStates() => null,
+                                  _ => .from(
+                                    color: useBlackTheme
+                                        ? colorTheme.onPrimaryContainer
+                                        : colorTheme.onSecondaryContainer,
+                                  ),
+                                },
+                              ),
                             ),
-                            onPressed: () async {
+                            settings: const .new(color: .tonal),
+                            onTap: () async {
                               await launchUrlString(
                                 changelogUrl,
                                 mode: .externalApplication,

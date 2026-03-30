@@ -1034,7 +1034,7 @@ class _SelectionModalState extends State<SelectionModal> {
                           )
                         : null,
                     trailing: widget.titlesAreLinks
-                        ? IconButton(
+                        ? IconButtonLegacy(
                             style: LegacyThemeFactory.createIconButtonStyle(
                               colorTheme: colorTheme,
                               elevationTheme: elevationTheme,
