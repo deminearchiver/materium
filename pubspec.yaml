@@ -95,9 +95,9 @@ dependencies:
   talker_dio_logger: ^5.1.16
   dio: ^5.9.2
   retrofit: ^4.9.2
-  device_info_ffi: ^1.1.0
-  dynamic_color_ffi: ^1.1.1
-  screen_corners_ffi: ^1.1.0
+  device_info_ffi: ^1.1.1
+  dynamic_color_ffi: ^1.1.2
+  screen_corners_ffi: ^1.1.1
   slang: ^4.14.0
   slang_flutter: ^4.14.0
   pub_semver: ^2.2.0
