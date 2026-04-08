@@ -149,8 +149,7 @@ class _ImportExportPageState extends State<ImportExportPage> {
 
     void runObtainiumImport() {
       HapticFeedback.selectionClick();
-      FilePicker.platform
-          .pickFiles()
+      FilePicker.pickFiles()
           .then((result) {
             setState(() {
               importInProgress = true;
@@ -192,7 +191,7 @@ class _ImportExportPageState extends State<ImportExportPage> {
     }
 
     void runUrlImport() {
-      FilePicker.platform.pickFiles().then((result) {
+      FilePicker.pickFiles().then((result) {
         if (result != null) {
           urlListImport(
             overrideInitValid: true,
