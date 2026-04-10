@@ -4,8 +4,6 @@ import 'package:materium/database/database.dart';
 import 'package:materium/flutter.dart';
 import 'package:sqflite/sqflite.dart' as sqflite;
 
-// TODO: replace logging with talker
-
 enum LogLevels { debug, info, warning, error }
 
 class LogsProvider {
@@ -58,7 +56,7 @@ class LogsProvider {
     }
     final amount = await query.go();
     if (amount > 0) {
-      add(
+      await add(
         plural(
           "clearedNLogsBeforeXAfterY",
           amount,
@@ -109,7 +107,7 @@ class LogsProvider {
         await instance.add("Legacy database not found.");
       }
     } on Object catch (e) {
-      instance.add(
+      await instance.add(
         "Legacy database purge failed. $e",
         level: LogLevels.warning,
       );
