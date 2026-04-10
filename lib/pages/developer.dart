@@ -645,7 +645,7 @@ class _DeveloperMarkdown1PageState extends State<DeveloperMarkdown1Page> {
                               style: typescaleTheme.bodyMedium
                                   .toTextStyle()
                                   .copyWith(
-                                    fontFamily: FontFamily.firaCode,
+                                    fontFamily: FontFamily.monaspaceArgon,
                                     fontWeight: FontWeight.w400,
                                     fontVariations: const [
                                       FontVariation.weight(400.0),
@@ -679,7 +679,7 @@ class _DeveloperMarkdown1PageState extends State<DeveloperMarkdown1Page> {
                         h3Padding: EdgeInsets.zero,
                         code: const TextStyle(
                           inherit: true,
-                          fontFamily: FontFamily.firaCode,
+                          fontFamily: FontFamily.monaspaceArgon,
                           fontWeight: FontWeight.w500,
                           fontVariations: [FontVariation.weight(500.0)],
                         ),
@@ -863,7 +863,7 @@ class _DeveloperMarkdown2PageState extends State<DeveloperMarkdown2Page> {
                         .toTextStyle()
                         .copyWith(
                           color: colorTheme.onSurface,
-                          fontFamily: FontFamily.firaCode,
+                          fontFamily: FontFamily.monaspaceArgon,
                         ),
                   };
                 }),

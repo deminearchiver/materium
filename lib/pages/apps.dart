@@ -1793,7 +1793,7 @@ class AppsPageState extends State<AppsPage> with TickerProviderStateMixin {
                       : tr("notInstalled"),
                   style: typescaleTheme.bodySmall.toTextStyle().copyWith(
                     fontFamily: installedVersion != null
-                        ? FontFamily.googleSansCode
+                        ? FontFamily.monaspaceArgon
                         : null,
                     color: isSelected
                         ? useBlackTheme

@@ -558,7 +558,7 @@ abstract final class CustomThemeFactory {
       // containerColor: .all(colorTheme.surfaceBright),
       // headlineTextStyle: .all(
       //   typescaleTheme.titleSmallEmphasized.toTextStyle().copyWith(
-      //     fontFamily: FontFamily.googleSansCode,
+      //     fontFamily: FontFamily.monaspaceArgon,
       //     color: colorTheme.onSurface,
       //   ),
       // ),
@@ -572,12 +572,12 @@ abstract final class CustomThemeFactory {
       containerColor: .all(colorTheme.surface),
       overlineTextStyle: .all(
         typescaleTheme.labelSmall
-            .mergeWith(font: const [FontFamily.googleSansCode])
+            .mergeWith(font: const [FontFamily.monaspaceArgon])
             .toTextStyle(color: colorTheme.onSurfaceVariant),
       ),
       headlineTextStyle: .all(
         typescaleTheme.bodyMedium
-            .mergeWith(font: const [FontFamily.googleSansCode])
+            .mergeWith(font: const [FontFamily.monaspaceArgon])
             .toTextStyle(color: colorTheme.onSurface),
       ),
     ),

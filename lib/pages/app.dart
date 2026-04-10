@@ -442,7 +442,7 @@ class _AppPageState extends State<AppPage> {
                           strong: const TextStyle(fontWeight: .w700),
                           em: const TextStyle(fontStyle: .italic),
                           code: typescaleTheme.bodyLarge.toTextStyle().copyWith(
-                            fontFamily: FontFamily.firaCode,
+                            fontFamily: FontFamily.monaspaceArgon,
                             backgroundColor: colorTheme.surfaceContainer,
                           ),
                           codeblockDecoration: ShapeDecoration(
@@ -844,7 +844,9 @@ class _AppPageState extends State<AppPage> {
                                     value.key,
                                     style: typescaleTheme.bodyMediumEmphasized
                                         .mergeWith(
-                                          font: const [FontFamily.firaCode],
+                                          font: const [
+                                            FontFamily.monaspaceArgon,
+                                          ],
                                         )
                                         .toTextStyle(),
                                   ),
@@ -918,7 +920,7 @@ class _AppPageState extends State<AppPage> {
                                 hash,
                                 style: typescaleTheme.bodyMediumEmphasized
                                     .mergeWith(
-                                      font: const [FontFamily.firaCode],
+                                      font: const [FontFamily.monaspaceArgon],
                                     )
                                     .toTextStyle(),
                               ),

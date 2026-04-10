@@ -6,6 +6,7 @@ const _firaCode = FontFamily.firaCode;
 const _googleSans = FontFamily.googleSans;
 const _googleSansCode = FontFamily.googleSansCode;
 const _googleSansFlex = FontFamily.googleSansFlex;
+const _monaspaceArgon = FontFamily.monaspaceArgon;
 const _robotoFlex = FontFamily.robotoFlex;
 
 abstract class TypographyThemeDataPartial with Diagnosticable {
