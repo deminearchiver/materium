@@ -257,43 +257,31 @@ class _ObtainiumState extends State<Obtainium> {
 
   Widget _buildNavigatorWrapper(BuildContext context, Widget? child) {
     if (child == null) return const SizedBox.shrink();
-
-    final materialLocalization = Localizations.of<MaterialLocalizations>(
-      context,
-      MaterialLocalizations,
-    );
     final colorTheme = ColorTheme.of(context);
     final typescaleTheme = TypescaleTheme.of(context);
-
-    final category = materialLocalization?.scriptCategory ?? .englishLike;
-    final localizedTextStyle = _DefaultTextStyles.geometryStyleFor(category);
-    final defaultTextStyle = typescaleTheme.bodyLarge
-        .toTextStyle(color: colorTheme.onSurface)
-        .merge(localizedTextStyle);
-    return DefaultTextStyle.merge(style: defaultTextStyle, child: child);
-  }
-
-  Widget _buildApp(BuildContext context) {
-    return RawMaterialApp(
-      debugShowCheckedModeBanner: false,
-
-      // Localization
-      title: "Materium",
-      localizationsDelegates: context.localizationDelegates,
-      supportedLocales: context.supportedLocales,
-      locale: context.locale,
-
-      // Navigation
-      navigatorKey: globalNavigatorKey,
-      builder: _buildNavigatorWrapper,
-      home: Shortcuts(
-        shortcuts: <LogicalKeySet, Intent>{
-          LogicalKeySet(LogicalKeyboardKey.select): const ActivateIntent(),
-        },
-        child: const HomePage(),
-      ),
+    return DefaultTextGeometry(
+      style: typescaleTheme.bodyLarge.toTextStyle(color: colorTheme.onSurface),
+      child: child,
     );
   }
+
+  Widget _buildApp(BuildContext context) => RawMaterialApp(
+    debugShowCheckedModeBanner: false,
+
+    // Localization
+    title: "Materium",
+    localizationsDelegates: context.localizationDelegates,
+    supportedLocales: context.supportedLocales,
+    locale: context.locale,
+
+    // Navigation
+    navigatorKey: globalNavigatorKey,
+    builder: _buildNavigatorWrapper,
+    home: Shortcuts(
+      shortcuts: {LogicalKeySet(.select): const ActivateIntent()},
+      child: const HomePage(),
+    ),
+  );
 
   // void onReceiveForegroundServiceData(Object data) {
   //   print("onReceiveTaskData: $data");
@@ -424,37 +412,4 @@ class _ObtainiumState extends State<Obtainium> {
   // static const _platform = DynamicSchemePlatform.phone;
   static const _specVersion = DynamicSchemeSpecVersion.spec2026;
   static const _typography = TypographyDefaults.material3Expressive2026;
-}
-
-abstract final class _DefaultTextStyles {
-  static const englishLike = TextStyle(
-    debugLabel: "englishLike default 2021",
-    inherit: true,
-    decoration: .none,
-    textBaseline: .alphabetic,
-    leadingDistribution: .even,
-  );
-
-  static const dense = TextStyle(
-    debugLabel: "dense default 2021",
-    inherit: true,
-    decoration: .none,
-    textBaseline: .ideographic,
-    leadingDistribution: .even,
-  );
-
-  static const tall = TextStyle(
-    debugLabel: "tall default 2021",
-    inherit: true,
-    decoration: .none,
-    textBaseline: .alphabetic,
-    leadingDistribution: .even,
-  );
-
-  static TextStyle geometryStyleFor(ScriptCategory category) =>
-      switch (category) {
-        .englishLike => englishLike,
-        .dense => dense,
-        .tall => tall,
-      };
 }
