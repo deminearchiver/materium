@@ -23,6 +23,9 @@ class FontFamily {
   /// Font family: Google Sans Flex
   static const String googleSansFlex = 'Google Sans Flex';
 
+  /// Font family: Monaspace Argon
+  static const String monaspaceArgon = 'Monaspace Argon';
+
   /// Font family: Roboto Flex
   static const String robotoFlex = 'Roboto Flex';
 }

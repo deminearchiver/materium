@@ -163,6 +163,9 @@ flutter:
     - family: Google Sans Flex
       fonts:
         - asset: assets/fonts/googlesansflex/GoogleSansFlex-VariableFont_GRAD,ROND,opsz,slnt,wdth,wght.ttf
+    - family: Monaspace Argon
+      fonts:
+        - asset: assets/fonts/monaspace/MonaspaceArgon-VariableFont.ttf
     - family: Roboto Flex
       fonts:
         - asset: assets/fonts/robotoflex/RobotoFlex-VariableFont_GRAD,XOPQ,XTRA,YOPQ,YTAS,YTDE,YTFI,YTLC,YTUC,opsz,slnt,wdth,wght.ttf
