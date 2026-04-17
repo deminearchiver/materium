@@ -7,9 +7,11 @@
     android:name="${applicationName}"
     android:icon="@mipmap/ic_launcher"
     android:roundIcon="@mipmap/ic_launcher_round"
+    android:banner="@drawable/tv_banner"
     android:requestLegacyExternalStorage="true"
     android:usesCleartextTraffic="true"
     android:localeConfig="@xml/locales_config"
+    android:memtagMode="async"
     android:enableOnBackInvokedCallback="true">
     <activity
       android:name=".MainActivity"
@@ -31,12 +33,15 @@
       <intent-filter>
         <action android:name="android.intent.action.MAIN" />
         <category android:name="android.intent.category.LAUNCHER" />
+        <category android:name="android.intent.category.LEANBACK_LAUNCHER" />
       </intent-filter>
+
       <intent-filter>
         <action
           android:name="com.android_package_installer.content.SESSION_API_PACKAGE_INSTALLED"
           android:exported="false" />
       </intent-filter>
+
       <intent-filter>
         <action android:name="android.intent.action.VIEW" />
 
@@ -76,6 +81,16 @@
       android:name="dev.deminearchiver.materium.service.NOTIFICATION_ICON"
       android:resource="@drawable/ic_notification" />
   </application>
+
+  <uses-feature
+    android:name="android.software.leanback"
+    android:required="false" />
+  <uses-feature
+    android:name="android.hardware.touchscreen"
+    android:required="false" />
+  <uses-feature
+    android:name="android.hardware.touchscreen.multitouch"
+    android:required="false" />
 
   <uses-permission android:name="android.permission.INTERNET" />
   <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />

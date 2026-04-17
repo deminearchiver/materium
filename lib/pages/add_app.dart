@@ -837,7 +837,7 @@ class AddAppPageState extends State<AddAppPage> {
         alignment: WrapAlignment.spaceBetween,
         spacing: 12,
         children: [
-          GestureDetector(
+          InkWell(
             onTap: () {
               showDialog(
                 context: context,
@@ -850,7 +850,7 @@ class AddAppPageState extends State<AddAppPage> {
                       ...sourceProvider.sources.map(
                         (e) => Padding(
                           padding: const EdgeInsets.symmetric(vertical: 4),
-                          child: GestureDetector(
+                          child: InkWell(
                             onTap: e.hosts.isNotEmpty
                                 ? () {
                                     launchUrlString(
@@ -891,7 +891,7 @@ class AddAppPageState extends State<AddAppPage> {
               ),
             ),
           ),
-          GestureDetector(
+          InkWell(
             onTap: () {
               launchUrlString(
                 'https://apps.obtainium.imranr.dev/',

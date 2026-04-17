@@ -2,6 +2,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:materium/flutter.dart';
 import 'package:materium/components/generated_form.dart';
 import 'package:materium/providers/settings_new.dart';
+import 'package:materium/providers/settings_provider.dart';
 import 'package:provider/provider.dart';
 
 class GeneratedFormModal extends StatefulWidget {
@@ -98,6 +99,7 @@ class _GeneratedFormModalState extends State<GeneratedFormModal> {
             shape: .round,
             color: .text,
           ),
+          autofocus: context.read<SettingsProvider>().isTv,
           onPressed: () {
             Navigator.of(context).pop(null);
           },

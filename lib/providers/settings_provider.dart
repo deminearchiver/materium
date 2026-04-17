@@ -2,6 +2,7 @@
 
 import 'dart:convert';
 
+import 'package:device_info_ffi/device_info_ffi.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:materium/flutter.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -10,6 +11,7 @@ import 'package:materium/main.dart';
 import 'package:materium/providers/apps_provider.dart';
 import 'package:materium/providers/source_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shared_preferences/util/legacy_to_async_migration_util.dart';
 import 'package:shared_storage/shared_storage.dart' as saf;
@@ -28,56 +30,38 @@ enum SortColumnSettings { added, nameAuthor, authorName, releaseDate }
 enum SortOrderSettings { ascending, descending }
 
 class SettingsProvider with ChangeNotifier {
-  SettingsProvider._({
-    required SharedPreferencesWithCache prefsWithCache,
-    required String defaultAppDir,
-  }) : _prefsWithCache = prefsWithCache,
-       _defaultAppDir = defaultAppDir;
+  SettingsProvider._({required SharedPreferencesWithCache prefsWithCache})
+    : _prefsWithCache = prefsWithCache;
 
-  static SettingsProvider? _instance;
+  Future<void> _reload({required bool reloadCache}) async {
+    if (reloadCache) {
+      await _prefsWithCache.reloadCache();
+    }
 
-  static Future<SettingsProvider> ensureInitialized() async {
-    SettingsProvider? instance = _instance;
-    if (instance != null) return instance;
+    _defaultAppDir = (await getAppStorageDir()).path;
 
-    // Options should be shared across all instances
-    const sharedPreferencesOptions = SharedPreferencesOptions();
+    final info = DeviceInfo.androidInfo!;
+    _isTv =
+        info.systemFeatures.contains("android.hardware.type.television") ||
+        info.systemFeatures.contains("android.software.leanback");
 
-    // First we migrate from legacy SharedPreferences
-    await migrateLegacySharedPreferencesToSharedPreferencesAsyncIfNecessary(
-      legacySharedPreferencesInstance: await SharedPreferences.getInstance(),
-      sharedPreferencesAsyncOptions: sharedPreferencesOptions,
-      migrationCompletedKey: _migration1CompletedKey,
-    );
-
-    // By setting a local variable way we utilitize Dart's null safety
-    instance = SettingsProvider._(
-      // create() includes a call to reloadCache already, no need to call it
-      prefsWithCache: await SharedPreferencesWithCache.create(
-        sharedPreferencesOptions: sharedPreferencesOptions,
-        cacheOptions: const SharedPreferencesWithCacheOptions(),
-      ),
-      defaultAppDir: (await getAppStorageDir()).path,
-    );
-
-    await instance.reload();
-
-    return _instance = instance;
+    notifyListeners();
   }
 
   Future<void> reload() async {
-    await _prefsWithCache.reloadCache();
-    _defaultAppDir = (await getAppStorageDir()).path;
-    notifyListeners();
+    await _reload(reloadCache: true);
   }
 
   final SharedPreferencesWithCache _prefsWithCache;
   SharedPreferencesWithCache get prefsWithCache => _prefsWithCache;
 
-  String _defaultAppDir;
+  String _defaultAppDir = "";
   String get defaultAppDir => _defaultAppDir;
 
   bool _justStarted = true;
+
+  bool _isTv = false;
+  bool get isTv => _isTv;
 
   static const String sourceUrl = 'https://github.com/deminearchiver/materium';
 
@@ -533,5 +517,35 @@ class SettingsProvider with ChangeNotifier {
   set useFGService(bool val) {
     prefsWithCache.setBool('useFGService', val);
     notifyListeners();
+  }
+
+  static SettingsProvider? _instance;
+
+  static Future<SettingsProvider> ensureInitialized() async {
+    var instance = _instance;
+    if (instance != null) return instance;
+
+    // Options should be shared across all instances
+    const sharedPreferencesOptions = SharedPreferencesOptions();
+
+    // First we migrate from legacy SharedPreferences
+    await migrateLegacySharedPreferencesToSharedPreferencesAsyncIfNecessary(
+      legacySharedPreferencesInstance: await SharedPreferences.getInstance(),
+      sharedPreferencesAsyncOptions: sharedPreferencesOptions,
+      migrationCompletedKey: _migration1CompletedKey,
+    );
+
+    // By setting a local variable way we utilitize Dart's null safety
+    instance = SettingsProvider._(
+      // create() includes a call to reloadCache already, no need to call it
+      prefsWithCache: await SharedPreferencesWithCache.create(
+        sharedPreferencesOptions: sharedPreferencesOptions,
+        cacheOptions: const SharedPreferencesWithCacheOptions(),
+      ),
+    );
+
+    await instance._reload(reloadCache: false);
+
+    return _instance = instance;
   }
 }

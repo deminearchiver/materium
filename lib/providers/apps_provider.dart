@@ -618,6 +618,21 @@ class AppsProvider with ChangeNotifier {
     return downloadedFile;
   }
 
+  Future<void> updatePendingRepoRename(String appId, String? newUrl) async {
+    if (apps.containsKey(appId)) {
+      apps[appId]!.app.pendingRepoRenameUrl = newUrl;
+      await saveApps([apps[appId]!.app]);
+    }
+  }
+
+  Future<void> acceptRepoRename(String appId, String newUrl) async {
+    if (apps.containsKey(appId)) {
+      apps[appId]!.app.url = newUrl;
+      apps[appId]!.app.pendingRepoRenameUrl = null;
+      await saveApps([apps[appId]!.app]);
+    }
+  }
+
   Future<Object> downloadApp(
     App app,
     BuildContext? context, {
@@ -1925,6 +1940,10 @@ class AppsProvider with ChangeNotifier {
 
   Future<App?> checkUpdate(String appId) async {
     App? currentApp = apps[appId]!.app;
+    // Pause update checks until the user resolves a pending repo rename.
+    if (currentApp.hasPendingRepoRename) {
+      return null;
+    }
     SourceProvider sourceProvider = SourceProvider();
     App newApp = await sourceProvider.getApp(
       sourceProvider.getSource(
@@ -2006,7 +2025,11 @@ class AppsProvider with ChangeNotifier {
                   throwErrorsForRetry) {
                 rethrow;
               }
-              errors.add(appId, e, appName: apps[appId]?.name);
+              if (e is RepositoryRenamedError) {
+                await updatePendingRepoRename(appId, e.newUrl);
+              } else {
+                errors.add(appId, e, appName: apps[appId]?.name);
+              }
             }
             if (newApp != null) {
               updates.add(newApp);

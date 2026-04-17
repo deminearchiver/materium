@@ -216,7 +216,7 @@ class _WelcomeDialog extends StatelessWidget {
         spacing: 20.0,
         children: [
           Text(tr("documentationLinksNote")),
-          GestureDetector(
+          InkWell(
             onTap: () {
               launchUrlString(
                 "https://github.com/deminearchiver/materium/blob/main/README.md",
@@ -245,6 +245,7 @@ class _WelcomeDialog extends StatelessWidget {
             shape: .round,
             color: .text,
           ),
+          autofocus: settingsProvider.isTv,
           onPressed: () {
             settingsProvider.welcomeShown = true;
             Navigator.of(context).pop(null);
@@ -276,7 +277,7 @@ class _GoogleVerificationWarningDialog extends StatelessWidget {
         spacing: 20.0,
         children: [
           Text(tr("googleVerificationWarningP1")),
-          GestureDetector(
+          InkWell(
             onTap: () {
               launchUrlString(
                 "https://keepandroidopen.org/",
@@ -306,6 +307,7 @@ class _GoogleVerificationWarningDialog extends StatelessWidget {
             shape: .round,
             color: .text,
           ),
+          autofocus: settingsProvider.isTv,
           onPressed: () {
             settingsProvider.googleVerificationWarningShown = true;
             Navigator.of(context).pop(null);

@@ -28,7 +28,7 @@ class GitHub extends AppSource {
         required: false,
         belowWidgets: [
           const SizedBox(height: 4),
-          GestureDetector(
+          InkWell(
             onTap: () {
               launchUrlString(
                 'https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token',
@@ -68,7 +68,7 @@ class GitHub extends AppSource {
         ],
         belowWidgets: [
           const SizedBox(height: 4),
-          GestureDetector(
+          InkWell(
             onTap: () {
               launchUrlString(
                 'https://github.com/sky22333/hubproxy',
@@ -85,6 +85,11 @@ class GitHub extends AppSource {
           ),
           const SizedBox(height: 4),
         ],
+      ),
+      GeneratedFormSwitch(
+        'checkRepoRename',
+        label: tr('repoRenamedCheck'),
+        defaultValue: false,
       ),
     ];
 
@@ -335,6 +340,58 @@ class GitHub extends AppSource {
   ) async =>
       '${await getAPIHost(additionalSettings)}/repos${standardUrl.substring('https://${hosts[0]}'.length)}';
 
+  /// Checks if the repository has been renamed or transferred.
+  ///
+  /// This method explicitly disables automatic redirect following to detect when
+  /// GitHub returns a redirect (indicating the repository has moved). A redirect
+  /// from the GitHub API for a repository endpoint definitively indicates that
+  /// the repository has been renamed or transferred to a different owner.
+  ///
+  /// Throws [RepositoryRenamedError] if a redirect is detected.
+  Future<void> checkForRepositoryRename(
+    String standardUrl,
+    Map<String, dynamic> additionalSettings,
+    Map<String, String> sourceConfigSettingValues,
+  ) async {
+    if (sourceConfigSettingValues["checkRepoRename"] == "false") {
+      return;
+    }
+    final uri = Uri.tryParse(standardUrl);
+    final host = uri?.host.toLowerCase() ?? "";
+    // Guard against non-GitHub URLs
+    if (host != hosts[0] && host != "www.${hosts[0]}") {
+      return;
+    }
+    final apiUrl = await convertStandardUrlToAPIUrl(
+      standardUrl,
+      additionalSettings,
+    );
+    final res = await sourceRequest(
+      apiUrl,
+      additionalSettings,
+      followRedirects: false,
+    );
+    if (res.statusCode >= 300 && res.statusCode < 400) {
+      final location = res.headers[HttpHeaders.locationHeader.toLowerCase()];
+      if (location != null) {
+        final res2 = await sourceRequest(
+          location,
+          additionalSettings,
+          followRedirects: false,
+        );
+        String? newUrl;
+        try {
+          newUrl = jsonDecode(res2.body)["html_url"];
+        } catch (e) {
+          // Unexpected - ignore (keep old URL)
+        }
+        if (newUrl != null) {
+          throw RepositoryRenamedError(standardUrl, newUrl);
+        }
+      }
+    }
+  }
+
   @override
   String? changeLogPageFromStandardUrl(String standardUrl) =>
       '$standardUrl/releases';
@@ -349,6 +406,11 @@ class GitHub extends AppSource {
     var sourceConfigSettingValues = await getSourceConfigValues(
       additionalSettings,
       settingsProvider,
+    );
+    await checkForRepositoryRename(
+      standardUrl,
+      additionalSettings,
+      sourceConfigSettingValues,
     );
     bool includePrereleases = additionalSettings['includePrereleases'] == true;
     bool fallbackToOlderReleases =

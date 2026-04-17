@@ -355,7 +355,7 @@ class AppsPageState extends State<AppsPage> with TickerProviderStateMixin {
     }
 
     if (settingsProvider.buryNonInstalled) {
-      var temp = [];
+      final temp = <AppInMemory>[];
       listedApps = listedApps.where((sa) {
         if (sa.app.installedVersion == null) {
           temp.add(sa);
@@ -366,16 +366,19 @@ class AppsPageState extends State<AppsPage> with TickerProviderStateMixin {
       listedApps = [...listedApps, ...temp];
     }
 
+    final renamedApps = <AppInMemory>[];
     final unpinnedApps = <AppInMemory>[];
     final pinnedApps = <AppInMemory>[];
     for (final item in listedApps) {
-      if (item.app.pinned) {
+      if (item.app.hasPendingRepoRename) {
+        renamedApps.add(item);
+      } else if (item.app.pinned) {
         pinnedApps.add(item);
       } else {
         unpinnedApps.add(item);
       }
     }
-    listedApps = [...pinnedApps, ...unpinnedApps];
+    listedApps = [...renamedApps, ...pinnedApps, ...unpinnedApps];
 
     List<String?> getListedCategories() {
       final temp = listedApps.map(
@@ -466,8 +469,7 @@ class AppsPageState extends State<AppsPage> with TickerProviderStateMixin {
     }
 
     Widget getAppIcon(int appIndex) {
-      return GestureDetector(
-        behavior: .opaque,
+      return InkWell(
         onDoubleTap: () {
           pm.openApp(listedApps[appIndex].app.id);
         },
@@ -523,6 +525,43 @@ class AppsPageState extends State<AppsPage> with TickerProviderStateMixin {
           : DateFormat(
               'yyyy-MM-dd',
             ).format(listedApps[appIndex].app.releaseDate!.toLocal());
+    }
+
+    Widget buildAuthorText(int appIndex) {
+      return Text(
+        tr("byX", args: [listedApps[appIndex].author]),
+        maxLines: 1,
+        style: TextStyle(
+          overflow: TextOverflow.ellipsis,
+          fontWeight: listedApps[appIndex].app.pinned
+              ? FontWeight.bold
+              : FontWeight.normal,
+        ),
+      );
+    }
+
+    Widget buildRepoMovedRow() {
+      final colorScheme = Theme.of(context).colorScheme;
+      final infoColor = colorScheme.primary.withValues(alpha: 0.7);
+      final textColor = colorScheme.onSurfaceVariant;
+      return Padding(
+        padding: const EdgeInsets.only(top: 2),
+        child: Flex.horizontal(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(Symbols.info_rounded, fill: 0.0, color: infoColor, size: 14.0),
+            const SizedBox(width: 4.0),
+            Flexible.loose(
+              child: Text(
+                tr("repoRenamed"),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(color: textColor, fontSize: 12),
+              ),
+            ),
+          ],
+        ),
+      );
     }
 
     Widget getSingleAppHorizTile(int index) {
@@ -702,6 +741,7 @@ class AppsPageState extends State<AppsPage> with TickerProviderStateMixin {
           ),
         ),
         child: ListTile(
+          autofocus: index == 0 && settingsProvider.isTv,
           minTileHeight: 72.0,
           tileColor: listedApps[index].app.pinned
               ? colorTheme.surfaceContainerHighest
@@ -711,7 +751,13 @@ class AppsPageState extends State<AppsPage> with TickerProviderStateMixin {
           onLongPress: () {
             toggleAppSelected(listedApps[index].app);
           },
-          leading: SizedBox.square(dimension: 56.0, child: getAppIcon(index)),
+          leading: settingsProvider.isTv
+              ? Checkbox.bistate(
+                  onCheckedChanged: (_) =>
+                      toggleAppSelected(listedApps[index].app),
+                  checked: selectedAppIds.contains(listedApps[index].app.id),
+                )
+              : SizedBox.square(dimension: 56.0, child: getAppIcon(index)),
           title: Text(
             listedApps[index].name,
             maxLines: 1,
@@ -727,17 +773,13 @@ class AppsPageState extends State<AppsPage> with TickerProviderStateMixin {
                           : colorTheme.onSurface,
                     ),
           ),
-          subtitle: Text(
-            tr("byX", args: [listedApps[index].author]),
-            maxLines: 1,
-            overflow: .ellipsis,
-            softWrap: false,
-            style: typescaleTheme.bodyMedium.toTextStyle(
-              color: isSelected
-                  ? colorTheme.onSecondaryContainer
-                  : colorTheme.onSurfaceVariant,
-            ),
-          ),
+          subtitle: listedApps[index].app.hasPendingRepoRename
+              ? Flex.vertical(
+                  mainAxisSize: .min,
+                  crossAxisAlignment: .start,
+                  children: [buildAuthorText(index), buildRepoMovedRow()],
+                )
+              : buildAuthorText(index),
           trailing: listedApps[index].downloadProgress != null
               ? SizedBox(
                   child: Text(

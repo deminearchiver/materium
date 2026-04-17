@@ -5,6 +5,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:materium/flutter.dart';
 import 'package:materium/components/generated_form_modal.dart';
 import 'package:materium/providers/settings_new.dart';
+import 'package:materium/providers/settings_provider.dart';
 import 'package:materium/providers/source_provider.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:collection/collection.dart';
@@ -273,6 +274,75 @@ int generateRandomNumber(
 bool validateTextField(TextFormField tf) =>
     (tf.key as GlobalKey<FormFieldState>).currentState?.isValid == true;
 
+class _TVTextFieldFocus extends StatefulWidget {
+  final Widget child;
+  final FocusNode textFocusNode;
+
+  const _TVTextFieldFocus({required this.child, required this.textFocusNode});
+
+  @override
+  State<_TVTextFieldFocus> createState() => _TVTextFieldFocusState();
+}
+
+class _TVTextFieldFocusState extends State<_TVTextFieldFocus> {
+  final FocusNode _outerFocus = FocusNode();
+  bool _activated = false;
+
+  @override
+  void initState() {
+    super.initState();
+    widget.textFocusNode.addListener(_onTextFocusChange);
+  }
+
+  void _onTextFocusChange() {
+    if (!widget.textFocusNode.hasFocus && _activated) {
+      setState(() => _activated = false);
+      _outerFocus.requestFocus();
+    }
+  }
+
+  @override
+  void dispose() {
+    widget.textFocusNode.removeListener(_onTextFocusChange);
+    _outerFocus.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Focus(
+      focusNode: _outerFocus,
+      onKeyEvent: (node, event) {
+        if (event is KeyDownEvent &&
+            (event.logicalKey == LogicalKeyboardKey.select ||
+                event.logicalKey == LogicalKeyboardKey.enter)) {
+          setState(() => _activated = true);
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            widget.textFocusNode.requestFocus();
+          });
+          return KeyEventResult.handled;
+        }
+        return KeyEventResult.ignored;
+      },
+      child: ListenableBuilder(
+        listenable: _outerFocus,
+        builder: (context, child) => Container(
+          decoration: _outerFocus.hasFocus && !_activated
+              ? BoxDecoration(
+                  border: Border.all(
+                    color: Theme.of(context).colorScheme.primary,
+                    width: 2,
+                  ),
+                  borderRadius: BorderRadius.circular(4),
+                )
+              : null,
+          child: ExcludeFocus(excluding: !_activated, child: widget.child),
+        ),
+      ),
+    );
+  }
+}
+
 class _GeneratedFormState extends State<GeneratedForm> {
   final _formKey = GlobalKey<FormState>();
   Map<String, dynamic> values = {};
@@ -350,6 +420,51 @@ class _GeneratedFormState extends State<GeneratedForm> {
           return TypeAheadField<String>(
             controller: ctrl,
             builder: (context, controller, focusNode) {
+              Widget textField = TextFormField(
+                controller: ctrl,
+                focusNode: focusNode,
+                keyboardType: formItem.textInputType,
+                obscureText: formItem.password,
+                autocorrect: !formItem.password,
+                enableSuggestions: !formItem.password,
+                key: formFieldKey,
+                autovalidateMode: AutovalidateMode.onUserInteraction,
+                onChanged: (value) {
+                  setState(() {
+                    values[formItem.key] = value;
+                    someValueChanged();
+                  });
+                },
+                decoration: InputDecoration(
+                  contentPadding: const .symmetric(
+                    horizontal: 16.0,
+                    vertical: (56.0 - 24.0) / 2.0,
+                  ),
+                  helperText: formItem.label + (formItem.required ? ' *' : ''),
+                  hintText: formItem.hint,
+                ),
+                minLines: formItem.max <= 1 ? null : formItem.max,
+                maxLines: formItem.max <= 1 ? 1 : formItem.max,
+                validator: (value) {
+                  if (formItem.required &&
+                      (value == null || value.trim().isEmpty)) {
+                    return '${formItem.label} ${tr('requiredInBrackets')}';
+                  }
+                  for (final validator in formItem.additionalValidators) {
+                    final String? result = validator(value);
+                    if (result != null) {
+                      return result;
+                    }
+                  }
+                  return null;
+                },
+              );
+              if (context.read<SettingsProvider>().isTv) {
+                textField = _TVTextFieldFocus(
+                  textFocusNode: focusNode,
+                  child: textField,
+                );
+              }
               return ValueListenableBuilder(
                 valueListenable: _textFieldTypeNotifier,
                 builder: (context, textFieldType, child) =>
@@ -359,48 +474,9 @@ class _GeneratedFormState extends State<GeneratedForm> {
                         textFieldType: _textFieldTypeNotifier.value,
                         hasLabelText: false,
                       ),
-                      child: child!,
+                      child: child,
                     ),
-                child: TextFormField(
-                  controller: ctrl,
-                  focusNode: focusNode,
-                  keyboardType: formItem.textInputType,
-                  obscureText: formItem.password,
-                  autocorrect: !formItem.password,
-                  enableSuggestions: !formItem.password,
-                  key: formFieldKey,
-                  autovalidateMode: AutovalidateMode.onUserInteraction,
-                  onChanged: (value) {
-                    setState(() {
-                      values[formItem.key] = value;
-                      someValueChanged();
-                    });
-                  },
-                  decoration: InputDecoration(
-                    contentPadding: const .symmetric(
-                      horizontal: 16.0,
-                      vertical: (56.0 - 24.0) / 2.0,
-                    ),
-                    helperText:
-                        formItem.label + (formItem.required ? ' *' : ''),
-                    hintText: formItem.hint,
-                  ),
-                  minLines: formItem.max <= 1 ? null : formItem.max,
-                  maxLines: formItem.max <= 1 ? 1 : formItem.max,
-                  validator: (value) {
-                    if (formItem.required &&
-                        (value == null || value.trim().isEmpty)) {
-                      return '${formItem.label} ${tr('requiredInBrackets')}';
-                    }
-                    for (final validator in formItem.additionalValidators) {
-                      final String? result = validator(value);
-                      if (result != null) {
-                        return result;
-                      }
-                    }
-                    return null;
-                  },
-                ),
+                child: textField,
               );
             },
             itemBuilder: (context, value) {

@@ -36,13 +36,16 @@ class Codeberg extends AppSource {
   Future<APKDetails> getLatestAPKDetails(
     String standardUrl,
     Map<String, dynamic> additionalSettings,
+  ) async => gh.getLatestAPKDetailsCommon2(standardUrl, additionalSettings, (
+    useTagUrl,
   ) async {
-    return await gh.getLatestAPKDetailsCommon2(standardUrl, additionalSettings, (
-      bool useTagUrl,
-    ) async {
-      return 'https://${hosts[0]}/api/v1/repos${standardUrl.substring('https://${hosts[0]}'.length)}/${useTagUrl ? 'tags' : 'releases'}?per_page=100';
-    }, null);
-  }
+    final standardUri = Uri.parse(standardUrl);
+    final apiPath =
+        "/api/v1/repos${standardUri.path}/${useTagUrl ? "tags" : "releases"}";
+    return standardUri
+        .replace(path: apiPath, queryParameters: {"per_page": "100"})
+        .toString();
+  }, null);
 
   AppNames getAppNames(String standardUrl) {
     String temp = standardUrl.substring(standardUrl.indexOf('://') + 3);
