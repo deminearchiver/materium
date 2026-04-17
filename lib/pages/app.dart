@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:math' as math;
 
 import 'package:collection/collection.dart';
@@ -206,202 +207,161 @@ class _AppPageState extends State<AppPage> {
     required AppsProvider appsProvider,
     required Future<void> Function(String id) onUpdate,
   }) {
+    // if (!kDebugMode && app?.app.hasPendingRepoRename != true) {
+    //   return const SizedBox.shrink();
+    // }
+    // final appValue = app!;
+    // final pendingUrl = kDebugMode
+    //     ? (appValue.app.pendingRepoRenameUrl ??
+    //           "https://github.com/deminearchiver/materium")
+    //     : appValue.app.pendingRepoRenameUrl!;
+
     if (app?.app.hasPendingRepoRename != true) {
       return const SizedBox.shrink();
     }
     final appValue = app!;
     final pendingUrl = appValue.app.pendingRepoRenameUrl!;
-    final colorScheme = ColorScheme.of(context);
-    final textTheme = TextTheme.of(context);
-    return Flex.vertical(
-      mainAxisSize: .min,
-      crossAxisAlignment: .stretch,
-      spacing: 2,
-      children: [
-        Material(
-          shape: const RoundedRectangleBorder(
-            borderRadius: .vertical(
-              top: .circular(16.0),
-              bottom: .circular(4.0),
-            ),
-          ),
-          color: colorScheme.surfaceContainer,
-          child: ConstrainedBox(
-            constraints: const .new(minHeight: 48),
-            child: Padding(
-              padding: const .symmetric(horizontal: 16, vertical: 10),
-              child: Flex.horizontal(
-                spacing: 12,
-                children: [
-                  Icon(
-                    Symbols.info_rounded,
-                    fill: 0.0,
-                    size: 24.0,
-                    color: colorScheme.onSurfaceVariant,
-                  ),
-                  Flexible.tight(
-                    child: Flex.vertical(
-                      mainAxisSize: .min,
-                      crossAxisAlignment: .stretch,
-                      children: [
-                        Text(
-                          tr("repoRenamed"),
-                          style: textTheme.bodyLarge?.copyWith(
-                            fontWeight: .w500,
-                            color: colorScheme.onSurface,
-                          ),
-                        ),
-                        Text(
-                          tr("repoRenamedExplanation"),
-                          style: textTheme.bodyMedium?.copyWith(
-                            color: colorScheme.onSurfaceVariant,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
+
+    final useBlackTheme = context.select<SettingsService, bool>(
+      (settings) => settings.useBlackTheme.value,
+    );
+    final colorTheme = ColorTheme.of(context);
+    final elevationTheme = ElevationTheme.of(context);
+    final shapeTheme = ShapeTheme.of(context);
+    final stateTheme = StateTheme.of(context);
+    final typescaleTheme = TypescaleTheme.of(context);
+    return _SegmentedList(
+      header: _SegmentedListItemData(
+        content: Skeleton.keep(
+          child: ListItemLayout(
+            minHeight: 0.0,
+            padding: const .fromLTRB(16.0, 8.0, 16.0, 8.0),
+            contentPadding: .zero,
+            headline: Text(
+              "Update repository URL",
+              style: typescaleTheme.labelLarge.toTextStyle(
+                color: colorTheme.onSurfaceVariant,
               ),
             ),
           ),
         ),
-        Material(
-          shape: const RoundedRectangleBorder(
-            borderRadius: .all(.circular(4.0)),
+      ),
+      items: [
+        _SegmentedListItemData(
+          visible: true,
+          containerBuilder: (context, isFirst, isLast, child) =>
+              ListItemContainer(isFirst: isFirst, isLast: isLast, child: child),
+          content: ListItemLayout(
+            leading: const Icon(Symbols.drive_file_move_rounded, fill: 1.0),
+            headline: Text(tr("repoRenamed")),
+            supportingText: Text(tr("repoRenamedExplanation")),
           ),
-          color: colorScheme.surfaceContainer,
-          child: ConstrainedBox(
-            constraints: const BoxConstraints(minHeight: 48.0),
-            child: Padding(
-              padding: const EdgeInsets.symmetric(
-                horizontal: 16.0,
-                vertical: 10.0,
+        ),
+        _SegmentedListItemData(
+          containerBuilder: (context, isFirst, isLast, child) =>
+              ListItemContainer(
+                isFirst: isFirst,
+                isLast: isLast,
+                child: ListItemInteraction(
+                  onLongPress: () => _copyText(pendingUrl),
+                  child: child,
+                ),
               ),
-              child: Flex.horizontal(
-                spacing: 12.0,
-                children: [
-                  Icon(
-                    Symbols.link_2_rounded,
-                    size: 24.0,
-                    color: colorScheme.onSurfaceVariant,
-                  ),
-                  Flexible.tight(
-                    child: Flex.vertical(
-                      mainAxisSize: .min,
-                      crossAxisAlignment: .stretch,
-                      children: [
-                        Text(
-                          tr("newUrl"),
-                          style: textTheme.bodyLarge?.copyWith(
-                            fontWeight: .w500,
-                            color: colorScheme.onSurface,
-                          ),
-                        ),
-                        Text(
-                          pendingUrl,
-                          style: textTheme.bodyMedium?.copyWith(
-                            color: colorScheme.onSurfaceVariant,
-                          ),
-                        ),
-                      ],
+          content: ListItemLayout(
+            padding: const .directional(start: 16.0, end: 16.0 - 4.0),
+            trailingPadding: const .symmetric(vertical: 10.0 - 4.0),
+            trailingSpace: 12.0 - 4.0,
+            leading: const Icon(Symbols.link_2_rounded, fill: 1.0),
+            headline: Text(tr("newUrl")),
+            supportingText: Text(pendingUrl),
+            trailing: IconButton(
+              style: .from(
+                containerColor: .resolveWith(
+                  (states) => switch (states) {
+                    ButtonDisabledStates() => null,
+                    _ =>
+                      useBlackTheme
+                          ? colorTheme.primaryContainer
+                          : colorTheme.secondaryContainer,
+                  },
+                ),
+                stateLayerColor: .all(
+                  useBlackTheme
+                      ? colorTheme.onPrimaryContainer
+                      : colorTheme.onSecondaryContainer,
+                ),
+                iconTheme: .resolveWith(
+                  (states) => switch (states) {
+                    ButtonDisabledStates() => null,
+                    _ => .from(
+                      color: useBlackTheme
+                          ? colorTheme.onPrimaryContainer
+                          : colorTheme.onSecondaryContainer,
                     ),
-                  ),
-                ],
+                  },
+                ),
               ),
+              settings: const .new(color: .tonal),
+              onTap: () async {
+                await launchUrlString(pendingUrl, mode: .externalApplication);
+              },
+              icon: const Icon(Symbols.open_in_new_rounded, fill: 0.0),
             ),
           ),
         ),
-        Material(
-          shape: const RoundedRectangleBorder(
-            borderRadius: BorderRadius.vertical(
-              top: .circular(4.0),
-              bottom: .circular(16.0),
-            ),
-          ),
-          color: colorScheme.surfaceContainer,
-          child: ConstrainedBox(
+        _SegmentedListItemData(
+          containerBuilder: (context, isFirst, isLast, child) =>
+              ListItemContainer(isFirst: isFirst, isLast: isLast, child: child),
+          content: ConstrainedBox(
             constraints: const .new(minHeight: 48.0),
             child: Padding(
-              padding: const .symmetric(
-                horizontal: 16.0,
-                // Min tap target has a height of 48dp
-                vertical: 10.0 - 4.0,
-              ),
+              padding: const .symmetric(horizontal: 16.0, vertical: 10.0 - 4.0),
               child: Flex.horizontal(
                 spacing: 12.0,
                 children: [
                   Flexible.tight(
-                    child: OutlinedButton(
-                      style: ButtonStyleLegacy(
-                        backgroundColor: WidgetStateProperty.resolveWith((
-                          states,
-                        ) {
-                          if (states.contains(WidgetState.disabled)) {
-                            return colorScheme.onSurface.withValues(alpha: 0.1);
-                          }
-                          return Colors.transparent;
-                        }),
-                        side: WidgetStatePropertyAll(
-                          BorderSide(
-                            width: 1.0,
-                            strokeAlign: BorderSide.strokeAlignInside,
-                            color: colorScheme.outlineVariant,
-                          ),
-                        ),
-                        elevation: const WidgetStatePropertyAll(0.0),
-                        overlayColor: WidgetStateProperty.resolveWith((states) {
-                          if (states.contains(WidgetState.disabled)) {
-                            return colorScheme.onSurfaceVariant.withAlpha(0);
-                          }
-                          if (states.contains(WidgetState.pressed)) {
-                            return colorScheme.onSurfaceVariant.withValues(
-                              alpha: 0.10,
-                            );
-                          }
-                          if (states.contains(WidgetState.focused)) {
-                            return colorScheme.onSurfaceVariant.withValues(
-                              alpha: 0.10,
-                            );
-                          }
-                          if (states.contains(WidgetState.hovered)) {
-                            return colorScheme.onSurfaceVariant.withValues(
-                              alpha: 0.08,
-                            );
-                          }
-                          return colorScheme.onSurfaceVariant.withAlpha(0);
-                        }),
-                        foregroundColor: WidgetStateProperty.resolveWith((
-                          states,
-                        ) {
-                          if (states.contains(WidgetState.disabled)) {
-                            return colorScheme.onSurface.withValues(
-                              alpha: 0.38,
-                            );
-                          }
-                          return colorScheme.onSurfaceVariant;
-                        }),
-                        textStyle: WidgetStatePropertyAll(textTheme.labelLarge),
+                    child: Button(
+                      style: Button.defaultStyleFrom(
+                        colorTheme: colorTheme,
+                        elevationTheme: elevationTheme,
+                        shapeTheme: shapeTheme,
+                        stateTheme: stateTheme,
+                        typescaleTheme: typescaleTheme,
                       ),
-                      onPressed: () async {
+                      settings: const .new(
+                        size: .small,
+                        shape: .round,
+                        color: .outlined,
+                      ),
+                      onTap: () async {
                         await appsProvider.updatePendingRepoRename(
                           appValue.app.id,
                           null,
                         );
                       },
-                      child: Text(tr("dismiss")),
+                      label: Text(tr("dismiss")),
                     ),
                   ),
                   Flexible.tight(
-                    child: FilledButton.tonal(
-                      style: ButtonStyleLegacy(
-                        elevation: const WidgetStatePropertyAll(0.0),
-                        textStyle: WidgetStatePropertyAll(
-                          textTheme.labelLarge?.copyWith(
-                            fontWeight: FontWeight.w600,
+                    child: Button(
+                      style:
+                          Button.defaultStyleFrom(
+                            colorTheme: colorTheme,
+                            elevationTheme: elevationTheme,
+                            shapeTheme: shapeTheme,
+                            stateTheme: stateTheme,
+                            typescaleTheme: typescaleTheme,
+                          ).mergeWith(
+                            labelTextStyle: .all(
+                              typescaleTheme.labelLargeEmphasized.toTextStyle(),
+                            ),
                           ),
-                        ),
+                      settings: const .new(
+                        size: .small,
+                        shape: .round,
+                        color: .filled,
                       ),
-                      onPressed: () async {
+                      onTap: () async {
                         await appsProvider.acceptRepoRename(
                           appValue.app.id,
                           pendingUrl,
@@ -410,7 +370,7 @@ class _AppPageState extends State<AppPage> {
                           await onUpdate(appValue.app.id);
                         }
                       },
-                      child: Text(tr("updateUrl")),
+                      label: Text(tr("updateUrl")),
                     ),
                   ),
                 ],
@@ -633,15 +593,27 @@ class _AppPageState extends State<AppPage> {
           child: Flex.vertical(
             crossAxisAlignment: .stretch,
             children: [
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
-                child: buildRepoRenameWarning(
-                  app: app,
-                  appsProvider: appsProvider,
-                  onUpdate: getUpdate,
-                ),
+              buildRepoRenameWarning(
+                app: app,
+                appsProvider: appsProvider,
+                onUpdate: getUpdate,
               ),
               _SegmentedList(
+                header: _SegmentedListItemData(
+                  content: Skeleton.keep(
+                    child: ListItemLayout(
+                      minHeight: 0.0,
+                      padding: const .fromLTRB(16.0, 20.0, 16.0, 8.0),
+                      contentPadding: .zero,
+                      headline: Text(
+                        "Info",
+                        style: typescaleTheme.labelLarge.toTextStyle(
+                          color: colorTheme.onSurfaceVariant,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
                 items: [
                   _SegmentedListItemData(
                     visible: aboutText != null,
@@ -660,7 +632,6 @@ class _AppPageState extends State<AppPage> {
                         fill: 1.0,
                       ),
                       overline: Text(tr("about")),
-                      // headline: Text(aboutText ?? ""),
                       headline: MarkdownBody(
                         data: aboutText ?? "",
                         styleSheet: MarkdownStyleSheet(
@@ -2406,10 +2377,12 @@ class _SegmentedListItemState extends State<_SegmentedListItem>
     }
 
     _controller.value = 0.0;
-    _controller.animateTo(
-      1.0,
-      duration: const DurationThemeData.fallback().long2,
-      curve: const EasingThemeData.fallback().standard,
+    unawaited(
+      _controller.animateTo(
+        1.0,
+        duration: const DurationThemeData.fallback().long2,
+        curve: const EasingThemeData.fallback().standard,
+      ),
     );
   }
 
@@ -2434,6 +2407,7 @@ class _SegmentedListItemState extends State<_SegmentedListItem>
   @override
   Widget build(BuildContext context) {
     _update(heightFactor: _heightFactor, margin: _margin);
+
     final Widget content = AnimatedBuilder(
       animation: _controller,
       builder: (context, child) => Opacity(
@@ -2446,6 +2420,7 @@ class _SegmentedListItemState extends State<_SegmentedListItem>
       ),
       child: widget.content,
     );
+
     final Widget container =
         widget.containerBuilder?.call(
           context,
@@ -2459,7 +2434,7 @@ class _SegmentedListItemState extends State<_SegmentedListItem>
       animation: _controller,
       builder: (context, child) => IgnorePointer(
         ignoring: _heightFactor < 1.0,
-        child: Padding(padding: _marginAnimation.value, child: child!),
+        child: Padding(padding: _marginAnimation.value, child: child),
       ),
       child: container,
     );
