@@ -23,12 +23,12 @@ dependencies:
   layout:
     git:
       url: https://github.com/deminearchiver/dart-flutter-packages.git
-      ref: f388ea361c0299ccb6c575b3b0e8c6c43f9d97d2
+      ref: 7892fcb58e9926230620893189509f98b2815656
       path: packages/layout
   material:
     git:
       url: https://github.com/deminearchiver/dart-flutter-packages.git
-      ref: f388ea361c0299ccb6c575b3b0e8c6c43f9d97d2
+      ref: 7892fcb58e9926230620893189509f98b2815656
       path: packages/material
   android_package_installer: # TODO: See if PR will be accepted (dev may not be active), else remove this comment
     git:
@@ -71,7 +71,7 @@ dependencies:
   crypto: ^3.0.7
   bcrypt: ^1.2.0
   app_links: ^7.0.0
-  background_fetch: ^1.6.1
+  background_fetch: ^1.6.2
   flex_color_picker: ^3.8.0
   markdown: ^7.3.1
   flutter_typeahead: ^6.0.0
@@ -106,7 +106,7 @@ dev_dependencies:
   build_runner: ^2.13.1
   json_serializable: ^6.13.1
   freezed: ^3.2.5
-  flutter_gen_runner: ^5.13.0+1
+  flutter_gen_runner: ^5.14.0
   drift_dev: ^2.32.1
   slang_build_runner: ^4.14.0
   fastforge: ^0.6.6

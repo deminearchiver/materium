@@ -73,10 +73,10 @@ extension ScreenCornersDataExtension on ScreenCornersData {
   };
 
   Corners toCorners() => Corners.only(
-    topLeft: .circular(topLeft),
-    topRight: .circular(topRight),
-    bottomLeft: .circular(bottomLeft),
-    bottomRight: .circular(bottomRight),
+    topLeft: .fixed(topLeft),
+    topRight: .fixed(topRight),
+    bottomLeft: .fixed(bottomLeft),
+    bottomRight: .fixed(bottomRight),
   );
 
   CornersBorder toShape({BorderSide side = .none}) => CornersBorder(
@@ -445,7 +445,7 @@ class CornersFilledInputBorder extends InputBorder {
   const CornersFilledInputBorder({
     super.borderSide = .none,
     required this.delegate,
-    this.corners = .none,
+    this.corners = .zero,
   });
 
   final CornersBorderDelegate delegate;

@@ -179,11 +179,11 @@ class ListItemContainer extends StatelessWidget {
       shape: resolvedShape,
       child: CenterOptically(
         enabled: corners != null,
-        corners: corners ?? .none,
+        corners: corners ?? .zero,
         maxOffsets: corners != null ? opticalCenterMaxOffsets : .zero,
         child: _ListItemContainerScope(
           opticalCenterEnabled: corners != null,
-          opticalCenterCorners: corners ?? .none,
+          opticalCenterCorners: corners ?? .zero,
           opticalCenterMaxOffsets: corners != null
               ? opticalCenterMaxOffsets
               : .zero,
@@ -238,8 +238,8 @@ class ListItemContainer extends StatelessWidget {
         ContinuousRectangleBorder(
           :final borderRadius,
         ) => CornersGeometry.fromBorderRadius(borderRadius),
-        StadiumBorder() || CircleBorder() || StarBorder() => .full,
-        LinearBorder() => .none,
+        StadiumBorder() || CircleBorder() || StarBorder() => .circle,
+        LinearBorder() => .zero,
         _ => null,
       };
 }
@@ -248,7 +248,7 @@ class _ListItemContainerScope extends InheritedWidget {
   const _ListItemContainerScope({
     super.key,
     this.opticalCenterEnabled = false,
-    this.opticalCenterCorners = .none,
+    this.opticalCenterCorners = .zero,
     this.opticalCenterMaxOffsets = .zero,
     required super.child,
   });
@@ -290,7 +290,7 @@ extension on _ListItemContainerScope? {
     return constructor(
       key: key,
       enabled: this?.opticalCenterEnabled ?? false,
-      corners: this?.opticalCenterCorners ?? .none,
+      corners: this?.opticalCenterCorners ?? .zero,
       maxOffsets: this?.opticalCenterMaxOffsets ?? .zero,
       textDirection: textDirection,
       child: child,

@@ -1841,7 +1841,7 @@ class _SettingsAppBarRoute<T extends Object?> extends PopupRoute<T> {
     // ),
 
     final viewShape = CornersBorder.rounded(
-      corners: animation.isCompleted ? Corners.none : screenCorners.toCorners(),
+      corners: animation.isCompleted ? .zero : screenCorners.toCorners(),
     );
 
     return AbsorbPointer(
@@ -1949,7 +1949,7 @@ class _SettingsAppBarRoute<T extends Object?> extends PopupRoute<T> {
 
             final shape = ShapeBorder.lerp(
               CornersBorder.rounded(
-                corners: .all(.circular(beginContainerRect.shortestSide / 2.0)),
+                corners: .all(.fixed(beginContainerRect.shortestSide / 2.0)),
               ),
               viewShape,
               _curvedAnimation.value,
@@ -3369,7 +3369,7 @@ class _MaterialDemoViewState extends State<_MaterialDemoView> {
                                       builder: (context, _) => Material(
                                         clipBehavior: .antiAlias,
                                         shape: const CornersBorder.rounded(
-                                          corners: .all(.circular(24.0)),
+                                          corners: .all(.fixed(24.0)),
                                         ),
                                         color: _selected.value && _enabled.value
                                             ? colorTheme.primaryContainer
