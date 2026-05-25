@@ -1502,7 +1502,7 @@ class _SettingsPageState extends State<SettingsPage> {
                             Symbols.moon_stars_rounded,
                             fill: 1.0,
                           ),
-                          label: "Calm",
+                          label: "Neutral",
                         ),
                         DropdownMenuEntry(
                           style: LegacyThemeFactory.createMenuButtonStyle(
@@ -1520,7 +1520,7 @@ class _SettingsPageState extends State<SettingsPage> {
                             Symbols.brush_rounded,
                             fill: 1.0,
                           ),
-                          label: "Pastel",
+                          label: "Soft",
                         ),
                         DropdownMenuEntry(
                           style: LegacyThemeFactory.createMenuButtonStyle(
@@ -1538,7 +1538,7 @@ class _SettingsPageState extends State<SettingsPage> {
                             Symbols.nutrition_rounded,
                             fill: 1.0,
                           ),
-                          label: "Juicy",
+                          label: "Bright",
                         ),
                         DropdownMenuEntry(
                           style: LegacyThemeFactory.createMenuButtonStyle(
@@ -1556,7 +1556,7 @@ class _SettingsPageState extends State<SettingsPage> {
                             Symbols.draw_abstract_rounded,
                             fill: 1.0,
                           ),
-                          label: "Creative",
+                          label: "Bold",
                         ),
                         DropdownMenuEntry(
                           style: LegacyThemeFactory.createMenuButtonStyle(
