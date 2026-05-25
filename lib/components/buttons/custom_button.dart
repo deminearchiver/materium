@@ -474,8 +474,11 @@ class _ButtonContainerState<S extends Object?> extends State<ButtonContainer<S>>
         container: true,
         button: true,
         enabled: !_states.isDisabled,
-        child: _InputPadding(
-          minTapTargetSize: minTapTargetSize,
+        child: SizedTouchTarget(
+          enabled: true,
+          behavior: .wrap,
+          minimumSize: minTapTargetSize,
+          alignment: .center,
           child: ConstrainedBox(
             constraints: constraints,
             child: AnimatedBuilder(
@@ -614,4 +617,11 @@ class _ButtonContentScope extends InheritedWidget {
     assert(result != null);
     return result!;
   }
+}
+
+class _TextStyleTween extends Tween<TextStyle?> {
+  _TextStyleTween({super.begin, super.end});
+
+  @override
+  TextStyle? lerp(double t) => TextStyle.lerp(begin, end, t);
 }
