@@ -590,7 +590,7 @@ class CustomRefreshIndicatorState extends State<CustomRefreshIndicator>
       );
       final Widget containedLoadingIndicator = SizedBox.square(
         dimension: containerSize,
-        child: Material(
+        child: Surface(
           clipBehavior: .antiAlias,
           shape: _shapeTheme.applyCorner(corner: _shapeTheme.cornerFull),
           color: containerColor,

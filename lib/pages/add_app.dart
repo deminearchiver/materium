@@ -1103,7 +1103,7 @@ class AddAppPageState extends State<AddAppPage> {
               SliverToBoxAdapter(
                 child: Padding(
                   padding: const .fromLTRB(8.0, 0.0, 8.0, 8.0),
-                  child: Material(
+                  child: Surface(
                     clipBehavior: .antiAlias,
                     shape: shapeTheme.applyCorner(
                       corner: shapeTheme.cornerLarge,

@@ -513,7 +513,7 @@ class _ButtonContainerState<S extends Object?> extends State<ButtonContainer<S>>
                                   _containerShapeAnimation.value ??
                                       _containerShape,
                                 );
-                        return Material(
+                        return Surface(
                           clipBehavior: .antiAlias,
                           borderOnForeground: false,
                           shape: resolvedContainerShape,

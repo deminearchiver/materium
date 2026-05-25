@@ -1088,7 +1088,7 @@ class _SettingsPageState extends State<SettingsPage> {
         ],
       ),
       const SizedBox(height: 16.0),
-      Material(
+      Surface(
         clipBehavior: .antiAlias,
         shape: shapeTheme.applyCorner(corner: shapeTheme.cornerLarge),
         color: unselectedContainerColor,
@@ -1977,7 +1977,7 @@ class _SettingsPageState extends State<SettingsPage> {
         ),
       ),
       const SizedBox(height: 16.0),
-      Material(
+      Surface(
         clipBehavior: .antiAlias,
         shape: shapeTheme.applyCorner(corner: shapeTheme.cornerLarge),
         color: unselectedContainerColor,
@@ -2325,7 +2325,7 @@ class _SettingsPageState extends State<SettingsPage> {
                             children: [
                               SizedBox.square(
                                 dimension: 40.0,
-                                child: Material(
+                                child: Surface(
                                   shape: shapeTheme.applyCorner(
                                     corner: shapeTheme.cornerFull,
                                   ),

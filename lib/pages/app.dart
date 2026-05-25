@@ -714,7 +714,7 @@ class _AppPageState extends State<AppPage> {
                                     child: SizedBox(
                                       width: 32.0,
                                       height: 40.0,
-                                      child: Material(
+                                      child: Surface(
                                         clipBehavior: .antiAlias,
                                         shape: shapeTheme.applyCorner(
                                           corner: shapeTheme.cornerFull,
@@ -1202,7 +1202,7 @@ class _AppPageState extends State<AppPage> {
         list,
         Padding(
           padding: const .symmetric(horizontal: 8.0),
-          child: Material(
+          child: Surface(
             shape: shapeTheme.applyCorner(corner: shapeTheme.cornerLarge),
             color: colorTheme.surface,
             child: Padding(
@@ -1537,7 +1537,7 @@ class _AppPageState extends State<AppPage> {
           (!isVersionDetectionStandard || trackOnly) &&
           app?.app.installedVersion != null &&
           app?.app.installedVersion == app?.app.latestVersion;
-      return Material(
+      return Surface(
         clipBehavior: .antiAlias,
         shape: shapeTheme.applyCorner(corner: shapeTheme.cornerNone),
         color: backgroundColor,
@@ -2002,7 +2002,7 @@ class _AppPageState extends State<AppPage> {
                                               .surfaceContainerHighest,
                                         ),
                                         child: Skeleton.leaf(
-                                          child: Material(
+                                          child: Surface(
                                             clipBehavior: .antiAlias,
                                             shape: shapeTheme.applyCorner(
                                               corner: shapeTheme.cornerFull,
@@ -2232,7 +2232,7 @@ class _AppPageAppBarState extends State<_AppPageAppBar> {
           collapsedIconFraction,
         );
 
-        return Material(
+        return Surface(
           clipBehavior: .antiAlias,
           shape: shapeTheme.applyCorner(corner: shapeTheme.cornerNone),
           color: color,

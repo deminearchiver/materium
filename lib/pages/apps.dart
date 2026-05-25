@@ -634,7 +634,7 @@ class AppsPageState extends State<AppsPage> with TickerProviderStateMixin {
             ),
           SizedBox(
             height: 56.0,
-            child: Material(
+            child: Surface(
               clipBehavior: .antiAlias,
               shape: shapeTheme.applyCorner(
                 corner: shapeTheme.cornerLarge,
@@ -1674,7 +1674,7 @@ class AppsPageState extends State<AppsPage> with TickerProviderStateMixin {
                           .then((_) => item.icon),
                       builder: (context, snapshot) {
                         final bytes = snapshot.data;
-                        return Material(
+                        return Surface(
                           clipBehavior: .antiAlias,
                           shape: shapeTheme.applyCorner(
                             corner: shapeTheme.cornerFull,
@@ -2275,7 +2275,7 @@ class AppsPageState extends State<AppsPage> with TickerProviderStateMixin {
 
       final Widget toolbar = SizedBox(
         height: height,
-        child: Material(
+        child: Surface(
           clipBehavior: .antiAlias,
           color: useBlackTheme
               ? colorTheme.surfaceContainer
@@ -2373,7 +2373,7 @@ class AppsPageState extends State<AppsPage> with TickerProviderStateMixin {
                 child: Align.center(
                   child: ConstrainedBox(
                     constraints: const BoxConstraints(maxWidth: 560.0),
-                    child: Material(
+                    child: Surface(
                       clipBehavior: .antiAlias,
                       shape: shapeTheme.applyCorner(
                         corner: shapeTheme.cornerExtraLarge,
@@ -2924,7 +2924,7 @@ class _AppChangelogPageState extends State<AppChangelogPage> {
                         ),
                       ),
                     ),
-                    Material(
+                    Surface(
                       shape: shapeTheme.applyCorner(
                         corner: shapeTheme.cornerLarge,
                       ),

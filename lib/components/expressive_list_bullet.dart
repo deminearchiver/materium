@@ -43,7 +43,7 @@ class ExpressiveListBullet extends StatelessWidget {
           child: Skeleton.replace(
             width: size,
             height: size,
-            replacement: Material(
+            replacement: Surface(
               shape: shapeTheme.applyCorner(corner: shapeTheme.cornerFull),
               color: color,
             ),

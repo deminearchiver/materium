@@ -393,7 +393,7 @@ class _ExperimentsPageState extends State<_ExperimentsPage> {
                     child: ColoredBox(
                       color: colorTheme.errorContainer,
                       child: Align.center(
-                        child: Material(
+                        child: Surface(
                           shape: shapeTheme.applyCorner(
                             corner: shapeTheme.cornerFull,
                           ),
@@ -1450,7 +1450,7 @@ class _SettingsAppBarState extends State<SettingsAppBar> {
       builder: (context, shrinkOffset, overlapsContent) => SizedBox(
         width: double.infinity,
         height: extent,
-        child: Material(
+        child: Surface(
           color: colorTheme.surfaceContainer,
           child: Padding(
             padding: EdgeInsets.only(top: padding.top),
@@ -1495,7 +1495,7 @@ class _SettingsAppBarState extends State<SettingsAppBar> {
                     key: _containerKey,
                     child: SizedBox(
                       height: 56.0,
-                      child: Material(
+                      child: Surface(
                         clipBehavior: Clip.antiAlias,
                         color: colorTheme.surfaceContainerHighest,
                         shape: shapeTheme.applyCorner(
@@ -1982,7 +1982,7 @@ class _SettingsAppBarRoute<T extends Object?> extends PopupRoute<T> {
                 child: SizedBox(
                   width: containerRect.width,
                   height: containerRect.height,
-                  child: Material(
+                  child: Surface(
                     clipBehavior: .antiAlias,
                     color: containerColor,
                     shape: shape,
@@ -2016,7 +2016,7 @@ class _SettingsAppBarRoute<T extends Object?> extends PopupRoute<T> {
                                         context,
                                         shrinkOffset,
                                         overlapsContent,
-                                      ) => Material(
+                                      ) => Surface(
                                         clipBehavior: Clip.antiAlias,
                                         color: containerColor,
                                         child: SizedBox(
@@ -2266,7 +2266,7 @@ class _Settings2ViewState extends State<Settings2View> {
                       child: ListItemLayout(
                         leading: SizedBox.square(
                           dimension: 40.0,
-                          child: Material(
+                          child: Surface(
                             clipBehavior: Clip.antiAlias,
                             color: staticColors.blue.colorFixed,
                             shape: shapeTheme.applyCorner(
@@ -2299,7 +2299,7 @@ class _Settings2ViewState extends State<Settings2View> {
                       child: ListItemLayout(
                         leading: SizedBox.square(
                           dimension: 40.0,
-                          child: Material(
+                          child: Surface(
                             clipBehavior: Clip.antiAlias,
                             color: staticColors.yellow.colorFixed,
                             shape: shapeTheme.applyCorner(
@@ -2338,7 +2338,7 @@ class _Settings2ViewState extends State<Settings2View> {
                         child: ListItemLayout(
                           leading: SizedBox.square(
                             dimension: 40.0,
-                            child: Material(
+                            child: Surface(
                               clipBehavior: Clip.antiAlias,
                               color: staticColors.pink.colorFixed,
                               shape: const StadiumBorder(),
@@ -2449,7 +2449,7 @@ class _AboutPageState extends State<AboutPage> with TickerProviderStateMixin {
                       child: AnimatedBuilder(
                         animation: _rotationController,
                         builder: (context, child) {
-                          return Material(
+                          return Surface(
                             clipBehavior: Clip.antiAlias,
                             shape: RoundedPolygonBorder(
                               polygon: MaterialShapes.cookie12Sided
@@ -2910,7 +2910,7 @@ class _MaterialDemoViewState extends State<_MaterialDemoView> {
                                     _enabled,
                                     _selected,
                                   ]),
-                                  builder: (context, _) => Material(
+                                  builder: (context, _) => Surface(
                                     shape: shapeTheme.applyCorner(
                                       corner: shapeTheme.cornerFull,
                                     ),
@@ -3014,7 +3014,7 @@ class _MaterialDemoViewState extends State<_MaterialDemoView> {
                                           _enabled,
                                           _selected,
                                         ]),
-                                        builder: (context, _) => Material(
+                                        builder: (context, _) => Surface(
                                           shape: shapeTheme.applyCorner(
                                             corner: _selected.value
                                                 ? shapeTheme
@@ -3134,7 +3134,7 @@ class _MaterialDemoViewState extends State<_MaterialDemoView> {
                                           _enabled,
                                           _selected,
                                         ]),
-                                        builder: (context, _) => Material(
+                                        builder: (context, _) => Surface(
                                           shape: shapeTheme.applyCorner(
                                             corner: shapeTheme.cornerFull,
                                           ),
@@ -3252,7 +3252,7 @@ class _MaterialDemoViewState extends State<_MaterialDemoView> {
                                           _enabled,
                                           _selected,
                                         ]),
-                                        builder: (context, _) => Material(
+                                        builder: (context, _) => Surface(
                                           shape: shapeTheme.applyCorner(
                                             corner: shapeTheme.cornerFull,
                                           ),
@@ -3355,7 +3355,7 @@ class _MaterialDemoViewState extends State<_MaterialDemoView> {
                                         _enabled,
                                         _selected,
                                       ]),
-                                      builder: (context, _) => Material(
+                                      builder: (context, _) => Surface(
                                         clipBehavior: .antiAlias,
                                         shape: shapeTheme.applyCornerValue(
                                           cornerValue: 24.0,
@@ -3716,7 +3716,7 @@ class _MaterialDemoViewState extends State<_MaterialDemoView> {
                       //       children: [
                       //         SizedBox(
                       //           height: 40.0,
-                      //           child: Material(
+                      //           child: Surface(
                       //             clipBehavior: .antiAlias,
                       //             shape: shapeTheme.applyCorners(
                       //               corners: startCorners,
@@ -3889,7 +3889,7 @@ class _ShapeLibraryViewState extends State<_ShapeLibraryView> {
     final searchBar = SizedBox(
       width: double.infinity,
       height: 56.0,
-      child: Material(
+      child: Surface(
         clipBehavior: Clip.antiAlias,
         shape: shapeTheme.applyCorner(corner: shapeTheme.cornerFull),
         color: colorTheme.surfaceBright,
@@ -4008,7 +4008,7 @@ class _ShapeLibraryViewState extends State<_ShapeLibraryView> {
               minExtent: 4.0 + 56.0 + 16.0,
               maxExtent: 4.0 + 56.0 + 16.0,
               pinned: true,
-              builder: (context, shrinkOffset, overlapsContent) => Material(
+              builder: (context, shrinkOffset, overlapsContent) => Surface(
                 clipBehavior: Clip.none,
                 color: colorTheme.surfaceContainer,
                 shape: shapeTheme.applyCorner(corner: shapeTheme.cornerNone),
@@ -4038,7 +4038,7 @@ class _ShapeLibraryViewState extends State<_ShapeLibraryView> {
             SliverToBoxAdapter(
               child: Padding(
                 padding: const EdgeInsets.fromLTRB(16.0, 0.0, 16.0, 16.0),
-                child: Material(
+                child: Surface(
                   clipBehavior: Clip.antiAlias,
                   shape: shapeTheme.applyCorner(corner: shapeTheme.cornerFull),
                   color: colorTheme.surfaceContainerLow,
@@ -4133,7 +4133,7 @@ class _ShapeLibraryViewState extends State<_ShapeLibraryView> {
                       children: [
                         AspectRatio(
                           aspectRatio: 1.0,
-                          child: Material(
+                          child: Surface(
                             clipBehavior: Clip.antiAlias,
                             shape: shape,
                             color: colorTheme.primary,
@@ -4180,7 +4180,7 @@ class _ShapeLibraryViewState extends State<_ShapeLibraryView> {
                                       children: [
                                         AspectRatio(
                                           aspectRatio: 1.0,
-                                          child: Material(
+                                          child: Surface(
                                             clipBehavior: Clip.antiAlias,
                                             shape: shape,
                                             color: colorTheme.primary,
