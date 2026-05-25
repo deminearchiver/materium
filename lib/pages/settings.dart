@@ -2157,188 +2157,188 @@ class _SettingsPageState extends State<SettingsPage> {
                 padding: const .symmetric(horizontal: 8.0),
                 sliver: SliverList.list(
                   children: [
-                    Padding(
-                      padding: .fromLTRB(16.0, 20.0, 16.0, 8.0),
-                      child: Text(
-                        "Back up & sync",
-                        style: typescaleTheme.labelLarge.toTextStyle(
-                          color: colorTheme.onSurfaceVariant,
-                        ),
-                      ),
-                    ),
-                    ListItemContainer(
-                      isFirst: true,
-                      child: ListItemInteraction(
-                        onTap: () async {
-                          await Fluttertoast.cancel();
-                          await Fluttertoast.showToast(
-                            msg: "Coming soon!",
-                            toastLength: .LENGTH_SHORT,
-                          );
-                        },
-                        child: ListItemLayout(
-                          leading: CustomListItemLeading.fromExtendedColor(
-                            extendedColor: staticColors.green,
-                            pairing: unselectedPairing,
-                            containerShape: RoundedPolygonBorder(
-                              polygon: MaterialShapes.pill,
-                            ),
-                            child: const Icon(
-                              Symbols.compare_arrows_rounded,
-                              fill: 1.0,
-                            ),
-                          ),
-                          headline: Text("Import / export"),
-                          supportingText: Text("Back up or restore app data"),
-                          trailing: const Icon(
-                            Symbols.keyboard_arrow_right_rounded,
-                          ),
-                        ),
-                      ),
-                    ),
-                    verticalSpace,
-                    ListItemContainer(
-                      isLast: true,
-                      child: ListItemInteraction(
-                        onTap: () async {
-                          await Fluttertoast.cancel();
-                          await Fluttertoast.showToast(
-                            msg: "Coming soon!",
-                            toastLength: .LENGTH_SHORT,
-                          );
-                        },
-                        child: ListItemLayout(
-                          leading: CustomListItemLeading.fromExtendedColor(
-                            extendedColor: staticColors.green,
-                            pairing: unselectedPairing,
-                            containerShape: RoundedPolygonBorder(
-                              polygon: MaterialShapes.cookie9Sided,
-                            ),
-                            child: const Icon(Symbols.sync_rounded, fill: 1.0),
-                          ),
-                          headline: Text("Sync"),
-                          supportingText: Text("Persist data between devices"),
-                          trailing: const Icon(
-                            Symbols.keyboard_arrow_right_rounded,
-                          ),
-                        ),
-                      ),
-                    ),
-                    Padding(
-                      padding: .fromLTRB(16.0, 20.0, 16.0, 8.0),
-                      child: Text(
-                        "Appearance",
-                        style: typescaleTheme.labelLarge.toTextStyle(
-                          color: colorTheme.onSurfaceVariant,
-                        ),
-                      ),
-                    ),
-                    ListItemContainer(
-                      isFirst: true,
-                      child: ListItemInteraction(
-                        onTap: () async {
-                          await Fluttertoast.cancel();
-                          await Fluttertoast.showToast(
-                            msg: "Coming soon!",
-                            toastLength: .LENGTH_SHORT,
-                          );
-                        },
-                        child: ListItemLayout(
-                          leading: CustomListItemLeading.fromExtendedColor(
-                            extendedColor: staticColors.orange,
-                            pairing: unselectedPairing,
-                            containerShape: RoundedPolygonBorder(
-                              polygon: MaterialShapes.slanted,
-                            ),
-                            child: const Icon(
-                              Symbols.translate_rounded,
-                              fill: 1.0,
-                            ),
-                          ),
-                          headline: Text("Language"),
-                          supportingText: Text("Follow system"),
-                          // supportingText: Text("Static (Creative)"),
-                          trailing: const Icon(
-                            Symbols.keyboard_arrow_right_rounded,
-                          ),
-                        ),
-                      ),
-                    ),
-                    verticalSpace,
-                    ListItemContainer(
-                      child: ListItemInteraction(
-                        onTap: () async {
-                          await Fluttertoast.cancel();
-                          await Fluttertoast.showToast(
-                            msg: "Coming soon!",
-                            toastLength: .LENGTH_SHORT,
-                          );
-                        },
-                        child: ListItemLayout(
-                          leading: CustomListItemLeading.fromExtendedColor(
-                            extendedColor: staticColors.orange,
-                            pairing: unselectedPairing,
-                            containerShape: RoundedPolygonBorder(
-                              polygon: MaterialShapes.sunny,
-                            ),
-                            child: const Icon(
-                              Symbols.brightness_5_rounded,
-                              fill: 1.0,
-                            ),
-                          ),
-                          headline: Text("Theme"),
-                          supportingText: Text("Follow system"),
-                          // supportingText: Text("Static (Creative)"),
-                          trailing: const Icon(
-                            Symbols.keyboard_arrow_right_rounded,
-                          ),
-                        ),
-                      ),
-                    ),
-                    verticalSpace,
-                    ListItemContainer(
-                      isLast: true,
-                      child: ListItemInteraction(
-                        onTap: () async {
-                          await Fluttertoast.cancel();
-                          await Fluttertoast.showToast(
-                            msg: "Coming soon!",
-                            toastLength: .LENGTH_SHORT,
-                          );
-                        },
-                        child: ListItemLayout(
-                          leading: CustomListItemLeading.fromExtendedColor(
-                            extendedColor: staticColors.orange,
-                            pairing: unselectedPairing,
-                            containerShape: RoundedPolygonBorder(
-                              polygon: MaterialShapes.clover8Leaf,
-                            ),
-                            child: const Icon(
-                              Symbols.palette_rounded,
-                              fill: 1.0,
-                            ),
-                          ),
-                          headline: Text("Color scheme"),
-                          supportingText: Text("Dynamic (creative)"),
-                          // supportingText: Text("Static (Creative)"),
-                          trailing: Flex.horizontal(
-                            children: [
-                              SizedBox.square(
-                                dimension: 40.0,
-                                child: Surface(
-                                  shape: shapeTheme.applyCorner(
-                                    corner: shapeTheme.cornerFull,
-                                  ),
-                                  color: colorTheme.primaryFixed,
-                                ),
-                              ),
-                              const SizedBox(width: 12.0),
-                              const Icon(Symbols.keyboard_arrow_right_rounded),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
+                    // Padding(
+                    //   padding: .fromLTRB(16.0, 20.0, 16.0, 8.0),
+                    //   child: Text(
+                    //     "Back up & sync",
+                    //     style: typescaleTheme.labelLarge.toTextStyle(
+                    //       color: colorTheme.onSurfaceVariant,
+                    //     ),
+                    //   ),
+                    // ),
+                    // ListItemContainer(
+                    //   isFirst: true,
+                    //   child: ListItemInteraction(
+                    //     onTap: () async {
+                    //       await Fluttertoast.cancel();
+                    //       await Fluttertoast.showToast(
+                    //         msg: "Coming soon!",
+                    //         toastLength: .LENGTH_SHORT,
+                    //       );
+                    //     },
+                    //     child: ListItemLayout(
+                    //       leading: CustomListItemLeading.fromExtendedColor(
+                    //         extendedColor: staticColors.green,
+                    //         pairing: unselectedPairing,
+                    //         containerShape: RoundedPolygonBorder(
+                    //           polygon: MaterialShapes.pill,
+                    //         ),
+                    //         child: const Icon(
+                    //           Symbols.compare_arrows_rounded,
+                    //           fill: 1.0,
+                    //         ),
+                    //       ),
+                    //       headline: Text("Import / export"),
+                    //       supportingText: Text("Back up or restore app data"),
+                    //       trailing: const Icon(
+                    //         Symbols.keyboard_arrow_right_rounded,
+                    //       ),
+                    //     ),
+                    //   ),
+                    // ),
+                    // verticalSpace,
+                    // ListItemContainer(
+                    //   isLast: true,
+                    //   child: ListItemInteraction(
+                    //     onTap: () async {
+                    //       await Fluttertoast.cancel();
+                    //       await Fluttertoast.showToast(
+                    //         msg: "Coming soon!",
+                    //         toastLength: .LENGTH_SHORT,
+                    //       );
+                    //     },
+                    //     child: ListItemLayout(
+                    //       leading: CustomListItemLeading.fromExtendedColor(
+                    //         extendedColor: staticColors.green,
+                    //         pairing: unselectedPairing,
+                    //         containerShape: RoundedPolygonBorder(
+                    //           polygon: MaterialShapes.cookie9Sided,
+                    //         ),
+                    //         child: const Icon(Symbols.sync_rounded, fill: 1.0),
+                    //       ),
+                    //       headline: Text("Sync"),
+                    //       supportingText: Text("Persist data between devices"),
+                    //       trailing: const Icon(
+                    //         Symbols.keyboard_arrow_right_rounded,
+                    //       ),
+                    //     ),
+                    //   ),
+                    // ),
+                    // Padding(
+                    //   padding: .fromLTRB(16.0, 20.0, 16.0, 8.0),
+                    //   child: Text(
+                    //     "Appearance",
+                    //     style: typescaleTheme.labelLarge.toTextStyle(
+                    //       color: colorTheme.onSurfaceVariant,
+                    //     ),
+                    //   ),
+                    // ),
+                    // ListItemContainer(
+                    //   isFirst: true,
+                    //   child: ListItemInteraction(
+                    //     onTap: () async {
+                    //       await Fluttertoast.cancel();
+                    //       await Fluttertoast.showToast(
+                    //         msg: "Coming soon!",
+                    //         toastLength: .LENGTH_SHORT,
+                    //       );
+                    //     },
+                    //     child: ListItemLayout(
+                    //       leading: CustomListItemLeading.fromExtendedColor(
+                    //         extendedColor: staticColors.orange,
+                    //         pairing: unselectedPairing,
+                    //         containerShape: RoundedPolygonBorder(
+                    //           polygon: MaterialShapes.slanted,
+                    //         ),
+                    //         child: const Icon(
+                    //           Symbols.translate_rounded,
+                    //           fill: 1.0,
+                    //         ),
+                    //       ),
+                    //       headline: Text("Language"),
+                    //       supportingText: Text("Follow system"),
+                    //       // supportingText: Text("Static (Creative)"),
+                    //       trailing: const Icon(
+                    //         Symbols.keyboard_arrow_right_rounded,
+                    //       ),
+                    //     ),
+                    //   ),
+                    // ),
+                    // verticalSpace,
+                    // ListItemContainer(
+                    //   child: ListItemInteraction(
+                    //     onTap: () async {
+                    //       await Fluttertoast.cancel();
+                    //       await Fluttertoast.showToast(
+                    //         msg: "Coming soon!",
+                    //         toastLength: .LENGTH_SHORT,
+                    //       );
+                    //     },
+                    //     child: ListItemLayout(
+                    //       leading: CustomListItemLeading.fromExtendedColor(
+                    //         extendedColor: staticColors.orange,
+                    //         pairing: unselectedPairing,
+                    //         containerShape: RoundedPolygonBorder(
+                    //           polygon: MaterialShapes.sunny,
+                    //         ),
+                    //         child: const Icon(
+                    //           Symbols.brightness_5_rounded,
+                    //           fill: 1.0,
+                    //         ),
+                    //       ),
+                    //       headline: Text("Theme"),
+                    //       supportingText: Text("Follow system"),
+                    //       // supportingText: Text("Static (Creative)"),
+                    //       trailing: const Icon(
+                    //         Symbols.keyboard_arrow_right_rounded,
+                    //       ),
+                    //     ),
+                    //   ),
+                    // ),
+                    // verticalSpace,
+                    // ListItemContainer(
+                    //   isLast: true,
+                    //   child: ListItemInteraction(
+                    //     onTap: () async {
+                    //       await Fluttertoast.cancel();
+                    //       await Fluttertoast.showToast(
+                    //         msg: "Coming soon!",
+                    //         toastLength: .LENGTH_SHORT,
+                    //       );
+                    //     },
+                    //     child: ListItemLayout(
+                    //       leading: CustomListItemLeading.fromExtendedColor(
+                    //         extendedColor: staticColors.orange,
+                    //         pairing: unselectedPairing,
+                    //         containerShape: RoundedPolygonBorder(
+                    //           polygon: MaterialShapes.clover8Leaf,
+                    //         ),
+                    //         child: const Icon(
+                    //           Symbols.palette_rounded,
+                    //           fill: 1.0,
+                    //         ),
+                    //       ),
+                    //       headline: Text("Color scheme"),
+                    //       supportingText: Text("Dynamic (creative)"),
+                    //       // supportingText: Text("Static (Creative)"),
+                    //       trailing: Flex.horizontal(
+                    //         children: [
+                    //           SizedBox.square(
+                    //             dimension: 40.0,
+                    //             child: Surface(
+                    //               shape: shapeTheme.applyCorner(
+                    //                 corner: shapeTheme.cornerFull,
+                    //               ),
+                    //               color: colorTheme.primaryFixed,
+                    //             ),
+                    //           ),
+                    //           const SizedBox(width: 12.0),
+                    //           const Icon(Symbols.keyboard_arrow_right_rounded),
+                    //         ],
+                    //       ),
+                    //     ),
+                    //   ),
+                    // ),
                     Padding(
                       padding: .fromLTRB(16.0, 20.0, 16.0, 8.0),
                       child: Text(
@@ -2348,35 +2348,35 @@ class _SettingsPageState extends State<SettingsPage> {
                         ),
                       ),
                     ),
-                    ListItemContainer(
-                      isFirst: true,
-                      child: ListItemInteraction(
-                        onTap: () async {
-                          await Fluttertoast.cancel();
-                          await Fluttertoast.showToast(
-                            msg: "Coming soon!",
-                            toastLength: .LENGTH_SHORT,
-                          );
-                        },
-                        child: ListItemLayout(
-                          leading: CustomListItemLeading.fromExtendedColor(
-                            extendedColor: staticColors.purple,
-                            pairing: unselectedPairing,
-                            containerShape: RoundedPolygonBorder(
-                              polygon: MaterialShapes.circle,
-                            ),
-                            child: const Icon(Symbols.info_rounded, fill: 1.0),
-                          ),
-                          headline: Text("About Materium"),
-                          supportingText: Text("Dynamic"),
-                          // supportingText: Text("Static (Creative)"),
-                          trailing: const Icon(
-                            Symbols.keyboard_arrow_right_rounded,
-                          ),
-                        ),
-                      ),
-                    ),
-                    verticalSpace,
+                    // ListItemContainer(
+                    //   isFirst: true,
+                    //   child: ListItemInteraction(
+                    //     onTap: () async {
+                    //       await Fluttertoast.cancel();
+                    //       await Fluttertoast.showToast(
+                    //         msg: "Coming soon!",
+                    //         toastLength: .LENGTH_SHORT,
+                    //       );
+                    //     },
+                    //     child: ListItemLayout(
+                    //       leading: CustomListItemLeading.fromExtendedColor(
+                    //         extendedColor: staticColors.purple,
+                    //         pairing: unselectedPairing,
+                    //         containerShape: RoundedPolygonBorder(
+                    //           polygon: MaterialShapes.circle,
+                    //         ),
+                    //         child: const Icon(Symbols.info_rounded, fill: 1.0),
+                    //       ),
+                    //       headline: Text("About Materium"),
+                    //       supportingText: Text("Dynamic"),
+                    //       // supportingText: Text("Static (Creative)"),
+                    //       trailing: const Icon(
+                    //         Symbols.keyboard_arrow_right_rounded,
+                    //       ),
+                    //     ),
+                    //   ),
+                    // ),
+                    // verticalSpace,
                     ValueListenableBuilder(
                       key: const ValueKey("developerMode"),
                       valueListenable: _settings.developerMode,
@@ -2391,6 +2391,7 @@ class _SettingsPageState extends State<SettingsPage> {
                         return ListItemTheme.withData(
                           data: unselectedListItemTheme,
                           child: ListItemContainer(
+                            isFirst: true,
                             isLast: true,
                             child: IntrinsicHeight(
                               child: Flex.horizontal(
