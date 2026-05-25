@@ -199,7 +199,19 @@ class _ObtainiumState extends State<Obtainium> {
   Widget _buildSystemThemes(BuildContext context, Widget child) =>
       CombiningBuilder(
         useOuterContext: true,
-        builders: [_buildColorThemes, _buildSpringTheme, _buildTypescaleTheme],
+        builders: [
+          _buildColorThemes,
+          _buildSpringTheme,
+          _buildTypescaleTheme,
+          // (context, child) => MeasurementTheme.mergeWithData(
+          //   data: const .from(space100: 8.0),
+          //   child: child,
+          // ),
+          // (context, child) => ShapeTheme.mergeWithData(
+          //   data: const .from(cornerFamily: .rounded),
+          //   child: child,
+          // ),
+        ],
         child: child,
       );
 
@@ -207,9 +219,7 @@ class _ObtainiumState extends State<Obtainium> {
     final useBlackTheme = context.select<SettingsService, bool>(
       (settings) => settings.useBlackTheme.value,
     );
-
     final colorTheme = ColorTheme.of(context);
-
     return LoadingIndicatorTheme.mergeWithData(
       data: .from(
         indicatorColor: useBlackTheme ? colorTheme.primary : null,
@@ -230,7 +240,6 @@ class _ObtainiumState extends State<Obtainium> {
             final shapeTheme = ShapeTheme.of(context);
             final stateTheme = StateTheme.of(context);
             final typescaleTheme = TypescaleTheme.of(context);
-
             final legacyTheme = LegacyThemeFactory.createTheme(
               colorTheme: colorTheme,
               elevationTheme: elevationTheme,
@@ -241,7 +250,6 @@ class _ObtainiumState extends State<Obtainium> {
                   ? colorTheme.surface
                   : colorTheme.surfaceContainer,
             );
-
             return Theme(data: legacyTheme, child: child!);
           }
         },
@@ -264,7 +272,7 @@ class _ObtainiumState extends State<Obtainium> {
     final typescaleTheme = TypescaleTheme.of(context);
     return DefaultTextGeometry(
       style: typescaleTheme.bodyLarge.toTextStyle(color: colorTheme.onSurface),
-      child: child,
+      child: TouchGroup(child: child),
     );
   }
 
@@ -408,11 +416,9 @@ class _ObtainiumState extends State<Obtainium> {
     });
 
     final appBuilder = Builder(builder: _buildApp);
-
     return WithForegroundTask(child: _buildThemes(context, appBuilder));
   }
 
-  // static const _platform = DynamicSchemePlatform.phone;
   static const _specVersion = DynamicSchemeSpecVersion.spec2026;
   static const _typography = TypographyDefaults.material3Expressive2026;
 }
