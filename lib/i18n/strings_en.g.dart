@@ -55,15 +55,15 @@ class Translations with BaseTranslations<AppLocale, Translations> {
   /// en: 'Materium'
   String get materium => 'Materium';
 
-  late final TranslationsLicensesPageEn licensesPage =
-      TranslationsLicensesPageEn.internal(_root);
-  late final TranslationsSettingsPageEn settingsPage =
-      TranslationsSettingsPageEn.internal(_root);
+  late final Translations$licensesPage$en licensesPage =
+      Translations$licensesPage$en.internal(_root);
+  late final Translations$settingsPage$en settingsPage =
+      Translations$settingsPage$en.internal(_root);
 }
 
 // Path: licensesPage
-class TranslationsLicensesPageEn {
-  TranslationsLicensesPageEn.internal(this._root);
+class Translations$licensesPage$en {
+  Translations$licensesPage$en.internal(this._root);
 
   final Translations _root; // ignore: unused_field
 
@@ -83,51 +83,52 @@ class TranslationsLicensesPageEn {
 }
 
 // Path: settingsPage
-class TranslationsSettingsPageEn {
-  TranslationsSettingsPageEn.internal(this._root);
+class Translations$settingsPage$en {
+  Translations$settingsPage$en.internal(this._root);
 
   final Translations _root; // ignore: unused_field
 
   // Translations
-  late final TranslationsSettingsPageSectionsEn sections =
-      TranslationsSettingsPageSectionsEn.internal(_root);
-  late final TranslationsSettingsPageItemsEn items =
-      TranslationsSettingsPageItemsEn.internal(_root);
+  late final Translations$settingsPage$sections$en sections =
+      Translations$settingsPage$sections$en.internal(_root);
+  late final Translations$settingsPage$items$en items =
+      Translations$settingsPage$items$en.internal(_root);
 }
 
 // Path: settingsPage.sections
-class TranslationsSettingsPageSectionsEn {
-  TranslationsSettingsPageSectionsEn.internal(this._root);
+class Translations$settingsPage$sections$en {
+  Translations$settingsPage$sections$en.internal(this._root);
 
   final Translations _root; // ignore: unused_field
 
   // Translations
-  late final TranslationsSettingsPageSectionsOtherEn other =
-      TranslationsSettingsPageSectionsOtherEn.internal(_root);
-  late final TranslationsSettingsPageSectionsTroubleshootingEn troubleshooting =
-      TranslationsSettingsPageSectionsTroubleshootingEn.internal(_root);
+  late final Translations$settingsPage$sections$other$en other =
+      Translations$settingsPage$sections$other$en.internal(_root);
+  late final Translations$settingsPage$sections$troubleshooting$en
+  troubleshooting =
+      Translations$settingsPage$sections$troubleshooting$en.internal(_root);
 }
 
 // Path: settingsPage.items
-class TranslationsSettingsPageItemsEn {
-  TranslationsSettingsPageItemsEn.internal(this._root);
+class Translations$settingsPage$items$en {
+  Translations$settingsPage$items$en.internal(this._root);
 
   final Translations _root; // ignore: unused_field
 
   // Translations
-  late final TranslationsSettingsPageItemsLicensesEn licenses =
-      TranslationsSettingsPageItemsLicensesEn.internal(_root);
-  late final TranslationsSettingsPageItemsAboutEn about =
-      TranslationsSettingsPageItemsAboutEn.internal(_root);
-  late final TranslationsSettingsPageItemsHelpEn help =
-      TranslationsSettingsPageItemsHelpEn.internal(_root);
-  late final TranslationsSettingsPageItemsDeveloperModeEn developerMode =
-      TranslationsSettingsPageItemsDeveloperModeEn.internal(_root);
+  late final Translations$settingsPage$items$licenses$en licenses =
+      Translations$settingsPage$items$licenses$en.internal(_root);
+  late final Translations$settingsPage$items$about$en about =
+      Translations$settingsPage$items$about$en.internal(_root);
+  late final Translations$settingsPage$items$help$en help =
+      Translations$settingsPage$items$help$en.internal(_root);
+  late final Translations$settingsPage$items$developerMode$en developerMode =
+      Translations$settingsPage$items$developerMode$en.internal(_root);
 }
 
 // Path: settingsPage.sections.other
-class TranslationsSettingsPageSectionsOtherEn {
-  TranslationsSettingsPageSectionsOtherEn.internal(this._root);
+class Translations$settingsPage$sections$other$en {
+  Translations$settingsPage$sections$other$en.internal(this._root);
 
   final Translations _root; // ignore: unused_field
 
@@ -138,8 +139,8 @@ class TranslationsSettingsPageSectionsOtherEn {
 }
 
 // Path: settingsPage.sections.troubleshooting
-class TranslationsSettingsPageSectionsTroubleshootingEn {
-  TranslationsSettingsPageSectionsTroubleshootingEn.internal(this._root);
+class Translations$settingsPage$sections$troubleshooting$en {
+  Translations$settingsPage$sections$troubleshooting$en.internal(this._root);
 
   final Translations _root; // ignore: unused_field
 
@@ -150,8 +151,8 @@ class TranslationsSettingsPageSectionsTroubleshootingEn {
 }
 
 // Path: settingsPage.items.licenses
-class TranslationsSettingsPageItemsLicensesEn {
-  TranslationsSettingsPageItemsLicensesEn.internal(this._root);
+class Translations$settingsPage$items$licenses$en {
+  Translations$settingsPage$items$licenses$en.internal(this._root);
 
   final Translations _root; // ignore: unused_field
 
@@ -165,8 +166,8 @@ class TranslationsSettingsPageItemsLicensesEn {
 }
 
 // Path: settingsPage.items.about
-class TranslationsSettingsPageItemsAboutEn {
-  TranslationsSettingsPageItemsAboutEn.internal(this._root);
+class Translations$settingsPage$items$about$en {
+  Translations$settingsPage$items$about$en.internal(this._root);
 
   final Translations _root; // ignore: unused_field
 
@@ -180,8 +181,8 @@ class TranslationsSettingsPageItemsAboutEn {
 }
 
 // Path: settingsPage.items.help
-class TranslationsSettingsPageItemsHelpEn {
-  TranslationsSettingsPageItemsHelpEn.internal(this._root);
+class Translations$settingsPage$items$help$en {
+  Translations$settingsPage$items$help$en.internal(this._root);
 
   final Translations _root; // ignore: unused_field
 
@@ -195,8 +196,8 @@ class TranslationsSettingsPageItemsHelpEn {
 }
 
 // Path: settingsPage.items.developerMode
-class TranslationsSettingsPageItemsDeveloperModeEn {
-  TranslationsSettingsPageItemsDeveloperModeEn.internal(this._root);
+class Translations$settingsPage$items$developerMode$en {
+  Translations$settingsPage$items$developerMode$en.internal(this._root);
 
   final Translations _root; // ignore: unused_field
 
