@@ -1496,12 +1496,10 @@ class AppsPageState extends State<AppsPage> with TickerProviderStateMixin {
                 leading: ExcludeFocus(
                   child: SizedBox.square(
                     dimension: 40.0,
-                    child: FutureBuilder(
-                      future: appsProvider
-                          .updateAppIcon(item.app.id)
-                          .then((_) => item.icon),
-                      builder: (context, snapshot) {
-                        final bytes = snapshot.data;
+                    child: _AppIconBuilder(
+                      appsProvider: appsProvider,
+                      appId: item.app.id,
+                      builder: (context, bytes, child) {
                         return Surface(
                           clipBehavior: .antiAlias,
                           shape: shapeTheme.applyCorner(
@@ -2582,24 +2580,32 @@ class AppsPageState extends State<AppsPage> with TickerProviderStateMixin {
   }
 }
 
-class AppIconWidget extends StatefulWidget {
-  final String appId;
-  final bool installed;
-  final AppsProvider appsProvider;
+typedef _AppIconWidgetBuilder =
+    Widget Function(BuildContext context, Uint8List? bytes, Widget? child);
 
-  const AppIconWidget({
+class _AppIconBuilder extends StatefulWidget {
+  const _AppIconBuilder({
     super.key,
-    required this.appId,
-    required this.installed,
     required this.appsProvider,
+    required this.appId,
+    required this.builder,
+    this.child,
   });
 
+  final AppsProvider appsProvider;
+
+  final String appId;
+
+  final _AppIconWidgetBuilder builder;
+
+  final Widget? child;
+
   @override
-  State<AppIconWidget> createState() => _AppIconWidgetState();
+  State<_AppIconBuilder> createState() => _AppIconBuilderState();
 }
 
-class _AppIconWidgetState extends State<AppIconWidget> {
-  late final Future<void> _iconFuture;
+class _AppIconBuilderState extends State<_AppIconBuilder> {
+  late Future<void> _iconFuture;
 
   @override
   void initState() {
@@ -2608,52 +2614,71 @@ class _AppIconWidgetState extends State<AppIconWidget> {
   }
 
   @override
+  Widget build(BuildContext context) => FutureBuilder(
+    future: _iconFuture,
+    builder: (context, snapshot) => widget.builder(
+      context,
+      widget.appsProvider.apps[widget.appId]?.icon,
+      widget.child,
+    ),
+  );
+}
+
+class AppIconWidget extends StatelessWidget {
+  const AppIconWidget({
+    super.key,
+    required this.appId,
+    required this.installed,
+    required this.appsProvider,
+  });
+
+  final String appId;
+  final bool installed;
+  final AppsProvider appsProvider;
+
+  @override
   Widget build(BuildContext context) {
     return InkWell(
-      child: FutureBuilder(
-        future: _iconFuture,
-        builder: (ctx, val) {
-          var icon = widget.appsProvider.apps[widget.appId]?.icon;
+      child: _AppIconBuilder(
+        appsProvider: appsProvider,
+        appId: appId,
+        builder: (context, icon, child) {
           return icon != null
               ? Image.memory(
                   icon,
                   gaplessPlayback: true,
-                  opacity: AlwaysStoppedAnimation(widget.installed ? 1 : 0.6),
+                  opacity: AlwaysStoppedAnimation(installed ? 1 : 0.6),
                 )
-              : Row(
-                  mainAxisSize: MainAxisSize.min,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Transform(
-                      alignment: Alignment.center,
-                      transform: Matrix4.rotationZ(0.31),
-                      child: Padding(
-                        padding: const EdgeInsets.all(15),
-                        child: Image(
-                          image: const AssetImage(
-                            'assets/graphics/icon_small.png',
-                          ),
-                          color: Theme.of(context).brightness == Brightness.dark
-                              ? Colors.white.withOpacity(0.4)
-                              : Colors.white.withOpacity(0.3),
-                          colorBlendMode: BlendMode.modulate,
-                          gaplessPlayback: true,
+              : Align.center(
+                  child: Transform(
+                    alignment: Alignment.center,
+                    transform: Matrix4.rotationZ(0.31),
+                    child: Padding(
+                      padding: const EdgeInsets.all(15),
+                      child: Image(
+                        image: const AssetImage(
+                          'assets/graphics/icon_small.png',
                         ),
+                        color: Theme.brightnessOf(context) == .dark
+                            ? Colors.white.withValues(alpha: 0.4)
+                            : Colors.white.withValues(alpha: 0.3),
+                        colorBlendMode: .modulate,
+                        gaplessPlayback: true,
                       ),
                     ),
-                  ],
+                  ),
                 );
         },
       ),
       onDoubleTap: () {
-        pm.openApp(widget.appId);
+        pm.openApp(appId);
       },
       onLongPress: () {
         Navigator.push(
           context,
           MaterialPageRoute(
             builder: (context) =>
-                AppPage(appId: widget.appId, showOppositeOfPreferredView: true),
+                AppPage(appId: appId, showOppositeOfPreferredView: true),
           ),
         );
       },
