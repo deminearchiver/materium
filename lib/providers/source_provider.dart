@@ -22,6 +22,7 @@ import 'package:materium/app_sources/fdroidrepo.dart';
 import 'package:materium/app_sources/github.dart';
 import 'package:materium/app_sources/gitlab.dart';
 import 'package:materium/app_sources/huaweiappgallery.dart';
+import 'package:materium/app_sources/itchio.dart';
 import 'package:materium/app_sources/izzyondroid.dart';
 import 'package:materium/app_sources/html.dart';
 import 'package:materium/app_sources/jenkins.dart';
@@ -653,6 +654,7 @@ abstract class AppSource {
   List<String> excludeCommonSettingKeys = [];
   bool urlsAlwaysHaveExtension = false;
   bool allowIncludeZips = false;
+  bool allowIncludeTarballs = false;
 
   AppSource() {
     name = runtimeType.toString();
@@ -885,6 +887,30 @@ abstract class AppSource {
       ]);
     }
 
+    if (allowIncludeTarballs) {
+      moreConditionalItems.addAll([
+        [
+          GeneratedFormSwitch(
+            'includeTarballs',
+            label: tr('includeTarballs'),
+            defaultValue: false,
+          ),
+        ],
+        [
+          GeneratedFormTextField(
+            'tarballedApkFilterRegEx',
+            label: tr('tarballedApkFilterRegEx'),
+            required: false,
+            additionalValidators: [
+              (value) {
+                return regExValidator(value);
+              },
+            ],
+          ),
+        ],
+      ]);
+    }
+
     if (versionDetectionDisallowed) {
       for (final item in agnosticItems.expand((row) => row)) {
         if (item.key == 'versionDetection' ||
@@ -1106,6 +1132,7 @@ class SourceProvider {
     ApkPure(),
     Aptoide(),
     Uptodown(),
+    ItchIO(),
     HuaweiAppGallery(),
     Tencent(),
     VivoAppStore(),
@@ -1113,10 +1140,10 @@ class SourceProvider {
     Apk4Free(),
     Farsroid(),
     CoolApk(),
-    RockMods(),
     LiteApks(),
     Jenkins(),
     ApkMirror(),
+    RockMods(),
     TelegramApp(),
     NeutronCode(),
     DirectApkLink(),

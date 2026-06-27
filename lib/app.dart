@@ -29,6 +29,10 @@ class _ObtainiumState extends State<Obtainium> {
 
   late Listenable _themeListenable;
 
+  var _lastUpdateInterval = -1;
+  var _lastUseFGService = false;
+  var _firstRunHandled = false;
+
   Future<void> requestNonOptionalPermissions() async {
     final NotificationPermission notificationPermission =
         await FlutterForegroundTask.checkNotificationPermission();
@@ -36,7 +40,11 @@ class _ObtainiumState extends State<Obtainium> {
       await FlutterForegroundTask.requestNotificationPermission();
     }
     if (!await FlutterForegroundTask.isIgnoringBatteryOptimizations) {
-      await FlutterForegroundTask.requestIgnoreBatteryOptimization();
+      if (!mounted) return;
+      final settingsProvider = context.read<SettingsProvider>();
+      if (settingsProvider.showBatteryOptimizationPrompt) {
+        await FlutterForegroundTask.requestIgnoreBatteryOptimization();
+      }
     }
   }
 
@@ -338,9 +346,6 @@ class _ObtainiumState extends State<Obtainium> {
 
   @override
   void dispose() {
-    // Remove a callback to receive data sent from the TaskHandler.
-    // FlutterForegroundTask.removeTaskDataCallback(onReceiveForegroundServiceData);
-
     super.dispose();
   }
 
@@ -362,11 +367,14 @@ class _ObtainiumState extends State<Obtainium> {
       (settingsProvider) => settingsProvider.forcedLocale,
     );
 
-    if (updateInterval == 0) {
-      stopForegroundService();
-      BackgroundFetch.stop();
-    } else {
-      if (useFGService) {
+    if (updateInterval != _lastUpdateInterval ||
+        useFGService != _lastUseFGService) {
+      _lastUpdateInterval = updateInterval;
+      _lastUseFGService = useFGService;
+      if (updateInterval == 0) {
+        stopForegroundService();
+        BackgroundFetch.stop();
+      } else if (useFGService) {
         BackgroundFetch.stop();
         startForegroundService(false);
       } else {
@@ -374,37 +382,42 @@ class _ObtainiumState extends State<Obtainium> {
         BackgroundFetch.start();
       }
     }
-    final isFirstRun = context.select<SettingsProvider, bool>(
-      (settingsProvider) => settingsProvider.checkAndFlipFirstRun(),
-    );
-    if (isFirstRun) {
-      logs.add("This is the first ever run of Materium.");
 
-      // If this is the first run, add Materium to the Apps list
-      getInstalledInfo(obtainiumId).then((value) {
-        if (value?.versionName != null) {
-          appsProvider.saveApps([
-            App(
-              obtainiumId,
-              obtainiumUrl,
-              "deminearchiver",
-              "materium",
-              value!.versionName,
-              value.versionName!,
-              [],
-              0,
-              {
-                "versionDetection": true,
-                "apkFilterRegEx": "fdroid",
-                "invertAPKFilter": true,
-              },
-              null,
-              false,
-            ),
-          ], onlyIfExists: false);
-        }
-      });
-
+    if (!_firstRunHandled) {
+      _firstRunHandled = true;
+      final isFirstRun = context.select<SettingsProvider, bool>(
+        (settingsProvider) => settingsProvider.checkAndFlipFirstRun(),
+      );
+      if (isFirstRun) {
+        logs.add('This is the first ever run of Obtainium.');
+        getInstalledInfo(obtainiumId)
+            .then((value) {
+              if (value?.versionName != null) {
+                appsProvider.saveApps([
+                  App(
+                    obtainiumId,
+                    obtainiumUrl,
+                    'deminearchiver',
+                    'Materium',
+                    value!.versionName,
+                    value.versionName!,
+                    [],
+                    0,
+                    {
+                      'versionDetection': true,
+                      'apkFilterRegEx': 'fdroid',
+                      'invertAPKFilter': true,
+                    },
+                    null,
+                    false,
+                  ),
+                ], onlyIfExists: false);
+              }
+            })
+            .catchError((err) {
+              logs.add('Failed to add Obtainium on first run: $err');
+            });
+      }
       if (!supportedLocales.map((e) => e.key).contains(context.locale) ||
           (forcedLocale == null && context.deviceLocale != context.locale)) {
         context.read<SettingsProvider>().resetLocaleSafe(context);

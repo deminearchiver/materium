@@ -74,6 +74,7 @@ List<String> collectAllStringsFromJSONObject(dynamic obj) {
 }
 
 List<String> _splitAlphaNumeric(String s) {
+  if (s.isEmpty) return [];
   final parts = <String>[];
   final sb = StringBuffer();
 
@@ -99,6 +100,7 @@ List<String> _splitAlphaNumeric(String s) {
 }
 
 bool _isNumeric(String s) {
+  if (s.isEmpty) return false;
   return s.codeUnitAt(0) >= 48 && s.codeUnitAt(0) <= 57;
 }
 

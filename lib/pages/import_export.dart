@@ -130,7 +130,7 @@ class _ImportExportPageState extends State<ImportExportPage> {
     }
 
     Future<void> runObtainiumExport({bool pickOnly = false}) async {
-      HapticFeedback.selectionClick();
+      context.read<SettingsProvider>().selectionClick();
       appsProvider
           .export(
             pickOnly:
@@ -148,28 +148,24 @@ class _ImportExportPageState extends State<ImportExportPage> {
     }
 
     void runObtainiumImport() {
-      HapticFeedback.selectionClick();
+      context.read<SettingsProvider>().selectionClick();
       FilePicker.pickFiles()
           .then((result) {
             setState(() {
               importInProgress = true;
             });
             if (result != null) {
-              String data = File(result.files.single.path!).readAsStringSync();
+              var path = result.files.single.path;
+              if (path == null) {
+                throw ObtainiumError(tr('noFilePickerAvailable'));
+              }
+              String data = File(path).readAsStringSync();
               try {
                 jsonDecode(data);
               } catch (e) {
                 throw ObtainiumError(tr('invalidInput'));
               }
               appsProvider.import(data).then((value) {
-                var cats = settingsProvider.categories;
-                appsProvider.apps.forEach((key, value) {
-                  for (var c in value.app.categories) {
-                    if (!cats.containsKey(c)) {
-                      cats[c] = generateRandomLightColor().toARGB32();
-                    }
-                  }
-                });
                 appsProvider.addMissingCategories(settingsProvider);
                 showMessage(
                   '${tr('importedX', args: [plural('apps', value.key.length).toLowerCase()])}${value.value ? ' + ${tr('settings').toLowerCase()}' : ''}',
@@ -181,7 +177,11 @@ class _ImportExportPageState extends State<ImportExportPage> {
             }
           })
           .catchError((e) {
-            showError(e, context);
+            if (e is PlatformException || e is MissingPluginException) {
+              showError(ObtainiumError(tr('noFilePickerAvailable')), context);
+            } else {
+              showError(e, context);
+            }
           })
           .whenComplete(() {
             setState(() {
@@ -191,27 +191,37 @@ class _ImportExportPageState extends State<ImportExportPage> {
     }
 
     void runUrlImport() {
-      FilePicker.pickFiles().then((result) {
-        if (result != null) {
-          urlListImport(
-            overrideInitValid: true,
-            initValue: RegExp('https?://[^"]+')
-                .allMatches(File(result.files.single.path!).readAsStringSync())
-                .map((e) => e.input.substring(e.start, e.end))
-                .toSet()
-                .toList()
-                .where((url) {
-                  try {
-                    sourceProvider.getSource(url);
-                    return true;
-                  } catch (e) {
-                    return false;
-                  }
-                })
-                .join('\n'),
-          );
-        }
-      });
+      FilePicker.pickFiles()
+          .then((result) {
+            if (result != null) {
+              var path = result.files.single.path;
+              if (path == null) return;
+              urlListImport(
+                overrideInitValid: true,
+                initValue: RegExp('https?://[^"]+')
+                    .allMatches(File(path).readAsStringSync())
+                    .map((e) => e.input.substring(e.start, e.end))
+                    .toSet()
+                    .toList()
+                    .where((url) {
+                      try {
+                        sourceProvider.getSource(url);
+                        return true;
+                      } catch (e) {
+                        return false;
+                      }
+                    })
+                    .join('\n'),
+              );
+            }
+          })
+          .catchError((e) {
+            if (e is PlatformException || e is MissingPluginException) {
+              showError(ObtainiumError(tr('noFilePickerAvailable')), context);
+            } else {
+              showError(e, context);
+            }
+          });
     }
 
     void runSourceSearch(AppSource source) {

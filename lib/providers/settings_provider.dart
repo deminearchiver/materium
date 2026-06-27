@@ -4,9 +4,9 @@ import 'dart:convert';
 
 import 'package:device_info_ffi/device_info_ffi.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:materium/custom_errors.dart';
 import 'package:materium/flutter.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:materium/app_sources/github.dart';
 import 'package:materium/main.dart';
 import 'package:materium/providers/apps_provider.dart';
 import 'package:materium/providers/source_provider.dart';
@@ -15,12 +15,27 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shared_preferences/util/legacy_to_async_migration_util.dart';
 import 'package:shared_storage/shared_storage.dart' as saf;
 
-final String obtainiumTempId = 'deminearchiver_materium_${GitHub().hosts[0]}';
-const String obtainiumId = 'dev.deminearchiver.materium';
-const String obtainiumUrl = 'https://github.com/deminearchiver/materium';
-const Color obtainiumThemeColor = Color(0xFF6438B5);
+const obtainiumTempId = "deminearchiver_materium_github.com";
+const obtainiumId = "dev.deminearchiver.materium";
+const obtainiumUrl = "https://github.com/deminearchiver/materium";
+const obtainiumThemeColor = Color(0xFF6438B5);
 
-const String _migration1CompletedKey = "migration1Completed";
+const _migration1CompletedKey = "migration1Completed";
+
+Locale? tryParseLocale(String? localeString) {
+  if (localeString == null) return null;
+  final split = localeString.split("-");
+  if (split.length == 3) {
+    return Locale.fromSubtags(languageCode: split[0], countryCode: split[2]);
+  }
+  if (split.length == 2) {
+    return Locale(split[0], split[1]);
+  }
+  if (split.isNotEmpty) {
+    return Locale(split[0]);
+  }
+  return null;
+}
 
 enum ThemeSettings { system, light, dark }
 
@@ -29,8 +44,7 @@ enum SortColumnSettings { added, nameAuthor, authorName, releaseDate }
 enum SortOrderSettings { ascending, descending }
 
 class SettingsProvider with ChangeNotifier {
-  SettingsProvider._({required SharedPreferencesWithCache prefsWithCache})
-    : _prefsWithCache = prefsWithCache;
+  SettingsProvider._({required this._prefsWithCache});
 
   Future<void> _reload({required bool reloadCache}) async {
     if (reloadCache) {
@@ -254,12 +268,15 @@ class SettingsProvider with ChangeNotifier {
 
   void setCategories(Map<String, int> cats, {AppsProvider? appsProvider}) {
     if (appsProvider != null) {
-      List<App> changedApps = appsProvider
+      final changedApps = appsProvider
           .getAppValues()
           .map((a) {
-            var n1 = a.app.categories.length;
-            a.app.categories.removeWhere((c) => !cats.keys.contains(c));
-            return n1 > a.app.categories.length ? a.app : null;
+            if (!a.app.categories.any((c) => !cats.keys.contains(c))) {
+              return null;
+            }
+            final app = a.app.deepCopy();
+            app.categories.removeWhere((c) => !cats.keys.contains(c));
+            return app;
           })
           .where((element) => element != null)
           .map((e) => e as App)
@@ -273,14 +290,10 @@ class SettingsProvider with ChangeNotifier {
   }
 
   Locale? get forcedLocale {
-    var flSegs = prefsWithCache.getString('forcedLocale')?.split('-');
-    var fl = flSegs != null && flSegs.isNotEmpty
-        ? Locale(flSegs[0], flSegs.length > 1 ? flSegs[1] : null)
-        : null;
-    var set = supportedLocales.where((element) => element.key == fl).isNotEmpty
+    final fl = tryParseLocale(prefsWithCache.getString('forcedLocale'));
+    return supportedLocales.where((element) => element.key == fl).isNotEmpty
         ? fl
         : null;
-    return set;
   }
 
   set forcedLocale(Locale? fl) {
@@ -307,6 +320,54 @@ class SettingsProvider with ChangeNotifier {
     }
   }
 
+  bool get showAppDowngradeError {
+    return prefsWithCache.getBool('showAppDowngradeError') ?? true;
+  }
+
+  set showAppDowngradeError(bool show) {
+    prefsWithCache.setBool('showAppDowngradeError', show);
+    notifyListeners();
+  }
+
+  bool get showBatteryOptimizationPrompt {
+    return prefsWithCache.getBool('showBatteryOptimizationPrompt') ?? true;
+  }
+
+  set showBatteryOptimizationPrompt(bool show) {
+    prefsWithCache.setBool('showBatteryOptimizationPrompt', show);
+    notifyListeners();
+  }
+
+  bool get tactileFeedbackEnabled {
+    return prefsWithCache.getBool('tactileFeedbackEnabled') ?? true;
+  }
+
+  set tactileFeedbackEnabled(bool val) {
+    prefsWithCache.setBool('tactileFeedbackEnabled', val);
+    notifyListeners();
+  }
+
+  void lightImpact() {
+    if (tactileFeedbackEnabled) HapticFeedback.lightImpact();
+  }
+
+  void heavyImpact() {
+    if (tactileFeedbackEnabled) HapticFeedback.heavyImpact();
+  }
+
+  void selectionClick() {
+    if (tactileFeedbackEnabled) HapticFeedback.selectionClick();
+  }
+
+  bool get includePrereleasesByDefault {
+    return prefsWithCache.getBool('includePrereleasesByDefault') ?? false;
+  }
+
+  set includePrereleasesByDefault(bool val) {
+    prefsWithCache.setBool('includePrereleasesByDefault', val);
+    notifyListeners();
+  }
+
   bool get removeOnExternalUninstall {
     return prefsWithCache.getBool('removeOnExternalUninstall') ?? false;
   }
@@ -327,17 +388,17 @@ class SettingsProvider with ChangeNotifier {
 
   // TODO: uncomment when transitions are reintroduced
   // bool get disablePageTransitions {
-  //   return prefs?.getBool('disablePageTransitions') ?? false;
+  //   return prefsWithCache.getBool('disablePageTransitions') ?? false;
   // }
   // set disablePageTransitions(bool show) {
-  //   prefs?.setBool('disablePageTransitions', show);
+  //   prefsWithCache.setBool('disablePageTransitions', show);
   //   notifyListeners();
   // }
   // bool get reversePageTransitions {
-  //   return prefs?.getBool('reversePageTransitions') ?? false;
+  //   return prefsWithCache.getBool('reversePageTransitions') ?? false;
   // }
   // set reversePageTransitions(bool show) {
-  //   prefs?.setBool('reversePageTransitions', show);
+  //   prefsWithCache.setBool('reversePageTransitions', show);
   //   notifyListeners();
   // }
 
@@ -383,15 +444,6 @@ class SettingsProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  bool get showDebugOpts {
-    return prefsWithCache.getBool('showDebugOpts') ?? false;
-  }
-
-  set showDebugOpts(bool val) {
-    prefsWithCache.setBool('showDebugOpts', val);
-    notifyListeners();
-  }
-
   Future<Uri?> getExportDir() async {
     var uriString = prefsWithCache.getString('exportDir');
     if (uriString != null) {
@@ -413,7 +465,11 @@ class SettingsProvider with ChangeNotifier {
     var currentOneWayDataSyncDir = await getExportDir();
     Uri? newOneWayDataSyncDir;
     if (!remove) {
-      newOneWayDataSyncDir = (await saf.openDocumentTree());
+      try {
+        newOneWayDataSyncDir = await saf.openDocumentTree();
+      } catch (_) {
+        throw ObtainiumError(tr('noFilePickerAvailable'));
+      }
     }
     if (currentOneWayDataSyncDir?.path != newOneWayDataSyncDir?.path) {
       if (newOneWayDataSyncDir == null) {

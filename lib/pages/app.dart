@@ -18,6 +18,7 @@ import 'package:materium/pages/developer.dart';
 import 'package:materium/pages/settings.dart';
 import 'package:materium/providers/apps_provider.dart';
 import 'package:materium/providers/settings_new.dart';
+import 'package:materium/providers/notifications_provider.dart';
 import 'package:materium/providers/settings_provider.dart';
 import 'package:materium/providers/source_provider.dart';
 import 'package:skeletonizer/skeletonizer.dart';
@@ -537,6 +538,11 @@ class _AppPageState extends State<AppPage> {
 
     final lastUpdateCheck = app?.app.lastUpdateCheck?.toLocal();
     final infoLines = <String>[
+      // TODO:
+      //  var realVersion = app?.installedInfo?.versionName;
+      //  infoLines = realVersion != null
+      //      ? '${tr('pseudoVersionInUse')} (OS installed $realVersion)\n$infoLines'
+      //      : '${tr('pseudoVersionInUse')}\n$infoLines';
       if (installedVersionIsEstimate) tr("pseudoVersionInUse"),
       if (trackOnly) tr("xIsTrackOnly", args: [tr("app")]),
       tr(
@@ -1136,6 +1142,11 @@ class _AppPageState extends State<AppPage> {
                   ),
                   _SegmentedListItemData(
                     visible: installedVersionIsEstimate,
+                    // TODO:
+                    //  var realVersion = app?.installedInfo?.versionName;
+                    //  infoLines = realVersion != null
+                    //      ? '${tr('pseudoVersionInUse')} (OS installed $realVersion)\n$infoLines'
+                    //      : '${tr('pseudoVersionInUse')}\n$infoLines';
                     containerBuilder: (context, isFirst, isLast, child) =>
                         ListItemContainer(
                           isFirst: isFirst,
@@ -1249,7 +1260,7 @@ class _AppPageState extends State<AppPage> {
               ),
               TextButton(
                 onPressed: () {
-                  HapticFeedback.selectionClick();
+                  context.read<SettingsProvider>().selectionClick();
                   var updatedApp = app?.app;
                   if (updatedApp != null) {
                     updatedApp.installedVersion = updatedApp.latestVersion;
@@ -1342,7 +1353,7 @@ class _AppPageState extends State<AppPage> {
                 var successMessage = app?.app.installedVersion == null
                     ? tr('installed')
                     : tr('appsUpdated');
-                HapticFeedback.heavyImpact();
+                context.read<SettingsProvider>().heavyImpact();
                 var res = await appsProvider.downloadAndInstallLatestApps(
                   app?.app.id != null ? [app!.app.id] : [],
                   globalNavigatorKey.currentContext,
@@ -1354,6 +1365,16 @@ class _AppPageState extends State<AppPage> {
                 }
                 if (res.isNotEmpty && context.mounted) {
                   Navigator.pop(context);
+                }
+                if (res.isNotEmpty && context.mounted) {
+                  context.read<NotificationsProvider>()
+                    ..cancel(UpdateNotification([]).id)
+                    ..cancel(
+                      SilentUpdateAttemptNotification(
+                        [],
+                        id: res[0].hashCode,
+                      ).id,
+                    );
                 }
               } catch (e) {
                 if (context.mounted) {

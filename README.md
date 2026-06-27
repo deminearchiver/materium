@@ -43,6 +43,11 @@
   - [Supported app sources](#supported-app-sources)
 - [Finding app configurations](#finding-app-configurations)
 - [Limitations](#limitations)
+- [Troubleshooting](#troubleshooting)
+  - [App not updating even when a new version is available](#app-not-updating-even-when-a-new-version-is-available)
+  - [Source additions failing with 403 Forbidden](#source-additions-failing-with-403-forbidden)
+  - [Flutter-related issues](#flutter-related-issues)
+  - [APK verification failures](#apk-verification-failures)
 
 </details>
 
@@ -111,12 +116,12 @@ Materium allows you to install and update apps directly from their releases page
 
 ### Useful links
 
-- [Obtainium Wiki](https://wiki.obtainium.imranr.dev/) ([repository](https://github.com/ImranR98/Obtainium-Wiki))
+- [Obtainium Wiki](https://wiki.obtainium.page/) ([repository](https://github.com/ImranR98/Obtainium-Wiki))
 - [Obtainium 101](https://www.youtube.com/watch?v=0MF_v2OBncw) - Tutorial video
 - [AppVerifier](https://github.com/soupslurpr/AppVerifier) - App verification tool (recommended, integrates with Obtainium)
-- [apps.obtainium.imranr.dev](https://apps.obtainium.imranr.dev/) - Crowdsourced app configurations ([repository](https://github.com/ImranR98/apps.obtainium.imranr.dev))
+- [apps.obtainium.page](https://apps.obtainium.page/) - Crowdsourced app configurations ([repository](https://github.com/ImranR98/apps.obtainium.page))
 - [Side Of Burritos - You should use this instead of F-Droid | How to use app RSS feed](https://youtu.be/FFz57zNR_M0) - Original motivation for this app
-- [Website](https://obtainium.imranr.dev) ([repository](https://github.com/ImranR98/obtainium.imranr.dev))
+- [Website](https://obtainium.page) ([repository](https://github.com/ImranR98/obtainium.page))
 - [Source code](https://github.com/deminearchiver/materium)
 
 ### Supported app sources
@@ -135,17 +140,18 @@ Materium allows you to install and update apps directly from their releases page
 - [APKPure](https://apkpure.net/)
 - [Aptoide](https://aptoide.com/)
 - [Uptodown](https://uptodown.com/)
+- [itch.io](https://itch.io/)
 - [Huawei AppGallery](https://appgallery.huawei.com/)
 - [Tencent App Store](https://sj.qq.com/)
 - [vivo App Store (CN)](https://h5.appstore.vivo.com.cn/)
 - [RuStore](https://rustore.ru/)
 - [Farsroid](https://www.farsroid.com)
 - [CoolApk](https://coolapk.com/)
-- [RockMods](https://rockmods.net/)
 - [LiteAPKs](https://liteapks.com/)
 - [APK4Free](https://apk4free.net/)
 - Jenkins Jobs
 - [APKMirror](https://apkmirror.com/) (Track-Only)
+- [RockMods](https://rockmods.net/)
 
 #### Other (app-specific)
 
@@ -160,11 +166,11 @@ Any other URL that returns an HTML page with links to APK files
 
 ## Finding app configurations
 
-You can find crowdsourced app configurations at [**apps.obtainium.imranr.dev**](https://apps.obtainium.imranr.dev).
+You can find crowdsourced app configurations at [apps.obtainium.page](https://apps.obtainium.page).
 
-If you can't find the configuration for an app you want, feel free to leave a request on the [**Discussions page**](https://github.com/ImranR98/apps.obtainium.imranr.dev/discussions/new?category=app-requests).
+If you can't find the configuration for an app you want, feel free to leave a request on the [discussions page](https://github.com/ImranR98/apps.obtainium.page/discussions/new?category=app-requests).
 
-Or, contribute some configurations to the website by creating a PR at [**ImranR98/apps.obtainium.imranr.dev**](https://github.com/ImranR98/apps.obtainium.imranr.dev).
+Or, contribute some configurations to the website by creating a PR at [this repo](https://github.com/ImranR98/apps.obtainium.page).
 
 <!-- ## Installation
 
@@ -187,3 +193,30 @@ Verification info:
 ## Limitations
 
 For some sources, data is gathered using Web scraping and can easily break due to changes in website design. In such cases, more reliable methods may be unavailable.
+
+## Troubleshooting
+
+### App not updating even when a new version is available
+
+- **Check the source settings** — Some sources require additional configuration (e.g., GitHub releases need the correct repository URL format)
+- **Check if the source is supported** — Not all sources support version checking equally; some use HTML scraping which may be slower
+- **Check the update interval** — By default, apps update every 6 hours. You can change this in app settings
+- **Try force-refreshing** — Pull down on the apps list to force a refresh
+
+### Source additions failing with 403 Forbidden
+
+- Some sources block requests from unknown user agents or regions
+- GitHub-based sources may need a Personal Access Token if you're hitting rate limits
+- Some APK hosts (APKMirror, etc.) may require cookies or specific headers
+
+### Flutter-related issues
+
+- Materium is built with Flutter. If the app crashes on startup, try:
+  - Clearing app data and reinstalling
+  - Ensuring your Android version meets the minimum requirement
+  - Checking if you have the latest Google Play Services
+
+### APK verification failures
+
+- If you see "Signature verification failed", ensure you haven't modified the APK after download
+- The SHA-256 hash in the app settings should match the downloaded APK

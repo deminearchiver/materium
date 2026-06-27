@@ -886,22 +886,203 @@ class _SettingsPageState extends State<SettingsPage> {
                         ? selectedListItemTheme
                         : unselectedListItemTheme,
                     child: ListItemContainer(
-                      child: ListItemInteraction(
-                        onTap: () =>
-                            _settingsProvider.removeOnExternalUninstall =
-                                !removeOnExternalUninstall,
-                        child: ListItemLayout(
-                          padding: const .fromLTRB(16.0, 0.0, 16.0 - 8.0, 0.0),
-                          trailingPadding: const .symmetric(
-                            vertical: (32.0 + 2 * 10.0 - 48.0) / 2.0,
+                      child: MergeSemantics(
+                        child: ListItemInteraction(
+                          onTap: () =>
+                              _settingsProvider.removeOnExternalUninstall =
+                                  !removeOnExternalUninstall,
+                          child: ListItemLayout(
+                            padding: const .fromLTRB(
+                              16.0,
+                              0.0,
+                              16.0 - 8.0,
+                              0.0,
+                            ),
+                            trailingPadding: const .symmetric(
+                              vertical: (32.0 + 2 * 10.0 - 48.0) / 2.0,
+                            ),
+                            headline: Text(tr("removeOnExternalUninstall")),
+                            trailing: ExcludeFocus(
+                              child: Switch(
+                                onCheckedChanged: (value) =>
+                                    _settingsProvider
+                                            .removeOnExternalUninstall =
+                                        value,
+                                checked: removeOnExternalUninstall,
+                              ),
+                            ),
                           ),
-                          headline: Text(tr("removeOnExternalUninstall")),
-                          trailing: ExcludeFocus(
-                            child: Switch(
-                              onCheckedChanged: (value) =>
-                                  _settingsProvider.removeOnExternalUninstall =
-                                      value,
-                              checked: removeOnExternalUninstall,
+                        ),
+                      ),
+                    ),
+                  ),
+            ),
+          ),
+          verticalSpace,
+          KeyedSubtree(
+            key: const ValueKey("includePrereleasesByDefault"),
+            child: Selector<SettingsProvider, bool>(
+              selector: (context, settingsProvider) =>
+                  settingsProvider.includePrereleasesByDefault,
+              builder: (context, includePrereleasesByDefault, _) =>
+                  ListItemTheme.mergeWithData(
+                    data: includePrereleasesByDefault
+                        ? selectedListItemTheme
+                        : unselectedListItemTheme,
+                    child: ListItemContainer(
+                      child: MergeSemantics(
+                        child: ListItemInteraction(
+                          onTap: () =>
+                              _settingsProvider.includePrereleasesByDefault =
+                                  !includePrereleasesByDefault,
+                          child: ListItemLayout(
+                            padding: const .fromLTRB(
+                              16.0,
+                              0.0,
+                              16.0 - 8.0,
+                              0.0,
+                            ),
+                            trailingPadding: const .symmetric(
+                              vertical: (32.0 + 2 * 10.0 - 48.0) / 2.0,
+                            ),
+                            headline: Text(tr("includePrereleasesByDefault")),
+                            trailing: ExcludeFocus(
+                              child: Switch(
+                                onCheckedChanged: (value) =>
+                                    _settingsProvider
+                                            .includePrereleasesByDefault =
+                                        value,
+                                checked: includePrereleasesByDefault,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+            ),
+          ),
+          verticalSpace,
+          KeyedSubtree(
+            key: const ValueKey("tactileFeedbackEnabled"),
+            child: Selector<SettingsProvider, bool>(
+              selector: (context, settingsProvider) =>
+                  settingsProvider.tactileFeedbackEnabled,
+              builder: (context, tactileFeedbackEnabled, _) =>
+                  ListItemTheme.mergeWithData(
+                    data: tactileFeedbackEnabled
+                        ? selectedListItemTheme
+                        : unselectedListItemTheme,
+                    child: ListItemContainer(
+                      child: MergeSemantics(
+                        child: ListItemInteraction(
+                          onTap: () =>
+                              _settingsProvider.tactileFeedbackEnabled =
+                                  !tactileFeedbackEnabled,
+                          child: ListItemLayout(
+                            padding: const .fromLTRB(
+                              16.0,
+                              0.0,
+                              16.0 - 8.0,
+                              0.0,
+                            ),
+                            trailingPadding: const .symmetric(
+                              vertical: (32.0 + 2 * 10.0 - 48.0) / 2.0,
+                            ),
+                            headline: Text(tr("tactileFeedbackEnabled")),
+                            trailing: ExcludeFocus(
+                              child: Switch(
+                                onCheckedChanged: (value) =>
+                                    _settingsProvider.tactileFeedbackEnabled =
+                                        value,
+                                checked: tactileFeedbackEnabled,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+            ),
+          ),
+          verticalSpace,
+          KeyedSubtree(
+            key: const ValueKey("showBatteryOptimizationPrompt"),
+            child: Selector<SettingsProvider, bool>(
+              selector: (context, settingsProvider) =>
+                  settingsProvider.showBatteryOptimizationPrompt,
+              builder: (context, showBatteryOptimizationPrompt, _) =>
+                  ListItemTheme.mergeWithData(
+                    data: showBatteryOptimizationPrompt
+                        ? selectedListItemTheme
+                        : unselectedListItemTheme,
+                    child: ListItemContainer(
+                      child: MergeSemantics(
+                        child: ListItemInteraction(
+                          onTap: () =>
+                              _settingsProvider.showBatteryOptimizationPrompt =
+                                  !showBatteryOptimizationPrompt,
+                          child: ListItemLayout(
+                            padding: const .fromLTRB(
+                              16.0,
+                              0.0,
+                              16.0 - 8.0,
+                              0.0,
+                            ),
+                            trailingPadding: const .symmetric(
+                              vertical: (32.0 + 2 * 10.0 - 48.0) / 2.0,
+                            ),
+                            headline: Text(tr("showBatteryOptimizationPrompt")),
+                            trailing: ExcludeFocus(
+                              child: Switch(
+                                onCheckedChanged: (value) =>
+                                    _settingsProvider
+                                            .showBatteryOptimizationPrompt =
+                                        value,
+                                checked: showBatteryOptimizationPrompt,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+            ),
+          ),
+          verticalSpace,
+          KeyedSubtree(
+            key: const ValueKey("showAppDowngradeError"),
+            child: Selector<SettingsProvider, bool>(
+              selector: (context, settingsProvider) =>
+                  settingsProvider.showAppDowngradeError,
+              builder: (context, showAppDowngradeError, _) =>
+                  ListItemTheme.mergeWithData(
+                    data: showAppDowngradeError
+                        ? selectedListItemTheme
+                        : unselectedListItemTheme,
+                    child: ListItemContainer(
+                      child: MergeSemantics(
+                        child: ListItemInteraction(
+                          onTap: () => _settingsProvider.showAppDowngradeError =
+                              !showAppDowngradeError,
+                          child: ListItemLayout(
+                            padding: const .fromLTRB(
+                              16.0,
+                              0.0,
+                              16.0 - 8.0,
+                              0.0,
+                            ),
+                            trailingPadding: const .symmetric(
+                              vertical: (32.0 + 2 * 10.0 - 48.0) / 2.0,
+                            ),
+                            headline: Text(tr("showAppDowngradeError")),
+                            trailing: ExcludeFocus(
+                              child: Switch(
+                                onCheckedChanged: (value) =>
+                                    _settingsProvider.showAppDowngradeError =
+                                        value,
+                                checked: showAppDowngradeError,
+                              ),
                             ),
                           ),
                         ),
@@ -998,14 +1179,18 @@ class _SettingsPageState extends State<SettingsPage> {
                               ),
                             ),
                           ),
-                          ListItemInteraction(
-                            onTap: () => launchUrlString(
-                              "https://github.com/soupslurpr/AppVerifier",
-                              mode: LaunchMode.externalApplication,
-                            ),
-                            child: ListItemLayout(
-                              leading: const Icon(Symbols.open_in_new_rounded),
-                              supportingText: Text(tr("about")),
+                          MergeSemantics(
+                            child: ListItemInteraction(
+                              onTap: () => launchUrlString(
+                                "https://github.com/soupslurpr/AppVerifier",
+                                mode: LaunchMode.externalApplication,
+                              ),
+                              child: ListItemLayout(
+                                leading: const Icon(
+                                  Symbols.open_in_new_rounded,
+                                ),
+                                supportingText: Text(tr("about")),
+                              ),
                             ),
                           ),
                         ],
@@ -1319,25 +1504,27 @@ class _SettingsPageState extends State<SettingsPage> {
                         ? selectedListItemTheme
                         : unselectedListItemTheme,
                     child: ListItemContainer(
-                      child: ListItemInteraction(
-                        onTap: !isDisabled ? selectColor : null,
-                        child: ListItemLayout(
-                          headline: Text(
-                            tr("selectX", args: [tr("colour").toLowerCase()]),
-                            style: textStyle,
-                          ),
-                          supportingText: Text(
-                            "${ColorTools.nameThatColor(themeColor)} "
-                            "(${ColorTools.materialNameAndCode(themeColor, colorSwatchNameMap: _colorsNameMap)})",
-                            style: textStyle,
-                          ),
-                          trailing: ColorIndicator(
-                            width: 40,
-                            height: 40,
-                            borderRadius: 20,
-                            color: containerColor ?? themeColor,
-                            onSelectFocus: false,
-                            onSelect: !isDisabled ? selectColor : null,
+                      child: MergeSemantics(
+                        child: ListItemInteraction(
+                          onTap: !isDisabled ? selectColor : null,
+                          child: ListItemLayout(
+                            headline: Text(
+                              tr("selectX", args: [tr("colour").toLowerCase()]),
+                              style: textStyle,
+                            ),
+                            supportingText: Text(
+                              "${ColorTools.nameThatColor(themeColor)} "
+                              "(${ColorTools.materialNameAndCode(themeColor, colorSwatchNameMap: _colorsNameMap)})",
+                              style: textStyle,
+                            ),
+                            trailing: ColorIndicator(
+                              width: 40,
+                              height: 40,
+                              borderRadius: 20,
+                              color: containerColor ?? themeColor,
+                              onSelectFocus: false,
+                              onSelect: !isDisabled ? selectColor : null,
+                            ),
                           ),
                         ),
                       ),
@@ -2007,15 +2194,17 @@ class _SettingsPageState extends State<SettingsPage> {
           data: unselectedListItemTheme,
           child: ListItemContainer(
             isFirst: true,
-            child: ListItemInteraction(
-              onTap: () => launchUrlString(
-                SettingsProvider.sourceUrl,
-                mode: LaunchMode.externalApplication,
-              ),
-              child: ListItemLayout(
-                leading: const Icon(Symbols.code_rounded),
-                headline: Text(tr("appSource")),
-                trailing: const Icon(Symbols.keyboard_arrow_right_rounded),
+            child: MergeSemantics(
+              child: ListItemInteraction(
+                onTap: () => launchUrlString(
+                  SettingsProvider.sourceUrl,
+                  mode: LaunchMode.externalApplication,
+                ),
+                child: ListItemLayout(
+                  leading: const Icon(Symbols.code_rounded),
+                  headline: Text(tr("appSource")),
+                  trailing: const Icon(Symbols.keyboard_arrow_right_rounded),
+                ),
               ),
             ),
           ),
@@ -2027,15 +2216,17 @@ class _SettingsPageState extends State<SettingsPage> {
         child: ListItemTheme.mergeWithData(
           data: unselectedListItemTheme,
           child: ListItemContainer(
-            child: ListItemInteraction(
-              onTap: () => launchUrlString(
-                "https://wiki.obtainium.imranr.dev/",
-                mode: LaunchMode.externalApplication,
-              ),
-              child: ListItemLayout(
-                leading: const Icon(Symbols.help_rounded, fill: 1.0),
-                headline: Text(tr("wiki")),
-                trailing: const Icon(Symbols.keyboard_arrow_right_rounded),
+            child: MergeSemantics(
+              child: ListItemInteraction(
+                onTap: () => launchUrlString(
+                  "https://wiki.obtainium.page/",
+                  mode: LaunchMode.externalApplication,
+                ),
+                child: ListItemLayout(
+                  leading: const Icon(Symbols.help_rounded, fill: 1.0),
+                  headline: Text(tr("wiki")),
+                  trailing: const Icon(Symbols.keyboard_arrow_right_rounded),
+                ),
               ),
             ),
           ),
@@ -2047,15 +2238,17 @@ class _SettingsPageState extends State<SettingsPage> {
         child: ListItemTheme.mergeWithData(
           data: unselectedListItemTheme,
           child: ListItemContainer(
-            child: ListItemInteraction(
-              onTap: () => launchUrlString(
-                "https://apps.obtainium.imranr.dev/",
-                mode: LaunchMode.externalApplication,
-              ),
-              child: ListItemLayout(
-                leading: const Icon(Symbols.apps_rounded),
-                headline: Text(tr("crowdsourcedConfigsLabel")),
-                trailing: const Icon(Symbols.keyboard_arrow_right_rounded),
+            child: MergeSemantics(
+              child: ListItemInteraction(
+                onTap: () => launchUrlString(
+                  "https://apps.obtainium.page/",
+                  mode: LaunchMode.externalApplication,
+                ),
+                child: ListItemLayout(
+                  leading: const Icon(Symbols.apps_rounded),
+                  headline: Text(tr("crowdsourcedConfigsLabel")),
+                  trailing: const Icon(Symbols.keyboard_arrow_right_rounded),
+                ),
               ),
             ),
           ),
@@ -2067,17 +2260,19 @@ class _SettingsPageState extends State<SettingsPage> {
         child: ListItemTheme.mergeWithData(
           data: unselectedListItemTheme,
           child: ListItemContainer(
-            child: ListItemInteraction(
-              onTap: () => Navigator.push(
-                context,
-                MaterialPageRoute<void>(
-                  builder: (context) => const _LogsPage(),
+            child: MergeSemantics(
+              child: ListItemInteraction(
+                onTap: () => Navigator.push(
+                  context,
+                  MaterialPageRoute<void>(
+                    builder: (context) => const _LogsPage(),
+                  ),
                 ),
-              ),
-              child: ListItemLayout(
-                leading: const Icon(Symbols.bug_report_rounded, fill: 1.0),
-                headline: Text(tr("appLogs")),
-                trailing: const Icon(Symbols.keyboard_arrow_right_rounded),
+                child: ListItemLayout(
+                  leading: const Icon(Symbols.bug_report_rounded, fill: 1.0),
+                  headline: Text(tr("appLogs")),
+                  trailing: const Icon(Symbols.keyboard_arrow_right_rounded),
+                ),
               ),
             ),
           ),
@@ -2090,17 +2285,19 @@ class _SettingsPageState extends State<SettingsPage> {
           data: unselectedListItemTheme,
           child: ListItemContainer(
             isLast: true,
-            child: ListItemInteraction(
-              onTap: () => Navigator.push(
-                context,
-                MaterialPageRoute<void>(
-                  builder: (context) => const ImportExportPage(),
+            child: MergeSemantics(
+              child: ListItemInteraction(
+                onTap: () => Navigator.push(
+                  context,
+                  MaterialPageRoute<void>(
+                    builder: (context) => const ImportExportPage(),
+                  ),
                 ),
-              ),
-              child: ListItemLayout(
-                leading: const Icon(Symbols.swap_vert_rounded, fill: 1.0),
-                headline: Text(tr("importExport")),
-                trailing: const Icon(Symbols.keyboard_arrow_right_rounded),
+                child: ListItemLayout(
+                  leading: const Icon(Symbols.swap_vert_rounded, fill: 1.0),
+                  headline: Text(tr("importExport")),
+                  trailing: const Icon(Symbols.keyboard_arrow_right_rounded),
+                ),
               ),
             ),
           ),
@@ -2416,64 +2613,66 @@ class _SettingsPageState extends State<SettingsPage> {
                                                 .developerMode
                                                 .disabledTooltip
                                           : "",
-                                      child: ListItemInteraction(
-                                        stateLayerShape: .all(
-                                          shapeTheme.applyCorners(
-                                            corners:
-                                                CornersDirectional.horizontal(
-                                                  end: shapeTheme
-                                                      .cornerExtraSmall,
+                                      child: MergeSemantics(
+                                        child: ListItemInteraction(
+                                          stateLayerShape: .all(
+                                            shapeTheme.applyCorners(
+                                              corners:
+                                                  CornersDirectional.horizontal(
+                                                    end: shapeTheme
+                                                        .cornerExtraSmall,
+                                                  ),
+                                            ),
+                                          ),
+                                          onTap: developerMode
+                                              ? () => Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute<void>(
+                                                    builder: (context) =>
+                                                        const DeveloperPage(),
+                                                  ),
+                                                )
+                                              : null,
+                                          child: ListItemLayout(
+                                            padding: const .directional(
+                                              start: 16.0,
+                                              end: 12.0,
+                                            ),
+                                            leading:
+                                                CustomListItemLeading.fromExtendedColor(
+                                                  extendedColor:
+                                                      staticColors.purple,
+                                                  pairing: unselectedPairing,
+                                                  containerShape:
+                                                      RoundedPolygonBorder(
+                                                        polygon: MaterialShapes
+                                                            .pixelCircle,
+                                                      ),
+                                                  child: const Icon(
+                                                    Symbols
+                                                        .developer_mode_rounded,
+                                                    fill: 1.0,
+                                                  ),
                                                 ),
-                                          ),
-                                        ),
-                                        onTap: developerMode
-                                            ? () => Navigator.push(
-                                                context,
-                                                MaterialPageRoute<void>(
-                                                  builder: (context) =>
-                                                      const DeveloperPage(),
-                                                ),
-                                              )
-                                            : null,
-                                        child: ListItemLayout(
-                                          padding: const .directional(
-                                            start: 16.0,
-                                            end: 12.0,
-                                          ),
-                                          leading:
-                                              CustomListItemLeading.fromExtendedColor(
-                                                extendedColor:
-                                                    staticColors.purple,
-                                                pairing: unselectedPairing,
-                                                containerShape:
-                                                    RoundedPolygonBorder(
-                                                      polygon: MaterialShapes
-                                                          .pixelCircle,
-                                                    ),
-                                                child: const Icon(
-                                                  Symbols
-                                                      .developer_mode_rounded,
-                                                  fill: 1.0,
-                                                ),
-                                              ),
-                                          headline: Text(
-                                            t
-                                                .settingsPage
-                                                .items
-                                                .developerMode
-                                                .label,
-                                          ),
-                                          supportingText: Text(
-                                            t
-                                                .settingsPage
-                                                .items
-                                                .developerMode
-                                                .description,
-                                          ),
-                                          trailing: Icon(
-                                            Symbols
-                                                .keyboard_arrow_right_rounded,
-                                            color: contentColor,
+                                            headline: Text(
+                                              t
+                                                  .settingsPage
+                                                  .items
+                                                  .developerMode
+                                                  .label,
+                                            ),
+                                            supportingText: Text(
+                                              t
+                                                  .settingsPage
+                                                  .items
+                                                  .developerMode
+                                                  .description,
+                                            ),
+                                            trailing: Icon(
+                                              Symbols
+                                                  .keyboard_arrow_right_rounded,
+                                              color: contentColor,
+                                            ),
                                           ),
                                         ),
                                       ),
@@ -2486,28 +2685,34 @@ class _SettingsPageState extends State<SettingsPage> {
                                     endIndent: 10.0,
                                     color: colorTheme.outlineVariant,
                                   ),
-                                  ListItemInteraction(
-                                    stateLayerShape: .all(
-                                      shapeTheme.applyCorners(
-                                        corners: CornersDirectional.horizontal(
-                                          start: shapeTheme.cornerExtraSmall,
+                                  MergeSemantics(
+                                    child: ListItemInteraction(
+                                      stateLayerShape: .all(
+                                        shapeTheme.applyCorners(
+                                          corners:
+                                              CornersDirectional.horizontal(
+                                                start:
+                                                    shapeTheme.cornerExtraSmall,
+                                              ),
                                         ),
                                       ),
-                                    ),
-                                    onTap: () => _settings.developerMode.value =
-                                        !developerMode,
-                                    child: Padding(
-                                      padding: const .fromSTEB(
-                                        12.0 - 8.0,
-                                        (32.0 + 2 * 10.0 - 48.0) / 2.0,
-                                        16.0 - 8.0,
-                                        (32.0 + 2 * 10.0 - 48.0) / 2.0,
-                                      ),
-                                      child: ExcludeFocus(
-                                        child: Switch(
-                                          onCheckedChanged:
-                                              _settings.developerMode.setValue,
-                                          checked: developerMode,
+                                      onTap: () =>
+                                          _settings.developerMode.value =
+                                              !developerMode,
+                                      child: Padding(
+                                        padding: const .fromSTEB(
+                                          12.0 - 8.0,
+                                          (32.0 + 2 * 10.0 - 48.0) / 2.0,
+                                          16.0 - 8.0,
+                                          (32.0 + 2 * 10.0 - 48.0) / 2.0,
+                                        ),
+                                        child: ExcludeFocus(
+                                          child: Switch(
+                                            onCheckedChanged: _settings
+                                                .developerMode
+                                                .setValue,
+                                            checked: developerMode,
+                                          ),
                                         ),
                                       ),
                                     ),
@@ -2954,23 +3159,25 @@ class _LogsPageState extends State<_LogsPage> {
                                     child: ListItemContainer(
                                       isFirst: isFirst,
                                       isLast: isLast,
-                                      child: ListItemInteraction(
-                                        onTap: () async {
-                                          await Fluttertoast.showToast(
-                                            msg: "Not yet implemented!",
-                                            toastLength: Toast.LENGTH_SHORT,
-                                          );
-                                        },
-                                        child: ListItemLayout(
-                                          alignment: .top,
-                                          leading: IconTheme.mergeWithData(
-                                            data: IconThemeDataPartial.from(
-                                              color: iconColor,
+                                      child: MergeSemantics(
+                                        child: ListItemInteraction(
+                                          onTap: () async {
+                                            await Fluttertoast.showToast(
+                                              msg: "Not yet implemented!",
+                                              toastLength: Toast.LENGTH_SHORT,
+                                            );
+                                          },
+                                          child: ListItemLayout(
+                                            alignment: .top,
+                                            leading: IconTheme.mergeWithData(
+                                              data: IconThemeDataPartial.from(
+                                                color: iconColor,
+                                              ),
+                                              child: icon,
                                             ),
-                                            child: icon,
+                                            overline: Text("${log.createdAt}"),
+                                            headline: Text(log.message),
                                           ),
-                                          overline: Text("${log.createdAt}"),
-                                          headline: Text(log.message),
                                         ),
                                       ),
                                     ),

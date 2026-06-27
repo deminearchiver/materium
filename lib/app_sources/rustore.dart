@@ -12,6 +12,7 @@ class RuStore extends AppSource {
     name = 'RuStore';
     naiveStandardVersionDetection = true;
     showReleaseDateAsVersionToggle = true;
+    changeLogIfAnyIsMarkDown = false;
   }
 
   @override

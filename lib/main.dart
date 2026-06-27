@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:materium/app.dart';
 import 'package:materium/flutter.dart';
 import 'package:materium/database/database.dart';
+import 'package:intl/date_symbol_data_local.dart';
 import 'package:materium/providers/apps_provider.dart';
 import 'package:materium/providers/logs_provider.dart';
 import 'package:materium/providers/notifications_provider.dart';
@@ -158,6 +159,7 @@ void main() async {
   final settings = await SettingsService.create();
   final settingsProvider = await SettingsProvider.ensureInitialized();
 
+  await initializeDateFormatting();
   await EasyLocalization.ensureInitialized();
   await loadTranslations();
 
@@ -172,7 +174,11 @@ void main() async {
 
   if (DeviceInfo.androidInfo!.version.sdkInt >= 29) {
     SystemChrome.setSystemUIOverlayStyle(
-      const SystemUiOverlayStyle(systemNavigationBarColor: Colors.transparent),
+      const SystemUiOverlayStyle(
+        systemNavigationBarColor: Colors.transparent,
+        statusBarColor: Colors.transparent,
+        systemStatusBarContrastEnforced: false,
+      ),
     );
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
   }

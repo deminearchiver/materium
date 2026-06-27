@@ -1,6 +1,6 @@
 name: materium
 description: Get Android app updates straight from the source.
-version: 1.4.3+2335
+version: 1.5.2+2338
 homepage: https://github.com/deminearchiver/materium
 repository: https://github.com/deminearchiver/materium
 issue_tracker: https://github.com/deminearchiver/materium/issues
@@ -60,28 +60,27 @@ dependencies:
   url_launcher: ^6.3.2
   permission_handler: ^12.0.3
   fluttertoast: ^9.1.0
-  file_picker: ^11.0.2
-  share_plus: ^12.0.2
+  file_picker: ^12.0.0-beta.7
+  share_plus: ^13.2.0
   sqflite: ^2.4.3
   easy_localization: ^3.0.8
   android_intent_plus: ^6.0.0
-  flutter_archive: ^6.0.4
+  flutter_archive: ^6.3.1
+  archive: ^4.0.9
   hsluv: ^1.1.3
-  connectivity_plus: ^7.1.1
+  connectivity_plus: ^7.2.0
   crypto: ^3.0.7
   bcrypt: ^1.2.0
-  app_links: ^7.1.2
+  app_links: ^7.2.0
   background_fetch: ^1.7.0
   flex_color_picker: ^3.8.0
   markdown: ^7.3.1
   flutter_typeahead: ^6.0.0
-  battery_plus: ^7.0.0
+  battery_plus: ^7.1.0
   flutter_charset_detector: ^6.0.0
   flutter_foreground_task: ^9.2.2
   flutter_markdown_plus: ^1.0.7
   skeletonizer: ^2.1.3
-  # super_keyboard: ^0.4.0
-  # super_editor: ^0.3.0-dev.51
   freezed_annotation: ^3.1.0
   json_annotation: ^4.12.0
   flutter_svg: ^2.3.0
@@ -91,8 +90,8 @@ dependencies:
   drift: ^2.34.0
   drift_flutter: ^0.3.0
   drift_sqflite: ^2.0.1
-  talker_flutter: ^5.1.16
-  device_info_ffi: ^1.1.1
+  talker_flutter: ^5.1.17
+  device_info_ffi: ^2.0.0
   dynamic_color_ffi: ^1.1.2
   slang: ^4.16.0
   slang_flutter: ^4.16.0
@@ -110,17 +109,15 @@ dev_dependencies:
   flutter_gen_runner: ^5.14.1
   drift_dev: ^2.34.0
   slang_build_runner: ^4.16.0
-  fastforge: ^0.6.6
+  fastforge: ^0.6.8
 
 dependency_overrides:
   # Hosted dependencies
-  archive: ^4.0.7 # fastforge uses outdated version
-  device_info_plus: ^12.3.0 # Needed for unknown reasons
+  archive: ^4.0.9 # fastforge uses outdated version
+  device_info_plus: ^13.2.0 # Needed for unknown reasons
   material_color_utilities: ^0.13.0 # Flutter pinned dependency
   meta: ^1.18.0 # Always use latest version
-  uuid: ^4.5.2 # fastforge uses outdated version
-  # super_editor: 0.3.0-dev.50
-  # super_keyboard: ^0.3.1
+  uuid: ^4.5.3 # fastforge uses outdated version
 
 flutter:
   uses-material-design: true

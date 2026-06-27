@@ -82,7 +82,7 @@ class AddAppPageState extends State<AddAppPage> {
                 overrideSource: pickedSourceOverride,
               )
             : null;
-        if (pickedSource.runtimeType != source.runtimeType ||
+        if (pickedSource?.runtimeType != source.runtimeType ||
             overrideChanged ||
             (prevHost != null && prevHost != source?.hosts[0])) {
           pickedSource = source;
@@ -138,6 +138,13 @@ class AddAppPageState extends State<AddAppPage> {
 
     final searchDeselected = context.select<SettingsProvider, List<String>>(
       (settingsProvider) => settingsProvider.searchDeselected,
+    );
+
+    final includePrereleasesByDefault = context.select<SettingsProvider, bool>(
+      (settingsProvider) => settingsProvider.includePrereleasesByDefault,
+    );
+    final shizukuPretendToBeGooglePlay = context.select<SettingsProvider, bool>(
+      (settingsProvider) => settingsProvider.shizukuPretendToBeGooglePlay,
     );
 
     final doingSomething = _adding || _searching;
@@ -378,7 +385,7 @@ class AddAppPageState extends State<AddAppPage> {
                 onTap: canAddApp || isSelected
                     ? () {
                         if (canAddApp) {
-                          HapticFeedback.selectionClick();
+                          context.read<SettingsProvider>().selectionClick();
                           addApp();
                         }
                       }
@@ -513,6 +520,8 @@ class AddAppPageState extends State<AddAppPage> {
                   }
                 }),
           )).where((a) => a != null).toList();
+
+          if (!mounted) return;
 
           // Interleave results instead of simple reduce
           final res = <String, MapEntry<String, List<String>>>{};
@@ -737,26 +746,43 @@ class AddAppPageState extends State<AddAppPage> {
           ),
         ),
         const SizedBox(height: 16),
-        GeneratedForm(
-          key: Key(
-            '${pickedSource.runtimeType.toString()}-${pickedSource?.hostChanged.toString()}-${pickedSource?.hostIdenticalDespiteAnyChange.toString()}',
-          ),
-          items: [
-            ...pickedSource!.combinedAppSpecificSettingFormItems,
-            ...(pickedSourceOverride != null
-                ? pickedSource!.sourceConfigSettingFormItems.map((e) => [e])
-                : []),
-          ],
-          onValueChanges: (values, valid, isBuilding) {
-            if (!isBuilding) {
-              setState(() {
-                additionalSettings = values;
-                additionalSettingsValid = valid;
-              });
+        () {
+          final formItems = pickedSource!.combinedAppSpecificSettingFormItems;
+          if (includePrereleasesByDefault || shizukuPretendToBeGooglePlay) {
+            for (final row in formItems) {
+              for (final item in row) {
+                if (item.key == "includePrereleases" &&
+                    includePrereleasesByDefault) {
+                  item.defaultValue = true;
+                }
+                if (item.key == "shizukuPretendToBeGooglePlay" &&
+                    shizukuPretendToBeGooglePlay) {
+                  item.defaultValue = true;
+                }
+              }
             }
-          },
-          textFieldType: useBlackTheme ? .outlined : .filled,
-        ),
+          }
+          return GeneratedForm(
+            key: Key(
+              '${pickedSource.runtimeType.toString()}-${pickedSource?.hostChanged.toString()}-${pickedSource?.hostIdenticalDespiteAnyChange.toString()}',
+            ),
+            items: [
+              ...formItems,
+              ...(pickedSourceOverride != null
+                  ? pickedSource!.sourceConfigSettingFormItems.map((e) => [e])
+                  : []),
+            ],
+            onValueChanges: (values, valid, isBuilding) {
+              if (!isBuilding) {
+                setState(() {
+                  additionalSettings = values;
+                  additionalSettingsValid = valid;
+                });
+              }
+            },
+            textFieldType: useBlackTheme ? .outlined : .filled,
+          );
+        }(),
         Flex.vertical(
           children: [
             const SizedBox(height: 16),
@@ -893,7 +919,7 @@ class AddAppPageState extends State<AddAppPage> {
           InkWell(
             onTap: () {
               launchUrlString(
-                'https://apps.obtainium.imranr.dev/',
+                'https://apps.obtainium.page/',
                 mode: LaunchMode.externalApplication,
               );
             },

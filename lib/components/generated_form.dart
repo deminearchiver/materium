@@ -586,17 +586,17 @@ class _GeneratedFormState extends State<GeneratedForm> {
     }
     for (var r = 0; r < formInputs.length; r++) {
       for (var e = 0; e < formInputs[r].length; e++) {
-        final fieldKey = widget.items[r][e].key;
-        if (widget.items[r][e] is GeneratedFormSwitch) {
+        final item = widget.items[r][e];
+        String fieldKey = item.key;
+        if (item is GeneratedFormSwitch) {
           formInputs[r][e] = Flex.horizontal(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Flexible.loose(child: Text(widget.items[r][e].label)),
+              Flexible.loose(child: Text(item.label)),
               const SizedBox(width: 8),
               Switch(
                 checked: values[fieldKey],
-                onCheckedChanged:
-                    (widget.items[r][e] as GeneratedFormSwitch).disabled
+                onCheckedChanged: item.disabled
                     ? null
                     : (value) {
                         setState(() {
@@ -607,13 +607,13 @@ class _GeneratedFormState extends State<GeneratedForm> {
               ),
             ],
           );
-        } else if (widget.items[r][e] is GeneratedFormTagInput) {
+        } else if (item is GeneratedFormTagInput) {
           void onAddPressed() {
             showDialog<Map<String, dynamic>?>(
               context: context,
               builder: (ctx) {
                 return GeneratedFormModal(
-                  title: widget.items[r][e].label,
+                  title: item.label,
                   items: [
                     [GeneratedFormTextField('label', label: tr('label'))],
                   ],
@@ -627,9 +627,7 @@ class _GeneratedFormState extends State<GeneratedForm> {
                       values[fieldKey] as Map<String, MapEntry<int, bool>>?;
                   temp ??= {};
                   if (temp[label] == null) {
-                    final singleSelect =
-                        (widget.items[r][e] as GeneratedFormTagInput)
-                            .singleSelect;
+                    final singleSelect = item.singleSelect;
                     final someSelected = temp.entries
                         .where((element) => element.value.value)
                         .isNotEmpty;
@@ -651,22 +649,15 @@ class _GeneratedFormState extends State<GeneratedForm> {
               if ((values[fieldKey] as Map<String, MapEntry<int, bool>>?)
                           ?.isNotEmpty ==
                       true &&
-                  (widget.items[r][e] as GeneratedFormTagInput)
-                      .showLabelWhenNotEmpty)
+                  item.showLabelWhenNotEmpty)
                 Flex.vertical(
-                  crossAxisAlignment:
-                      (widget.items[r][e] as GeneratedFormTagInput).alignment ==
-                          WrapAlignment.center
+                  crossAxisAlignment: item.alignment == WrapAlignment.center
                       ? CrossAxisAlignment.center
                       : CrossAxisAlignment.stretch,
-                  children: [
-                    Text(widget.items[r][e].label),
-                    const SizedBox(height: 8),
-                  ],
+                  children: [Text(item.label), const SizedBox(height: 8)],
                 ),
               Wrap(
-                alignment:
-                    (widget.items[r][e] as GeneratedFormTagInput).alignment,
+                alignment: item.alignment,
                 crossAxisAlignment: WrapCrossAlignment.center,
                 spacing: 18.0,
                 runSpacing: 0.0,
@@ -681,98 +672,97 @@ class _GeneratedFormState extends State<GeneratedForm> {
                   //     : const SizedBox.shrink(),
                   // TODO: get rid of category colors across the app
                   // TODO: make categories be tags
-                  ...(values[fieldKey] as Map<String, MapEntry<int, bool>>?)
-                          ?.entries
-                          .map((e2) {
-                            final isSelected = e2.value.value;
-                            return Button(
-                              style: .from(
-                                containerColor: .resolveWith(
-                                  (states) => switch (states) {
-                                    ButtonDisabledStates() => null,
-                                    ToggleButtonStates(isSelected: true) =>
-                                      useBlackTheme
-                                          ? colorTheme.primaryContainer
-                                          : colorTheme.tertiaryContainer,
-                                    _ =>
-                                      useBlackTheme
-                                          ? colorTheme.surfaceContainer
-                                          : colorTheme.surfaceContainer,
-                                  },
-                                ),
-                                labelTextStyle: .resolveWith(
-                                  (states) => .new(
-                                    color: switch (states) {
-                                      ButtonDisabledStates() => null,
-                                      ToggleButtonStates(isSelected: true) =>
-                                        useBlackTheme
-                                            ? colorTheme.onPrimaryContainer
-                                            : colorTheme.onTertiaryContainer,
-                                      _ =>
-                                        useBlackTheme
-                                            ? colorTheme.onSurface
-                                            : colorTheme.onSurfaceVariant,
-                                    },
-                                  ),
-                                ),
-                              ),
-                              settings: .new(
-                                size: .extraSmall,
-                                color: useBlackTheme ? .tonal : .filled,
-                              ),
-                              isSelected: isSelected,
-                              onTap: () {
-                                final value = !isSelected;
-                                setState(() {
-                                  (values[fieldKey]
-                                      as Map<String, MapEntry<int, bool>>)[e2
-                                      .key] = MapEntry(
-                                    (values[fieldKey]
-                                            as Map<
-                                              String,
-                                              MapEntry<int, bool>
-                                            >)[e2.key]!
-                                        .key,
-                                    value,
-                                  );
-                                  if ((widget.items[r][e]
-                                              as GeneratedFormTagInput)
-                                          .singleSelect &&
-                                      value) {
-                                    for (final key
-                                        in (values[fieldKey]
-                                                as Map<
-                                                  String,
-                                                  MapEntry<int, bool>
-                                                >)
-                                            .keys) {
-                                      if (key != e2.key) {
-                                        (values[fieldKey]
-                                            as Map<
-                                              String,
-                                              MapEntry<int, bool>
-                                            >)[key] = MapEntry(
-                                          (values[fieldKey]
-                                                  as Map<
-                                                    String,
-                                                    MapEntry<int, bool>
-                                                  >)[key]!
-                                              .key,
-                                          false,
-                                        );
-                                      }
-                                    }
-                                  }
-                                  someValueChanged();
-                                });
-                              },
-                              label: Text(
-                                e2.key,
-                                maxLines: 2,
-                                overflow: .ellipsis,
+                  ...() sync* {
+                        final tagEntries =
+                            values[fieldKey]
+                                as Map<String, MapEntry<int, bool>>?;
+                        if (tagEntries != null) {
+                          final sorted = tagEntries.entries.toList()
+                            ..sort(
+                              (a, b) => a.key.toLowerCase().compareTo(
+                                b.key.toLowerCase(),
                               ),
                             );
-                          }) ??
+                          yield* sorted;
+                        }
+                      }().map((e2) {
+                        final isSelected = e2.value.value;
+                        return Button(
+                          style: .from(
+                            containerColor: .resolveWith(
+                              (states) => switch (states) {
+                                ButtonDisabledStates() => null,
+                                ToggleButtonStates(isSelected: true) =>
+                                  useBlackTheme
+                                      ? colorTheme.primaryContainer
+                                      : colorTheme.tertiaryContainer,
+                                _ =>
+                                  useBlackTheme
+                                      ? colorTheme.surfaceContainer
+                                      : colorTheme.surfaceContainer,
+                              },
+                            ),
+                            labelTextStyle: .resolveWith(
+                              (states) => .new(
+                                color: switch (states) {
+                                  ButtonDisabledStates() => null,
+                                  ToggleButtonStates(isSelected: true) =>
+                                    useBlackTheme
+                                        ? colorTheme.onPrimaryContainer
+                                        : colorTheme.onTertiaryContainer,
+                                  _ =>
+                                    useBlackTheme
+                                        ? colorTheme.onSurface
+                                        : colorTheme.onSurfaceVariant,
+                                },
+                              ),
+                            ),
+                          ),
+                          settings: .new(
+                            size: .extraSmall,
+                            color: useBlackTheme ? .tonal : .filled,
+                          ),
+                          isSelected: isSelected,
+                          onTap: () {
+                            final value = !isSelected;
+                            setState(() {
+                              (values[fieldKey]
+                                  as Map<String, MapEntry<int, bool>>)[e2
+                                  .key] = MapEntry(
+                                (values[fieldKey]
+                                        as Map<String, MapEntry<int, bool>>)[e2
+                                        .key]!
+                                    .key,
+                                value,
+                              );
+                              if (item.singleSelect && value) {
+                                for (final key
+                                    in (values[fieldKey]
+                                            as Map<String, MapEntry<int, bool>>)
+                                        .keys) {
+                                  if (key != e2.key) {
+                                    (values[fieldKey]
+                                        as Map<
+                                          String,
+                                          MapEntry<int, bool>
+                                        >)[key] = MapEntry(
+                                      (values[fieldKey]
+                                              as Map<
+                                                String,
+                                                MapEntry<int, bool>
+                                              >)[key]!
+                                          .key,
+                                      false,
+                                    );
+                                  }
+                                }
+                              }
+                              someValueChanged();
+                            });
+                          },
+                          label: Text(e2.key, maxLines: 2, overflow: .ellipsis),
+                        );
+                      }) ??
                       const [SizedBox.shrink()],
                 ],
               ),
@@ -903,12 +893,8 @@ class _GeneratedFormState extends State<GeneratedForm> {
                               });
                             }
 
-                            if ((widget.items[r][e] as GeneratedFormTagInput)
-                                    .deleteConfirmationMessage !=
-                                null) {
-                              final message =
-                                  (widget.items[r][e] as GeneratedFormTagInput)
-                                      .deleteConfirmationMessage!;
+                            if (item.deleteConfirmationMessage != null) {
+                              final message = item.deleteConfirmationMessage!;
                               showDialog<Map<String, dynamic>?>(
                                 context: context,
                                 builder: (ctx) {
@@ -994,11 +980,7 @@ class _GeneratedFormState extends State<GeneratedForm> {
                       settings: const .new(size: .extraSmall, shape: .square),
                       onTap: onAddPressed,
                       icon: const Icon(Symbols.add_rounded),
-                      label: Text(
-                        (widget.items[r][e] as GeneratedFormTagInput).label,
-                        maxLines: 2,
-                        overflow: .ellipsis,
-                      ),
+                      label: Text(item.label, maxLines: 2, overflow: .ellipsis),
                     )
                   else
                     Tooltip(
@@ -1042,11 +1024,9 @@ class _GeneratedFormState extends State<GeneratedForm> {
               ),
             ],
           );
-        } else if (widget.items[r][e] is GeneratedFormSubForm) {
+        } else if (item is GeneratedFormSubForm) {
           final List<Widget> subformColumn = [];
-          final compact =
-              (widget.items[r][e] as GeneratedFormSubForm).items.length == 1 &&
-              (widget.items[r][e] as GeneratedFormSubForm).items[0].length == 1;
+          final compact = item.items.length == 1 && item.items[0].length == 1;
           for (var i = 0; i < values[fieldKey].length; i++) {
             final internalFormKey = ValueKey(
               generateRandomNumber(
@@ -1062,26 +1042,21 @@ class _GeneratedFormState extends State<GeneratedForm> {
                   if (!compact) const SizedBox(height: 16),
                   if (!compact)
                     Text(
-                      '${(widget.items[r][e] as GeneratedFormSubForm).label} (${i + 1})',
+                      '${item.label} (${i + 1})',
                       style: const TextStyle(fontWeight: FontWeight.bold),
                     ),
                   GeneratedForm(
                     key: internalFormKey,
-                    items:
-                        cloneFormItems(
-                              (widget.items[r][e] as GeneratedFormSubForm)
-                                  .items,
-                            )
-                            .map(
-                              (x) => x.map((y) {
-                                y
-                                  ..defaultValue = values[fieldKey]?[i]?[y.key]
-                                  ..key =
-                                      '${y.key.toString()},$internalFormKey';
-                                return y;
-                              }).toList(),
-                            )
-                            .toList(),
+                    items: cloneFormItems(item.items)
+                        .map(
+                          (x) => x.map((y) {
+                            y
+                              ..defaultValue = values[fieldKey]?[i]?[y.key]
+                              ..key = '${y.key.toString()},$internalFormKey';
+                            return y;
+                          }).toList(),
+                        )
+                        .toList(),
                     onValueChanges: (values, valid, isBuilding) {
                       values = values.map(
                         (key, value) => MapEntry(key.split(',')[0], value),
@@ -1151,7 +1126,7 @@ class _GeneratedFormState extends State<GeneratedForm> {
                         ),
                         icon: const Icon(Symbols.delete_rounded, fill: 0),
                         label: Text(
-                          '${(widget.items[r][e] as GeneratedFormSubForm).label} (${i + 1})',
+                          '${item.label} (${i + 1})',
                           maxLines: 2,
                           overflow: TextOverflow.ellipsis,
                         ),
@@ -1171,9 +1146,7 @@ class _GeneratedFormState extends State<GeneratedForm> {
                     child: FilledButton.icon(
                       onPressed: () {
                         values[fieldKey].add(
-                          getDefaultValuesFromFormItems(
-                            (widget.items[r][e] as GeneratedFormSubForm).items,
-                          ),
+                          getDefaultValuesFromFormItems(item.items),
                         );
                         forceUpdateKeyCount++;
                         someValueChanged();
@@ -1227,7 +1200,7 @@ class _GeneratedFormState extends State<GeneratedForm> {
                       ),
                       icon: const Icon(Symbols.add_rounded),
                       label: Text(
-                        (widget.items[r][e] as GeneratedFormSubForm).label,
+                        item.label,
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
                       ),

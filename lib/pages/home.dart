@@ -191,6 +191,7 @@ class _HomePageState extends State<HomePage> {
     final backgroundColor = useBlackTheme
         ? colorTheme.surface
         : colorTheme.surfaceContainer;
+    // TODO: PopScope isLinkActivity
     return Scaffold(
       backgroundColor: backgroundColor,
       body: AppsPage(key: GlobalObjectKey(this)),

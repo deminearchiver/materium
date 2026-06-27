@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'dart:math' as math;
 
 import 'package:easy_localization/easy_localization.dart';
+import 'package:materium/components/app_list_builder.dart';
 import 'package:materium/components/custom_markdown.dart';
 import 'package:materium/components/custom_refresh_indicator.dart';
 import 'package:materium/flutter.dart';
@@ -17,6 +18,7 @@ import 'package:materium/pages/app.dart';
 import 'package:materium/pages/developer.dart';
 import 'package:materium/pages/settings.dart';
 import 'package:materium/providers/apps_provider.dart';
+import 'package:materium/providers/notifications_provider.dart';
 import 'package:materium/providers/settings_new.dart';
 import 'package:materium/providers/settings_provider.dart';
 import 'package:materium/providers/source_provider.dart';
@@ -24,53 +26,6 @@ import 'package:provider/provider.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 import 'package:markdown/markdown.dart' as md;
-
-class AppsFilter {
-  AppsFilter({
-    this.nameFilter = "",
-    this.authorFilter = "",
-    this.idFilter = "",
-    this.includeUptodate = true,
-    this.includeNonInstalled = true,
-    this.categoryFilter = const {},
-    this.sourceFilter = "",
-  });
-
-  String nameFilter;
-  String authorFilter;
-  String idFilter;
-  bool includeUptodate;
-  bool includeNonInstalled;
-  Set<String> categoryFilter;
-  String sourceFilter;
-
-  Map<String, Object?> toFormValuesMap() => {
-    "appName": nameFilter,
-    "author": authorFilter,
-    "appId": idFilter,
-    "upToDateApps": includeUptodate,
-    "nonInstalledApps": includeNonInstalled,
-    "sourceFilter": sourceFilter,
-  };
-
-  void setFormValuesFromMap(Map<String, Object?> values) {
-    nameFilter = values["appName"]! as String;
-    authorFilter = values["author"]! as String;
-    idFilter = values["appId"]! as String;
-    includeUptodate = values["upToDateApps"] as bool;
-    includeNonInstalled = values["nonInstalledApps"] as bool;
-    sourceFilter = values["sourceFilter"] as String;
-  }
-
-  bool isIdenticalTo(AppsFilter other, SettingsProvider settingsProvider) =>
-      authorFilter.trim() == other.authorFilter.trim() &&
-      nameFilter.trim() == other.nameFilter.trim() &&
-      idFilter.trim() == other.idFilter.trim() &&
-      includeUptodate == other.includeUptodate &&
-      includeNonInstalled == other.includeNonInstalled &&
-      settingsProvider.setEqual(categoryFilter, other.categoryFilter) &&
-      sourceFilter.trim() == other.sourceFilter.trim();
-}
 
 class AppsPage extends StatefulWidget {
   const AppsPage({super.key});
@@ -96,14 +51,10 @@ class AppsPageState extends State<AppsPage> with TickerProviderStateMixin {
 
   DateTime? refreshingSince;
 
-  bool clearSelected() {
-    if (selectedAppIds.isNotEmpty) {
-      setState(() {
-        selectedAppIds.clear();
-      });
-      return true;
-    }
-    return false;
+  void clearSelected() {
+    setState(() {
+      selectedAppIds.clear();
+    });
   }
 
   void selectThese(List<App> apps) {
@@ -173,7 +124,7 @@ class AppsPageState extends State<AppsPage> with TickerProviderStateMixin {
     final listItemEasing = const EasingThemeData.defaults().standard;
 
     Future<List<App>> refresh() {
-      HapticFeedback.lightImpact();
+      settingsProvider.lightImpact();
       setState(() {
         refreshingSince = DateTime.now();
       });
@@ -197,174 +148,67 @@ class AppsPageState extends State<AppsPage> with TickerProviderStateMixin {
       _refreshIndicatorKey.currentState?.show();
     }
 
-    selectedAppIds = selectedAppIds
-        .where((id) => listedApps.map((item) => item.app.id).contains(id))
-        .toSet();
+    final listedAppIdSet = listedApps.map((e) => e.app.id).toSet();
+    selectedAppIds = selectedAppIds.where(listedAppIdSet.contains).toSet();
 
     void toggleAppSelected(App app) {
       setState(() {
-        if (selectedAppIds.map((e) => e).contains(app.id)) {
-          selectedAppIds.removeWhere((a) => a == app.id);
+        if (selectedAppIds.contains(app.id)) {
+          selectedAppIds.remove(app.id);
         } else {
           selectedAppIds.add(app.id);
         }
       });
     }
 
-    listedApps =
-        listedApps.where((app) {
-          if (app.app.installedVersion == app.app.latestVersion &&
-              !(filter.includeUptodate)) {
-            return false;
-          }
-          if (app.app.installedVersion == null &&
-              !(filter.includeNonInstalled)) {
-            return false;
-          }
-          if (filter.nameFilter.isNotEmpty || filter.authorFilter.isNotEmpty) {
-            final nameTokens = filter.nameFilter
-                .split(" ")
-                .where((element) => element.trim().isNotEmpty)
-                .toList();
-            final authorTokens = filter.authorFilter
-                .split(" ")
-                .where((element) => element.trim().isNotEmpty)
-                .toList();
-
-            for (final t in nameTokens) {
-              if (!app.name.toLowerCase().contains(t.toLowerCase())) {
-                return false;
-              }
-            }
-            for (final t in authorTokens) {
-              if (!app.author.toLowerCase().contains(t.toLowerCase())) {
-                return false;
-              }
-            }
-          }
-          if (filter.idFilter.isNotEmpty) {
-            if (!app.app.id.contains(filter.idFilter)) {
-              return false;
-            }
-          }
-          if (filter.categoryFilter.isNotEmpty &&
-              filter.categoryFilter
-                  .intersection(app.app.categories.toSet())
-                  .isEmpty) {
-            return false;
-          }
-          if (filter.sourceFilter.isNotEmpty &&
-              sourceProvider
-                      .getSource(
-                        app.app.url,
-                        overrideSource: app.app.overrideSource,
-                      )
-                      .runtimeType
-                      .toString() !=
-                  filter.sourceFilter) {
-            return false;
-          }
-          return true;
-        }).toList()..sort((a, b) {
-          var result = 0;
-          switch (settingsProvider.sortColumn) {
-            case .authorName:
-              result = ((a.author + a.name).toLowerCase()).compareTo(
-                (b.author + b.name).toLowerCase(),
-              );
-            case .nameAuthor:
-              result = ((a.name + a.author).toLowerCase()).compareTo(
-                (b.name + b.author).toLowerCase(),
-              );
-            case .releaseDate:
-              // Handle null dates: apps with unknown release dates are grouped at the end
-              final aDate = a.app.releaseDate;
-              final bDate = b.app.releaseDate;
-              final isDescending = settingsProvider.sortOrder == .descending;
-              if (aDate == null && bDate == null) {
-                // Both null: sort by name for consistency
-                result = ((a.name + a.author).toLowerCase()).compareTo(
-                  (b.name + b.author).toLowerCase(),
-                );
-              } else if (aDate == null) {
-                // a has no date, always push to end regardless of sort direction
-                result = isDescending ? -1 : 1;
-              } else if (bDate == null) {
-                // b has no date, always push to end regardless of sort direction
-                result = isDescending ? 1 : -1;
-              } else {
-                result = aDate.compareTo(bDate);
-              }
-            default:
-          }
-          return result;
-        });
-
-    if (settingsProvider.sortOrder == .descending) {
-      listedApps = listedApps.reversed.toList();
-    }
-
     final existingUpdates = appsProvider.findExistingUpdates(
       installedOnly: true,
+    );
+
+    listedApps = AppListBuilder.filter(listedApps, filter, sourceProvider);
+    listedApps = AppListBuilder.sort(
+      listedApps,
+      settingsProvider.sortColumn,
+      settingsProvider.sortOrder,
+    );
+    listedApps = AppListBuilder.reorder(
+      listedApps,
+      settingsProvider.pinUpdates,
+      settingsProvider.buryNonInstalled,
+      existingUpdates.map((e) => e).toSet(),
     );
 
     var existingUpdateIdsAllOrSelected = existingUpdates
         .where(
           (element) => selectedAppIds.isEmpty
-              ? listedApps.where((a) => a.app.id == element).isNotEmpty
-              : selectedAppIds.map((e) => e).contains(element),
+              ? listedAppIdSet.contains(element)
+              : selectedAppIds.contains(element),
         )
         .toList();
     var newInstallIdsAllOrSelected = appsProvider
         .findExistingUpdates(nonInstalledOnly: true)
         .where(
           (element) => selectedAppIds.isEmpty
-              ? listedApps.where((a) => a.app.id == element).isNotEmpty
-              : selectedAppIds.map((e) => e).contains(element),
+              ? listedAppIdSet.contains(element)
+              : selectedAppIds.contains(element),
         )
         .toList();
 
     final trackOnlyUpdateIdsAllOrSelected = <String>[];
-
-    existingUpdateIdsAllOrSelected = existingUpdateIdsAllOrSelected.where((id) {
+    bool isNotTrackOnly(String id) {
       if (appsProvider.apps[id]!.app.additionalSettings['trackOnly'] == true) {
         trackOnlyUpdateIdsAllOrSelected.add(id);
         return false;
       }
       return true;
-    }).toList();
-
-    newInstallIdsAllOrSelected = newInstallIdsAllOrSelected.where((id) {
-      if (appsProvider.apps[id]!.app.additionalSettings['trackOnly'] == true) {
-        trackOnlyUpdateIdsAllOrSelected.add(id);
-        return false;
-      }
-      return true;
-    }).toList();
-
-    if (settingsProvider.pinUpdates) {
-      final temp = [];
-      listedApps = listedApps.where((sa) {
-        if (existingUpdates.contains(sa.app.id)) {
-          temp.add(sa);
-          return false;
-        }
-        return true;
-      }).toList();
-      listedApps = [...temp, ...listedApps];
     }
 
-    if (settingsProvider.buryNonInstalled) {
-      final temp = <AppInMemory>[];
-      listedApps = listedApps.where((sa) {
-        if (sa.app.installedVersion == null) {
-          temp.add(sa);
-          return false;
-        }
-        return true;
-      }).toList();
-      listedApps = [...listedApps, ...temp];
-    }
+    existingUpdateIdsAllOrSelected = existingUpdateIdsAllOrSelected
+        .where(isNotTrackOnly)
+        .toList();
+    newInstallIdsAllOrSelected = newInstallIdsAllOrSelected
+        .where(isNotTrackOnly)
+        .toList();
 
     final renamedApps = <AppInMemory>[];
     final unpinnedApps = <AppInMemory>[];
@@ -378,7 +222,6 @@ class AppsPageState extends State<AppsPage> with TickerProviderStateMixin {
         unpinnedApps.add(item);
       }
     }
-    listedApps = [...renamedApps, ...pinnedApps, ...unpinnedApps];
 
     List<String?> getListedCategories() {
       final temp = listedApps.map(
@@ -427,8 +270,7 @@ class AppsPageState extends State<AppsPage> with TickerProviderStateMixin {
           final oldValue = _progressIndicatorValueCache;
           final newValue = isVisible
               ? !appsProvider.loadingApps
-                    ? appsProvider
-                              .getAppValues()
+                    ? appsProvider.apps.values
                               .where(
                                 (element) =>
                                     !(element.app.lastUpdateCheck?.isBefore(
@@ -468,53 +310,13 @@ class AppsPageState extends State<AppsPage> with TickerProviderStateMixin {
       );
     }
 
-    Widget getAppIcon(int appIndex) {
-      return InkWell(
-        onDoubleTap: () {
-          pm.openApp(listedApps[appIndex].app.id);
-        },
-        onLongPress: () {
-          Navigator.of(context).push(
-            MaterialPageRoute<void>(
-              builder: (context) => AppPage(
-                appId: listedApps[appIndex].app.id,
-                showOppositeOfPreferredView: true,
-              ),
-            ),
-          );
-        },
-        child: FutureBuilder(
-          future: appsProvider.updateAppIcon(listedApps[appIndex].app.id),
-          builder: (ctx, val) => listedApps[appIndex].icon != null
-              ? Image.memory(
-                  listedApps[appIndex].icon!,
-                  gaplessPlayback: true,
-                  opacity: AlwaysStoppedAnimation(
-                    listedApps[appIndex].installedInfo == null ? 0.6 : 1,
-                  ),
-                )
-              : Align.center(
-                  child: SizedBox.square(
-                    dimension: 40.0,
-                    child: Transform(
-                      alignment: Alignment.center,
-                      transform: Matrix4.rotationZ(0.31),
-                      child: Assets.graphics.iconSmall.image(
-                        color: colorTheme.brightness == .dark
-                            ? Colors.white.withValues(alpha: 0.4)
-                            : Colors.white.withValues(alpha: 0.3),
-                        colorBlendMode: .modulate,
-                        gaplessPlayback: true,
-                      ),
-                    ),
-                  ),
-                ),
-        ),
-      );
-    }
-
     String getVersionText(int appIndex) {
-      return listedApps[appIndex].app.installedVersion ?? tr('notInstalled');
+      final installed = listedApps[appIndex].app.installedVersion;
+      final latest = listedApps[appIndex].app.latestVersion;
+      if (installed != null && installed != latest) {
+        return '$installed → $latest';
+      }
+      return installed ?? tr('notInstalled');
     }
 
     String getChangesButtonString(int appIndex, bool hasChangeLogFn) {
@@ -712,13 +514,13 @@ class AppsPageState extends State<AppsPage> with TickerProviderStateMixin {
 
       final transparent = colorTheme.surface.withAlpha(0).toARGB32();
 
-      final stops = <double>[
-        ...listedApps[index].app.categories.asMap().entries.map(
-          (e) =>
-              ((e.key / (listedApps[index].app.categories.length - 1)) -
-              0.0001),
-        ),
-        1.0,
+      var categories = listedApps[index].app.categories;
+      List<double> stops = [
+        if (categories.isNotEmpty)
+          ...categories.asMap().entries.map(
+            (e) => ((e.key / (categories.length - 1)) - 0.0001),
+          ),
+        1,
       ];
       if (stops.length == 2) {
         stops[0] = 0.9999;
@@ -726,19 +528,21 @@ class AppsPageState extends State<AppsPage> with TickerProviderStateMixin {
       return DecoratedBox(
         position: DecorationPosition.foreground,
         decoration: BoxDecoration(
-          gradient: LinearGradient(
-            stops: stops,
-            begin: const Alignment(-1.0, 0.0),
-            end: const Alignment(-0.97, 0.0),
-            colors: [
-              ...listedApps[index].app.categories.map(
-                (e) => Color(
-                  settingsProvider.categories[e] ?? transparent,
-                ).withAlpha(255),
-              ),
-              Color(transparent),
-            ],
-          ),
+          gradient: categories.isEmpty
+              ? null
+              : LinearGradient(
+                  stops: stops,
+                  begin: const Alignment(-1, 0),
+                  end: const Alignment(-0.97, 0),
+                  colors: [
+                    ...categories.map(
+                      (e) => Color(
+                        settingsProvider.categories[e] ?? transparent,
+                      ).withAlpha(255),
+                    ),
+                    Color(transparent),
+                  ],
+                ),
         ),
         child: ListTile(
           autofocus: index == 0 && settingsProvider.isTv,
@@ -757,7 +561,14 @@ class AppsPageState extends State<AppsPage> with TickerProviderStateMixin {
                       toggleAppSelected(listedApps[index].app),
                   checked: selectedAppIds.contains(listedApps[index].app.id),
                 )
-              : SizedBox.square(dimension: 56.0, child: getAppIcon(index)),
+              : SizedBox.square(
+                  dimension: 56.0,
+                  child: AppIconWidget(
+                    appId: listedApps[index].app.id,
+                    installed: listedApps[index].installedInfo != null,
+                    appsProvider: appsProvider,
+                  ),
+                ),
           title: Text(
             listedApps[index].name,
             maxLines: 1,
@@ -849,7 +660,7 @@ class AppsPageState extends State<AppsPage> with TickerProviderStateMixin {
                   trackOnlyUpdateIdsAllOrSelected.isEmpty)
           ? null
           : () {
-              HapticFeedback.heavyImpact();
+              settingsProvider.heavyImpact();
               List<GeneratedFormItem> formItems = [];
               if (existingUpdateIdsAllOrSelected.isNotEmpty) {
                 formItems.add(
@@ -945,8 +756,13 @@ class AppsPageState extends State<AppsPage> with TickerProviderStateMixin {
                         return <String>[];
                       })
                       .then((value) {
-                        if (value.isNotEmpty && shouldInstallUpdates) {
-                          showMessage(tr('appsUpdated'), context);
+                        if (value.isNotEmpty && context.mounted) {
+                          if (shouldInstallUpdates) {
+                            showMessage(tr('appsUpdated'), context);
+                          }
+                          context.read<NotificationsProvider>().cancel(
+                            UpdateNotification([]).id,
+                          );
                         }
                       });
                 }
@@ -1046,7 +862,7 @@ class AppsPageState extends State<AppsPage> with TickerProviderStateMixin {
               ),
               TextButton(
                 onPressed: () {
-                  HapticFeedback.selectionClick();
+                  settingsProvider.selectionClick();
                   appsProvider.saveApps(
                     selectedApps.map((a) {
                       if (a.installedVersion != null &&
@@ -1066,9 +882,7 @@ class AppsPageState extends State<AppsPage> with TickerProviderStateMixin {
             ],
           );
         },
-      ).whenComplete(() {
-        Navigator.of(context).pop();
-      });
+      );
     }
 
     void pinSelectedApps() {
@@ -1207,7 +1021,7 @@ class AppsPageState extends State<AppsPage> with TickerProviderStateMixin {
                               String urls = "";
                               for (var a in selectedApps) {
                                 urls +=
-                                    "https://apps.obtainium.imranr.dev/redirect?r=obtainium://app/${Uri.encodeComponent(jsonEncode({"id": a.id, "url": a.url, "author": a.author, "name": a.name, "preferredApkIndex": a.preferredApkIndex, "additionalSettings": jsonEncode(a.additionalSettings), "overrideSource": a.overrideSource}))}\n\n";
+                                    "https://apps.obtainium.page/redirect?r=obtainium://app/${Uri.encodeComponent(jsonEncode({"id": a.id, "url": a.url, "author": a.author, "name": a.name, "preferredApkIndex": a.preferredApkIndex, "additionalSettings": jsonEncode(a.additionalSettings), "overrideSource": a.overrideSource}))}\n\n";
                               }
                               SharePlus.instance.share(
                                 ShareParams(
@@ -1436,11 +1250,12 @@ class AppsPageState extends State<AppsPage> with TickerProviderStateMixin {
               final showChanges = getChangeLogFn(context, item.app);
 
               final installedVersion = item.app.installedVersion;
+              final latestVersion = item.app.latestVersion;
               final progress = item.downloadProgress;
 
               final isInstalled = installedVersion != null;
               final hasUpdate =
-                  isInstalled && installedVersion != item.app.latestVersion;
+                  isInstalled && installedVersion != latestVersion;
               final isSelected = selectedAppIds.contains(item.app.id);
 
               final Widget updateButton = Tooltip(
@@ -1476,6 +1291,18 @@ class AppsPageState extends State<AppsPage> with TickerProviderStateMixin {
                               .downloadAndInstallLatestApps([
                                 item.app.id,
                               ], globalNavigatorKey.currentContext)
+                              .then((res) {
+                                if (res.isNotEmpty && context.mounted) {
+                                  context.read<NotificationsProvider>()
+                                    ..cancel(UpdateNotification([]).id)
+                                    ..cancel(
+                                      SilentUpdateAttemptNotification(
+                                        [],
+                                        id: res[0].hashCode,
+                                      ).id,
+                                    );
+                                }
+                              })
                               .catchError((e) {
                                 if (context.mounted) {
                                   showError(e, context);
@@ -1831,7 +1658,7 @@ class AppsPageState extends State<AppsPage> with TickerProviderStateMixin {
                 supportingText: Text(
                   installedVersion != null
                       ? hasUpdate
-                            ? "$installedVersion → ${item.app.latestVersion}"
+                            ? "$installedVersion → $latestVersion"
                             : installedVersion
                       : tr("notInstalled"),
                   style: typescaleTheme.bodySmall.toTextStyle().copyWith(
@@ -2577,175 +2404,259 @@ class AppsPageState extends State<AppsPage> with TickerProviderStateMixin {
       );
     }
 
-    return Scaffold(
-      backgroundColor: backgroundColor,
-      extendBody: true,
-      body: SafeArea(
-        top: false,
-        bottom: false,
-        child: CustomRefreshIndicator(
-          key: _refreshIndicatorKey,
-          onRefresh: () async {
-            // if (kDebugMode) {
-            //   await Future.delayed(const Duration(seconds: 5));
-            // }
-            if (context.mounted) {
-              await refresh();
-            }
-          },
-          edgeOffset: padding.top + 64.0,
-          displacement: 80.0,
-          child: Scrollbar(
-            controller: scrollController,
-            interactive: true,
-            child: CustomScrollView(
-              physics: const AlwaysScrollableScrollPhysics(),
+    return PopScope(
+      canPop: selectedAppIds.isEmpty,
+      onPopInvokedWithResult: (didPop, result) {
+        if (!didPop) {
+          clearSelected();
+        }
+      },
+      child: Scaffold(
+        backgroundColor: backgroundColor,
+        extendBody: true,
+        body: SafeArea(
+          top: false,
+          bottom: false,
+          child: CustomRefreshIndicator(
+            key: _refreshIndicatorKey,
+            onRefresh: refresh,
+            edgeOffset: padding.top + 64.0,
+            displacement: 80.0,
+            child: Scrollbar(
               controller: scrollController,
-              slivers: <Widget>[
-                buildLinearProgressIndicator(
-                  (context, preferredSize, child) => CustomAppBar(
-                    type: .small,
-                    expandedContainerColor: backgroundColor,
-                    collapsedContainerColor: backgroundColor,
-                    collapsedTitleTextStyle: typescaleTheme.titleLargeEmphasized
-                        .toTextStyle(),
-                    collapsedPadding: const .symmetric(
-                      horizontal: 8.0 + 52.0 + 8.0,
-                    ),
-                    leading: Padding(
-                      padding: const .fromSTEB(8.0, 0.0, 8.0, 0.0),
-                      child: Tooltip(
-                        message: isFilterOff
-                            ? tr("filterApps")
-                            : "${tr("filter")} - ${tr("remove")}",
-                        child: IconButton(
-                          style: .from(
-                            containerColor: .resolveWith(
-                              (states) => switch (states) {
-                                ButtonDisabledStates() => null,
-                                ToggleButtonStates(isSelected: true) =>
-                                  useBlackTheme
-                                      ? colorTheme.primaryContainer
-                                      : colorTheme.tertiaryContainer,
-                                _ =>
-                                  useBlackTheme
-                                      ? colorTheme.surfaceContainer
-                                      : colorTheme.surfaceContainerHighest,
-                              },
-                            ),
-                            iconTheme: .resolveWith(
-                              (states) => .from(
-                                color: switch (states) {
+              interactive: true,
+              child: CustomScrollView(
+                physics: const AlwaysScrollableScrollPhysics(),
+                controller: scrollController,
+                slivers: <Widget>[
+                  buildLinearProgressIndicator(
+                    (context, preferredSize, child) => CustomAppBar(
+                      type: .small,
+                      expandedContainerColor: backgroundColor,
+                      collapsedContainerColor: backgroundColor,
+                      collapsedTitleTextStyle: typescaleTheme
+                          .titleLargeEmphasized
+                          .toTextStyle(),
+                      collapsedPadding: const .symmetric(
+                        horizontal: 8.0 + 52.0 + 8.0,
+                      ),
+                      leading: Padding(
+                        padding: const .fromSTEB(8.0, 0.0, 8.0, 0.0),
+                        child: Tooltip(
+                          message: isFilterOff
+                              ? tr("filterApps")
+                              : "${tr("filter")} - ${tr("remove")}",
+                          child: IconButton(
+                            style: .from(
+                              containerColor: .resolveWith(
+                                (states) => switch (states) {
                                   ButtonDisabledStates() => null,
                                   ToggleButtonStates(isSelected: true) =>
                                     useBlackTheme
-                                        ? colorTheme.onPrimaryContainer
-                                        : colorTheme.onTertiaryContainer,
+                                        ? colorTheme.primaryContainer
+                                        : colorTheme.tertiaryContainer,
                                   _ =>
                                     useBlackTheme
-                                        ? colorTheme.primary
-                                        : colorTheme.onSurfaceVariant,
+                                        ? colorTheme.surfaceContainer
+                                        : colorTheme.surfaceContainerHighest,
                                 },
                               ),
+                              iconTheme: .resolveWith(
+                                (states) => .from(
+                                  color: switch (states) {
+                                    ButtonDisabledStates() => null,
+                                    ToggleButtonStates(isSelected: true) =>
+                                      useBlackTheme
+                                          ? colorTheme.onPrimaryContainer
+                                          : colorTheme.onTertiaryContainer,
+                                    _ =>
+                                      useBlackTheme
+                                          ? colorTheme.primary
+                                          : colorTheme.onSurfaceVariant,
+                                  },
+                                ),
+                              ),
                             ),
-                          ),
-                          settings: const .new(
-                            size: .small,
-                            shape: .round,
-                            color: .standard,
-                            width: .wide,
-                          ),
-                          isSelected: !isFilterOff,
-                          onTap: isFilterOff
-                              ? showFilterDialog
-                              : () {
-                                  setState(() {
-                                    filter = AppsFilter();
-                                  });
-                                },
-                          icon: Icon(
-                            isFilterOff
-                                ? Symbols.filter_alt_rounded
-                                : Symbols.filter_alt_off_rounded,
-                            fill: 1.0,
+                            settings: const .new(
+                              size: .small,
+                              shape: .round,
+                              color: .standard,
+                              width: .wide,
+                            ),
+                            isSelected: !isFilterOff,
+                            onTap: isFilterOff
+                                ? showFilterDialog
+                                : () {
+                                    setState(() {
+                                      filter = AppsFilter();
+                                    });
+                                  },
+                            icon: Icon(
+                              isFilterOff
+                                  ? Symbols.filter_alt_rounded
+                                  : Symbols.filter_alt_off_rounded,
+                              fill: 1.0,
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                    title: const Text(
-                      "Materium",
-                      textAlign: .center,
-                      maxLines: 1,
-                      overflow: .ellipsis,
-                      softWrap: false,
-                    ),
-                    trailing: Padding(
-                      padding: const .fromSTEB(8.0, 0.0, 8.0, 0.0),
-                      child: Tooltip(
-                        message: tr("settings"),
-                        child: IconButton(
-                          style: .from(
-                            containerColor: .resolveWith(
-                              (states) => switch (states) {
-                                ButtonDisabledStates() => null,
-                                _ =>
-                                  useBlackTheme
-                                      ? colorTheme.surfaceContainer
-                                      : colorTheme.surfaceContainerHighest,
-                              },
-                            ),
-                            iconTheme: .resolveWith(
-                              (states) => .from(
-                                color: switch (states) {
+                      title: const Text(
+                        "Materium",
+                        textAlign: .center,
+                        maxLines: 1,
+                        overflow: .ellipsis,
+                        softWrap: false,
+                      ),
+                      trailing: Padding(
+                        padding: const .fromSTEB(8.0, 0.0, 8.0, 0.0),
+                        child: Tooltip(
+                          message: tr("settings"),
+                          child: IconButton(
+                            style: .from(
+                              containerColor: .resolveWith(
+                                (states) => switch (states) {
                                   ButtonDisabledStates() => null,
                                   _ =>
                                     useBlackTheme
-                                        ? colorTheme.primary
-                                        : colorTheme.onSurfaceVariant,
+                                        ? colorTheme.surfaceContainer
+                                        : colorTheme.surfaceContainerHighest,
                                 },
                               ),
+                              iconTheme: .resolveWith(
+                                (states) => .from(
+                                  color: switch (states) {
+                                    ButtonDisabledStates() => null,
+                                    _ =>
+                                      useBlackTheme
+                                          ? colorTheme.primary
+                                          : colorTheme.onSurfaceVariant,
+                                  },
+                                ),
+                              ),
+                            ),
+                            settings: const .new(
+                              size: .small,
+                              shape: .round,
+                              color: .standard,
+                              width: .wide,
+                            ),
+                            onTap: () => Navigator.push(
+                              context,
+                              MaterialPageRoute<void>(
+                                builder: (context) => const SettingsPage(),
+                              ),
+                            ),
+                            icon: const Icon(
+                              Symbols.settings_rounded,
+                              fill: 1.0,
                             ),
                           ),
-                          settings: const .new(
-                            size: .small,
-                            shape: .round,
-                            color: .standard,
-                            width: .wide,
-                          ),
-                          onTap: () => Navigator.push(
-                            context,
-                            MaterialPageRoute<void>(
-                              builder: (context) => const SettingsPage(),
-                            ),
-                          ),
-                          icon: const Icon(Symbols.settings_rounded, fill: 1.0),
                         ),
                       ),
-                    ),
-                    bottom: PreferredSize(
-                      preferredSize: preferredSize,
-                      child: Padding(
-                        padding: const .symmetric(horizontal: 4.0),
-                        child: KeyedSubtree(
-                          key: _progressIndicatorKey,
-                          child: child,
+                      bottom: PreferredSize(
+                        preferredSize: preferredSize,
+                        child: Padding(
+                          padding: const .symmetric(horizontal: 4.0),
+                          child: KeyedSubtree(
+                            key: _progressIndicatorKey,
+                            child: child,
+                          ),
                         ),
                       ),
                     ),
                   ),
-                ),
-                getDisplayedList(),
-                ?buildSliverFillRemaining(),
-                if (hasApps)
-                  SliverToBoxAdapter(
-                    child: SizedBox(height: toolbar.preferredSize.height),
-                  ),
-              ],
+                  getDisplayedList(),
+                  ?buildSliverFillRemaining(),
+                  if (hasApps)
+                    SliverToBoxAdapter(
+                      child: SizedBox(height: toolbar.preferredSize.height),
+                    ),
+                ],
+              ),
             ),
           ),
         ),
+        bottomNavigationBar: toolbar,
       ),
-      bottomNavigationBar: toolbar,
+    );
+  }
+}
+
+class AppIconWidget extends StatefulWidget {
+  final String appId;
+  final bool installed;
+  final AppsProvider appsProvider;
+
+  const AppIconWidget({
+    super.key,
+    required this.appId,
+    required this.installed,
+    required this.appsProvider,
+  });
+
+  @override
+  State<AppIconWidget> createState() => _AppIconWidgetState();
+}
+
+class _AppIconWidgetState extends State<AppIconWidget> {
+  late final Future<void> _iconFuture;
+
+  @override
+  void initState() {
+    super.initState();
+    _iconFuture = widget.appsProvider.updateAppIcon(widget.appId);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      child: FutureBuilder(
+        future: _iconFuture,
+        builder: (ctx, val) {
+          var icon = widget.appsProvider.apps[widget.appId]?.icon;
+          return icon != null
+              ? Image.memory(
+                  icon,
+                  gaplessPlayback: true,
+                  opacity: AlwaysStoppedAnimation(widget.installed ? 1 : 0.6),
+                )
+              : Row(
+                  mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Transform(
+                      alignment: Alignment.center,
+                      transform: Matrix4.rotationZ(0.31),
+                      child: Padding(
+                        padding: const EdgeInsets.all(15),
+                        child: Image(
+                          image: const AssetImage(
+                            'assets/graphics/icon_small.png',
+                          ),
+                          color: Theme.of(context).brightness == Brightness.dark
+                              ? Colors.white.withOpacity(0.4)
+                              : Colors.white.withOpacity(0.3),
+                          colorBlendMode: BlendMode.modulate,
+                          gaplessPlayback: true,
+                        ),
+                      ),
+                    ),
+                  ],
+                );
+        },
+      ),
+      onDoubleTap: () {
+        pm.openApp(widget.appId);
+      },
+      onLongPress: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) =>
+                AppPage(appId: widget.appId, showOppositeOfPreferredView: true),
+          ),
+        );
+      },
     );
   }
 }
@@ -2989,38 +2900,26 @@ Future<void> showChangelogPage(
 }
 
 Future<void> Function()? getChangeLogFn(BuildContext context, App app) {
-  final appSource = SourceProvider().getSource(
-    app.url,
-    overrideSource: app.overrideSource,
-  );
-  var changesUrl = appSource.changeLogPageFromStandardUrl(app.url);
-  var changeLog = app.changeLog;
-  if (changeLog?.split('\n').length == 1) {
-    if (RegExp(
-      '(http|ftp|https)://([\\w_-]+(?:(?:\\.[\\w_-]+)+))([\\w.,@?^=%&:/~+#-]*[\\w@?^=%&/~+#-])?',
-    ).hasMatch(changeLog!)) {
-      if (changesUrl == null) {
-        changesUrl = changeLog;
-        changeLog = null;
-      }
-    }
+  String? changesUrl;
+  String? changeLog = app.changeLog;
+  if (changeLog?.split("\n").length == 1 &&
+      RegExp(
+        r"(http|ftp|https)://([\w_-]+(?:(?:\.[\w_-]+)+))([\w.,@?^=%&:/~+#-]*[\w@?^=%&/~+#-])?",
+      ).hasMatch(changeLog!)) {
+    changesUrl = changeLog;
+    changeLog = null;
   }
-  return (changeLog == null && changesUrl == null)
-      ? null
-      : () async {
-          if (changeLog != null) {
-            await showChangelogPage(
-              context,
-              app,
-              changesUrl,
-              appSource,
-              changeLog,
-            );
-          } else {
-            await launchUrlString(
-              changesUrl!,
-              mode: LaunchMode.externalApplication,
-            );
-          }
-        };
+  if (changeLog == null && changesUrl == null) return null;
+  return () async {
+    final appSource = SourceProvider().getSource(
+      app.url,
+      overrideSource: app.overrideSource,
+    );
+    changesUrl ??= appSource.changeLogPageFromStandardUrl(app.url);
+    if (changeLog != null) {
+      await showChangelogPage(context, app, changesUrl, appSource, changeLog);
+    } else if (changesUrl != null) {
+      await launchUrlString(changesUrl!, mode: LaunchMode.externalApplication);
+    }
+  };
 }

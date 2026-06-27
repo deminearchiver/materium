@@ -133,7 +133,7 @@ class _GeneratedFormModalState extends State<GeneratedFormModal> {
                 ? null
                 : () {
                     if (valid) {
-                      HapticFeedback.selectionClick();
+                      context.read<SettingsProvider>().selectionClick();
                       Navigator.of(context).pop(values);
                     }
                   },
