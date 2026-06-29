@@ -3338,7 +3338,7 @@ class _MaterialDemoViewState extends State<_MaterialDemoView> {
                                 width: .infinity,
                                 height: 64.0,
                                 child: SpringTheme.replaceWithData(
-                                  data: const .defaultsExpressive(),
+                                  data: const .defaultsStandard(),
                                   child: SwitchTheme.mergeWithData(
                                     data: CustomThemeFactory.createSwitchTheme(
                                       colorTheme: colorTheme,
