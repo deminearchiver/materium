@@ -76,6 +76,7 @@ export 'package:flutter/material.dart'
 
 // Third-party packages
 
+export 'package:animation/animation.dart';
 export 'package:layout/layout.dart';
 export 'package:material/material.dart';
 export 'package:material/material_symbols.dart';

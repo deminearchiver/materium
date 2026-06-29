@@ -20,15 +20,20 @@ dependencies:
     sdk: flutter
 
   # Git dependencies
+  animation:
+    git:
+      url: https://github.com/deminearchiver/dart-flutter-packages.git
+      ref: 14efabfe1204ad04418ea4e8a4c055e3dd26aae3
+      path: packages/animation
   layout:
     git:
       url: https://github.com/deminearchiver/dart-flutter-packages.git
-      ref: daeb55e35b504595b23ef17d0af8c837583dce23
+      ref: 14efabfe1204ad04418ea4e8a4c055e3dd26aae3
       path: packages/layout
   material:
     git:
       url: https://github.com/deminearchiver/dart-flutter-packages.git
-      ref: daeb55e35b504595b23ef17d0af8c837583dce23
+      ref: 14efabfe1204ad04418ea4e8a4c055e3dd26aae3
       path: packages/material
   android_package_installer: # TODO: See if PR will be accepted (dev may not be active), else remove this comment
     git:
