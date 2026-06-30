@@ -57,7 +57,7 @@ class $AssetsGraphicsGen {
   /// File path: assets/graphics/badge_obtainium.png
   AssetGenImage get badgeObtainium => const AssetGenImage(
     'assets/graphics/badge_obtainium.png',
-    size: const Size(564.0, 168.0),
+    size: const Size(646.0, 250.0),
   );
 
   /// File path: assets/graphics/banner.png

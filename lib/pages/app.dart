@@ -1044,7 +1044,7 @@ class _AppPageState extends State<AppPage> {
                                 child: ListItemLayout(
                                   alignment: .middle,
                                   leading: SizedBox(
-                                    width: 24.0,
+                                    width: 20.0,
                                     height: 20.0,
                                     child: ExpressiveListBullet.indexed(
                                       index: index,
@@ -1119,7 +1119,7 @@ class _AppPageState extends State<AppPage> {
                             child: ListItemLayout(
                               alignment: .top,
                               leading: SizedBox(
-                                width: 24.0,
+                                width: 20.0,
                                 // Keep in sync with line height
                                 height: 20.0,
                                 child: ExpressiveListBullet.indexed(

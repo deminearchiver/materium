@@ -23,17 +23,17 @@ dependencies:
   animation:
     git:
       url: https://github.com/deminearchiver/dart-flutter-packages.git
-      ref: 14efabfe1204ad04418ea4e8a4c055e3dd26aae3
+      ref: c6e45b6175631af9975e3ab35c9ed439191d404f
       path: packages/animation
   layout:
     git:
       url: https://github.com/deminearchiver/dart-flutter-packages.git
-      ref: 14efabfe1204ad04418ea4e8a4c055e3dd26aae3
+      ref: c6e45b6175631af9975e3ab35c9ed439191d404f
       path: packages/layout
   material:
     git:
       url: https://github.com/deminearchiver/dart-flutter-packages.git
-      ref: 14efabfe1204ad04418ea4e8a4c055e3dd26aae3
+      ref: c6e45b6175631af9975e3ab35c9ed439191d404f
       path: packages/material
   android_package_installer: # TODO: See if PR will be accepted (dev may not be active), else remove this comment
     git:
@@ -98,8 +98,8 @@ dependencies:
   talker_flutter: ^5.1.17
   device_info_ffi: ^2.0.1
   dynamic_color_ffi: ^1.1.2
-  slang: ^4.16.0
-  slang_flutter: ^4.16.0
+  slang: ^4.17.0
+  slang_flutter: ^4.17.0
   pub_semver: ^2.2.0
   motor: ^1.1.0
   touch_targets: ^0.4.0
@@ -113,7 +113,7 @@ dev_dependencies:
   freezed: ^3.2.5
   flutter_gen_runner: ^5.14.1
   drift_dev: ^2.34.0
-  slang_build_runner: ^4.16.0
+  slang_build_runner: ^4.17.0
   fastforge: ^0.6.8
 
 dependency_overrides:
