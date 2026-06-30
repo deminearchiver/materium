@@ -581,7 +581,7 @@ class _AppPageState extends State<AppPage> {
               ),
             ),
             overlineTextStyle: .all(
-              typescaleTheme.labelMedium.toTextStyle(
+              typescaleTheme.labelSmall.toTextStyle(
                 color: colorTheme.onSurfaceVariant,
               ),
             ),
