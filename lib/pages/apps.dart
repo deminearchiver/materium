@@ -916,7 +916,7 @@ class AppsPageState extends State<AppsPage> with TickerProviderStateMixin {
                 padding: .fromLTRB(8.0, 0.0, 8.0, 16.0 + padding.bottom),
                 child: ListItemTheme.mergeWithData(
                   data: .from(
-                    containerColor: .all(colorTheme.surfaceContainerLow),
+                    containerColor: .all(colorTheme.surfaceContainerLowest),
                   ),
                   child: Flex.vertical(
                     mainAxisSize: .min,
@@ -956,6 +956,39 @@ class AppsPageState extends State<AppsPage> with TickerProviderStateMixin {
                       //   ),
                       ListItemContainer(
                         isFirst: true,
+                        child: ListItemInteraction(
+                          onTap: selectedAppIds.isNotEmpty
+                              ? launchCategorizeDialog()
+                              : null,
+                          child: ListItemLayout(
+                            leading: const Icon(
+                              Symbols.category_rounded,
+                              fill: 1.0,
+                            ),
+                            headline: Text(tr("categorize")),
+                          ),
+                        ),
+                      ),
+                      ListItemContainer(
+                        child: ListItemInteraction(
+                          onTap: selectedAppIds.isNotEmpty
+                              ? () {
+                                  appsProvider.removeAppsWithModal(
+                                    context,
+                                    selectedApps.toList(),
+                                  );
+                                }
+                              : null,
+                          child: ListItemLayout(
+                            leading: const Icon(
+                              Symbols.delete_rounded,
+                              fill: 1.0,
+                            ),
+                            headline: Text(tr("removeSelectedApps")),
+                          ),
+                        ),
+                      ),
+                      ListItemContainer(
                         child: ListItemInteraction(
                           onTap: () {
                             pinSelectedApps();
@@ -1959,65 +1992,65 @@ class AppsPageState extends State<AppsPage> with TickerProviderStateMixin {
             : tr("installUpdateApps"),
       );
 
-      final Widget removeButton = IconButtonLegacy(
-        style: LegacyThemeFactory.createIconButtonStyle(
-          colorTheme: colorTheme,
-          elevationTheme: elevationTheme,
-          shapeTheme: shapeTheme,
-          stateTheme: stateTheme,
-          size: .small,
-          color: .standard,
-          width: .normal,
-          isSelected: false,
-          unselectedShape: .round,
-          selectedShape: .round,
-          unselectedContainerColor: unselectedContainerColor,
-          unselectedDisabledContainerColor: unselectedDisabledContainerColor,
-          unselectedIconColor: unselectedContentColor,
-          unselectedDisabledIconColor: unselectedDisabledContentColor,
-          selectedContainerColor: selectedContainerColor,
-          selectedDisabledContainerColor: selectedDisabledContainerColor,
-          selectedIconColor: selectedContentColor,
-          selectedDisabledIconColor: selectedDisabledContentColor,
-        ),
-        onPressed: hasSelection
-            ? () {
-                appsProvider.removeAppsWithModal(
-                  context,
-                  selectedApps.toList(),
-                );
-              }
-            : null,
+      // final Widget removeButton = IconButtonLegacy(
+      //   style: LegacyThemeFactory.createIconButtonStyle(
+      //     colorTheme: colorTheme,
+      //     elevationTheme: elevationTheme,
+      //     shapeTheme: shapeTheme,
+      //     stateTheme: stateTheme,
+      //     size: .small,
+      //     color: .standard,
+      //     width: .normal,
+      //     isSelected: false,
+      //     unselectedShape: .round,
+      //     selectedShape: .round,
+      //     unselectedContainerColor: unselectedContainerColor,
+      //     unselectedDisabledContainerColor: unselectedDisabledContainerColor,
+      //     unselectedIconColor: unselectedContentColor,
+      //     unselectedDisabledIconColor: unselectedDisabledContentColor,
+      //     selectedContainerColor: selectedContainerColor,
+      //     selectedDisabledContainerColor: selectedDisabledContainerColor,
+      //     selectedIconColor: selectedContentColor,
+      //     selectedDisabledIconColor: selectedDisabledContentColor,
+      //   ),
+      //   onPressed: hasSelection
+      //       ? () {
+      //           appsProvider.removeAppsWithModal(
+      //             context,
+      //             selectedApps.toList(),
+      //           );
+      //         }
+      //       : null,
 
-        icon: const Icon(Symbols.delete_rounded, fill: 1.0),
-        tooltip: tr("removeSelectedApps"),
-      );
+      //   icon: const Icon(Symbols.delete_rounded, fill: 1.0),
+      //   tooltip: tr("removeSelectedApps"),
+      // );
 
-      final Widget categorizeButton = IconButtonLegacy(
-        style: LegacyThemeFactory.createIconButtonStyle(
-          colorTheme: colorTheme,
-          elevationTheme: elevationTheme,
-          shapeTheme: shapeTheme,
-          stateTheme: stateTheme,
-          size: .small,
-          color: .standard,
-          width: .normal,
-          isSelected: false,
-          unselectedShape: .round,
-          selectedShape: .round,
-          unselectedContainerColor: unselectedContainerColor,
-          unselectedDisabledContainerColor: unselectedDisabledContainerColor,
-          unselectedIconColor: unselectedContentColor,
-          unselectedDisabledIconColor: unselectedDisabledContentColor,
-          selectedContainerColor: selectedContainerColor,
-          selectedDisabledContainerColor: selectedDisabledContainerColor,
-          selectedIconColor: selectedContentColor,
-          selectedDisabledIconColor: selectedDisabledContentColor,
-        ),
-        onPressed: hasSelection ? launchCategorizeDialog() : null,
-        icon: const Icon(Symbols.category_rounded, fill: 1.0),
-        tooltip: tr("categorize"),
-      );
+      // final Widget categorizeButton = IconButtonLegacy(
+      //   style: LegacyThemeFactory.createIconButtonStyle(
+      //     colorTheme: colorTheme,
+      //     elevationTheme: elevationTheme,
+      //     shapeTheme: shapeTheme,
+      //     stateTheme: stateTheme,
+      //     size: .small,
+      //     color: .standard,
+      //     width: .normal,
+      //     isSelected: false,
+      //     unselectedShape: .round,
+      //     selectedShape: .round,
+      //     unselectedContainerColor: unselectedContainerColor,
+      //     unselectedDisabledContainerColor: unselectedDisabledContainerColor,
+      //     unselectedIconColor: unselectedContentColor,
+      //     unselectedDisabledIconColor: unselectedDisabledContentColor,
+      //     selectedContainerColor: selectedContainerColor,
+      //     selectedDisabledContainerColor: selectedDisabledContainerColor,
+      //     selectedIconColor: selectedContentColor,
+      //     selectedDisabledIconColor: selectedDisabledContentColor,
+      //   ),
+      //   onPressed: hasSelection ? launchCategorizeDialog() : null,
+      //   icon: const Icon(Symbols.category_rounded, fill: 1.0),
+      //   tooltip: tr("categorize"),
+      // );
 
       final Widget pinButton = IconButtonLegacy(
         style: LegacyThemeFactory.createIconButtonStyle(
@@ -2110,23 +2143,24 @@ class AppsPageState extends State<AppsPage> with TickerProviderStateMixin {
               : colorTheme.surfaceContainerHighest,
           shape: shapeTheme.applyCorner(corner: shapeTheme.cornerFull),
           elevation: elevation,
-          child: Flex.horizontal(
-            mainAxisSize: .min,
-            children: [
-              const SizedBox(width: 12.0),
-              downloadButton,
-              const SizedBox(width: 12.0 - 4.0),
-              selectButton,
-              const SizedBox(width: 12.0 - 4.0 - 4.0),
-              removeButton,
-              const SizedBox(width: 12.0 - 4.0 - 4.0),
-              categorizeButton,
-              const SizedBox(width: 12.0 - 4.0 - 4.0),
-              pinButton,
-              const SizedBox(width: 12.0 - 4.0 - 4.0),
-              moreButton,
-              const SizedBox(width: 12.0 - 4.0),
-            ],
+          child: Padding(
+            padding: .fromSTEB(12.0, 0.0, 12.0 - 4.0, 0.0),
+            child: Flex.horizontal(
+              mainAxisSize: .min,
+              children: [
+                downloadButton,
+                const SizedBox(width: 12.0 - 4.0),
+                selectButton,
+                const SizedBox(width: 12.0 - 4.0 - 4.0),
+                pinButton,
+                // const SizedBox(width: 12.0 - 4.0 - 4.0),
+                // categorizeButton,
+                // const SizedBox(width: 12.0 - 4.0 - 4.0),
+                // removeButton,
+                const SizedBox(width: 12.0 - 4.0 - 4.0),
+                moreButton,
+              ],
+            ),
           ),
         ),
       );
@@ -2498,12 +2532,21 @@ class AppsPageState extends State<AppsPage> with TickerProviderStateMixin {
                           ),
                         ),
                       ),
-                      title: const Text(
+                      title: Text(
                         "Materium",
                         textAlign: .center,
                         maxLines: 1,
                         overflow: .ellipsis,
                         softWrap: false,
+                        style: typescaleTheme.headlineLargeEmphasized
+                            .maybeCopyWith(
+                              font: [FontFamily.googleSansFlex],
+                              weight: 1000.0,
+                              wght: 1000.0,
+                              wdth: 25.0,
+                              rond: 100.0,
+                            )
+                            .toTextStyle(color: colorTheme.primary),
                       ),
                       trailing: Padding(
                         padding: const .fromSTEB(8.0, 0.0, 8.0, 0.0),
