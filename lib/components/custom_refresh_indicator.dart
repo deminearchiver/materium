@@ -21,6 +21,38 @@ const Duration _kIndicatorSnapDuration = Duration(milliseconds: 150);
 // has completed.
 const Duration _kIndicatorScaleDuration = Duration(milliseconds: 200);
 
+mixin PullToRefreshStates {
+  double get progress;
+}
+
+final class _CustomRefreshIndicatorStates
+    with Diagnosticable
+    implements PullToRefreshStates, LoadingIndicatorStates {
+  const _CustomRefreshIndicatorStates({required this.progress});
+
+  @override
+  final double progress;
+
+  @override
+  bool get isContained => true;
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties
+      ..add(DoubleProperty("progress", progress))
+      ..add(DiagnosticsProperty("isContained", isContained));
+  }
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is _CustomRefreshIndicatorStates && progress == other.progress;
+
+  @override
+  int get hashCode => progress.hashCode;
+}
+
 /// A widget that supports the Material "swipe to refresh" idiom.
 ///
 /// {@youtube 560 315 https://www.youtube.com/watch?v=ORApMlzwMdM}
@@ -99,8 +131,11 @@ class CustomRefreshIndicator extends StatefulWidget {
     this.displacement = 40.0,
     this.edgeOffset = 0.0,
     required this.onRefresh,
-    this.indicatorColor,
+    this.containerShape,
     this.containerColor,
+    this.containerOutline,
+    this.activeIndicatorColor,
+    this.activeIndicatorOutline,
     this.notificationPredicate = defaultScrollNotificationPredicate,
     this.semanticsLabel,
     this.semanticsValue,
@@ -151,13 +186,15 @@ class CustomRefreshIndicator extends StatefulWidget {
   /// This is an optional parameter, used to fine tune app cases.
   final ValueChanged<RefreshIndicatorStatus?>? onStatusChange;
 
-  /// The progress indicator's background color. The current theme's
-  /// [ThemeData.canvasColor] by default.
-  final Color? containerColor;
+  final LoadingIndicatorStateProperty<OutlinedBorder?>? containerShape;
 
-  /// The progress indicator's foreground color. The current theme's
-  /// [ColorScheme.primary] by default.
-  final Color? indicatorColor;
+  final LoadingIndicatorStateProperty<Color?>? containerColor;
+
+  final LoadingIndicatorStateProperty<OutlinePartial?>? containerOutline;
+
+  final LoadingIndicatorStateProperty<Color?>? activeIndicatorColor;
+
+  final LoadingIndicatorStateProperty<OutlinePartial?>? activeIndicatorOutline;
 
   /// A check that specifies whether a [ScrollNotification] should be
   /// handled by this widget.
@@ -217,11 +254,46 @@ class CustomRefreshIndicatorState extends State<CustomRefreshIndicator>
     end: _kDragSizeFactorLimit,
   );
 
+  late _CustomRefreshIndicatorStates _states;
+  late OutlinedBorder _resolvedContainerShape;
+  late Color _resolvedContainerColor;
+  late Outline _resolvedContainerOutline;
+  late Color _resolvedActiveIndicatorColor;
+  late Outline _resolvedActiveIndicatorOutline;
+
+  void _positionListener() {
+    _states = _CustomRefreshIndicatorStates(
+      progress: _positionController.value,
+    );
+
+    _resolvedContainerShape =
+        widget.containerShape?.resolve(_states) ??
+        _loadingIndicatorTheme.containerShape.resolve(_states);
+
+    _resolvedContainerColor =
+        widget.containerColor?.resolve(_states) ??
+        _loadingIndicatorTheme.containerColor.resolve(_states);
+
+    _resolvedContainerOutline = _loadingIndicatorTheme.containerOutline
+        .resolve(_states)
+        .maybeMerge(widget.containerOutline?.resolve(_states));
+
+    _resolvedActiveIndicatorColor =
+        widget.activeIndicatorColor?.resolve(_states) ??
+        _loadingIndicatorTheme.activeIndicatorColor.resolve(_states);
+
+    _resolvedActiveIndicatorOutline = _loadingIndicatorTheme
+        .activeIndicatorOutline
+        .resolve(_states)
+        .maybeMerge(widget.activeIndicatorOutline?.resolve(_states));
+  }
+
   @protected
   @override
   void initState() {
     super.initState();
-    _positionController = AnimationController(vsync: this);
+    _positionController = AnimationController(vsync: this)
+      ..addListener(_positionListener);
     _positionFactor = _positionController.drive(_positionFactorTween);
 
     _switchController = AnimationController(vsync: this, value: 0.0);
@@ -268,7 +340,7 @@ class CustomRefreshIndicatorState extends State<CustomRefreshIndicator>
     };
     if (indicatorAtTopNow != _isIndicatorAtTop) {
       if (_status == .drag || _status == .armed) {
-        _dismiss(.canceled);
+        unawaited(_dismiss(.canceled));
       }
     } else if (notification is ScrollUpdateNotification) {
       if (_status == .drag || _status == .armed) {
@@ -298,12 +370,12 @@ class CustomRefreshIndicatorState extends State<CustomRefreshIndicator>
       switch (_status) {
         case .armed:
           if (_positionController.value < 1.0) {
-            _dismiss(.canceled);
+            unawaited(_dismiss(.canceled));
           } else {
             _show();
           }
         case .drag:
-          _dismiss(.canceled);
+          unawaited(_dismiss(.canceled));
         case .canceled:
         case .done:
         case .refresh:
@@ -412,24 +484,28 @@ class CustomRefreshIndicatorState extends State<CustomRefreshIndicator>
     _pendingRefreshFuture = completer.future;
     _status = .snap;
     widget.onStatusChange?.call(_status);
-    _positionController
-        .animateTo(
-          1.0 / _kDragSizeFactorLimit,
-          duration: _kIndicatorSnapDuration,
-        )
-        .then((value) {
-          if (mounted && _status == .snap) {
-            // Show the indeterminate progress indicator.
-            setState(() => _status = .refresh);
+    unawaited(
+      _positionController
+          .animateTo(
+            1.0 / _kDragSizeFactorLimit,
+            duration: _kIndicatorSnapDuration,
+          )
+          .then((value) {
+            if (mounted && _status == .snap) {
+              // Show the indeterminate progress indicator.
+              setState(() => _status = .refresh);
 
-            widget.onRefresh().whenComplete(() {
-              if (mounted && _status == .refresh) {
-                completer.complete();
-                _dismiss(.done);
-              }
-            });
-          }
-        });
+              unawaited(
+                widget.onRefresh().whenComplete(() {
+                  if (mounted && _status == .refresh) {
+                    completer.complete();
+                    unawaited(_dismiss(.done));
+                  }
+                }),
+              );
+            }
+          }),
+    );
     _updateSwitchAnimation();
   }
 
@@ -476,9 +552,9 @@ class CustomRefreshIndicatorState extends State<CustomRefreshIndicator>
         snapToEnd: true,
       );
       if (newValue >= oldValue) {
-        _switchController.animateWith(simulation);
+        unawaited(_switchController.animateWith(simulation));
       } else {
-        _switchController.animateBackWith(simulation);
+        unawaited(_switchController.animateBackWith(simulation));
       }
     }
 
@@ -487,7 +563,6 @@ class CustomRefreshIndicatorState extends State<CustomRefreshIndicator>
 
   late ElevationThemeData _elevationTheme;
   late EasingThemeData _easingTheme;
-  late ShapeThemeData _shapeTheme;
   late LoadingIndicatorThemeData _loadingIndicatorTheme;
 
   final _indeterminateIndicatorOpacityTween = Tween<double>(
@@ -505,7 +580,6 @@ class CustomRefreshIndicatorState extends State<CustomRefreshIndicator>
     super.didChangeDependencies();
     _elevationTheme = ElevationTheme.of(context);
     _easingTheme = EasingTheme.of(context);
-    _shapeTheme = ShapeTheme.of(context);
     _loadingIndicatorTheme = LoadingIndicatorTheme.of(context);
   }
 
@@ -535,12 +609,6 @@ class CustomRefreshIndicatorState extends State<CustomRefreshIndicator>
 
     _updateSwitchAnimation();
 
-    final containerColor =
-        widget.containerColor ?? _loadingIndicatorTheme.containedContainerColor;
-
-    final indicatorColor =
-        widget.indicatorColor ?? _loadingIndicatorTheme.containedIndicatorColor;
-
     final elevation = widget.elevation ?? _elevationTheme.level0;
 
     Widget? layer;
@@ -554,12 +622,19 @@ class CustomRefreshIndicatorState extends State<CustomRefreshIndicator>
           );
           return Visibility(
             visible: opacity > 0.0,
-            child: Opacity(opacity: opacity, child: child!),
+            child: Opacity(opacity: opacity, child: child),
           );
         },
-        child: IndeterminateLoadingIndicator(
-          contained: false,
-          indicatorColor: indicatorColor,
+        child: AnimatedBuilder(
+          animation: _positionController,
+          builder: (context, child) => IndeterminateLoadingIndicator(
+            contained: false,
+            containerShape: const .all(RoundedRectangleBorder()),
+            containerColor: const .all(Colors.transparent),
+            containerOutline: const .all(.from()),
+            activeIndicatorColor: .all(_resolvedActiveIndicatorColor),
+            activeIndicatorOutline: .all(_resolvedActiveIndicatorOutline),
+          ),
         ),
       );
       final Widget determinateLoadingIndicator = AnimatedBuilder(
@@ -570,7 +645,7 @@ class CustomRefreshIndicatorState extends State<CustomRefreshIndicator>
           );
           return Visibility(
             visible: opacity > 0.0,
-            child: Opacity(opacity: opacity, child: child!),
+            child: Opacity(opacity: opacity, child: child),
           );
         },
         child: AnimatedBuilder(
@@ -581,7 +656,11 @@ class CustomRefreshIndicatorState extends State<CustomRefreshIndicator>
               angle: progress > 1.0 ? -(progress - 1.0) * math.pi : 0.0,
               child: DeterminateLoadingIndicator(
                 contained: false,
-                indicatorColor: indicatorColor,
+                containerShape: const .all(RoundedRectangleBorder()),
+                containerColor: const .all(Colors.transparent),
+                containerOutline: const .all(.from()),
+                activeIndicatorColor: .all(_resolvedActiveIndicatorColor),
+                activeIndicatorOutline: .all(_resolvedActiveIndicatorOutline),
                 progress: clampDouble(progress, 0.0, 1.0),
               ),
             );
@@ -590,11 +669,15 @@ class CustomRefreshIndicatorState extends State<CustomRefreshIndicator>
       );
       final Widget containedLoadingIndicator = SizedBox.square(
         dimension: containerSize,
-        child: Surface(
-          clipBehavior: .antiAlias,
-          shape: _shapeTheme.applyCorner(corner: _shapeTheme.cornerFull),
-          color: containerColor,
-          elevation: elevation,
+        child: AnimatedBuilder(
+          animation: _positionController,
+          builder: (context, child) => Surface(
+            clipBehavior: .antiAlias,
+            shape: _resolvedContainerOutline.apply(_resolvedContainerShape),
+            color: _resolvedContainerColor,
+            elevation: elevation,
+            child: child,
+          ),
           child: Stack(
             fit: .expand,
             alignment: .center,
@@ -613,7 +696,7 @@ class CustomRefreshIndicatorState extends State<CustomRefreshIndicator>
           );
           return Opacity(
             opacity: progress,
-            child: Transform.scale(scale: progress, child: child!),
+            child: Transform.scale(scale: progress, child: child),
           );
         },
         child: containedLoadingIndicator,
@@ -642,7 +725,7 @@ class CustomRefreshIndicatorState extends State<CustomRefreshIndicator>
               alignment: _isIndicatorAtTop! ? .bottomCenter : .topCenter,
               widthFactor: null,
               heightFactor: heightFactor,
-              child: child!,
+              child: child,
             ),
           );
         },

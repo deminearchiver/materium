@@ -230,9 +230,20 @@ class _ObtainiumState extends State<Obtainium> {
     final colorTheme = ColorTheme.of(context);
     return LoadingIndicatorTheme.mergeWithData(
       data: .from(
-        indicatorColor: useBlackTheme ? colorTheme.primary : null,
-        containedContainerColor: useBlackTheme ? colorTheme.primaryDim : null,
-        containedIndicatorColor: useBlackTheme ? colorTheme.onPrimary : null,
+        containerColor: .resolveWith(
+          (states) => useBlackTheme
+              ? states.isContained
+                    ? colorTheme.primaryDim
+                    : null
+              : null,
+        ),
+        activeIndicatorColor: .resolveWith(
+          (states) => useBlackTheme
+              ? states.isContained
+                    ? colorTheme.onPrimary
+                    : colorTheme.primary
+              : null,
+        ),
       ),
       child: child,
     );

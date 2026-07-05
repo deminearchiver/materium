@@ -23,17 +23,17 @@ dependencies:
   animation:
     git:
       url: https://github.com/deminearchiver/dart-flutter-packages.git
-      ref: f850c7543a5227b355ca007e45fe58b1252ade35
+      ref: 5dedc969b11300bf8d27207fe754ad5584cdb204
       path: packages/animation
   layout:
     git:
       url: https://github.com/deminearchiver/dart-flutter-packages.git
-      ref: f850c7543a5227b355ca007e45fe58b1252ade35
+      ref: 5dedc969b11300bf8d27207fe754ad5584cdb204
       path: packages/layout
   material:
     git:
       url: https://github.com/deminearchiver/dart-flutter-packages.git
-      ref: f850c7543a5227b355ca007e45fe58b1252ade35
+      ref: 5dedc969b11300bf8d27207fe754ad5584cdb204
       path: packages/material
   android_package_installer: # TODO: See if PR will be accepted (dev may not be active), else remove this comment
     git:
