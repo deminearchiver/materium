@@ -98,8 +98,8 @@ dependencies:
   talker_flutter: ^5.1.17
   device_info_ffi: ^2.0.1
   dynamic_color_ffi: ^1.1.2
-  slang: ^4.17.0
-  slang_flutter: ^4.17.0
+  slang: ^4.18.0
+  slang_flutter: ^4.18.0
   pub_semver: ^2.2.0
   motor: ^1.1.0
   touch_targets: ^0.4.0
@@ -110,11 +110,11 @@ dev_dependencies:
   deminearchiver_lints: ^2.1.2
   build_runner: ^2.15.0
   json_serializable: ^6.14.0
-  freezed: ^3.2.5
+  freezed: ^4.0.0-dev.3
   flutter_gen_runner: ^5.14.1
-  drift_dev: ^2.34.0
-  slang_build_runner: ^4.17.0
-  fastforge: ^0.6.8
+  drift_dev: ^2.34.1+1
+  slang_build_runner: ^4.18.0
+  fastforge: ^0.6.9
 
 dependency_overrides:
   # Hosted dependencies
