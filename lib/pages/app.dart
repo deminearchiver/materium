@@ -1048,6 +1048,7 @@ class _AppPageState extends State<AppPage> {
                                     height: 20.0,
                                     child: ExpressiveListBullet.indexed(
                                       index: index,
+                                      size: 8.0,
                                     ),
                                   ),
                                   headline: Text(
@@ -1124,6 +1125,7 @@ class _AppPageState extends State<AppPage> {
                                 height: 20.0,
                                 child: ExpressiveListBullet.indexed(
                                   index: index,
+                                  size: 8.0,
                                 ),
                               ),
                               headline: Text(
