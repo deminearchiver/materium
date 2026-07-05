@@ -278,7 +278,7 @@ class _ObtainiumState extends State<Obtainium> {
     if (child == null) return const SizedBox.shrink();
     final colorTheme = ColorTheme.of(context);
     final typescaleTheme = TypescaleTheme.of(context);
-    return DefaultTextGeometry(
+    return DefaultLocalizedTextStyle(
       style: typescaleTheme.bodyLarge.toTextStyle(color: colorTheme.onSurface),
       child: TouchGroup(child: child),
     );
