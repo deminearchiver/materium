@@ -476,7 +476,6 @@ class _ButtonContainerState<S extends Object?> extends State<ButtonContainer<S>>
         enabled: !_states.isDisabled,
         child: SizedTouchTarget(
           enabled: true,
-          fit: .wrap,
           minimumSize: minTapTargetSize,
           alignment: .center,
           child: ConstrainedBox(

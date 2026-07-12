@@ -126,131 +126,121 @@ class _ObtainiumState extends State<Obtainium> {
     if (!mounted) return;
   }
 
-  Widget _buildTypefaceTheme(BuildContext context, Widget child) =>
-      TypefaceTheme.mergeWithData(data: _typography.typeface, child: child);
+  SingleChildWidget _buildTypefaceTheme(BuildContext context) =>
+      TypefaceTheme.mergeWithData(data: _typography.typeface);
 
-  Widget _buildReferenceThemes(BuildContext context, Widget child) =>
-      CombiningBuilder(
-        useOuterContext: true,
-        builders: [_buildTypefaceTheme],
-        child: child,
+  List<SingleChildWidget> _buildReferenceThemes(BuildContext context) => [
+    _buildTypefaceTheme(context),
+  ];
+
+  SingleChildWidget _buildColorThemes(BuildContext context) =>
+      SingleChildBuilder(
+        builder: (context, child) => ListenableBuilder(
+          listenable: _themeListenable,
+          builder: (context, child) {
+            final Brightness brightness = _settings.useBlackTheme.value
+                ? .dark
+                : switch (_settings.themeMode.value) {
+                    .system => MediaQuery.platformBrightnessOf(context),
+                    .light => .light,
+                    .dark => .dark,
+                  };
+
+            final highContrast = MediaQuery.highContrastOf(context);
+
+            final sourceColor = _settings.themeColor.value;
+
+            final contrastLevel = highContrast ? 1.0 : 0.0;
+
+            final DynamicSchemeVariant variant = _settings.useMaterialYou.value
+                // ? .tonalSpot
+                ? _settings.themeVariant.value.dynamicSchemeVariant
+                : _settings.themeVariant.value.dynamicSchemeVariant;
+
+            final DynamicSchemePlatform platform = _settings.useBlackTheme.value
+                ? .watch
+                : .phone;
+
+            var colorTheme = ColorThemeData.fromSeed(
+              sourceColor: ColorThemeSourceColor.fromColor(sourceColor),
+              brightness: brightness,
+              contrastLevel: contrastLevel,
+              variant: variant,
+              platform: platform,
+              specVersion: _specVersion,
+            );
+
+            if (_settings.useMaterialYou.value) {
+              final dynamicColorScheme = DynamicColor.dynamicColorScheme(
+                brightness,
+              );
+              colorTheme = colorTheme.maybeMerge(
+                dynamicColorScheme?.toColorTheme(),
+              );
+            }
+
+            final staticColors = StaticColorsData.fallback(
+              brightness: brightness,
+              contrastLevel: contrastLevel,
+              variant: variant,
+              specVersion: _specVersion,
+              platform: platform,
+            );
+
+            return ColorTheme.replaceWithData(
+              data: colorTheme,
+              child: StaticColors(
+                data: staticColors,
+                child: child ?? const SizedBox.shrink(),
+              ),
+            );
+          },
+          child: child,
+        ),
       );
 
-  Widget _buildColorThemes(
-    BuildContext context,
-    Widget child,
-  ) => ListenableBuilder(
-    listenable: _themeListenable,
-    builder: (context, child) {
-      final Brightness brightness = _settings.useBlackTheme.value
-          ? .dark
-          : switch (_settings.themeMode.value) {
-              .system => MediaQuery.platformBrightnessOf(context),
-              .light => .light,
-              .dark => .dark,
-            };
+  SingleChildWidget _buildSpringTheme(BuildContext context) =>
+      const SpringTheme.replaceWithData(data: .defaultsExpressive());
 
-      final highContrast = MediaQuery.highContrastOf(context);
+  SingleChildWidget _buildTypescaleTheme(BuildContext context) =>
+      TypescaleTheme.mergeWithData(data: _typography.typescale);
 
-      final sourceColor = _settings.themeColor.value;
+  List<SingleChildWidget> _buildSystemThemes(BuildContext context) => [
+    _buildColorThemes(context),
+    _buildSpringTheme(context),
+    _buildTypescaleTheme(context),
+  ];
 
-      final contrastLevel = highContrast ? 1.0 : 0.0;
-
-      final DynamicSchemeVariant variant = _settings.useMaterialYou.value
-          // ? .tonalSpot
-          ? _settings.themeVariant.value.dynamicSchemeVariant
-          : _settings.themeVariant.value.dynamicSchemeVariant;
-
-      final DynamicSchemePlatform platform = _settings.useBlackTheme.value
-          ? .watch
-          : .phone;
-
-      var colorTheme = ColorThemeData.fromSeed(
-        sourceColor: ColorThemeSourceColor.fromColor(sourceColor),
-        brightness: brightness,
-        contrastLevel: contrastLevel,
-        variant: variant,
-        platform: platform,
-        specVersion: _specVersion,
-      );
-
-      if (_settings.useMaterialYou.value) {
-        final dynamicColorScheme = DynamicColor.dynamicColorScheme(brightness);
-        colorTheme = colorTheme.maybeMerge(dynamicColorScheme?.toColorTheme());
-      }
-
-      final staticColors = StaticColorsData.fallback(
-        brightness: brightness,
-        contrastLevel: contrastLevel,
-        variant: variant,
-        specVersion: _specVersion,
-        platform: platform,
-      );
-
-      return ColorTheme.replaceWithData(
-        data: colorTheme,
-        child: StaticColors(data: staticColors, child: child!),
-      );
-    },
-    child: child,
-  );
-
-  Widget _buildSpringTheme(BuildContext context, Widget child) =>
-      SpringTheme.replaceWithData(
-        data: const .defaultsExpressive(),
-        child: child,
-      );
-
-  Widget _buildTypescaleTheme(BuildContext context, Widget child) =>
-      TypescaleTheme.mergeWithData(data: _typography.typescale, child: child);
-
-  Widget _buildSystemThemes(BuildContext context, Widget child) =>
-      CombiningBuilder(
-        useOuterContext: true,
-        builders: [
-          _buildColorThemes,
-          _buildSpringTheme,
-          _buildTypescaleTheme,
-          // (context, child) => MeasurementTheme.mergeWithData(
-          //   data: const .from(space100: 8.0),
-          //   child: child,
-          // ),
-          // (context, child) => ShapeTheme.mergeWithData(
-          //   data: const .from(cornerFamily: .rounded),
-          //   child: child,
-          // ),
-        ],
-        child: child,
-      );
-
-  Widget _buildComponentThemes(BuildContext context, Widget child) {
+  List<SingleChildWidget> _buildComponentThemes(BuildContext context) {
     final useBlackTheme = context.select<SettingsService, bool>(
       (settings) => settings.useBlackTheme.value,
     );
     final colorTheme = ColorTheme.of(context);
-    return LoadingIndicatorTheme.mergeWithData(
-      data: .from(
-        containerColor: .resolveWith(
-          (states) => useBlackTheme
-              ? states.isContained
-                    ? colorTheme.primaryDim
-                    : null
-              : null,
-        ),
-        activeIndicatorColor: .resolveWith(
-          (states) => useBlackTheme
-              ? states.isContained
-                    ? colorTheme.onPrimary
-                    : colorTheme.primary
-              : null,
+    return [
+      LoadingIndicatorTheme.mergeWithData(
+        data: .from(
+          containerColor: .resolveWith(
+            (states) => useBlackTheme
+                ? states.isContained
+                      ? colorTheme.primaryDim
+                      : null
+                : null,
+          ),
+          activeIndicatorColor: .resolveWith(
+            (states) => useBlackTheme
+                ? states.isContained
+                      ? colorTheme.onPrimary
+                      : colorTheme.primary
+                : null,
+          ),
         ),
       ),
-      child: child,
-    );
+    ];
   }
 
-  Widget _buildLegacyThemes(BuildContext context, Widget child) =>
-      ListenableBuilder(
+  List<SingleChildWidget> _buildLegacyThemes(BuildContext context) => [
+    SingleChildBuilder(
+      builder: (context, child) => ListenableBuilder(
         listenable: _themeListenable,
         builder: (context, child) {
           {
@@ -269,21 +259,35 @@ class _ObtainiumState extends State<Obtainium> {
                   ? colorTheme.surface
                   : colorTheme.surfaceContainer,
             );
-            return Theme(data: legacyTheme, child: child!);
+            return Theme(
+              data: legacyTheme,
+              child: child ?? const SizedBox.shrink(),
+            );
           }
         },
         child: child,
-      );
+      ),
+    ),
+  ];
 
-  Widget _buildThemes(BuildContext context, Widget child) => CombiningBuilder(
-    builders: [
+  Widget _buildThemes(BuildContext context, Widget child) {
+    final builders = <List<SingleChildWidget> Function(BuildContext context)>[
       _buildReferenceThemes,
       _buildSystemThemes,
       _buildComponentThemes,
       _buildLegacyThemes,
-    ],
-    child: child,
-  );
+    ];
+    return Nested(
+      children: [
+        for (final builder in builders)
+          SingleChildBuilder(
+            builder: (context, child) =>
+                Nested(children: builder(context), child: child),
+          ),
+      ],
+      child: child,
+    );
+  }
 
   Widget _buildNavigatorWrapper(BuildContext context, Widget? child) {
     if (child == null) return const SizedBox.shrink();
@@ -439,7 +443,7 @@ class _ObtainiumState extends State<Obtainium> {
       notifs.checkLaunchByNotif();
     });
 
-    final appBuilder = Builder(builder: _buildApp);
+    final appBuilder = Builder(key: GlobalObjectKey(this), builder: _buildApp);
     return WithForegroundTask(child: _buildThemes(context, appBuilder));
   }
 

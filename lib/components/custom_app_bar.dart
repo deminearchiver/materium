@@ -103,6 +103,37 @@ class CustomAppBar extends StatefulWidget {
   static Animation<double> collapsedOpacityAnimation(
     Animation<double> parent,
   ) => _collapsedOpacityAnimatable.animate(parent);
+
+  static PreferredSizeWidget buildPullToRefreshBottom({
+    required BuildContext context,
+    required CustomPullToRefreshStates states,
+    double maxHeight = CustomPullToRefresh.defaultThreshold,
+    required Widget child,
+  }) {
+    final isRefreshing = states.isRefreshing;
+    final verticalOffset = states.verticalOffset;
+    final layoutHeight = states.layoutHeight;
+    return PreferredSize(
+      preferredSize: Size(.infinity, layoutHeight),
+      child: SizedBox(
+        height: layoutHeight,
+        child: OverflowBox(
+          alignment: .topCenter,
+          minHeight: verticalOffset,
+          maxHeight: verticalOffset,
+          child: OverflowBox(
+            alignment: .center,
+            minHeight: 0.0,
+            maxHeight: maxHeight,
+            child: Visibility(
+              visible: isRefreshing || verticalOffset > 0.0,
+              child: child,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
 }
 
 class _CustomAppBarState extends State<CustomAppBar> {

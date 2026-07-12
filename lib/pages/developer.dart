@@ -1,5 +1,6 @@
 // ignore_for_file: invalid_use_of_internal_member
 
+import 'dart:async';
 import 'dart:math' as math;
 
 import 'package:collection/collection.dart';
@@ -9,7 +10,6 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:material/material_shapes.dart';
 import 'package:materium/components/custom_app_bar.dart';
 import 'package:materium/components/custom_markdown.dart';
-import 'package:materium/components/custom_refresh_indicator.dart';
 import 'package:materium/components/overflow_eager.dart';
 import 'package:materium/flutter.dart' hide Cubic;
 import 'package:markdown/markdown.dart' as md;
@@ -2510,7 +2510,10 @@ class _MaterialDemoView extends StatefulWidget {
   State<_MaterialDemoView> createState() => _MaterialDemoViewState();
 }
 
-class _MaterialDemoViewState extends State<_MaterialDemoView> {
+class _MaterialDemoViewState extends State<_MaterialDemoView>
+    with TickerProviderStateMixin {
+  static const _indicatorMaxDistance = 80.0;
+
   static const List<double> _speedValues = [
     0.1,
     0.25,
@@ -2539,6 +2542,8 @@ class _MaterialDemoViewState extends State<_MaterialDemoView> {
   final _selected = ValueNotifier<bool>(false);
   final _progress = ValueNotifier<double>(0.0);
 
+  final _pullToRefreshKey = GlobalKey<CustomPullToRefreshState>();
+
   @override
   Widget build(BuildContext context) {
     final padding = MediaQuery.paddingOf(context);
@@ -2565,33 +2570,51 @@ class _MaterialDemoViewState extends State<_MaterialDemoView> {
 
     return Scaffold(
       backgroundColor: backgroundColor,
-      body: CustomRefreshIndicator(
-        onRefresh: () async {
-          await Fluttertoast.showToast(msg: "Pull-to-refresh demo triggered");
-          await Future.delayed(const Duration(seconds: 5));
-        },
-        edgeOffset: padding.top + 152.0,
-        displacement: 80.0,
-        child: SafeArea(
-          top: false,
-          bottom: false,
-          child: CustomScrollView(
+      body: SafeArea(
+        top: false,
+        bottom: false,
+        child: CustomPullToRefresh(
+          key: _pullToRefreshKey,
+          onRefresh: () async {
+            await Fluttertoast.showToast(msg: "Pull-to-refresh demo triggered");
+            await Future.delayed(const Duration(seconds: 5));
+          },
+          threshold: _indicatorMaxDistance,
+          builder: (context, controller) => CustomScrollView(
+            physics: PullToRefreshScrollPhysics(controller: controller),
             slivers: [
-              CustomAppBar(
-                type: .small,
-                expandedContainerColor: backgroundColor,
-                collapsedContainerColor: backgroundColor,
-                collapsedPadding: const .fromSTEB(
-                  8.0 + 40.0 + 8.0,
-                  0.0,
-                  16.0,
-                  0.0,
+              ValueListenableBuilder(
+                valueListenable: controller,
+                builder: (context, states, child) => CustomAppBar(
+                  type: .small,
+                  expandedContainerColor: backgroundColor,
+                  collapsedContainerColor: backgroundColor,
+                  collapsedPadding: const .fromSTEB(
+                    8.0 + 40.0 + 8.0,
+                    0.0,
+                    16.0,
+                    0.0,
+                  ),
+                  leading: const Padding(
+                    padding: .fromSTEB(8.0 - 4.0, 0.0, 8.0 - 4.0, 0.0),
+                    child: DeveloperPageBackButton(),
+                  ),
+                  title: const Text("Material 3 Expressive"),
+                  bottom: CustomAppBar.buildPullToRefreshBottom(
+                    context: context,
+                    states: states,
+                    maxHeight: _indicatorMaxDistance,
+                    child: child!,
+                  ),
                 ),
-                leading: const Padding(
-                  padding: .fromSTEB(8.0 - 4.0, 0.0, 8.0 - 4.0, 0.0),
-                  child: DeveloperPageBackButton(),
+                child: Align.center(
+                  child: PullToRefreshFadeTransition(
+                    states: controller,
+                    endFraction: 0.4,
+                    dismissedScale: 0.4,
+                    child: PullToRefreshLoadingIndicator(states: controller),
+                  ),
                 ),
-                title: const Text("Material 3 Expressive"),
               ),
               SliverPadding(
                 padding: const .symmetric(horizontal: 8.0),
@@ -2613,6 +2636,12 @@ class _MaterialDemoViewState extends State<_MaterialDemoView> {
                       ),
                   child: SliverList.list(
                     children: [
+                      Button(
+                        onTap: () {
+                          unawaited(_pullToRefreshKey.currentState?.show());
+                        },
+                        label: Text("Refresh!"),
+                      ),
                       Padding(
                         padding: const EdgeInsets.fromLTRB(
                           16.0,
