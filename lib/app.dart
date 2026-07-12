@@ -223,7 +223,7 @@ class _ObtainiumState extends State<Obtainium> {
             (states) => useBlackTheme
                 ? states.isContained
                       ? colorTheme.primaryDim
-                      : null
+                      : Colors.transparent
                 : null,
           ),
           activeIndicatorColor: .resolveWith(
