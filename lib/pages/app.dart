@@ -2020,7 +2020,7 @@ class _AppPageState extends State<AppPage> {
               ? getAppWebView()
               : CustomScrollView(
                   physics: AlwaysScrollableScrollPhysics(
-                    parent: PullToRefreshScrollPhysics(controller: controller),
+                    parent: controller.createScrollPhysics(),
                   ),
                   slivers: [
                     ValueListenableBuilder(

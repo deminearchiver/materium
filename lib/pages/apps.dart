@@ -2456,7 +2456,7 @@ class AppsPageState extends State<AppsPage> with TickerProviderStateMixin {
               onRefresh: refresh,
               builder: (context, controller) => CustomScrollView(
                 physics: AlwaysScrollableScrollPhysics(
-                  parent: PullToRefreshScrollPhysics(controller: controller),
+                  parent: controller.createScrollPhysics(),
                 ),
                 controller: scrollController,
                 slivers: <Widget>[

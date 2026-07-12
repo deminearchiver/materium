@@ -2581,7 +2581,7 @@ class _MaterialDemoViewState extends State<_MaterialDemoView>
           },
           threshold: _indicatorMaxDistance,
           builder: (context, controller) => CustomScrollView(
-            physics: PullToRefreshScrollPhysics(controller: controller),
+            physics: controller.createScrollPhysics(),
             slivers: [
               ValueListenableBuilder(
                 valueListenable: controller,

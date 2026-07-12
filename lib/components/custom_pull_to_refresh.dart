@@ -91,6 +91,12 @@ class CustomPullToRefreshController
   }
 }
 
+typedef CustomPullToRefreshBuilder =
+    Widget Function(
+      BuildContext context,
+      CustomPullToRefreshController controller,
+    );
+
 class CustomPullToRefresh extends StatefulWidget {
   const CustomPullToRefresh({
     super.key,
@@ -109,20 +115,12 @@ class CustomPullToRefresh extends StatefulWidget {
 
   final double threshold;
 
-  final Widget Function(
-    BuildContext context,
-    CustomPullToRefreshController controller,
-  )
-  builder;
+  final CustomPullToRefreshBuilder builder;
 
   @override
   CustomPullToRefreshState createState() => CustomPullToRefreshState();
 
-  static final defaultSpring = SpringDescription.withDampingRatio(
-    mass: 1.0,
-    stiffness: 1500.0,
-    ratio: 1.0,
-  );
+  static final defaultSpring = PullToRefreshDefaultDelegate.defaultSpring;
 
   static const defaultThreshold = 80.0;
 }
