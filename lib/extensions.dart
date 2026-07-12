@@ -2,7 +2,7 @@ import 'package:dynamic_color_ffi/dynamic_color_ffi.dart';
 import 'package:materium/flutter.dart';
 
 extension DynamicColorSchemeToColorTheme on DynamicColorScheme {
-  ColorThemeDataPartial toColorTheme() => ColorThemeDataPartial.from(
+  ColorThemeDataPartial toColorTheme() => .from(
     primaryPaletteKeyColor: primaryPaletteKeyColor,
     secondaryPaletteKeyColor: secondaryPaletteKeyColor,
     tertiaryPaletteKeyColor: tertiaryPaletteKeyColor,

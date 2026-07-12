@@ -136,64 +136,64 @@ class _ObtainiumState extends State<Obtainium> {
         child: child,
       );
 
-  Widget _buildColorThemes(BuildContext context, Widget child) =>
-      ListenableBuilder(
-        listenable: _themeListenable,
-        builder: (context, child) {
-          final Brightness brightness = _settings.useBlackTheme.value
-              ? .dark
-              : switch (_settings.themeMode.value) {
-                  .system => MediaQuery.platformBrightnessOf(context),
-                  .light => .light,
-                  .dark => .dark,
-                };
+  Widget _buildColorThemes(
+    BuildContext context,
+    Widget child,
+  ) => ListenableBuilder(
+    listenable: _themeListenable,
+    builder: (context, child) {
+      final Brightness brightness = _settings.useBlackTheme.value
+          ? .dark
+          : switch (_settings.themeMode.value) {
+              .system => MediaQuery.platformBrightnessOf(context),
+              .light => .light,
+              .dark => .dark,
+            };
 
-          final highContrast = MediaQuery.highContrastOf(context);
+      final highContrast = MediaQuery.highContrastOf(context);
 
-          final sourceColor = _settings.themeColor.value;
+      final sourceColor = _settings.themeColor.value;
 
-          final contrastLevel = highContrast ? 1.0 : 0.0;
+      final contrastLevel = highContrast ? 1.0 : 0.0;
 
-          final DynamicSchemeVariant variant = _settings.useMaterialYou.value
-              // ? .tonalSpot
-              ? _settings.themeVariant.value.dynamicSchemeVariant
-              : _settings.themeVariant.value.dynamicSchemeVariant;
+      final DynamicSchemeVariant variant = _settings.useMaterialYou.value
+          // ? .tonalSpot
+          ? _settings.themeVariant.value.dynamicSchemeVariant
+          : _settings.themeVariant.value.dynamicSchemeVariant;
 
-          final DynamicSchemePlatform platform = _settings.useBlackTheme.value
-              ? .watch
-              : .phone;
+      final DynamicSchemePlatform platform = _settings.useBlackTheme.value
+          ? .watch
+          : .phone;
 
-          var colorTheme = ColorThemeData.fromSeed(
-            sourceColor: ColorThemeSourceColor.fromColor(sourceColor),
-            brightness: brightness,
-            contrastLevel: contrastLevel,
-            variant: variant,
-            platform: platform,
-            specVersion: _specVersion,
-          );
-
-          if (_settings.useMaterialYou.value) {
-            final dynamicColorScheme = DynamicColor.dynamicColorScheme(
-              brightness,
-            );
-            colorTheme = colorTheme.merge(dynamicColorScheme?.toColorTheme());
-          }
-
-          final staticColors = StaticColorsData.fallback(
-            brightness: brightness,
-            contrastLevel: contrastLevel,
-            variant: variant,
-            specVersion: _specVersion,
-            platform: platform,
-          );
-
-          return ColorTheme.replaceWithData(
-            data: colorTheme,
-            child: StaticColors(data: staticColors, child: child!),
-          );
-        },
-        child: child,
+      var colorTheme = ColorThemeData.fromSeed(
+        sourceColor: ColorThemeSourceColor.fromColor(sourceColor),
+        brightness: brightness,
+        contrastLevel: contrastLevel,
+        variant: variant,
+        platform: platform,
+        specVersion: _specVersion,
       );
+
+      if (_settings.useMaterialYou.value) {
+        final dynamicColorScheme = DynamicColor.dynamicColorScheme(brightness);
+        colorTheme = colorTheme.maybeMerge(dynamicColorScheme?.toColorTheme());
+      }
+
+      final staticColors = StaticColorsData.fallback(
+        brightness: brightness,
+        contrastLevel: contrastLevel,
+        variant: variant,
+        specVersion: _specVersion,
+        platform: platform,
+      );
+
+      return ColorTheme.replaceWithData(
+        data: colorTheme,
+        child: StaticColors(data: staticColors, child: child!),
+      );
+    },
+    child: child,
+  );
 
   Widget _buildSpringTheme(BuildContext context, Widget child) =>
       SpringTheme.replaceWithData(
