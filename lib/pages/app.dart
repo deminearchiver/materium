@@ -269,9 +269,6 @@ class _AppPageState extends State<AppPage> {
                 ),
               ),
           content: ListItemLayout(
-            padding: const .directional(start: 16.0, end: 16.0 - 4.0),
-            trailingPadding: const .symmetric(vertical: 10.0 - 4.0),
-            trailingSpace: 12.0 - 4.0,
             leading: const Icon(Symbols.link_2_rounded, fill: 1.0),
             headline: Text(tr("newUrl")),
             supportingText: Text(pendingUrl),
@@ -316,7 +313,7 @@ class _AppPageState extends State<AppPage> {
           content: ConstrainedBox(
             constraints: const .new(minHeight: 48.0),
             child: Padding(
-              padding: const .symmetric(horizontal: 16.0, vertical: 10.0 - 4.0),
+              padding: const .symmetric(horizontal: 16.0, vertical: 10),
               child: Flex.horizontal(
                 spacing: 12.0,
                 children: [
@@ -758,9 +755,6 @@ class _AppPageState extends State<AppPage> {
                           ),
                         ),
                     content: ListItemLayout(
-                      padding: const .directional(start: 16.0, end: 16.0 - 4.0),
-                      trailingPadding: const .symmetric(vertical: 10.0 - 4.0),
-                      trailingSpace: 12.0 - 4.0,
                       leading: const Icon(
                         Symbols.release_alert_rounded,
                         fill: 1.0,
@@ -866,9 +860,6 @@ class _AppPageState extends State<AppPage> {
                           ),
                         ),
                     content: ListItemLayout(
-                      padding: const .directional(start: 16.0, end: 16.0 - 4.0),
-                      trailingPadding: const .symmetric(vertical: 10.0 - 4.0),
-                      trailingSpace: 12.0 - 4.0,
                       leading: const Icon(Symbols.link_2_rounded, fill: 1.0),
                       overline: const Text("Source URL"),
                       headline: Text(app?.app.url ?? ""),
@@ -947,14 +938,6 @@ class _AppPageState extends State<AppPage> {
                       crossAxisAlignment: .stretch,
                       children: [
                         ListItemLayout(
-                          padding: const .directional(
-                            start: 16.0,
-                            end: 16.0 - 4.0,
-                          ),
-                          trailingPadding: const .symmetric(
-                            vertical: 10.0 - 4.0,
-                          ),
-                          trailingSpace: 12.0 - 4.0,
                           leading: const Icon(
                             Symbols.android_rounded,
                             fill: 1.0,
@@ -1069,9 +1052,6 @@ class _AppPageState extends State<AppPage> {
                             .skip(3)
                             .isNotEmpty)
                           ListItemLayout(
-                            trailingPadding: const .symmetric(
-                              vertical: 10.0 - 4.0,
-                            ),
                             trailing: Button(
                               settings: const .new(size: .small, color: .text),
                               onTap: () async {
@@ -1219,7 +1199,7 @@ class _AppPageState extends State<AppPage> {
             shape: shapeTheme.applyCorner(corner: shapeTheme.cornerLarge),
             color: colorTheme.surface,
             child: Padding(
-              padding: const .symmetric(horizontal: 16.0, vertical: 16.0 - 8.0),
+              padding: const .symmetric(horizontal: 16.0, vertical: 16.0),
               child: CategoryEditorSelector(
                 showLabelWhenNotEmpty: false,
                 alignment: WrapAlignment.center,
@@ -1898,6 +1878,117 @@ class _AppPageState extends State<AppPage> {
       );
     }
 
+    final Widget appBarTrailing = IconButton(
+      style: .from(
+        containerColor: .resolveWith(
+          (states) => switch (states) {
+            ButtonDisabledStates() => null,
+            _ =>
+              useBlackTheme
+                  ? colorTheme.surfaceContainer
+                  : colorTheme.surfaceContainerHighest,
+          },
+        ),
+        stateLayerColor: .all(
+          useBlackTheme ? colorTheme.primary : colorTheme.onSurfaceVariant,
+        ),
+        iconTheme: .resolveWith(
+          (states) => switch (states) {
+            ButtonDisabledStates() => null,
+            _ => .from(
+              color: useBlackTheme
+                  ? colorTheme.primary
+                  : colorTheme.onSurfaceVariant,
+            ),
+          },
+        ),
+      ),
+      settings: const .new(
+        size: .small,
+        shape: .round,
+        color: .standard,
+        width: .normal,
+      ),
+      onTap: app != null ? () => pm.openApp(app.app.id) : null,
+      icon: const Icon(Symbols.open_in_new_rounded),
+    );
+
+    final Widget appBarIcon = FutureBuilder(
+      future: appsProvider
+          .updateAppIcon(app?.app.id, ignoreCache: true)
+          .then((_) => app?.icon),
+      builder: (context, snapshot) {
+        final isLoading = snapshot.connectionState != .done;
+        final bytes = snapshot.data;
+        final iconTheme = IconTheme.of(context);
+        final isCollapsed = iconTheme.size <= 48.0;
+        return Padding(
+          padding: const .symmetric(horizontal: 24.0 + 40.0 + 24.0),
+          child: Align.center(
+            child: SizedBox(
+              width: .infinity,
+              height: math.max(iconTheme.size, 48.0 + 8.0 * 2.0),
+              child: Tooltip(
+                message: isCollapsed ? app?.name ?? "" : "",
+                child: InkWell(
+                  customBorder: shapeTheme.applyCorner(
+                    corner: shapeTheme.cornerFull,
+                  ),
+                  overlayColor: WidgetStateLayerColor(
+                    color: WidgetStatePropertyAll(colorTheme.onSurface),
+                    opacity: stateTheme.asWidgetStateLayerOpacity,
+                  ),
+                  onTap: isCollapsed ? () {} : null,
+                  child: OverflowBox(
+                    alignment: .center,
+                    minWidth: iconTheme.size,
+                    maxWidth: iconTheme.size,
+                    minHeight: iconTheme.size,
+                    maxHeight: iconTheme.size,
+                    child: Skeletonizer(
+                      enabled: isLoading,
+                      effect: ShimmerEffect(
+                        baseColor: colorTheme.surfaceContainerHigh,
+                        highlightColor: colorTheme.surfaceContainerHighest,
+                      ),
+                      child: Skeleton.leaf(
+                        child: Surface(
+                          clipBehavior: .antiAlias,
+                          shape: shapeTheme.applyCorner(
+                            corner: shapeTheme.cornerFull,
+                          ),
+                          color: !isLoading && bytes != null
+                              ? useBlackTheme
+                                    ? colorTheme.surfaceContainerLow
+                                    : colorTheme.surfaceContainerHighest
+                              : Colors.transparent,
+                          child: !isLoading
+                              ? bytes != null
+                                    ? Image.memory(
+                                        bytes,
+                                        fit: .cover,
+                                        gaplessPlayback: true,
+                                      )
+                                    : Icon(
+                                        Symbols.broken_image_rounded,
+                                        // opticalSize:
+                                        //     48.0,
+                                        // size: 48.0,
+                                        color: colorTheme.primary,
+                                      )
+                              : const SizedBox.shrink(),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        );
+      },
+    );
+
     return Scaffold(
       extendBody: false,
       appBar: showAppWebpageFinal
@@ -1912,11 +2003,10 @@ class _AppPageState extends State<AppPage> {
             )
           : null,
       backgroundColor: backgroundColor,
-      // TODO: replace with a Loading indicator
       body: SafeArea(
         top: false,
         bottom: false,
-        child: CustomRefreshIndicator(
+        child: CustomPullToRefresh(
           onRefresh: () async {
             // if (kDebugMode) {
             //   await Future.delayed(const Duration(seconds: 5));
@@ -1925,158 +2015,46 @@ class _AppPageState extends State<AppPage> {
               return getUpdate(app.app.id);
             }
           },
-          edgeOffset: padding.top,
-          displacement: (96.0 - 48.0) / 2.0,
-          child: showAppWebpageFinal
+          enabled: !showAppWebpageFinal,
+          builder: (context, controller) => showAppWebpageFinal
               ? getAppWebView()
               : CustomScrollView(
+                  physics: AlwaysScrollableScrollPhysics(
+                    parent: PullToRefreshScrollPhysics(controller: controller),
+                  ),
                   slivers: [
-                    _AppPageAppBar(
-                      collapsedPadding: const .symmetric(
-                        horizontal: 24.0 - 4.0,
+                    ValueListenableBuilder(
+                      valueListenable: controller,
+                      builder: (context, states, child) => _AppPageAppBar(
+                        expandedContainerColor: backgroundColor,
+                        collapsedContainerColor: backgroundColor,
+                        leading: const DeveloperPageBackButton(),
+                        trailing: appBarTrailing,
+                        icon: appBarIcon,
+                        headline: Text(app?.name ?? tr("app")),
+                        supportingText: Text(
+                          tr("byX", args: [app?.author ?? tr("unknown")]),
+                        ),
+                        bottom: CustomAppBar.buildBottomPullToRefresh(
+                          context: context,
+                          states: states,
+                          child: child!,
+                        ),
                       ),
-                      expandedContainerColor: backgroundColor,
-                      collapsedContainerColor: backgroundColor,
-                      leading: const DeveloperPageBackButton(),
-                      trailing: IconButton(
-                        style: .from(
-                          containerColor: .resolveWith(
-                            (states) => switch (states) {
-                              ButtonDisabledStates() => null,
-                              _ =>
-                                useBlackTheme
-                                    ? colorTheme.surfaceContainer
-                                    : colorTheme.surfaceContainerHighest,
-                            },
-                          ),
-                          stateLayerColor: .all(
-                            useBlackTheme
-                                ? colorTheme.primary
-                                : colorTheme.onSurfaceVariant,
-                          ),
-                          iconTheme: .resolveWith(
-                            (states) => switch (states) {
-                              ButtonDisabledStates() => null,
-                              _ => .from(
-                                color: useBlackTheme
-                                    ? colorTheme.primary
-                                    : colorTheme.onSurfaceVariant,
-                              ),
-                            },
+                      child: Align.bottomCenter(
+                        child: PullToRefreshFadeTransition(
+                          states: controller,
+                          endFraction: 0.4,
+                          dismissedScale: 0.4,
+                          child: PullToRefreshLoadingIndicator(
+                            states: controller,
                           ),
                         ),
-                        settings: const .new(
-                          size: .small,
-                          shape: .round,
-                          color: .standard,
-                          width: .normal,
-                        ),
-                        onTap: app != null
-                            ? () => pm.openApp(app.app.id)
-                            : null,
-                        icon: const Icon(Symbols.open_in_new_rounded),
-                      ),
-                      icon: FutureBuilder(
-                        future: appsProvider
-                            .updateAppIcon(app?.app.id, ignoreCache: true)
-                            .then((_) => app?.icon),
-                        builder: (context, snapshot) {
-                          final isLoading = snapshot.connectionState != .done;
-                          final bytes = snapshot.data;
-                          final iconTheme = IconTheme.of(context);
-                          final isCollapsed = iconTheme.size <= 48.0;
-                          return Padding(
-                            padding: const .symmetric(
-                              horizontal: 24.0 + 40.0 + 24.0,
-                            ),
-                            child: Align.center(
-                              child: SizedBox(
-                                width: .infinity,
-                                height: math.max(
-                                  iconTheme.size,
-                                  48.0 + 8.0 * 2.0,
-                                ),
-                                child: Tooltip(
-                                  message: isCollapsed ? app?.name ?? "" : "",
-                                  child: InkWell(
-                                    customBorder: shapeTheme.applyCorner(
-                                      corner: shapeTheme.cornerFull,
-                                    ),
-                                    overlayColor: WidgetStateLayerColor(
-                                      color: WidgetStatePropertyAll(
-                                        colorTheme.onSurface,
-                                      ),
-                                      opacity:
-                                          stateTheme.asWidgetStateLayerOpacity,
-                                    ),
-                                    onTap: isCollapsed ? () {} : null,
-                                    child: OverflowBox(
-                                      alignment: .center,
-                                      minWidth: iconTheme.size,
-                                      maxWidth: iconTheme.size,
-                                      minHeight: iconTheme.size,
-                                      maxHeight: iconTheme.size,
-                                      child: Skeletonizer(
-                                        enabled: isLoading,
-                                        effect: ShimmerEffect(
-                                          baseColor:
-                                              colorTheme.surfaceContainerHigh,
-                                          highlightColor: colorTheme
-                                              .surfaceContainerHighest,
-                                        ),
-                                        child: Skeleton.leaf(
-                                          child: Surface(
-                                            clipBehavior: .antiAlias,
-                                            shape: shapeTheme.applyCorner(
-                                              corner: shapeTheme.cornerFull,
-                                            ),
-                                            color: !isLoading && bytes != null
-                                                ? useBlackTheme
-                                                      ? colorTheme
-                                                            .surfaceContainerLow
-                                                      : colorTheme
-                                                            .surfaceContainerHighest
-                                                : Colors.transparent,
-                                            child: !isLoading
-                                                ? bytes != null
-                                                      ? Image.memory(
-                                                          bytes,
-                                                          fit: .cover,
-                                                          gaplessPlayback: true,
-                                                        )
-                                                      : Icon(
-                                                          Symbols
-                                                              .broken_image_rounded,
-                                                          // opticalSize:
-                                                          //     48.0,
-                                                          // size: 48.0,
-                                                          color: colorTheme
-                                                              .primary,
-                                                        )
-                                                : const SizedBox.shrink(),
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ),
-                          );
-                        },
-                      ),
-                      headline: Text(app?.name ?? tr("app")),
-                      supportingText: Text(
-                        tr("byX", args: [app?.author ?? tr("unknown")]),
                       ),
                     ),
                     SliverToBoxAdapter(
                       child: Flex.vertical(children: [getFullInfoColumn()]),
                     ),
-                    // if (kDebugMode)
-                    //   SliverToBoxAdapter(
-                    //     child: SizedBox(height: MediaQuery.heightOf(context)),
-                    //   ),
                   ],
                 ),
         ),
@@ -2100,6 +2078,7 @@ class _AppPageAppBar extends StatefulWidget {
     required this.headline,
     required this.supportingText,
     this.trailing,
+    this.bottom,
   });
 
   final Color? expandedContainerColor;
@@ -2111,6 +2090,7 @@ class _AppPageAppBar extends StatefulWidget {
   final Widget headline;
   final Widget supportingText;
   final Widget? trailing;
+  final PreferredSizeWidget? bottom;
 
   @override
   State<_AppPageAppBar> createState() => _AppPageAppBarState();
@@ -2172,10 +2152,18 @@ class _AppPageAppBarState extends State<_AppPageAppBar> {
       ],
     );
 
+    final PreferredSizeWidget? bottom = widget.bottom;
+    final bottomSize = bottom?.preferredSize ?? .zero;
+
     return SliverDynamicHeader(
       minExtentPrototype: Padding(
         padding: .only(top: padding.top),
-        child: const SizedBox(height: collapsedContainerHeight),
+        child: Flex.vertical(
+          children: [
+            const SizedBox(height: collapsedContainerHeight),
+            SizedBox.fromSize(size: bottomSize),
+          ],
+        ),
       ),
       maxExtentPrototype: Padding(
         padding: .fromLTRB(
@@ -2189,13 +2177,17 @@ class _AppPageAppBarState extends State<_AppPageAppBar> {
             const SizedBox(height: collapsedContainerHeight),
             const SizedBox(height: expandedIconSize),
             header,
+            SizedBox.fromSize(size: bottomSize),
           ],
         ),
       ),
       builder: (context, layoutInfo) {
-        final minExtent = layoutInfo.minExtent - padding.top;
-        final maxExtent = layoutInfo.maxExtent - padding.top;
-        final currentExtent = layoutInfo.currentExtent - padding.top;
+        final minExtent =
+            layoutInfo.minExtent - padding.top - bottomSize.height;
+        final maxExtent =
+            layoutInfo.maxExtent - padding.top - bottomSize.height;
+        final currentExtent =
+            layoutInfo.currentExtent - padding.top - bottomSize.height;
         final shrinkOffset = layoutInfo.shrinkOffset;
 
         const minShrinkOffset = 0.0;
@@ -2256,73 +2248,83 @@ class _AppPageAppBarState extends State<_AppPageAppBar> {
         );
 
         return Surface(
-          clipBehavior: .antiAlias,
+          clipBehavior: .none,
           shape: shapeTheme.applyCorner(corner: shapeTheme.cornerNone),
           color: color,
-          child: Stack(
-            alignment: .topCenter,
+          child: Flex.vertical(
             children: [
-              Positioned(
-                left: padding.left,
-                top: padding.top,
-                right: padding.right,
-                height: currentExtent,
-                child: Flex.vertical(
-                  mainAxisSize: .min,
-                  mainAxisAlignment: .end,
+              Flexible.tight(
+                child: Stack(
+                  alignment: .topCenter,
                   children: [
-                    Padding(
-                      padding: .only(top: iconAreaPadding),
-                      child: SizedBox(
-                        height: iconAreaHeight,
-                        child: IconTheme.mergeWithData(
-                          data: .from(opticalSize: iconSize, size: iconSize),
-                          child: widget.icon,
-                        ),
-                      ),
-                    ),
-                    Flexible.tight(
-                      child: ClipRect(
-                        child: Opacity(
-                          opacity: headerOpacity,
-                          child: OverflowBox(
-                            alignment: .bottomCenter,
-                            minHeight: 0.0,
-                            maxHeight: maxShrinkOffset,
-                            child: Padding(
-                              padding: const .fromLTRB(
-                                16.0,
-                                expandedIconSize,
-                                16.0,
-                                0.0,
+                    Positioned(
+                      left: padding.left,
+                      top: padding.top,
+                      right: padding.right,
+                      height: currentExtent,
+                      child: Flex.vertical(
+                        mainAxisSize: .min,
+                        mainAxisAlignment: .end,
+                        children: [
+                          Padding(
+                            padding: .only(top: iconAreaPadding),
+                            child: SizedBox(
+                              height: iconAreaHeight,
+                              child: IconTheme.mergeWithData(
+                                data: .from(
+                                  opticalSize: iconSize,
+                                  size: iconSize,
+                                ),
+                                child: widget.icon,
                               ),
-                              child: header,
                             ),
                           ),
+                          Flexible.tight(
+                            child: ClipRect(
+                              child: Opacity(
+                                opacity: headerOpacity,
+                                child: OverflowBox(
+                                  alignment: .bottomCenter,
+                                  minHeight: 0.0,
+                                  maxHeight: maxShrinkOffset,
+                                  child: Padding(
+                                    padding: const .fromLTRB(
+                                      16.0,
+                                      expandedIconSize,
+                                      16.0,
+                                      0.0,
+                                    ),
+                                    child: header,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Positioned(
+                      left: padding.left,
+                      top: padding.top,
+                      right: padding.right,
+                      height: collapsedExtent,
+                      child: Padding(
+                        padding:
+                            widget.collapsedPadding ??
+                            const .symmetric(horizontal: 24.0),
+                        child: Flex.horizontal(
+                          children: [
+                            ?widget.leading,
+                            const Flexible.space(),
+                            ?widget.trailing,
+                          ],
                         ),
                       ),
                     ),
                   ],
                 ),
               ),
-              Positioned(
-                left: padding.left,
-                top: padding.top,
-                right: padding.right,
-                height: collapsedExtent,
-                child: Padding(
-                  padding:
-                      widget.collapsedPadding ??
-                      const .symmetric(horizontal: 24.0),
-                  child: Flex.horizontal(
-                    children: [
-                      ?widget.leading,
-                      const Flexible.space(),
-                      ?widget.trailing,
-                    ],
-                  ),
-                ),
-              ),
+              SizedBox.fromSize(size: bottomSize, child: bottom),
             ],
           ),
         );

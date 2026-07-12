@@ -67,8 +67,7 @@ class AppsPageState extends State<AppsPage> with TickerProviderStateMixin {
     }
   }
 
-  final GlobalKey<CustomRefreshIndicatorState> _refreshIndicatorKey =
-      GlobalKey<CustomRefreshIndicatorState>();
+  final _pullToRefreshKey = GlobalKey<CustomPullToRefreshState>();
 
   late SpringThemeData _springTheme;
   late Motion _listItemMotion;
@@ -145,7 +144,7 @@ class AppsPageState extends State<AppsPage> with TickerProviderStateMixin {
         appsProvider.apps.isNotEmpty &&
         settingsProvider.checkJustStarted() &&
         settingsProvider.checkOnStart) {
-      _refreshIndicatorKey.currentState?.show();
+      unawaited(_pullToRefreshKey.currentState?.show());
     }
 
     final listedAppIdSet = listedApps.map((e) => e.app.id).toSet();
@@ -1727,7 +1726,7 @@ class AppsPageState extends State<AppsPage> with TickerProviderStateMixin {
                         ),
                       ),
                       child: Padding(
-                        padding: const .directional(end: 12.0 - 8.0),
+                        padding: const .directional(end: 12.0),
                         child: updateButton,
                       ),
                     ),
@@ -1738,7 +1737,7 @@ class AppsPageState extends State<AppsPage> with TickerProviderStateMixin {
                         final value = _hasSelectionController.value;
                         return Padding(
                           padding: .directional(
-                            end: lerpDouble(16.0 - 8.0, 16.0 - 4.0, value),
+                            end: lerpDouble(16.0, 16.0 - 4.0, value),
                           ),
                           child: Visibility(
                             visible: value > 0.0,
@@ -2449,159 +2448,196 @@ class AppsPageState extends State<AppsPage> with TickerProviderStateMixin {
         body: SafeArea(
           top: false,
           bottom: false,
-          child: CustomRefreshIndicator(
-            key: _refreshIndicatorKey,
-            onRefresh: refresh,
-            edgeOffset: padding.top + 64.0,
-            displacement: 80.0,
-            child: Scrollbar(
-              controller: scrollController,
-              interactive: true,
-              child: CustomScrollView(
-                physics: const AlwaysScrollableScrollPhysics(),
+          child: Scrollbar(
+            controller: scrollController,
+            interactive: true,
+            child: CustomPullToRefresh(
+              key: _pullToRefreshKey,
+              onRefresh: refresh,
+              builder: (context, controller) => CustomScrollView(
+                physics: AlwaysScrollableScrollPhysics(
+                  parent: PullToRefreshScrollPhysics(controller: controller),
+                ),
                 controller: scrollController,
                 slivers: <Widget>[
-                  buildLinearProgressIndicator(
-                    (context, preferredSize, child) => CustomAppBar(
-                      type: .small,
-                      expandedContainerColor: backgroundColor,
-                      collapsedContainerColor: backgroundColor,
-                      collapsedTitleTextStyle: typescaleTheme
-                          .titleLargeEmphasized
-                          .toTextStyle(),
-                      collapsedPadding: const .symmetric(
-                        horizontal: 8.0 + 52.0 + 8.0,
-                      ),
-                      leading: Padding(
-                        padding: const .fromSTEB(8.0, 0.0, 8.0, 0.0),
-                        child: Tooltip(
-                          message: isFilterOff
-                              ? tr("filterApps")
-                              : "${tr("filter")} - ${tr("remove")}",
-                          child: IconButton(
-                            style: .from(
-                              containerColor: .resolveWith(
-                                (states) => switch (states) {
-                                  ButtonDisabledStates() => null,
-                                  ToggleButtonStates(isSelected: true) =>
-                                    useBlackTheme
-                                        ? colorTheme.primaryContainer
-                                        : colorTheme.tertiaryContainer,
-                                  _ =>
-                                    useBlackTheme
-                                        ? colorTheme.surfaceContainer
-                                        : colorTheme.surfaceContainerHighest,
-                                },
-                              ),
-                              iconTheme: .resolveWith(
-                                (states) => .from(
-                                  color: switch (states) {
-                                    ButtonDisabledStates() => null,
-                                    ToggleButtonStates(isSelected: true) =>
-                                      useBlackTheme
-                                          ? colorTheme.onPrimaryContainer
-                                          : colorTheme.onTertiaryContainer,
-                                    _ =>
-                                      useBlackTheme
-                                          ? colorTheme.primary
-                                          : colorTheme.onSurfaceVariant,
-                                  },
+                  ValueListenableBuilder(
+                    valueListenable: controller,
+                    builder: (context, states, loadingIndicator) {
+                      final bottom = CustomAppBar.buildBottomPullToRefresh(
+                        context: context,
+                        states: states,
+                        child: loadingIndicator!,
+                      );
+                      return buildLinearProgressIndicator(
+                        (
+                          context,
+                          linearProgressIndicatorSize,
+                          linearProgressIndicator,
+                        ) => CustomAppBar(
+                          type: .small,
+                          expandedContainerColor: backgroundColor,
+                          collapsedContainerColor: backgroundColor,
+                          collapsedTitleTextStyle: typescaleTheme
+                              .titleLargeEmphasized
+                              .toTextStyle(),
+                          collapsedPadding: const .symmetric(
+                            horizontal: 8.0 + 52.0 + 8.0,
+                          ),
+                          leading: Padding(
+                            padding: const .fromSTEB(8.0, 0.0, 8.0, 0.0),
+                            child: Tooltip(
+                              message: isFilterOff
+                                  ? tr("filterApps")
+                                  : "${tr("filter")} - ${tr("remove")}",
+                              child: IconButton(
+                                style: .from(
+                                  containerColor: .resolveWith(
+                                    (states) => switch (states) {
+                                      ButtonDisabledStates() => null,
+                                      ToggleButtonStates(isSelected: true) =>
+                                        useBlackTheme
+                                            ? colorTheme.primaryContainer
+                                            : colorTheme.tertiaryContainer,
+                                      _ =>
+                                        useBlackTheme
+                                            ? colorTheme.surfaceContainer
+                                            : colorTheme
+                                                  .surfaceContainerHighest,
+                                    },
+                                  ),
+                                  iconTheme: .resolveWith(
+                                    (states) => .from(
+                                      color: switch (states) {
+                                        ButtonDisabledStates() => null,
+                                        ToggleButtonStates(isSelected: true) =>
+                                          useBlackTheme
+                                              ? colorTheme.onPrimaryContainer
+                                              : colorTheme.onTertiaryContainer,
+                                        _ =>
+                                          useBlackTheme
+                                              ? colorTheme.primary
+                                              : colorTheme.onSurfaceVariant,
+                                      },
+                                    ),
+                                  ),
+                                ),
+                                settings: const .new(
+                                  size: .small,
+                                  shape: .round,
+                                  color: .standard,
+                                  width: .wide,
+                                ),
+                                isSelected: !isFilterOff,
+                                onTap: isFilterOff
+                                    ? showFilterDialog
+                                    : () {
+                                        setState(() {
+                                          filter = AppsFilter();
+                                        });
+                                      },
+                                icon: Icon(
+                                  isFilterOff
+                                      ? Symbols.filter_alt_rounded
+                                      : Symbols.filter_alt_off_rounded,
+                                  fill: 1.0,
                                 ),
                               ),
                             ),
-                            settings: const .new(
-                              size: .small,
-                              shape: .round,
-                              color: .standard,
-                              width: .wide,
-                            ),
-                            isSelected: !isFilterOff,
-                            onTap: isFilterOff
-                                ? showFilterDialog
-                                : () {
-                                    setState(() {
-                                      filter = AppsFilter();
-                                    });
-                                  },
-                            icon: Icon(
-                              isFilterOff
-                                  ? Symbols.filter_alt_rounded
-                                  : Symbols.filter_alt_off_rounded,
-                              fill: 1.0,
-                            ),
                           ),
-                        ),
-                      ),
-                      title: Text(
-                        "Materium",
-                        textAlign: .center,
-                        maxLines: 1,
-                        overflow: .ellipsis,
-                        softWrap: false,
-                        style: typescaleTheme.headlineLargeEmphasized
-                            .maybeCopyWith(
-                              font: [FontFamily.googleSansFlex],
-                              weight: 1000.0,
-                              wght: 1000.0,
-                              wdth: 25.0,
-                              rond: 100.0,
-                            )
-                            .toTextStyle(color: colorTheme.primary),
-                      ),
-                      trailing: Padding(
-                        padding: const .fromSTEB(8.0, 0.0, 8.0, 0.0),
-                        child: Tooltip(
-                          message: tr("settings"),
-                          child: IconButton(
-                            style: .from(
-                              containerColor: .resolveWith(
-                                (states) => switch (states) {
-                                  ButtonDisabledStates() => null,
-                                  _ =>
-                                    useBlackTheme
-                                        ? colorTheme.surfaceContainer
-                                        : colorTheme.surfaceContainerHighest,
-                                },
-                              ),
-                              iconTheme: .resolveWith(
-                                (states) => .from(
-                                  color: switch (states) {
-                                    ButtonDisabledStates() => null,
-                                    _ =>
-                                      useBlackTheme
-                                          ? colorTheme.primary
-                                          : colorTheme.onSurfaceVariant,
-                                  },
+                          title: Text(
+                            "Materium",
+                            textAlign: .center,
+                            maxLines: 1,
+                            overflow: .ellipsis,
+                            softWrap: false,
+                            style: typescaleTheme.headlineLargeEmphasized
+                                .maybeCopyWith(
+                                  font: [FontFamily.googleSansFlex],
+                                  weight: 1000.0,
+                                  wght: 1000.0,
+                                  wdth: 25.0,
+                                  rond: 100.0,
+                                )
+                                .toTextStyle(color: colorTheme.primary),
+                          ),
+                          trailing: Padding(
+                            padding: const .fromSTEB(8.0, 0.0, 8.0, 0.0),
+                            child: Tooltip(
+                              message: tr("settings"),
+                              child: IconButton(
+                                style: .from(
+                                  containerColor: .resolveWith(
+                                    (states) => switch (states) {
+                                      ButtonDisabledStates() => null,
+                                      _ =>
+                                        useBlackTheme
+                                            ? colorTheme.surfaceContainer
+                                            : colorTheme
+                                                  .surfaceContainerHighest,
+                                    },
+                                  ),
+                                  iconTheme: .resolveWith(
+                                    (states) => .from(
+                                      color: switch (states) {
+                                        ButtonDisabledStates() => null,
+                                        _ =>
+                                          useBlackTheme
+                                              ? colorTheme.primary
+                                              : colorTheme.onSurfaceVariant,
+                                      },
+                                    ),
+                                  ),
+                                ),
+                                settings: const .new(
+                                  size: .small,
+                                  shape: .round,
+                                  color: .standard,
+                                  width: .wide,
+                                ),
+                                onTap: () => Navigator.push(
+                                  context,
+                                  MaterialPageRoute<void>(
+                                    builder: (context) => const SettingsPage(),
+                                  ),
+                                ),
+                                icon: const Icon(
+                                  Symbols.settings_rounded,
+                                  fill: 1.0,
                                 ),
                               ),
                             ),
-                            settings: const .new(
-                              size: .small,
-                              shape: .round,
-                              color: .standard,
-                              width: .wide,
+                          ),
+                          bottom: PreferredSize(
+                            preferredSize: Size(
+                              .infinity,
+                              linearProgressIndicatorSize.height +
+                                  bottom.preferredSize.height,
                             ),
-                            onTap: () => Navigator.push(
-                              context,
-                              MaterialPageRoute<void>(
-                                builder: (context) => const SettingsPage(),
-                              ),
-                            ),
-                            icon: const Icon(
-                              Symbols.settings_rounded,
-                              fill: 1.0,
+                            child: Flex.vertical(
+                              mainAxisSize: .min,
+                              crossAxisAlignment: .stretch,
+                              children: [
+                                Padding(
+                                  padding: const .symmetric(horizontal: 4.0),
+                                  child: KeyedSubtree(
+                                    key: _progressIndicatorKey,
+                                    child: linearProgressIndicator,
+                                  ),
+                                ),
+                                bottom,
+                              ],
                             ),
                           ),
                         ),
-                      ),
-                      bottom: PreferredSize(
-                        preferredSize: preferredSize,
-                        child: Padding(
-                          padding: const .symmetric(horizontal: 4.0),
-                          child: KeyedSubtree(
-                            key: _progressIndicatorKey,
-                            child: child,
-                          ),
+                      );
+                    },
+                    child: Align.center(
+                      child: PullToRefreshFadeTransition(
+                        states: controller,
+                        endFraction: 0.4,
+                        dismissedScale: 0.4,
+                        child: PullToRefreshLoadingIndicator(
+                          states: controller,
                         ),
                       ),
                     ),
@@ -2796,7 +2832,7 @@ class _AppChangelogPageState extends State<AppChangelogPage> {
                 0.0,
               ),
               leading: const Padding(
-                padding: .fromSTEB(8.0 - 4.0, 0.0, 8.0 - 4.0, 0.0),
+                padding: .fromSTEB(8.0, 0.0, 8.0, 0.0),
                 child: DeveloperPageBackButton(),
               ),
               title: Text("Changelog", textAlign: .start),
@@ -2840,13 +2876,6 @@ class _AppChangelogPageState extends State<AppChangelogPage> {
                       child: ListItemInteraction(
                         onLongPress: () => _copyText(changelogUrl),
                         child: ListItemLayout(
-                          padding: const .directional(
-                            start: 16.0,
-                            end: 16.0 - (48.0 - 40.0) / 2.0,
-                          ),
-                          trailingPadding: const .symmetric(
-                            vertical: 10.0 - (48.0 - 40.0) / 2.0,
-                          ),
                           leading: const Icon(Symbols.link_2_rounded),
                           headline: Text("Changelog URL"),
                           supportingText: Text(

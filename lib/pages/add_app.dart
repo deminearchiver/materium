@@ -979,7 +979,7 @@ class AddAppPageState extends State<AddAppPage> {
                     : null,
                 leading: showBackButton
                     ? const Padding(
-                        padding: .fromSTEB(8.0 - 4.0, 0.0, 8.0 - 4.0, 0.0),
+                        padding: .fromSTEB(8.0, 0.0, 8.0, 0.0),
                         child: DeveloperPageBackButton(),
                       )
                     : null,
@@ -988,8 +988,9 @@ class AddAppPageState extends State<AddAppPage> {
                   textAlign: !showBackButton ? .center : .start,
                 ),
                 trailing: Padding(
-                  padding: const .fromSTEB(8.0 - 4.0, 0.0, 8.0 - 4.0, 0.0),
+                  padding: const .fromSTEB(8.0, 0.0, 8.0, 0.0),
                   child: Flex.horizontal(
+                    spacing: 8.0,
                     children: [
                       Tooltip(
                         message: tr("supportedSources"),

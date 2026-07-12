@@ -96,6 +96,7 @@ class CustomPullToRefresh extends StatefulWidget {
     super.key,
     required this.onRefresh,
     this.enabled = true,
+    this.spring,
     this.threshold = defaultThreshold,
     required this.builder,
   });
@@ -103,6 +104,9 @@ class CustomPullToRefresh extends StatefulWidget {
   final RefreshCallback onRefresh;
 
   final bool enabled;
+
+  final SpringDescription? spring;
+
   final double threshold;
 
   final Widget Function(
@@ -113,6 +117,12 @@ class CustomPullToRefresh extends StatefulWidget {
 
   @override
   CustomPullToRefreshState createState() => CustomPullToRefreshState();
+
+  static final defaultSpring = SpringDescription.withDampingRatio(
+    mass: 1.0,
+    stiffness: 1500.0,
+    ratio: 1.0,
+  );
 
   static const defaultThreshold = 80.0;
 }
@@ -165,7 +175,10 @@ class CustomPullToRefreshState extends State<CustomPullToRefresh>
   @override
   void initState() {
     super.initState();
-    _delegate = .new(vsync: this);
+    _delegate = .new(
+      vsync: this,
+      spring: widget.spring ?? CustomPullToRefresh.defaultSpring,
+    );
     _controller = .new(
       onRefresh: _onRefresh,
       enabled: widget.enabled,
@@ -178,6 +191,9 @@ class CustomPullToRefreshState extends State<CustomPullToRefresh>
   @override
   void didUpdateWidget(covariant CustomPullToRefresh oldWidget) {
     super.didUpdateWidget(oldWidget);
+    if (widget.spring != oldWidget.spring) {
+      _delegate.spring = widget.spring ?? CustomPullToRefresh.defaultSpring;
+    }
     _controller.enabled = widget.enabled;
     _controller.threshold = widget.threshold;
   }

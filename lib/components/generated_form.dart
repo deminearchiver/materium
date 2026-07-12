@@ -660,7 +660,7 @@ class _GeneratedFormState extends State<GeneratedForm> {
                 alignment: item.alignment,
                 crossAxisAlignment: WrapCrossAlignment.center,
                 spacing: 18.0,
-                runSpacing: 0.0,
+                runSpacing: 16.0,
                 children: [
                   // (values[fieldKey] as Map<String, MapEntry<int, bool>>?)
                   //             ?.isEmpty ==
@@ -766,6 +766,7 @@ class _GeneratedFormState extends State<GeneratedForm> {
                       const [SizedBox.shrink()],
                 ],
               ),
+              const SizedBox(height: 16.0),
               Flex.horizontal(
                 mainAxisAlignment:
                     (values[fieldKey] as Map<String, MapEntry<int, bool>>?)
@@ -780,7 +781,7 @@ class _GeneratedFormState extends State<GeneratedForm> {
                           .length ==
                       1)
                     Padding(
-                      padding: const .directional(end: 18.0 - 4.0 - 4.0),
+                      padding: const .directional(end: 18.0),
                       child: Tooltip(
                         message: tr("colour"),
                         child: IconButton(
@@ -848,7 +849,7 @@ class _GeneratedFormState extends State<GeneratedForm> {
                           .isNotEmpty ==
                       true)
                     Padding(
-                      padding: const .directional(end: 18.0 - 4.0 - 4.0),
+                      padding: const .directional(end: 18.0),
                       child: Tooltip(
                         message: tr("remove"),
                         child: IconButton(

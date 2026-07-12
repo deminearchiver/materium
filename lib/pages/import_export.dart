@@ -396,7 +396,7 @@ class _ImportExportPageState extends State<ImportExportPage> {
           : null,
       leading: showBackButton
           ? const Padding(
-              padding: .fromSTEB(8.0 - 4.0, 0.0, 8.0 - 4.0, 0.0),
+              padding: .fromSTEB(8.0, 0.0, 8.0, 0.0),
               child: DeveloperPageBackButton(),
             )
           : null,

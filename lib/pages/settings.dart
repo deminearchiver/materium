@@ -2324,7 +2324,7 @@ class _SettingsPageState extends State<SettingsPage> {
                   : null,
               leading: showBackButton
                   ? const Padding(
-                      padding: .fromSTEB(8.0 - 4.0, 0.0, 8.0 - 4.0, 0.0),
+                      padding: .fromSTEB(8.0, 0.0, 8.0, 0.0),
                       child: DeveloperPageBackButton(),
                     )
                   : null,
@@ -2969,7 +2969,7 @@ class _LogsPageState extends State<_LogsPage> {
                 0.0,
               ),
               leading: const Padding(
-                padding: .fromSTEB(8.0 - 4.0, 0.0, 8.0 - 4.0, 0.0),
+                padding: .fromSTEB(8.0, 0.0, 8.0, 0.0),
                 child: DeveloperPageBackButton(),
               ),
               title: Text(tr("appLogs")),

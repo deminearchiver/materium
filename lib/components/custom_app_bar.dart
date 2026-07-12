@@ -104,7 +104,7 @@ class CustomAppBar extends StatefulWidget {
     Animation<double> parent,
   ) => _collapsedOpacityAnimatable.animate(parent);
 
-  static PreferredSizeWidget buildPullToRefreshBottom({
+  static PreferredSizeWidget buildBottomPullToRefresh({
     required BuildContext context,
     required CustomPullToRefreshStates states,
     double maxHeight = CustomPullToRefresh.defaultThreshold,

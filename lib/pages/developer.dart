@@ -122,7 +122,7 @@ class _DeveloperPageState extends State<DeveloperPage> {
                 0.0,
               ),
               leading: const Padding(
-                padding: .fromSTEB(8.0 - 4.0, 0.0, 8.0 - 4.0, 0.0),
+                padding: .fromSTEB(8.0, 0.0, 8.0, 0.0),
                 child: DeveloperPageBackButton(),
               ),
               title: const Text("Developer Options"),
@@ -364,7 +364,7 @@ class _ExperimentsPageState extends State<_ExperimentsPage> {
                   : null,
               leading: showBackButton
                   ? const Padding(
-                      padding: .fromSTEB(8.0 - 4.0, 0.0, 8.0 - 4.0, 0.0),
+                      padding: .fromSTEB(8.0, 0.0, 8.0, 0.0),
                       child: DeveloperPageBackButton(),
                     )
                   : null,
@@ -562,7 +562,7 @@ class _DeveloperMarkdown1PageState extends State<DeveloperMarkdown1Page> {
         slivers: [
           CustomAppBar(
             leading: const Padding(
-              padding: EdgeInsets.only(left: 8.0 - 4.0),
+              padding: EdgeInsets.only(left: 8.0),
               child: DeveloperPageBackButton(),
             ),
             type: CustomAppBarType.largeFlexible,
@@ -2420,7 +2420,7 @@ class _AboutPageState extends State<AboutPage> with TickerProviderStateMixin {
         slivers: [
           CustomAppBar(
             leading: const Padding(
-              padding: EdgeInsets.only(left: 8.0 - 4.0),
+              padding: EdgeInsets.only(left: 8.0),
               child: DeveloperPageBackButton(),
             ),
             type: CustomAppBarType.small,
@@ -2596,11 +2596,11 @@ class _MaterialDemoViewState extends State<_MaterialDemoView>
                     0.0,
                   ),
                   leading: const Padding(
-                    padding: .fromSTEB(8.0 - 4.0, 0.0, 8.0 - 4.0, 0.0),
+                    padding: .fromSTEB(8.0, 0.0, 8.0, 0.0),
                     child: DeveloperPageBackButton(),
                   ),
                   title: const Text("Material 3 Expressive"),
-                  bottom: CustomAppBar.buildPullToRefreshBottom(
+                  bottom: CustomAppBar.buildBottomPullToRefresh(
                     context: context,
                     states: states,
                     maxHeight: _indicatorMaxDistance,
@@ -2637,6 +2637,7 @@ class _MaterialDemoViewState extends State<_MaterialDemoView>
                   child: SliverList.list(
                     children: [
                       Button(
+                        settings: const .new(color: .outlined),
                         onTap: () {
                           unawaited(_pullToRefreshKey.currentState?.show());
                         },
@@ -4016,7 +4017,7 @@ class _ShapeLibraryViewState extends State<_ShapeLibraryView> {
           slivers: [
             CustomAppBar(
               leading: const Padding(
-                padding: EdgeInsets.only(left: 8.0 - 4.0),
+                padding: EdgeInsets.only(left: 8.0),
                 child: DeveloperPageBackButton(),
               ),
               type: CustomAppBarType.small,
