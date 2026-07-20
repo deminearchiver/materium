@@ -16,7 +16,7 @@ import 'package:obtainium/providers/settings_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-const _url = 'https://github.com/ImranR98/Obtainium';
+const _url = 'https://github.com/deminearchiver/materium';
 
 class _UnusedAppsProvider extends ChangeNotifier implements AppsProvider {
   @override
@@ -41,10 +41,10 @@ void main() {
       final settings = SettingsProvider()
         ..prefs = await SharedPreferences.getInstance();
       const app = App(
-        id: 'dev.imranr.obtainium',
+        id: 'io.qzz.deminearchiver.materium',
         url: _url,
-        author: 'ImranR98',
-        name: 'Obtainium',
+        author: 'deminearchiver',
+        name: 'Materium',
         installedVersion: null,
         latestVersion: '1.0.0',
         preferredApkIndex: 0,

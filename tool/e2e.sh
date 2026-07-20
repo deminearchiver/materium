@@ -158,7 +158,7 @@ reset_install_targets() {
     "$ADB" -s "$DEV" uninstall "$pkg" >/dev/null 2>&1 || true
   done
   for apk in testapp-v1.apk testapp2-v1.apk; do
-    if ! "$ADB" -s "$DEV" install -r -i dev.imranr.obtainium.debug \
+    if ! "$ADB" -s "$DEV" install -r -i io.qzz.deminearchiver.materium.debug \
       "$REPO_DIR/build/e2e_assets/$apk" >/dev/null; then
       echo "Failed to pre-install $apk with Obtainium as installer" >&2
       exit 1
@@ -173,7 +173,7 @@ fi
 run_suite() {
   local suite="$1"
   echo "=== $suite ==="
-  "$ADB" -s "$DEV" shell pm grant dev.imranr.obtainium.debug \
+  "$ADB" -s "$DEV" shell pm grant io.qzz.deminearchiver.materium.debug \
     android.permission.POST_NOTIFICATIONS >/dev/null 2>&1 || true
   if [ "$TARGET" = "phone" ] && $WITH_INSTALL && \
     [[ " ${INSTALL_SUITES[*]} " == *" $suite "* ]]; then

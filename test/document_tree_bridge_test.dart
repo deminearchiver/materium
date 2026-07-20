@@ -3,7 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:obtainium/providers/document_tree_bridge.dart';
 
 void main() {
-  const channel = MethodChannel('dev.imranr.obtainium/document_tree');
+  const channel = MethodChannel('io.qzz.deminearchiver.materium/document_tree');
 
   testWidgets('parses the picked tree URI', (tester) async {
     tester.binding.defaultBinaryMessenger.setMockMethodCallHandler(channel, (

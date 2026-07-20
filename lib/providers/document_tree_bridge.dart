@@ -28,7 +28,7 @@ class DocumentTreeBridge {
   static final DocumentTreeBridge instance = DocumentTreeBridge._();
 
   static const MethodChannel _channel = MethodChannel(
-    'dev.imranr.obtainium/document_tree',
+    'io.qzz.deminearchiver.materium/document_tree',
   );
 
   /// Returns the picked tree URI, or null when the user cancelled.

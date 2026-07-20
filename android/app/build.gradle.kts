@@ -36,7 +36,7 @@ kotlin {
 }
 
 android {
-    namespace = "dev.imranr.obtainium"
+    namespace = "io.qzz.deminearchiver.materium"
     // Versioned form so the SDK's minor-version directory (android-37.0) is
     // found by tooling that installs platforms as `android-<major>.<minor>`
     // (F-Droid's build server, GitHub runners). Requires AGP 9.1+.
@@ -54,7 +54,7 @@ android {
     }
 
     defaultConfig {
-        applicationId = "dev.imranr.obtainium"
+        applicationId = "io.qzz.deminearchiver.materium"
         // You can update the following values to match your application needs.
         // For more information, see: https://flutter.dev/to/review-gradle-config.
         minSdk = 26
