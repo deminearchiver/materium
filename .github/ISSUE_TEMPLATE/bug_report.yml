@@ -40,13 +40,13 @@ body:
     attributes:
       label: Screenshots and Logs
       description: |
-        If applicable, add screenshots, logs, and any other artifacts (like some/all files under `/Android/data/dev.imranr.obtainium/`) that you think may help troubleshoot the issue.
+        If applicable, add screenshots, logs, and any other artifacts (like some/all files under `/Android/data/io.qzz.deminearchiver.materium/`) that you think may help troubleshoot the issue.
 
   - type: input
     id: device
     attributes:
       label: Device
-      placeholder: 'Pixel 10'
+      placeholder: "Pixel 10"
     validations:
       required: true
 
@@ -54,7 +54,7 @@ body:
     id: os
     attributes:
       label: OS
-      placeholder: 'GrapheneOS'
+      placeholder: "GrapheneOS"
     validations:
       required: true
 
@@ -62,7 +62,7 @@ body:
     id: obtainium_version
     attributes:
       label: Obtainium Version
-      placeholder: '1.6.10'
+      placeholder: "1.6.10"
     validations:
       required: true
 
