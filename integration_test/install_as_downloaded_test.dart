@@ -31,7 +31,7 @@ void main() {
       markTestSkipped(
         'Pre-install both test packages with Obtainium as their installer '
         '(the runner does this); e.g. adb install -r -i '
-        'dev.imranr.obtainium.debug build/e2e_assets/testapp-v1.apk',
+        'io.qzz.deminearchiver.materium.debug build/e2e_assets/testapp-v1.apk',
       );
       return;
     }

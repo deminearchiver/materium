@@ -255,8 +255,8 @@ class _ObtainiumState extends State<Obtainium> {
                     App(
                       id: obtainiumId,
                       url: obtainiumUrl,
-                      author: 'ImranR98',
-                      name: 'Obtainium',
+                      author: 'deminearchiver',
+                      name: 'Materium',
                       installedVersion: value!.versionName,
                       latestVersion: value.versionName!,
                       apkUrls: [],
@@ -384,7 +384,7 @@ class _ObtainiumState extends State<Obtainium> {
         }
 
         return MaterialApp(
-          title: 'Obtainium',
+          title: 'Materium',
           navigatorKey: appNavigatorKey,
           localizationsDelegates: [
             ...context.localizationDelegates,
