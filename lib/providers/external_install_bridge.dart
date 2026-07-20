@@ -29,7 +29,7 @@ class ExternalInstallerBridge {
   static final ExternalInstallerBridge instance = ExternalInstallerBridge._();
 
   static const MethodChannel _channel = MethodChannel(
-    'dev.imranr.obtainium/external_install',
+    'io.qzz.deminearchiver.materium/external_install',
   );
 
   /// Lists installer apps, enriching each native package/activity pair with a

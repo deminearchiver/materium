@@ -1,4 +1,4 @@
-package dev.imranr.obtainium
+package io.qzz.deminearchiver.materium
 
 import android.content.Intent
 import android.net.Uri
@@ -11,13 +11,13 @@ import io.flutter.plugin.common.MethodChannel
 import java.io.File
 
 /**
- * The native surface is intentionally tiny: the capabilities below 
- * have no Flutter-plugin equivalent. Everything else (intent dispatch, 
+ * The native surface is intentionally tiny: the capabilities below
+ * have no Flutter-plugin equivalent. Everything else (intent dispatch,
  * foreground tracking, install verification, batching) lives in Dart.
  */
 class MainActivity : FlutterActivity() {
     private companion object {
-        const val EXTERNAL_INSTALL_CHANNEL = "dev.imranr.obtainium/external_install"
+        const val EXTERNAL_INSTALL_CHANNEL = "io.qzz.deminearchiver.materium/external_install"
         const val APK_MIME = "application/vnd.android.package-archive"
     }
 
@@ -76,7 +76,7 @@ class MainActivity : FlutterActivity() {
      */
     private fun listInstallTargets(): List<Map<String, String>> {
         val targets = ArrayList<Map<String, String>>()
-        val probe = Uri.parse("content://dev.imranr.obtainium.probe/sample.apk")
+        val probe = Uri.parse("content://io.qzz.deminearchiver.materium.probe/sample.apk")
         val actions = listOf(Intent.ACTION_VIEW, Intent.ACTION_INSTALL_PACKAGE)
         for (action in actions) {
             @Suppress("DEPRECATION")
