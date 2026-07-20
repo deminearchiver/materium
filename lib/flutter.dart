@@ -78,11 +78,17 @@ export 'package:flutter/material.dart'
 
 export 'package:animation/animation.dart';
 export 'package:layout/layout.dart';
-export 'package:material/material.dart';
-export 'package:material/material_symbols.dart';
+export 'package:material/material.dart'
+    hide
+        GoogleSymbols,
+        GoogleSymbolsOutlined,
+        GoogleSymbolsRounded,
+        GoogleSymbolsSharp,
+        LuminousSymbols;
+
+export 'package:linked_layouts/linked_layouts.dart';
 export 'package:meta/meta.dart';
 export 'package:motor/motor.dart';
-export 'package:linked_layouts/linked_layouts.dart';
 export 'package:touch_targets/touch_targets.dart';
 
 // Adjacent libraries

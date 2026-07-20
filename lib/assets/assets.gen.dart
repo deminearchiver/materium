@@ -451,9 +451,7 @@ class $AssetsFontsRobotoflexGen {
   List<String> get values => [ofl];
 }
 
-class Assets {
-  const Assets._();
-
+abstract final class Assets {
   static const $AssetsCaGen ca = $AssetsCaGen();
   static const $AssetsFontsGen fonts = $AssetsFontsGen();
   static const $AssetsGraphicsGen graphics = $AssetsGraphicsGen();

@@ -31,6 +31,9 @@ targets:
             materium: lib/database/database.dart
           schema_dir: drift_schemas/
       slang_build_runner:
+        enabled: false
+      slang_build_runner:legacy:
+        enabled: true
         options:
           base_locale: en
           fallback_strategy: base_locale_empty_string
