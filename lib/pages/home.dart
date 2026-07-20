@@ -85,9 +85,9 @@ class _HomePageState extends State<HomePage> {
   }
 
   void pushSettings() {
-    Navigator.of(context).push(
-      MaterialPageRoute(builder: (_) => const SettingsPage()),
-    );
+    Navigator.of(
+      context,
+    ).push(MaterialPageRoute(builder: (_) => const SettingsPage()));
   }
 
   Future<void> showWelcomeDialogs() async {
@@ -105,9 +105,9 @@ class _HomePageState extends State<HomePage> {
                 Text(tr('documentationLinksNote')),
                 const LinkText(
                   text:
-                      'https://github.com/ImranR98/Obtainium/blob/main/README.md',
+                      'https://github.com/deminearchiver/Materium/blob/main/README.md',
                   url:
-                      'https://github.com/ImranR98/Obtainium/blob/main/README.md',
+                      'https://github.com/deminearchiver/Materium/blob/main/README.md',
                   style: TextStyle(fontWeight: FontWeight.bold),
                 ),
               ],
@@ -197,7 +197,9 @@ class _HomePageState extends State<HomePage> {
 
           String? standardizedUrl;
           try {
-            standardizedUrl = sourceProvider.getSource(data).standardizeUrl(data);
+            standardizedUrl = sourceProvider
+                .getSource(data)
+                .standardizeUrl(data);
           } catch (_) {
             standardizedUrl = null;
           }
@@ -312,8 +314,7 @@ class _HomePageState extends State<HomePage> {
 
     final layoutWidth = MediaQuery.sizeOf(context).width;
     final useLargeScreen = isTV || layoutWidth >= 840;
-    final useTwoPane =
-        useLargeScreen && !settingsProvider.alwaysUsePhoneLayout;
+    final useTwoPane = useLargeScreen && !settingsProvider.alwaysUsePhoneLayout;
 
     final detailPane =
         selectedAppId != null &&
@@ -362,7 +363,9 @@ class _HomePageState extends State<HomePage> {
       label: Text(tr('add')),
     );
 
-    final loadingApps = context.select<AppsProvider, bool>((p) => p.loadingApps);
+    final loadingApps = context.select<AppsProvider, bool>(
+      (p) => p.loadingApps,
+    );
 
     final Widget? fab = appsSelecting
         ? actionsFab
