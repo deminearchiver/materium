@@ -39,7 +39,7 @@ class CertificateBridge {
   static final CertificateBridge instance = CertificateBridge._();
 
   static const MethodChannel _channel = MethodChannel(
-    'dev.imranr.obtainium/certificate',
+    'io.qzz.deminearchiver.materium/certificate',
   );
 
   Future<List<CertificateInfo>> parse(List<Uint8List> ders) async {

@@ -1,6 +1,6 @@
 name: obtainium
 description: Get Android app updates straight from the source.
-publish_to: 'none'
+publish_to: "none"
 
 version: 1.7.3+2361
 
@@ -99,6 +99,6 @@ flutter:
     - assets/ca-certs/
 
   fonts:
-      - family: Montserrat
-        fonts:
-          - asset: assets/fonts/Montserrat-Regular.ttf
+    - family: Montserrat
+      fonts:
+        - asset: assets/fonts/Montserrat-Regular.ttf

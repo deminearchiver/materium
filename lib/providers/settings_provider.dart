@@ -19,9 +19,9 @@ import 'package:device_info_plus/device_info_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shared_storage/shared_storage.dart' as saf;
 
-const String obtainiumTempId = 'imranr98_obtainium_github.com';
-const String obtainiumId = 'dev.imranr.obtainium';
-const String obtainiumUrl = 'https://github.com/ImranR98/Obtainium';
+const String obtainiumTempId = 'deminearchiver_materium_github.com';
+const String obtainiumId = 'io.qzz.deminearchiver.materium';
+const String obtainiumUrl = 'https://github.com/deminearchiver/materium';
 
 /// Sentinel stored as the export directory on devices without a document-tree
 /// picker (typically TVs): exports go to `Downloads/Obtainium/` through
