@@ -106,15 +106,16 @@ class _ImportFromURLListPageState extends State<ImportFromURLListPage> {
                       spacing: 16,
                       children: [
                         ConnectedCard(
-                          color: Theme.of(context)
-                              .colorScheme
-                              .surfaceContainerHighest,
+                          color: Theme.of(
+                            context,
+                          ).colorScheme.surfaceContainerHighest,
                           child: TextFormField(
                             controller: controller.urlController,
                             maxLines: null,
                             minLines: 8,
                             decoration: InputDecoration(
-                                labelText: tr('appURLList')),
+                              labelText: tr('appURLList'),
+                            ),
                             validator: controller.validate,
                             autovalidateMode:
                                 AutovalidateMode.onUserInteraction,
@@ -443,20 +444,15 @@ class _ExportSectionState extends State<ExportSection> {
               child: DropdownMenu<String>(
                 expandedInsets: EdgeInsets.zero,
                 label: Text(tr('includeSettings')),
-                initialSelection:
-                    settingsProvider.exportSettings.toString(),
+                initialSelection: settingsProvider.exportSettings.toString(),
                 dropdownMenuEntries: [
-                  DropdownMenuEntry(
-                      value: '0', label: tr('none')),
-                  DropdownMenuEntry(
-                      value: '1', label: tr('excludeSecrets')),
-                  DropdownMenuEntry(
-                      value: '2', label: tr('all')),
+                  DropdownMenuEntry(value: '0', label: tr('none')),
+                  DropdownMenuEntry(value: '1', label: tr('excludeSecrets')),
+                  DropdownMenuEntry(value: '2', label: tr('all')),
                 ],
                 onSelected: (value) {
                   if (value != null) {
-                    settingsProvider.exportSettings =
-                        int.tryParse(value) ?? 1;
+                    settingsProvider.exportSettings = int.tryParse(value) ?? 1;
                   }
                 },
               ),
