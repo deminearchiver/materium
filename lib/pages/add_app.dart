@@ -139,7 +139,8 @@ class AddAppPageState extends State<AddAppPage> {
           );
         }
         additionalSettingsValid =
-            source == null || _requiredFormFieldsFilled(source, additionalSettings);
+            source == null ||
+            _requiredFormFieldsFilled(source, additionalSettings);
         inferAppIdIfOptional = true;
       } else if (valid && !updateUrlInput && _prevValid) {
         return;

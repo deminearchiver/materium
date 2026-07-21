@@ -23,22 +23,20 @@ class NavHelper {
   }
 
   static void pushSettingsPage(BuildContext context) {
-    Navigator.of(context).push(
-      MaterialPageRoute(builder: (_) => const SettingsPage()),
-    );
+    Navigator.of(
+      context,
+    ).push(MaterialPageRoute(builder: (_) => const SettingsPage()));
   }
 
   static void pushAddAppPage(BuildContext context, {String? initialUrl}) {
     Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (_) => AddAppPage(initialUrl: initialUrl),
-      ),
+      MaterialPageRoute(builder: (_) => AddAppPage(initialUrl: initialUrl)),
     );
   }
 
   static void pushLogsPage(BuildContext context) {
-    Navigator.of(context).push(
-      MaterialPageRoute(builder: (_) => const LogsPage()),
-    );
+    Navigator.of(
+      context,
+    ).push(MaterialPageRoute(builder: (_) => const LogsPage()));
   }
 }

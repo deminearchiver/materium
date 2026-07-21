@@ -164,8 +164,7 @@ abstract final class ExpressiveMotion {
 }
 
 abstract final class AppPaddings {
-  static const EdgeInsets pageHorizontal =
-      EdgeInsets.symmetric(horizontal: 16);
+  static const EdgeInsets pageHorizontal = EdgeInsets.symmetric(horizontal: 16);
   static const EdgeInsets page = EdgeInsets.fromLTRB(16, 0, 16, 0);
   static const EdgeInsets cardInner = EdgeInsets.all(16);
 }

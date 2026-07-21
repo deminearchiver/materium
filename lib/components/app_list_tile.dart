@@ -923,8 +923,7 @@ class _VersionLabel extends StatelessWidget {
                   overflow: TextOverflow.ellipsis,
                   textAlign: TextAlign.end,
                   style: TextStyle(
-                    fontStyle:
-                        isVersionPseudo(app) ? FontStyle.italic : null,
+                    fontStyle: isVersionPseudo(app) ? FontStyle.italic : null,
                     color: updateColor,
                   ),
                 ),

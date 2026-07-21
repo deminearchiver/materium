@@ -20,8 +20,11 @@ extension AppsProviderImportExport on AppsProvider {
   }) {
     final appList = apps.values
         .where((e) => appIds == null || appIds.contains(e.app.id))
-        .where((e) => !settingsProvider.exportInstalledOnly ||
-            e.app.installedVersion != null)
+        .where(
+          (e) =>
+              !settingsProvider.exportInstalledOnly ||
+              e.app.installedVersion != null,
+        )
         .map((e) => e.app.toJson())
         .toList();
     int shouldExportSettings = settingsProvider.exportSettings;

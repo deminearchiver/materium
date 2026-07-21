@@ -1356,7 +1356,7 @@ class HttpService {
       'assets/ca-certs/harica-tls-root-2021-rsa.crt',
       'assets/ca-certs/harica-tls-root-2021-ecc.crt',
       'assets/ca-certs/russian-mintsifry-root.crt',
-    ])
+    ]),
   };
 
   static Future<List<Uint8List>> _loadCertificateFromAsset(
@@ -1372,9 +1372,7 @@ class HttpService {
 
   static String _extractRootHost(String host) {
     final parts = host.split('.');
-    return parts.length > 2
-        ? parts.sublist(parts.length - 2).join('.')
-        : host;
+    return parts.length > 2 ? parts.sublist(parts.length - 2).join('.') : host;
   }
 
   Future<SecurityContext?> _createCertPinning(String url) async {
@@ -1388,16 +1386,14 @@ class HttpService {
         securityContext.setTrustedCertificatesBytes(certBytes);
       }
       return securityContext;
-    }
-    else if (_certificatePins.containsKey(rootHost)) {
+    } else if (_certificatePins.containsKey(rootHost)) {
       final certsBytes = await _certificatePins[rootHost]!;
       final securityContext = SecurityContext();
       for (final certBytes in certsBytes) {
         securityContext.setTrustedCertificatesBytes(certBytes);
       }
       return securityContext;
-    }
-    else {
+    } else {
       return null;
     }
   }
@@ -1409,7 +1405,9 @@ class HttpService {
    */
   Future<SecurityContext> _ruStoreWorkaroundSecurityContext() async {
     final securityContext = SecurityContext(withTrustedRoots: true);
-    final cert = await rootBundle.load('assets/ca-certs/russian-mintsifry-root.crt');
+    final cert = await rootBundle.load(
+      'assets/ca-certs/russian-mintsifry-root.crt',
+    );
     securityContext.setTrustedCertificatesBytes(cert.buffer.asUint8List());
     return securityContext;
   }
@@ -1424,8 +1422,7 @@ class HttpService {
     final host = Uri.parse(url).host;
     if (pinning) {
       securityContext = await _createCertPinning(url);
-    }
-    else if (_extractRootHost(host) == 'rustore.ru') {
+    } else if (_extractRootHost(host) == 'rustore.ru') {
       securityContext = await _ruStoreWorkaroundSecurityContext();
     }
     final client = securityContext != null
