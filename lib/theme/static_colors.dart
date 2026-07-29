@@ -22,7 +22,7 @@ abstract class StaticColorsData with Diagnosticable {
     double contrastLevel = 0.0,
     DynamicSchemeSpecVersion? specVersion = DynamicScheme.defaultSpecVersion,
   }) {
-    const palette = StaticPalette.defaults();
+    const palette = PaletteThemeData.defaults();
     return .from(
       blue: .fromSeed(
         sourceColor: palette.blue50,
