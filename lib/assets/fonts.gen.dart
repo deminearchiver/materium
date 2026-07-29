@@ -9,9 +9,6 @@
 // ignore_for_file: deprecated_member_use,directives_ordering,implicit_dynamic_list_literal,unnecessary_import
 
 abstract final class FontFamily {
-  /// Font family: Fira Code
-  static const String firaCode = 'Fira Code';
-
   /// Font family: Google Sans
   static const String googleSans = 'Google Sans';
 
@@ -23,6 +20,18 @@ abstract final class FontFamily {
 
   /// Font family: Monaspace Argon
   static const String monaspaceArgon = 'Monaspace Argon';
+
+  /// Font family: Monaspace Krypton
+  static const String monaspaceKrypton = 'Monaspace Krypton';
+
+  /// Font family: Monaspace Neon
+  static const String monaspaceNeon = 'Monaspace Neon';
+
+  /// Font family: Monaspace Radon
+  static const String monaspaceRadon = 'Monaspace Radon';
+
+  /// Font family: Monaspace Xenon
+  static const String monaspaceXenon = 'Monaspace Xenon';
 
   /// Font family: Roboto Flex
   static const String robotoFlex = 'Roboto Flex';

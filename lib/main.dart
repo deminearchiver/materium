@@ -129,9 +129,10 @@ class MyTaskHandler extends TaskHandler {
 
 Stream<LicenseEntry> _licenses() async* {
   final assets = <String>[
-    Assets.fonts.firacode.ofl,
+    Assets.fonts.googlesans.ofl,
     Assets.fonts.googlesanscode.ofl,
     Assets.fonts.googlesansflex.ofl,
+    Assets.fonts.monaspace.ofl,
     Assets.fonts.robotoflex.ofl,
   ];
   for (final asset in assets) {

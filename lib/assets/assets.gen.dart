@@ -30,9 +30,6 @@ class $AssetsCaGen {
 class $AssetsFontsGen {
   const $AssetsFontsGen();
 
-  /// Directory path: assets/fonts/firacode
-  $AssetsFontsFiracodeGen get firacode => const $AssetsFontsFiracodeGen();
-
   /// Directory path: assets/fonts/googlesans
   $AssetsFontsGooglesansGen get googlesans => const $AssetsFontsGooglesansGen();
 
@@ -43,6 +40,9 @@ class $AssetsFontsGen {
   /// Directory path: assets/fonts/googlesansflex
   $AssetsFontsGooglesansflexGen get googlesansflex =>
       const $AssetsFontsGooglesansflexGen();
+
+  /// Directory path: assets/fonts/monaspace
+  $AssetsFontsMonaspaceGen get monaspace => const $AssetsFontsMonaspaceGen();
 
   /// Directory path: assets/fonts/robotoflex
   $AssetsFontsRobotoflexGen get robotoflex => const $AssetsFontsRobotoflexGen();
@@ -386,19 +386,6 @@ class $AssetsTranslationsGen {
   ];
 }
 
-class $AssetsFontsFiracodeGen {
-  const $AssetsFontsFiracodeGen();
-
-  /// File path: assets/fonts/firacode/OFL.txt
-  String get ofl => 'assets/fonts/firacode/OFL.txt';
-
-  /// Directory path: assets/fonts/firacode
-  String get path => 'assets/fonts/firacode';
-
-  /// List of all assets
-  List<String> get values => [ofl];
-}
-
 class $AssetsFontsGooglesansGen {
   const $AssetsFontsGooglesansGen();
 
@@ -433,6 +420,19 @@ class $AssetsFontsGooglesansflexGen {
 
   /// Directory path: assets/fonts/googlesansflex
   String get path => 'assets/fonts/googlesansflex';
+
+  /// List of all assets
+  List<String> get values => [ofl];
+}
+
+class $AssetsFontsMonaspaceGen {
+  const $AssetsFontsMonaspaceGen();
+
+  /// File path: assets/fonts/monaspace/OFL.txt
+  String get ofl => 'assets/fonts/monaspace/OFL.txt';
+
+  /// Directory path: assets/fonts/monaspace
+  String get path => 'assets/fonts/monaspace';
 
   /// List of all assets
   List<String> get values => [ofl];

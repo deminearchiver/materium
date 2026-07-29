@@ -142,16 +142,12 @@ flutter:
     - assets/translations/
 
     # Open Font Licenses
-    - assets/fonts/firacode/OFL.txt
     - assets/fonts/googlesans/OFL.txt
     - assets/fonts/googlesanscode/OFL.txt
     - assets/fonts/googlesansflex/OFL.txt
     - assets/fonts/robotoflex/OFL.txt
+    - assets/fonts/monaspace/OFL.txt
   fonts:
-    - family: Fira Code
-      fonts:
-        - asset: assets/fonts/firacode/FiraCode-VariableFont_wght.ttf
-          style: normal
     - family: Google Sans
       fonts:
         - asset: assets/fonts/googlesans/GoogleSans-VariableFont_GRAD,opsz,wght.ttf
@@ -160,16 +156,28 @@ flutter:
           style: italic
     - family: Google Sans Code
       fonts:
-        - asset: assets/fonts/googlesanscode/GoogleSansCode-VariableFont_wght.ttf
+        - asset: assets/fonts/googlesanscode/GoogleSansCode[MONO,wght].ttf
           style: normal
-        - asset: assets/fonts/googlesanscode/GoogleSansCode-Italic-VariableFont_wght.ttf
+        - asset: assets/fonts/googlesanscode/GoogleSansCode-Italic[MONO,wght].ttf
           style: italic
     - family: Google Sans Flex
       fonts:
         - asset: assets/fonts/googlesansflex/GoogleSansFlex-VariableFont_GRAD,ROND,opsz,slnt,wdth,wght.ttf
     - family: Monaspace Argon
       fonts:
-        - asset: assets/fonts/monaspace/MonaspaceArgon-VariableFont.ttf
+        - asset: assets/fonts/monaspace/MonaspaceArgon-VariableFont_slnt,wdth,wght.ttf
+    - family: Monaspace Krypton
+      fonts:
+        - asset: assets/fonts/monaspace/MonaspaceKrypton-VariableFont_slnt,wdth,wght.ttf
+    - family: Monaspace Neon
+      fonts:
+        - asset: assets/fonts/monaspace/MonaspaceNeon-VariableFont_slnt,wdth,wght.ttf
+    - family: Monaspace Radon
+      fonts:
+        - asset: assets/fonts/monaspace/MonaspaceRadon-VariableFont_slnt,wdth,wght.ttf
+    - family: Monaspace Xenon
+      fonts:
+        - asset: assets/fonts/monaspace/MonaspaceXenon-VariableFont_slnt,wdth,wght.ttf
     - family: Roboto Flex
       fonts:
         - asset: assets/fonts/robotoflex/RobotoFlex-VariableFont_GRAD,XOPQ,XTRA,YOPQ,YTAS,YTDE,YTFI,YTLC,YTUC,opsz,slnt,wdth,wght.ttf
