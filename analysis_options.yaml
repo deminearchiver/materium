@@ -1,8 +1,8 @@
 include:
-  - package:deminearchiver_lints/base.yaml
-  - package:deminearchiver_lints/app.yaml
+  - package:deminearchiver_lints/analysis_options_flutter.yaml
+  - package:deminearchiver_lints/app/loose.yaml
 
-# TODO(deminearchiver): remove after migrating away from the dynamic type.
+# TODO: remove after migrating away from the dynamic type.
 analyzer:
   language:
     strict-casts: false

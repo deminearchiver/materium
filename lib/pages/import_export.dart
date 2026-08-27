@@ -149,13 +149,13 @@ class _ImportExportPageState extends State<ImportExportPage> {
 
     void runObtainiumImport() {
       context.read<SettingsProvider>().selectionClick();
-      FilePicker.pickFiles()
-          .then((result) {
+      FilePicker.pickFile()
+          .then((file) {
             setState(() {
               importInProgress = true;
             });
-            if (result != null) {
-              var path = result.files.single.path;
+            if (file != null) {
+              var path = file.path;
               if (path == null) {
                 throw ObtainiumError(tr('noFilePickerAvailable'));
               }
@@ -191,10 +191,10 @@ class _ImportExportPageState extends State<ImportExportPage> {
     }
 
     void runUrlImport() {
-      FilePicker.pickFiles()
-          .then((result) {
-            if (result != null) {
-              var path = result.files.single.path;
+      FilePicker.pickFile()
+          .then((file) {
+            if (file != null) {
+              var path = file.path;
               if (path == null) return;
               urlListImport(
                 overrideInitValid: true,
